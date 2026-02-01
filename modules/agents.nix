@@ -1,47 +1,73 @@
-{...}:
+{ pkgs, inputs, ... }:
 {
-	programs.opencode = {
-		enable = true;
-		enableMcpIntegration = true;
-		settings = {
-			username = "😺 Andrew Nguyen";
-			theme = "system";
-			# permission = {
-			# 	list = "deny";
-			# 	grep = "deny";
-			# 	glob = "deny";
-			# 	webfetch = "deny";
-			# 	websearch = "deny";
-			# };
-			plugin = [
-				"opencode-gemini-auth@latest"
-			];
-			mcp = {
-				serena = {
-					enabled = true;
-					type = "remote";
-					url = "http://localhost:12345/mcp";
-					timeout = 2000;
-				};
+  programs.mcp = {
+    enable = true;
+    servers = {
+      serena = {
+        url = "http://localhost:12345/mcp";
+        timeout = 2000;
+      };
+      context7 = {
+        command = "pnpm";
+        args = [
+          "dlx"
+          "@upstash/context7-mcp"
+        ];
+        env = {
+          api-key = "{env:CONTEXT_7_API_KEY}";
+        };
+      };
+      tavily = {
+        command = "pnpm";
+        args = [
+          "dlx"
+          "tavily-mcp@latest"
+        ];
+        environment = {
+          TAVILY_API_KEY = "{env:TAVILY_API_KEY}";
+        };
+      };
+    };
+  };
+  programs.opencode = {
+    enable = true;
+    enableMcpIntegration = true;
+    settings = {
+      username = "😺 Andrew Nguyen";
+      theme = "system";
+      # permission = {
+      # 	list = "deny";
+      # 	grep = "deny";
+      # 	glob = "deny";
+      # 	webfetch = "deny";
+      # 	websearch = "deny";
+      # };
+      plugin = [
+        "opencode-gemini-auth@latest"
+      ];
+    };
+  };
 
-				context7 = {
-					enabled = true;
-					type = "local";
-					command = [ "pnpm" "dlx" "@upstash/context7-mcp" ];
-					environment = {
-						api-key = "\${env:CONTEXT_7_API_KEY}";
-					};
-				};
+  home.packages = [
+    inputs.serena.packages.${pkgs.system}.serena
+    (pkgs.writeShellScriptBin "start-serena" ''
+      # Kill any existing instances to avoid port conflicts
+      pkill -f "serena start-mcp-server"
 
-				tavily = {
-					enabled = true;
-					type = "local";
-					command = [ "pnpm" "dlx" "tavily-mcp@latest" ];
-					environment = {
-						TAVILY_API_KEY = "\${env:TAVILY_API_KEY}";
-					};
-				};
-			};
-		};
-	};
+      # Start the server
+      nohup serena start-mcp-server --transport streamable-http --port 12345 --context ide > /dev/null 2>&1 &
+
+      # Give it a second to initialize
+      sleep 2
+
+      # Verify it is actually running
+      PID=$(pgrep -f "serena start-mcp-server")
+
+      if [ -z "$PID" ]; then
+          echo "❌ Error: Server failed to start."
+      else
+          echo "✅ Serena MCP Server started successfully (PID: $PID)"
+      fi
+    '')
+  ];
 }

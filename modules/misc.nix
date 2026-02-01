@@ -8,6 +8,7 @@
   programs.fd.enable = true;
   programs.bun.enable = true;
   programs.ripgrep.enable = true;
+  programs.uv.enable = true;
 
   programs.btop = {
     enable = true;

@@ -1,13 +1,15 @@
 { pkgs, ... }@inputs:
-let 
+let
 in
-  {
+{
   programs.nvf = {
     enable = true;
     settings = {
       vim.vimAlias = true;
-      vim.lazy.enable =true;
-      vim.clipboard.enable =true;
+      vim.lazy.enable = true;
+      vim.clipboard.enable = true;
+      vim.clipboard.providers.wl-copy.enable = true;
+      vim.syntaxHighlighting = true;
       vim.globals = {
         mapleader = " ";
         maplocalleader = "/";
@@ -28,11 +30,11 @@ in
       vim.keymaps = [
         {
           key = "<leader>e";
-          mode="n";
+          mode = "n";
           silent = true;
           desc = "Open MiniFiles";
           lua = true;
-          action = builtins.readFile ../utils/explorer.lua ;
+          action = builtins.readFile ../utils/explorer.lua;
         }
         {
           key = "<leader>cf";
@@ -52,12 +54,12 @@ in
       };
 
       vim.diagnostics = {
-        enable =true;
+        enable = true;
         nvim-lint.enable = true;
         nvim-lint.lint_after_save = true;
       };
       vim.formatter = {
-        conform-nvim.enable =true;
+        conform-nvim.enable = true;
         conform-nvim.setupOpts = {
           timeout_ms = 1000;
           lsp_format = "fallback";
@@ -70,22 +72,30 @@ in
       vim.treesitter.textobjects.enable = true;
       vim.treesitter.context.enable = true;
 
+      vim.lsp = {
+        formatOnSave = true;
+        lspconfig.enable = true;
+      };
+
       vim.languages.ts = {
         enable = true;
         format.enable = true;
-        format.type = ["biome" "prettierd"];
+        format.type = [
+          "biome"
+          "prettierd"
+        ];
         lsp.enable = true;
-        lsp.servers = ["ts_ls"];
-        treesitter.enable =true;
+        lsp.servers = [ "ts_ls" ];
+        treesitter.enable = true;
         extensions.ts-error-translator.enable = true;
       };
 
       vim.languages.nix = {
         enable = true;
         format.enable = true;
-        format.type = ["nixfmt"];
+        format.type = [ "nixfmt" ];
         lsp.enable = true;
-        lsp.servers = ["nixd"];
+        lsp.servers = [ "nixd" ];
         treesitter.enable = true;
       };
       vim.ui = {
@@ -136,22 +146,41 @@ in
         };
         ai.setupOpts = {
           n_lines = 500;
-          L = { __raw = "require('mini.extra').gen_ai_spec.line()"; };
-          f = { __raw = "require('mini.ai').gen_spec.function_call({ name_pattern = '[%w_]' })"; };
-          F = { __raw = "require('mini.ai').gen_spec.treesitter({ a = '@function.outer', i = '@function.inner' })"; };
-          o = { __raw = ''
-                                            require('mini.ai').gen_spec.treesitter({
-                                              a = { "@block.outer", "@loop.outer", "@conditional.outer" },
-                                              i = { "@block.inner", "@loop.inner", "@conditional.inner" },
-                                            })
-          '';
+          L = {
+            __raw = "require('mini.extra').gen_ai_spec.line()";
           };
-          B = { __raw = "require('mini.extra').gen_ai_spec.buffer()"; };
-          D = { __raw = "require('mini.extra').gen_ai_spec.diagnostic()"; };
-          I = { __raw = "require('mini.extra').gen_ai_spec.indent()"; };
-          u = { __raw = "require('mini.ai').gen_spec.function_call()"; };
-          U = { __raw = "require('mini.ai').gen_spec.function_call({ name_pattern = '[%w_]' })"; };
-          N = { __raw = "require('mini.extra').gen_ai_spec.number()"; };
+          f = {
+            __raw = "require('mini.ai').gen_spec.function_call({ name_pattern = '[%w_]' })";
+          };
+          F = {
+            __raw = "require('mini.ai').gen_spec.treesitter({ a = '@function.outer', i = '@function.inner' })";
+          };
+          o = {
+            __raw = ''
+              require('mini.ai').gen_spec.treesitter({
+                a = { "@block.outer", "@loop.outer", "@conditional.outer" },
+                i = { "@block.inner", "@loop.inner", "@conditional.inner" },
+              })
+            '';
+          };
+          B = {
+            __raw = "require('mini.extra').gen_ai_spec.buffer()";
+          };
+          D = {
+            __raw = "require('mini.extra').gen_ai_spec.diagnostic()";
+          };
+          I = {
+            __raw = "require('mini.extra').gen_ai_spec.indent()";
+          };
+          u = {
+            __raw = "require('mini.ai').gen_spec.function_call()";
+          };
+          U = {
+            __raw = "require('mini.ai').gen_spec.function_call({ name_pattern = '[%w_]' })";
+          };
+          N = {
+            __raw = "require('mini.extra').gen_ai_spec.number()";
+          };
         };
         clue.setupOpts = {
           window = {
