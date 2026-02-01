@@ -10,7 +10,10 @@
       url = "github:NotAShelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    aic8800.url = "github:kurumeii/aic8800-nix";
+    aic8800 = {
+      url = "github:kurumeii/aic8800-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     {
@@ -24,7 +27,7 @@
       username = "andrew";
       hostName = "andrewix";
       stateVersion = "25.11";
-      fontFamily = "JetBrainsMono Nerd Font";
+      fontFamily = "CaskaydiaCove Nerd Font";
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
@@ -45,9 +48,6 @@
           inputs.nvf.nixosModules.default
           homeManager.nixosModules.home-manager
           {
-            # nixpkgs.overlays = [
-            # 	inputs.neovimNightly.overlays.default
-            # ];
             home-manager = {
               extraSpecialArgs = {
                 inherit
@@ -65,6 +65,7 @@
               backupFileExtension = "backup";
             };
           }
+          # Use AIC8800 module from local repository
           inputs.aic8800.nixosModules.default
         ];
       };

@@ -40,12 +40,12 @@
     Unit = {
       Description = "Keepassxc";
       After = [
-        "default.target"
+        "graphical-session-pre.target"
         "rclone-gdrive.service"
       ];
     };
     Install = {
-      WantedBy = [ "default.target" ];
+      WantedBy = [ "graphical-session.target" ];
     };
     Service = {
       Type = "simple";

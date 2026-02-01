@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "aic8800": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1769934667,
+        "narHash": "sha256-nqoBjlbJzJAXSj8yBiVgnT9ikSlqnpKD6rTl87dUjPc=",
+        "owner": "kurumeii",
+        "repo": "aic8800-nix",
+        "rev": "00dcf7cfdc900c2029fc06afa747f78d46fced8d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kurumeii",
+        "repo": "aic8800-nix",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -137,6 +157,7 @@
     },
     "root": {
       "inputs": {
+        "aic8800": "aic8800",
         "homeManager": "homeManager",
         "nixpkgs": "nixpkgs",
         "nvf": "nvf"

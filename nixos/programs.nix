@@ -16,6 +16,7 @@
     brave
     pnpm
     bun
+    caprine
   ];
 
   programs.fish.enable = true;
