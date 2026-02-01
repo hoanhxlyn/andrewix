@@ -10,10 +10,9 @@
             set -u EDITOR nvim
       			'';
     shellAliases = {
-      rev = "nh os switch ~/dotconfigs";
+      rev = "nh os switch";
       clean = "nh clean all";
-      opp = "nix store optimise";
-      update = "sudo nix flake update --flake ~/dotconfigs";
+      update = "nix flake update";
       ll = "eza --long --icons";
       ls = "eza --all";
       cd = "z";

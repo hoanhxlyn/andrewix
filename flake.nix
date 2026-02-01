@@ -29,50 +29,61 @@
     let
       system = "x86_64-linux";
       username = "andrew";
-      hostName = "andrewix";
       stateVersion = "25.11";
       fontFamily = "CaskaydiaCove Nerd Font";
       pkgs = nixpkgs.legacyPackages.${system};
+
+      # Function to create NixOS configuration
+      mkSystem =
+        hostName: modules:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit
+              inputs
+              username
+              stateVersion
+              fontFamily
+              hostName
+              self
+              ;
+          };
+          modules = [
+            ./nixos/hosts/${hostName}/default.nix
+            inputs.nvf.nixosModules.default
+            homeManager.nixosModules.home-manager
+            {
+              home-manager = {
+                extraSpecialArgs = {
+                  inherit
+                    inputs
+                    username
+                    stateVersion
+                    fontFamily
+                    hostName
+                    self
+                    ;
+                };
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                users.${username} = import ./home.nix;
+                backupFileExtension = "backup";
+              };
+            }
+          ] ++ modules;
+        };
     in
     {
-      nixosConfigurations.${hostName} = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit
-            inputs
-            username
-            hostName
-            stateVersion
-            fontFamily
-            self
-            ;
-        };
-        modules = [
-          ./nixos/configuration.nix
-          inputs.nvf.nixosModules.default
-          homeManager.nixosModules.home-manager
-          {
-            home-manager = {
-              extraSpecialArgs = {
-                inherit
-                  inputs
-                  username
-                  hostName
-                  stateVersion
-                  fontFamily
-                  self
-                  ;
-              };
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.${username} = import ./home.nix;
-              backupFileExtension = "backup";
-            };
-          }
-          # Use AIC8800 module from local repository
+      nixosConfigurations = {
+        # PC Configuration (Nvidia)
+        andrew-pc = mkSystem "andrew-pc" [ ];
+
+        # Laptop Configuration
+        andrew-laptop = mkSystem "andrew-laptop" [
           inputs.aic8800.nixosModules.default
         ];
       };
+
       devShells.${system} = {
         default = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [

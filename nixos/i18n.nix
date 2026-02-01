@@ -9,7 +9,7 @@
         fcitx5-gtk
       ];
       waylandFrontend = true;
-      ignoreUserConfig = true;
+      ignoreUserConfig = false;
       settings = {
         addons = {
           unikey.globalSection = {
