@@ -7,7 +7,9 @@ in
     enable = true;
     nativeMessagingHosts = [ keepass ];
     profiles.default = {
+      id = 0;
       isDefault = true;
+      name = "default";
       settings = {
         # Enable vertical tabs
         "sidebar.verticalTabs" = true;
