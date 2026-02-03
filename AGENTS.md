@@ -1,175 +1,90 @@
-# AGENTS.md - NixOS Dotfiles Configuration
+# AGENTS.md - NixOS Dotfiles Configuration (Andrewix)
 
-This repository contains Andrew's NixOS and home-manager dotfiles configuration using the [nvf](https://github.com/NotAShelf/nvf) Neovim flake and home-manager.
+This repository contains Andrew's NixOS and Home Manager configuration. It follows a modular architecture with automatic directory scanning.
 
-## Build Commands
+## Build & Maintenance Commands
 
-### System Updates
+### System Management (Recommended)
 ```bash
-# Update flake inputs (run from ~/dotconfigs)
-nix flake update --flake ~/dotconfigs
-
-# Switch NixOS configuration (Apply changes)
+# Apply changes and switch to new configuration
 nh os switch ~/dotconfigs
 
-# Clean all nix garbage
+# Update all flake inputs
+nix flake update --flake ~/dotconfigs
+
+# Check flake for evaluation errors
+nix flake check
+
+# Cleanup nix garbage and old generations
 nh clean all
 
-# Optimise nix store
+# Optimize nix store (deduplicate files)
 nix store optimise
 ```
 
-### Search and Development
+### Search & Shell
 ```bash
-# Search for packages (replaces nix search)
+# Search for packages
 nh search <package-name>
 
-# Enter development shell
+# Enter the project development shell
 nix develop
 ```
 
-### Flake Commands
-```bash
-# Show flake outputs
-nix flake show
-
-# Lock flake inputs
-nix flake lock
-
-# Check flake for errors
-nix flake check
-```
-
-## Code Style Guidelines
-
-### Nix Formatting
-- Use **nixfmt** for all `.nix` files (configured as default formatter in neovim)
-- Indentation: 2 spaces
-- Attribute sets: prefer concise form when attributes fit on one line
-- Let-bindings: use `let ... in` pattern with proper spacing
-
-### Nix Conventions
-- Always use `{ pkgs, ... }@inputs` or `{ config, pkgs, ... }@inputs` pattern for module inputs
-- Import modules using `./relative/path.nix` syntax
-- Use `inherit` for passing arguments to reduce repetition
-- Keep configuration options organized by subsystem (programs, services, etc.)
-- Use `pkgs.lib.nixosSystem` for NixOS module definitions
+## Architecture & Conventions
 
 ### Module Structure
-- NixOS modules: `nixos/*.nix` - system-level configuration
-- Home-manager modules: `modules/*.nix` - user-level configuration
-- Each module should be self-contained with clear imports
-- Use descriptive variable names (`hostName`, `username`, `stateVersion`)
+- **NixOS (System):** `modules/system/features/`
+- **Home Manager (User):** `modules/user/features/`
+- **Hosts:** `modules/hosts/<hostname>/`
+- **Flake Logic:** `modules/flake/`
 
-### Neovim Configuration (nvf)
-- Use `programs.nvf.settings` for Neovim configuration
-- Follow the nested structure: `vim.*`, `vim.languages.*`, `vim.mini.*`
-- Keymaps: use `vim.keymaps` array with mode, action, and desc fields
-- Use Lua for complex configurations via `__raw` attribute
+We use `vic/import-tree` to automatically import all `.nix` files within `features/` directories. Simply adding a new file there integrates it into the build.
 
-### Lua Files
-- Store in `utils/` directory
-- Follow Lua conventions: lowercase with underscores for variables
-- Use `require()` for module imports
+### Code Style Guidelines
 
-### JSON Files
-- Configuration files like `andrew.omp.json` should be properly formatted
-- Use consistent indentation (2 spaces)
+#### Nix Formatting
+- **Formatter:** Use `nixfmt` for all `.nix` files.
+- **Indentation:** 2 spaces.
+- **Imports:** Use relative paths (e.g., `./module.nix`) within modules.
+- **Patterns:**
+  - Standard input: `{ config, pkgs, inputs, ... }: { ... }`
+  - Use `inherit` for repetitive attribute passing.
+  - Organize settings by subsystem (e.g., `programs`, `services`).
 
-## Error Handling
+#### Naming Conventions
+- **Files:** `kebab-case.nix` (e.g., `keepassxc.nix`, `git-config.nix`).
+- **Variables:** `camelCase` (e.g., `hostName`, `stateVersion`).
+- **Booleans:** Prefix with `enable` or `disable` (e.g., `enable = true`).
 
-### Nix Module Errors
-- Use `lib.asserts` for configuration validation
-- Check for `enable = true` before setting related options
-- Use `mkIf` or `mkDefault` for conditional configuration
+#### Neovim (nvf)
+- Configured via `programs.nvf.settings`.
+- Follow the nested structure: `vim.*`, `vim.languages.*`, `vim.mini.*`.
+- Keymaps: Use the `vim.keymaps` array with `mode`, `action`, and `desc`.
 
-### Home Manager
-- Ensure proper imports to avoid "unknown option" errors
-- Follow module structure: `{ config, pkgs, ... }@inputs: { ... }`
+## Error Handling & Safety
+- **State Version:** Fixed at `25.11`. **Do not change** unless performing a manual migration.
+- **Safety Loop:** Always run `nix flake check` before committing significant structural changes.
+- **Conditional Config:** Use `lib.mkIf` or `lib.mkDefault` when defining options that might be overridden or depend on other toggles.
 
-## Import Patterns
-
-```nix
-# Standard module import pattern
-{ config, pkgs, ... }@inputs:
-{
-  imports = [
-    ./relative/module.nix
-  ];
-
-  programs.example = {
-    enable = true;
-    settings = {
-      # configuration here
-    };
-  };
-}
-```
-
-## Naming Conventions
-
-- **Variables**: `camelCase` (e.g., `hostName`, `stateVersion`)
-- **Modules**: `kebab-case.nix` (e.g., `shell.nix`, `git.nix`)
-- **Functions**: `camelCase` or `snake_case` depending on context
-- **Booleans**: `enable`, `disable` pattern (e.g., `enable = true`)
-
-## Key Configuration Patterns
-
-### NixOS Configuration
-```nix
-{
-  imports = [
-    ./hardware-configuration.nix
-    ./programs.nix
-    # ... other modules
-  ];
-  boot.loader.systemd-boot.enable = true;
-  networking.hostName = hostName;
-  system.stateVersion = stateVersion;
-}
-```
-
-### Home Manager Modules
-```nix
-{ pkgs, ... }@inputs:
-{
-  home = {
-    inherit username stateVersion;
-    homeDirectory = "/home/${username}";
-  };
-  programs.example.enable = true;
-}
-```
-
-## Formatting Tools
-
-- **Nix**: `nixfmt` (run via conform-nvim or CLI: `nixfmt file.nix`)
-- **TypeScript/JavaScript**: `biome` (configured in neovim)
-- **Lua**: Built-in Lua formatter or `lua-format`
-
-## Repository Structure
-
-```
+## Repository Layout
+```text
 ~/dotconfigs/
-├── flake.nix              # Main flake definition
-├── home.nix               # Home-manager entry point
-├── nixos/                 # NixOS system modules
-│   ├── configuration.nix  # Main system config
-│   ├── i18n.nix           # Locale and Input Method
-│   ├── programs.nix       # System programs
-│   └── ...
-├── modules/               # Home-manager modules
-│   ├── shell.nix          # Fish shell config
-│   ├── git.nix            # Git config
-│   └── ...
-├── utils/                 # Lua utilities
-└── andrew.omp.json        # Oh My Posh theme
+├── flake.nix              # Entry point (flake-parts)
+├── modules/
+│   ├── system/            # NixOS system-level config
+│   │   ├── features/      # Auto-imported NixOS modules
+│   │   └── configuration.nix
+│   ├── user/              # Home Manager user-level config
+│   │   ├── features/      # Auto-imported user modules
+│   │   ├── bundle.nix
+│   │   └── home.nix
+│   ├── hosts/             # Hardware/Host specific configs
+│   └── flake/             # mkSystem and host definitions
+└── andrew.omp.json        # Theme for Oh My Posh
 ```
 
-## Important Notes
-
-- State version: `25.11` - do not change unless migrating
-- Hostname: `andrewix` - used in flake.nix nixosConfigurations
-- Username: `andrew` - used throughout configuration
-- The flake uses `nixd` for Nix LSP and `nixfmt` for formatting
-- MCP servers (serena, context7, tavily) are configured in `modules/agents.nix`
+## Important Variables
+- **Hostname:** `andrew-pc` or `andrew-laptop` (defined in `modules/flake/hosts.nix`)
+- **Username:** `andrew`
+- **LSP:** `nixd` for Nix, `lua-ls` for Lua.

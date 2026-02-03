@@ -1,5 +1,4 @@
-{ pkgs, username, ... }@inputs:
-{
+{ pkgs, username, ... }: {
   environment.systemPackages = with pkgs; [
     vim
     wget

@@ -2,15 +2,12 @@
   stateVersion,
   username,
   pkgs,
+  inputs,
   ...
 }:
 {
   imports = [
-    ./programs.nix
-    ./i18n.nix
-    ./fonts.nix
-    ./services.nix
-    ./neovim.nix
+    (inputs.import-tree ./features)
   ];
 
   users.users.${username} = {
@@ -34,6 +31,5 @@
     "flakes"
   ];
   nix.settings.auto-optimise-store = true;
-  nixpkgs.config.allowUnfree = true;
   system.stateVersion = stateVersion;
 }

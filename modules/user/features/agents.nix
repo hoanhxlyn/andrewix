@@ -1,5 +1,4 @@
-{ pkgs, inputs, ... }:
-{
+{ pkgs, inputs, ... }: {
   programs.mcp = {
     enable = true;
     servers = {
@@ -39,8 +38,6 @@
         list = "deny";
         grep = "deny";
         glob = "deny";
-        # webfetch = "deny";
-        # websearch = "deny";
       };
       plugin = [
         "opencode-gemini-auth@latest"

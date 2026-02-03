@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ ... }: {
   programs.git = {
     enable = true;
     settings = {
@@ -12,11 +11,6 @@
     gitCredentialHelper.enable = true;
     settings = {
       editor = "nvim";
-    };
-    hosts = {
-      "github.com" = {
-        user = "kurumeii";
-      };
     };
   };
   programs.lazygit = {

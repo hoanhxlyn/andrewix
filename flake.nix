@@ -1,95 +1,29 @@
+# DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
+# Use `nix run .#write-flake` to regenerate it.
 {
-  description = "Andrewix - flake it till we hit it";
+  description = "Andrewix - Dendritic Configuration";
+
+  outputs = inputs: import ./outputs.nix inputs;
+
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    homeManager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nvf = {
-      url = "github:NotAShelf/nvf";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    serena = {
-      url = "github:oraios/serena";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     aic8800 = {
-      url = "github:kurumeii/aic8800-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:kurumeii/aic8800-nix";
     };
+    flake-aspects.url = "github:vic/flake-aspects";
+    flake-file.url = "github:vic/flake-file";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    home-manager = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/home-manager";
+    };
+    import-tree.url = "github:vic/import-tree";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    rust-overlay = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:oxalica/rust-overlay";
+    };
+    serena.url = "github:oraios/serena";
   };
-  outputs =
-    {
-      self,
-      nixpkgs,
-      homeManager,
-      ...
-    }@inputs:
-    let
-      system = "x86_64-linux";
-      username = "andrew";
-      stateVersion = "25.11";
-      fontFamily = "CaskaydiaCove Nerd Font";
-      pkgs = nixpkgs.legacyPackages.${system};
 
-      # Function to create NixOS configuration
-      mkSystem =
-        hostName: modules:
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit
-              inputs
-              username
-              stateVersion
-              fontFamily
-              hostName
-              self
-              ;
-          };
-          modules = [
-            ./nixos/hosts/${hostName}/default.nix
-            inputs.nvf.nixosModules.default
-            homeManager.nixosModules.home-manager
-            {
-              home-manager = {
-                extraSpecialArgs = {
-                  inherit
-                    inputs
-                    username
-                    stateVersion
-                    fontFamily
-                    hostName
-                    self
-                    ;
-                };
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.${username} = import ./home.nix;
-                backupFileExtension = "backup";
-              };
-            }
-          ] ++ modules;
-        };
-    in
-    {
-      nixosConfigurations = {
-        # PC Configuration (Nvidia)
-        andrew-pc = mkSystem "andrew-pc" [ ];
-
-        # Laptop Configuration
-        andrew-laptop = mkSystem "andrew-laptop" [
-          inputs.aic8800.nixosModules.default
-        ];
-      };
-
-      devShells.${system} = {
-        default = pkgs.mkShell {
-          nativeBuildInputs = with pkgs; [
-            nodejs
-          ];
-        };
-      };
-    };
 }

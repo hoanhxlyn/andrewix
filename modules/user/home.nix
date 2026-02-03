@@ -1,7 +1,7 @@
-{config, pkgs, username, stateVersion, ...}@inputs:
+{username, stateVersion, ...}@inputs:
 {
 	imports = [
-		./modules/bundle.nix
+		./bundle.nix
 	];
 	home = {
 	# Do not override var here

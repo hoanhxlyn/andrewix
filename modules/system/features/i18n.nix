@@ -1,5 +1,4 @@
-{ pkgs, fontFamily, ... }@inputs:
-{
+{ pkgs, fontFamily, ... }: {
   i18n = {
     inputMethod.enable = true;
     inputMethod.type = "fcitx5";
@@ -7,6 +6,7 @@
       addons = with pkgs; [
         kdePackages.fcitx5-unikey
         fcitx5-gtk
+        kdePackages.fcitx5-qt
       ];
       waylandFrontend = true;
       ignoreUserConfig = false;
