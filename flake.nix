@@ -1,95 +1,87 @@
+# DO-NOT-EDIT. This file was auto-generated using github:denful/flake-file.
+# Use `nix run .#write-flake` to regenerate it.
 {
-  description = "Andrewix - flake it till we hit it";
+  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
+
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    homeManager = {
+    aic8800 = {
+      url = "github:hoanhxlyn/aic8800-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    den.url = "github:denful/den";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flake-file.url = "github:denful/flake-file";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+    gruvbox-wallpapers = {
+      url = "github:AngelJumbo/gruvbox-wallpapers";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    helium = {
+      url = "github:oxcl/nix-flake-helium-browser";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    herdr-nix.url = "github:herdrdev/herdr-nix";
+    home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nvf = {
-      url = "github:NotAShelf/nvf";
+    import-tree.url = "github:denful/import-tree";
+    ironbar = {
+      url = "github:JakeStanger/ironbar";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    serena = {
-      url = "github:oraios/serena";
+    mini-nvim = {
+      url = "github:nvim-mini/mini.nvim";
+      flake = false;
+    };
+    niri.url = "github:epireyn/niri-flake";
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    aic8800 = {
-      url = "github:kurumeii/aic8800-nix";
+    nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nvf.url = "github:notashelf/nvf";
+    nwm = {
+      url = "github:BirdeeHub/nix-wrapper-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    omp-yazi = {
+      url = "github:saumyajyoti/omp.yazi";
+      flake = false;
+    };
+    opencode = {
+      url = "github:anomalyco/opencode/v2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ponytail = {
+      url = "github:DietrichGebert/ponytail";
+      flake = false;
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    stylix = {
+      url = "github:adomixaszvers/stylix/merged-rofi-settings-font";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    waycalix.url = "github:hoanhxlyn/waycalix";
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs = {
+        home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs";
+      };
     };
   };
-  outputs =
-    {
-      self,
-      nixpkgs,
-      homeManager,
-      ...
-    }@inputs:
-    let
-      system = "x86_64-linux";
-      username = "andrew";
-      stateVersion = "25.11";
-      fontFamily = "CaskaydiaCove Nerd Font";
-      pkgs = nixpkgs.legacyPackages.${system};
-
-      # Function to create NixOS configuration
-      mkSystem =
-        hostName: modules:
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit
-              inputs
-              username
-              stateVersion
-              fontFamily
-              hostName
-              self
-              ;
-          };
-          modules = [
-            ./nixos/hosts/${hostName}/default.nix
-            inputs.nvf.nixosModules.default
-            homeManager.nixosModules.home-manager
-            {
-              home-manager = {
-                extraSpecialArgs = {
-                  inherit
-                    inputs
-                    username
-                    stateVersion
-                    fontFamily
-                    hostName
-                    self
-                    ;
-                };
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.${username} = import ./home.nix;
-                backupFileExtension = "backup";
-              };
-            }
-          ] ++ modules;
-        };
-    in
-    {
-      nixosConfigurations = {
-        # PC Configuration (Nvidia)
-        andrew-pc = mkSystem "andrew-pc" [ ];
-
-        # Laptop Configuration
-        andrew-laptop = mkSystem "andrew-laptop" [
-          inputs.aic8800.nixosModules.default
-        ];
-      };
-
-      devShells.${system} = {
-        default = pkgs.mkShell {
-          nativeBuildInputs = with pkgs; [
-            nodejs
-          ];
-        };
-      };
-    };
 }

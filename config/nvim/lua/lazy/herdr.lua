@@ -1,0 +1,268 @@
+-- Agent side pane backed by herdr (replaces sidekick.nvim). Requires nvim to run inside herdr (HERDR_ENV=1).
+local utils = require("config.utils")
+
+-- Where the agent pane opens ("right" or "down") and the share (0-1) of space it gets.
+local config = {
+  width = 0.4,
+  direction = "right",
+}
+-- Each nvim lives in its own herdr pane; scope everything to it so several tabs/instances don't collide.
+local SELF = vim.env.HERDR_PANE_ID
+local KINDS = { "claude", "codex", "opencode", "gemini", "cursor", "copilot", "pi", "amp", "kimi", "qwen" }
+
+-- Executable per picker entry when it differs from the label.
+local EXE = { ["command code"] = "cmdc", mimo = "mimo" }
+
+local TIMEOUT = 3000 -- ms; keep a hung herdr from freezing nvim
+local AGENT_START_TIMEOUT = 15000 -- ms; agent start waits for the agent to be detected, so give it longer
+local SHELL_READY_TIMEOUT = 20000 -- ms; waiting for the shell prompt can take a while on a cold direnv cache
+local PROMPT_MARKER = "@andrew" -- first segment of the omp prompt; shell is ready once this shows
+local STARTUP_DELAY = 1500 -- ms; let a fresh agent TUI come up before sending text
+
+local PREVIEW_LINES = 5 -- max selected lines echoed to the agent before "..."
+
+local pane_id, last_kind
+
+local function herdr(args, timeout)
+  local res = vim.system(vim.list_extend({ "herdr" }, args), { text = true }):wait(timeout or TIMEOUT)
+  local ok, json = pcall(vim.json.decode, res.stdout or "")
+  return res.code == 0, ok and json or nil, res.stderr
+end
+
+-- The agent pane outlives nvim, so remember it on disk (keyed by our own herdr pane) and reattach next session.
+local state_file = SELF and (vim.fn.stdpath("state") .. "/herdr_agent/" .. SELF:gsub("[^%w]", "_") .. ".json")
+
+local function pane_info(id)
+  local ok, json = herdr({ "pane", "get", id })
+  return ok and json and vim.tbl_get(json, "result", "pane") or nil
+end
+
+-- Stable name for this nvim's agent; herdr clears the name when the agent exits.
+local function agent_name()
+  return "agent-" .. SELF:gsub("[^%w]", "_"):lower()
+end
+
+local function agent_info()
+  local ok, json = herdr({ "agent", "get", agent_name() })
+  return ok and json and vim.tbl_get(json, "result", "agent") or nil
+end
+
+local function forget()
+  pane_id, last_kind = nil, nil
+  if state_file then
+    os.remove(state_file)
+  end
+end
+
+local function remember()
+  local info = pane_info(pane_id)
+  if not (state_file and info) then
+    return
+  end
+  vim.fn.mkdir(vim.fn.fnamemodify(state_file, ":h"), "p")
+  vim.fn.writefile(
+    { vim.json.encode({ pane_id = pane_id, terminal_id = info.terminal_id, kind = last_kind }) },
+    state_file
+  )
+end
+
+-- Reattach to the saved agent by name; herdr clears the name when the agent exits.
+local function restore()
+  if not (state_file and vim.uv.fs_stat(state_file)) then
+    return
+  end
+  local ok, saved = pcall(vim.json.decode, table.concat(vim.fn.readfile(state_file), "\n"))
+  local info = ok and type(saved) == "table" and agent_info() or nil
+  if info then
+    pane_id, last_kind = info.pane_id, saved.kind
+  else
+    forget()
+  end
+end
+
+-- `agent start` runs the agent in the shell; herdr clears the name when it exits, so a live name means a live agent.
+local function alive()
+  if not pane_id then
+    restore()
+  end
+  if not pane_id then
+    return false
+  end
+  if agent_info() then
+    return true
+  end
+  -- agent gone (or herdr errored): close best-effort so a live pane is never orphaned, then reset
+  herdr({ "pane", "close", pane_id })
+  forget()
+  return false
+end
+
+local function pick_kind(cb)
+  if last_kind then
+    return cb(last_kind)
+  end
+  local extra = vim.tbl_keys(EXE)
+  table.sort(extra)
+  local installed = vim.tbl_filter(function(k)
+    return vim.fn.executable(EXE[k] or k) == 1
+  end, vim.list_extend(vim.deepcopy(KINDS), extra))
+  if #installed == 0 then
+    return utils.notify("No supported agent found in PATH", "ERROR", "Agent")
+  end
+  vim.ui.select(installed, { prompt = "Agent" }, function(kind)
+    if kind then
+      last_kind = kind
+      cb(kind)
+    end
+  end)
+end
+
+local function open(cb)
+  if vim.env.HERDR_ENV ~= "1" or not SELF then
+    return utils.notify("Not running inside herdr", "ERROR", "Agent")
+  end
+  if alive() then
+    return cb(pane_id)
+  end
+  pick_kind(function(kind)
+    local ok, json, err = herdr({
+      "pane",
+      "split",
+      SELF,
+      "--direction",
+      config.direction,
+      "--ratio",
+      tostring(1 - config.width),
+      "--cwd",
+      vim.fn.getcwd(),
+      "--no-focus",
+    })
+    if not ok or not json then
+      return utils.notify("split failed: " .. (err or ""), "ERROR", "Agent")
+    end
+    pane_id = vim.tbl_get(json, "result", "pane", "pane_id")
+    if not pane_id then
+      return utils.notify("split returned no pane id", "ERROR", "Agent")
+    end
+    -- direnv's `use flake` swallows the first char of input sent during startup (`opencode` ->
+    -- `pencode`), so wait for the prompt before typing into the shell.
+    local ready, _, werr =
+      herdr({ "pane", "wait-output", pane_id, "--match", PROMPT_MARKER, "--timeout", "15000" }, SHELL_READY_TIMEOUT)
+    if not ready then
+      herdr({ "pane", "close", pane_id })
+      pane_id = nil
+      utils.notify("shell not ready: " .. (werr or ""), "ERROR", "Agent")
+      return
+    end
+    local started, _, serr
+    if EXE[kind] then
+      -- no herdr --kind for this one: type it into the shell the old way
+      started, _, serr = herdr({ "pane", "run", pane_id, EXE[kind] .. "; exit" })
+    else
+      -- herdr-supported: agent start waits for the agent to be detected
+      started, _, serr =
+        herdr({ "agent", "start", agent_name(), "--kind", kind, "--pane", pane_id }, AGENT_START_TIMEOUT)
+    end
+    if not started then
+      -- don't leave a dead pane behind that alive() would treat as the agent
+      herdr({ "pane", "close", pane_id })
+      pane_id = nil
+      utils.notify("agent start failed: " .. (serr or ""), "ERROR", "Agent")
+      return
+    end
+    remember()
+    cb(pane_id, true)
+  end)
+end
+
+local function focus_agent()
+  if pane_id then
+    herdr({ "pane", "focus", "--pane", SELF, "--direction", config.direction })
+  end
+end
+
+local function focus()
+  open(focus_agent)
+end
+
+local function send(text)
+  open(function(id, fresh)
+    local function go()
+      herdr({ "pane", "send-text", id, text })
+      focus_agent()
+    end
+    if fresh then
+      vim.defer_fn(go, STARTUP_DELAY)
+    else
+      go()
+    end
+  end)
+end
+
+local function relpath()
+  local name = vim.api.nvim_buf_get_name(0)
+  return name ~= "" and vim.fn.fnamemodify(name, ":.") or "[No Name]"
+end
+
+return {
+  "herdr-agent",
+  virtual = true,
+  keys = {
+    { utils.L("aa"), focus, desc = "Agent: Open/Focus" },
+    {
+      utils.L("as"),
+      function()
+        local mode = vim.fn.mode()
+        if not mode:match("^[vV\22]") then
+          return send(("@%s:%d "):format(relpath(), vim.fn.line(".")))
+        end
+        local a, b = vim.fn.line("v"), vim.fn.line(".")
+        local s, e = math.min(a, b), math.max(a, b)
+        vim.api.nvim_feedkeys(vim.keycode("<esc>"), "nx", false)
+        local ft = vim.bo.filetype ~= "" and vim.bo.filetype or "txt"
+        local lines = vim.api.nvim_buf_get_lines(0, s - 1, math.min(e, s + PREVIEW_LINES - 1), false)
+        if e - s + 1 > PREVIEW_LINES then
+          lines[#lines + 1] = "..."
+        end
+        local range = s == e and ("L:%d"):format(s) or ("L:%d - L:%d"):format(s, e)
+        send(("@%s %s\n```%s\n%s\n```\n"):format(relpath(), range, ft, table.concat(lines, "\n")))
+      end,
+      mode = { "x", "n" },
+      desc = "Agent: Send Selection",
+    },
+    {
+      utils.L("af"),
+      function()
+        send("@" .. relpath() .. " ")
+      end,
+      desc = "Agent: Send File",
+    },
+    {
+      utils.L("ab"),
+      function()
+        local refs = {}
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          local name = vim.api.nvim_buf_get_name(buf)
+          if vim.bo[buf].buflisted and vim.bo[buf].buftype == "" and name ~= "" then
+            refs[#refs + 1] = "- @" .. vim.fn.fnamemodify(name, ":.")
+          end
+        end
+        if #refs == 0 then
+          return utils.notify("No buffers to send", "WARN", "Agent")
+        end
+        send(table.concat(refs, "\n") .. "\n")
+      end,
+      desc = "Agent: Send Buffers",
+    },
+    {
+      utils.L("ax"),
+      function()
+        if pane_id and not herdr({ "pane", "close", pane_id }) then
+          return utils.notify("close failed", "ERROR", "Agent")
+        end
+        forget()
+      end,
+      desc = "Agent: Close",
+    },
+  },
+}

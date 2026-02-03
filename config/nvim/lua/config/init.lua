@@ -1,0 +1,5 @@
+vim.g.start_time = vim.uv.hrtime()
+require("config.options")
+require("config.keymaps")
+require("config.mininvim")
+require("config.autocmds")

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "upgrade": {
+    "source": "cdn",
+    "interval": "168h",
+    "auto": false,
+    "notice": true
+  },
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "template": "@{{ .UserName }} ",
+          "foreground": "#E36464",
+          "type": "session",
+          "style": "plain"
+        },
+        {
+          "template": "to",
+          "foreground": "#86F2A5",
+          "type": "text",
+          "style": "plain"
+        },
+        {
+          "options": {
+            "style": "folder"
+          },
+          "template": " {{ .Path }} ",
+          "foreground": "#56B6C2",
+          "type": "path",
+          "style": "plain"
+        },
+        {
+          "options": {
+            "branch_icon": "\ue0a0",
+            "fetch_status": true,
+            "fetch_upstream_icon": true
+          },
+          "template": "<#ffffff>on</> {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }} ",
+          "foreground": "#D4AAFC",
+          "type": "git",
+          "style": "plain"
+        },
+        {
+          "options": {
+            "fetch_version": true
+          },
+          "template": "<#ffffff>via</> \ue718 {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }} ",
+          "foreground": "#98C379",
+          "type": "node",
+          "style": "plain"
+        },
+        {
+          "options": {
+            "fetch_version": true
+          },
+          "template": "<#ffffff>via</>  {{ .Full }} ",
+          "foreground": "#61AFEF",
+          "type": "lua",
+          "style": "plain"
+        },
+        {
+          "options": {
+            "fetch_version": true
+          },
+          "template": "<#ffffff>via</>  {{ .Full }} ",
+          "foreground": "#E5A06B",
+          "type": "rust",
+          "style": "plain"
+        },
+        {
+          "options": {
+            "fetch_version": true,
+            "fetch_virtual_env": true
+          },
+          "template": "<#ffffff>via</>  {{ .Full }}{{ if .Venv }} ({{ .Venv }}){{ end }} ",
+          "foreground": "#E5C07B",
+          "type": "python",
+          "style": "plain"
+        },
+        {
+          "template": "{{ if or (glob \"flake.nix\") (glob \"shell.nix\") (glob \"default.nix\") }}<#ffffff>via</>  nix {{ end }}",
+          "foreground": "#7EBAE4",
+          "type": "text",
+          "style": "plain"
+        },
+        {
+          "template": " \uf119",
+          "foreground": "#DCB977",
+          "type": "status",
+          "style": "plain"
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "template": "\udb80\udd1b ",
+          "foreground": "#86F2A5",
+          "type": "text",
+          "style": "plain"
+        }
+      ],
+      "newline": true
+    }
+  ],
+  "version": 4,
+  "final_space": true
+}

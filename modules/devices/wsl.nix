@@ -1,0 +1,40 @@
+{__findFile, inputs, ...}: {
+  den.aspects = {
+    wsl = {
+      includes = [
+        <core.git>
+        <core.agents>
+        <core.editor>
+        <core.services.sync.sops>
+        <core.services.sync.stylix>
+        <core.shell>
+        <core.locale>
+      ];
+
+      nixos = {user, ...}: {
+        imports = [inputs.nixos-wsl.nixosModules.default];
+        wsl = {
+          enable = true;
+          # otherwise WSL logs in as the module's default `nixos` user
+          defaultUser = user.userName;
+          # Windows PATH entries live on a 9P/DrvFs mount, so appending them to
+          # $PATH makes every command lookup (completions, prompt hooks, etc.)
+          # stat across that slow mount. Interop itself stays on; only PATH
+          # search is disabled, so .exe's must be invoked by absolute path.
+          interop.includePath = false;
+        };
+      };
+
+      homeManager = {pkgs, ...}: {
+        home.packages = [
+          (pkgs.writeShellScriptBin "wsl-open" ''
+            # explorer.exe reports a spurious non-zero exit even on success.
+            /mnt/c/Windows/explorer.exe "$1" 2>/dev/null
+            exit 0
+          '')
+        ];
+        home.sessionVariables.BROWSER = "wsl-open";
+      };
+    };
+  };
+}

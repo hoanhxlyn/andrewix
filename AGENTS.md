@@ -1,175 +1,202 @@
-# AGENTS.md - NixOS Dotfiles Configuration
+# AGENTS.md — Andrewix NixOS Config
 
-This repository contains Andrew's NixOS and home-manager dotfiles configuration using the [nvf](https://github.com/NotAShelf/nvf) Neovim flake and home-manager.
+## Quick Commands
 
-## Build Commands
+Use Justfile shortcuts (preferred). Default host = `hostname -s` (auto-detected).
 
-### System Updates
 ```bash
-# Update flake inputs (run from ~/dotconfigs)
-nix flake update --flake ~/dotconfigs
-
-# Switch NixOS configuration (Apply changes)
-nh os switch ~/dotconfigs
-
-# Clean all nix garbage
-nh clean all
-
-# Optimise nix store
-nix store optimise
+just fmt          # alejandra .
+just lint         # statix check + deadnix --no-underscore --fail
+just build <h>    # nix run .#<h> -- build
+just boot <h>     # boot new build at next restart
+just switch <h>   # nix run .#<h> -- switch
+just test <h>     # nix run .#<h> -- test (needs sudo)
+just vm <h>       # build + run test VM, host store, disk untouched
+just update       # nix run .#write-flake && nix flake update (no commit)
+just search <pkg> # nps -e <pkg> in fzf
+just list-gen     # nixos-rebuild list-generations
+just gc           # wipe old system gens + store gc
+just clean-up     # user+system GC, keep 7d (sudo)
 ```
 
-### Search and Development
-```bash
-# Search for packages (replaces nix search)
-nh search <package-name>
+Hosts: `asus-vivo14`, `asus-rog-gl552vx`, `msi-gf63`, `home-pc`, `home-wsl`, `work-wsl`. Only non-WSL
+hosts are installable (WSL hosts have no disk layout).
 
-# Enter development shell
-nix develop
+### No Justfile?
+
+```bash
+alejandra . && statix check && deadnix --no-underscore --fail
+nix flake check .
+nix run .#<host> -- build|boot|switch|test
+nix run .#write-flake    # regenerate flake.nix
+nix flake update         # no commit
 ```
 
-### Flake Commands
+## Validation Pipeline (run before commit)
+
 ```bash
-# Show flake outputs
-nix flake show
-
-# Lock flake inputs
-nix flake lock
-
-# Check flake for errors
-nix flake check
+just fmt && just lint && just test <host>
 ```
 
-## Code Style Guidelines
+`just test` needs sudo and validates the running system. Build with `just build <host>` to catch eval errors without
+sudo (slower than the deprecated `just check`, but accurate).
 
-### Nix Formatting
-- Use **nixfmt** for all `.nix` files (configured as default formatter in neovim)
-- Indentation: 2 spaces
-- Attribute sets: prefer concise form when attributes fit on one line
-- Let-bindings: use `let ... in` pattern with proper spacing
+## Architecture
 
-### Nix Conventions
-- Always use `{ pkgs, ... }@inputs` or `{ config, pkgs, ... }@inputs` pattern for module inputs
-- Import modules using `./relative/path.nix` syntax
-- Use `inherit` for passing arguments to reduce repetition
-- Keep configuration options organized by subsystem (programs, services, etc.)
-- Use `pkgs.lib.nixosSystem` for NixOS module definitions
+NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto module discovery via `vic/import-tree`.
 
-### Module Structure
-- NixOS modules: `nixos/*.nix` - system-level configuration
-- Home-manager modules: `modules/*.nix` - user-level configuration
-- Each module should be self-contained with clear imports
-- Use descriptive variable names (`hostName`, `username`, `stateVersion`)
+| Path                    | Purpose                                           |
+| ----------------------- | ------------------------------------------------- |
+| `modules/core/`         | All aspects (NixOS + Home Manager)                |
+| `modules/hosts.nix`     | Host definitions (6 hosts) + host→variant wiring  |
+| `modules/schema.nix`    | Host facts → `den.schema.host` (`_lib/facts.nix`) |
+| `modules/devices/`      | Variant aspects (`workstation`, `server`, `wsl`)  |
+| `modules/defaults.nix`  | Default includes + dev shell                      |
+| `modules/dendritic.nix` | Framework bootstrapping                           |
+| `modules/_settings.nix` | Shared host settings (path-imported by `mkHost`)  |
+| `modules/_lib/`         | Host builder (`mk-host.nix`, `facts.nix`)         |
+| `secrets/`              | sops-nix encrypted secrets                        |
+| `config/`               | Non-Nix app configs (symlinked into `~/.config`)  |
+| `flake.nix`             | **Auto-generated. DO NOT EDIT.**                  |
 
-### Neovim Configuration (nvf)
-- Use `programs.nvf.settings` for Neovim configuration
-- Follow the nested structure: `vim.*`, `vim.languages.*`, `vim.mini.*`
-- Keymaps: use `vim.keymaps` array with mode, action, and desc fields
-- Use Lua for complex configurations via `__raw` attribute
+Host builder: `mkHost` in `modules/_lib/mk-host.nix` composes `_settings.nix` with per-host data and the
+workstation/server/wsl variant. Layout translates flat monitor attrs into niri's nested shape and sets the variant flag
+(`server.enable` for servers, `wsl.enable` for WSL hosts).
 
-### Lua Files
-- Store in `utils/` directory
-- Follow Lua conventions: lowercase with underscores for variables
-- Use `require()` for module imports
+**Host facts** (set in `modules/hosts.nix`). The single definition is `modules/_lib/facts.nix`; `modules/schema.nix`
+feeds it to `den.schema.host` (types, defaults), `mkHost` rejects unknown fact names against it, and cross-fact checks
+are `assertions` in `modules/core/hardware/default.nix`:
 
-### JSON Files
-- Configuration files like `andrew.omp.json` should be properly formatted
-- Use consistent indentation (2 spaces)
+| Fact              | Values / meaning                                                                 |
+| ----------------- | -------------------------------------------------------------------------------- |
+| `formFactor`      | `desktop` (default) \| `laptop`; derives `host.isLaptop`                         |
+| `cpu`             | `intel` (default) \| `amd`; kvm module + microcode in `core.hardware.bootable`   |
+| `gpu`             | list of `intel` \| `nvidia`; both = hybrid                                       |
+| `nvidiaPrime`     | `{intelBusId, nvidiaBusId}`; hybrid only; `null` = PRIME off + build warning     |
+| `bootLoader`      | `systemd-boot` (default) \| `grub` \| `limine`                                       |
+| `storage`         | `{layout = "single" \| "multi" \| "dual"; swap = "24G";}`; `multi` = nixos/works/entertainment, `dual` = root + data disk |
+| `chargeThreshold` | `{start, stop, msiEc}` battery limits (laptop only); `null` = unmanaged           |
+| `enableGaming`    | include `<core.gaming>`                                                          |
 
-## Error Handling
+Aspects are chosen from facts, **never from a hostname**: hardware aspects in `modules/core/hardware/default.nix`
+(`power-manager`, `intel-vaapi`, `nvidia`), gaming in `modules/devices/workstation.nix`. The variant per host is
+generated in `hosts.nix` via `provides.to-users`.
 
-### Nix Module Errors
-- Use `lib.asserts` for configuration validation
-- Check for `enable = true` before setting related options
-- Use `mkIf` or `mkDefault` for conditional configuration
+**Adding a device:** add one `mkHost` entry in `hosts.nix` with its facts and monitors (keyed by connector name), and
+nothing else: `install.fish` reads `flake.installableHosts` (all non-WSL hosts). No other file should mention the
+hostname.
 
-### Home Manager
-- Ensure proper imports to avoid "unknown option" errors
-- Follow module structure: `{ config, pkgs, ... }@inputs: { ... }`
+## Conventions
 
-## Import Patterns
+- **Namespace:** `core.<name>` = all aspects (NixOS + Home Manager).
+- **Composition:** `den.aspects.<name>.includes` with angle-bracket imports (`<core/sound>`, `<core/editor/nvf>`,
+  `<workstation>`). Compose with `includes`, **not** `imports`, inside this repo.
+- **No dead top-level args.** If a module needs nothing from the module system, write a bare attrset
+  (`{ core.x = ...; }`). Only take args you actually use (`{__findFile, ...}:`, `{lib, inputs, self, ...}:`). Same for
+  an aspect's `nixos`/`homeManager` fn — omit the fn wrapper when no args are used.
+- **Files:** `kebab-case.nix`, **options:** `camelCase`.
+- **No relative-path imports.** Take `{self, ...}` and use `import "${self}/modules/_lib/foo.nix"`. **Exception:**
+  `hosts.nix`, `schema.nix` and `_lib/mk-host.nix` run while the flake outputs are being computed, so `${self}`
+  there is infinite recursion — those three use relative imports.
+- **Underscore dirs = not aspects.** `_nvf/`, `_nwm/`, `_lib/` are path-imported, **not** auto-discovered. Split a big
+  aspect into `_<name>/*.nix` sub-configs and `import "${self}/..."` them from the aspect file (see
+  `modules/core/editor/nwm.nix`).
+- **`config/<tool>/`:** non-Nix app configs, one subfolder per tool (not per format). Symlink via
+  `home.file."<dest>".source = "${self}/config/<tool>/<file>"` (see `modules/core/editor/cursor.nix`).
+- **Booleans:** prefix with `enable`/`disable`. **Override defaults:** `lib.mkDefault`.
+- **Formatter:** `alejandra`, 2-space indent, ≤100 chars.
+
+### Module patterns
+
+Simple aspect:
 
 ```nix
-# Standard module import pattern
-{ config, pkgs, ... }@inputs:
 {
-  imports = [
-    ./relative/module.nix
-  ];
-
-  programs.example = {
-    enable = true;
-    settings = {
-      # configuration here
-    };
+  core.sound.nixos = {
+    services.pipewire.enable = true;
   };
 }
 ```
 
-## Naming Conventions
+With includes + nixos + homeManager:
 
-- **Variables**: `camelCase` (e.g., `hostName`, `stateVersion`)
-- **Modules**: `kebab-case.nix` (e.g., `shell.nix`, `git.nix`)
-- **Functions**: `camelCase` or `snake_case` depending on context
-- **Booleans**: `enable`, `disable` pattern (e.g., `enable = true`)
-
-## Key Configuration Patterns
-
-### NixOS Configuration
 ```nix
-{
-  imports = [
-    ./hardware-configuration.nix
-    ./programs.nix
-    # ... other modules
-  ];
-  boot.loader.systemd-boot.enable = true;
-  networking.hostName = hostName;
-  system.stateVersion = stateVersion;
-}
-```
-
-### Home Manager Modules
-```nix
-{ pkgs, ... }@inputs:
-{
-  home = {
-    inherit username stateVersion;
-    homeDirectory = "/home/${username}";
+{__findFile, ...}: {
+  core.aspect = {
+    includes = [ (<den/dep> ["pkg-name"]) ];
+    nixos = {config, pkgs, ...}: { /* NixOS */ };
+    homeManager = {pkgs, ...}: { /* Home Manager */ };
   };
-  programs.example.enable = true;
 }
 ```
 
-## Formatting Tools
+Flake input (declared from the aspect that needs it):
 
-- **Nix**: `nixfmt` (run via conform-nvim or CLI: `nixfmt file.nix`)
-- **TypeScript/JavaScript**: `biome` (configured in neovim)
-- **Lua**: Built-in Lua formatter or `lua-format`
-
-## Repository Structure
-
-```
-~/dotconfigs/
-├── flake.nix              # Main flake definition
-├── home.nix               # Home-manager entry point
-├── nixos/                 # NixOS system modules
-│   ├── configuration.nix  # Main system config
-│   ├── i18n.nix           # Locale and Input Method
-│   ├── programs.nix       # System programs
-│   └── ...
-├── modules/               # Home-manager modules
-│   ├── shell.nix          # Fish shell config
-│   ├── git.nix            # Git config
-│   └── ...
-├── utils/                 # Lua utilities
-└── andrew.omp.json        # Oh My Posh theme
+```nix
+{inputs, ...}: {
+  flake-file.inputs.foo = {
+    url = "github:owner/repo";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+}
 ```
 
-## Important Notes
+## Adding new aspects
 
-- State version: `25.11` - do not change unless migrating
-- Hostname: `andrewix` - used in flake.nix nixosConfigurations
-- Username: `andrew` - used throughout configuration
-- The flake uses `nixd` for Nix LSP and `nixfmt` for formatting
-- MCP servers (serena, context7, tavily) are configured in `modules/agents.nix`
+`git add` the new file **before** building — nix flakes only see git-tracked files. A staged but uncommitted new aspect
+produces: `error: Namespace 'core' has no aspect 'new-aspect'`.
+
+```bash
+git add modules/core/new-aspect.nix
+just build <host>
+```
+
+After adding inputs or editing `flake-file.*`, regenerate:
+
+```bash
+nix run .#write-flake    # rewrites flake.nix
+```
+
+## Hard rules
+
+1. **NEVER edit `flake.nix`** — use `nix run .#write-flake`.
+2. **NEVER change `stateVersion`** (currently `26.05`, set in `modules/core/system/nix-setting.nix`).
+3. **NEVER commit without** `just fmt && just lint` (add `just test <host>` when feasible).
+4. **User: `andrew`, system: `x86_64-linux`.**
+5. **No unit tests** — validate via `just build` + `just test <host>`.
+6. **Tools installed via Nix** (`modules/core/`) — no pre-commit hooks.
+7. **Research unfamiliar NixOS/HM options** with `context7` + `websearch` before guessing.
+8. **No system Python** — machine has no `python`/`python3`. Run Python via `uv run` (e.g. `uv run python script.py`,
+   `uv run --with <pkg> ...`).
+
+## Operational gotchas
+
+- **Disko owns the layout:** `disko.enableConfig = true` in `modules/core/hardware/disko.nix` — disko provides
+  `fileSystems`/`swapDevices`/`boot.resumeDevice` (xfs root, dedicated swap partition, hibernate resume) for all
+  physical hosts; layout and swap size come from the `storage` fact. The per-host `hosts/<host>/_nixos/` configs are
+  gone; hardware boot bits (initrd `vmd`/`ahci`/`nvme`, kvm, microcode) live in `modules/core/hardware/bootable.nix`,
+  shared by the Intel workstations; the loader comes from the `bootLoader` fact. Target disks are picked at install time
+  by `install.fish`, so the `/dev/nvme0n1` in `disko.nix` is only a default.
+- **Hybrid GPU (`msi-gf63`, GTX 1650 Mobile):** `nvidiaPrime` bus IDs are filled in from `lspci -D -d ::03xx` (see
+  `hosts.nix`); a hybrid host without them gets PRIME off and a build warning. niri runs on the Intel iGPU; games use the
+  nvidia dGPU via PRIME offload (`nvidia-offload <cmd>`, e.g. as a Steam launch option). PRIME sync is X11-only and is
+  not used. Verify connector names with `niri msg outputs`; HDMI ports wired to the nvidia GPU may behave differently.
+- **Charge limit:** `core.hardware.power-manager` sets TLP thresholds and the asus_wmi workaround only when the host
+  declares `chargeThreshold` (X1405VA, `asus-vivo14`). Hosts whose firmware is missing from the in-tree msi-ec
+  allowlist (GF63 Thin 10SC, `msi-gf63`) set `msiEc = true`: the aspect then pulls the out-of-tree
+  `boot.kernelPackages.msi-ec` and writes the threshold to `BAT1/charge_control_end_threshold`.
+- **First-boot password:** the installer (`install.fish`) prompts for it and sets it with `nixos-enter` before you
+  reboot; no default password ships in the repo. A known `admin123` survives only inside `virtualisation.vmVariant`
+  (`modules/core/hardware/disko.nix`) for `just vm`. Machines installed before this still hold the old bootstrap
+  password — check with `sudo passwd -S andrew` and run `passwd` if it shows `P`.
+- **WSL PATH:** `modules/devices/wsl.nix` disables WSL interop `$PATH` because Windows PATH lives on a slow 9P/DrvFs
+  mount. Invoke `.exe`s by absolute path; `wsl-open` wrapper handles explorer.exe's spurious non-zero exit.
+- **Secrets:** only on `asus-vivo14` / `asus-rog-gl552vx` / `home-pc`. Decrypt with the shared age key
+  at `~/.config/sops-nix/keys.txt` on each host. Edit via `sops secrets/secrets.yaml`; declare new secrets in
+  `modules/core/services/sync/sops.nix` under `sops.secrets`.
+- **GC is manual:** there is no `nix.gc` timer; run `just gc` (wipe old system generations + store gc, needs sudo).
+
+## Dev shell
+
+`.envrc` runs `use flake` (direnv). Auto-loads via `.direnv/`. The dev shell (`just`-style `nix develop`) provides:
+`gh`, `alejandra`, `statix`, `deadnix`, `just`.

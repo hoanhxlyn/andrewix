@@ -1,0 +1,9 @@
+{
+  core.cli.tui = {
+    homeManager = {pkgs, ...}: {
+      home.packages = with pkgs; [bruno gdu];
+      # xdg.configFile."YouTube Music/config.json".force = true;
+      # xdg.configFile."YouTube Music/config.json".source = "${self}/config/youtube-music/config.json";
+    };
+  };
+}

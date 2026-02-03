@@ -1,0 +1,78 @@
+# Shared host settings (DE-style sections). Per-host overrides go through mkHost; hardware facts
+# live in facts.nix.
+{
+  terminal = {
+    padding = 2;
+    mux = "herdr";
+  };
+  locale = {
+    lang = "en_US.UTF-8";
+    # numbers, money, paper, address, name, phone, measurement, identification
+    # vi_VN (no .UTF-8): glibc's SUPPORTED has `vi_VN/UTF-8`, and NixOS appends the charset.
+    formats = "vi_VN";
+    time = "en_US.UTF-8";
+  };
+  # Default applications
+  defaults = {
+    browser = "zen";
+    terminal = "kitty";
+    shell = "fish";
+  };
+  profiles.andrew = {};
+  login = "ly";
+  input = {
+    keyboard = {
+      layout = "us";
+      repeatDelay = 250; # ms before repeat starts
+      repeatRate = 50; # keys per second
+    };
+    touchpad = {
+      tap = true;
+      naturalScroll = true;
+      disableWhileTyping = true;
+    };
+    mouse.accelProfile = "flat"; # flat | adaptive
+  };
+  accessibility = {
+    cursorSize = 24;
+    hideCursorWhenTyping = true;
+    animations = {
+      enable = true;
+      slowdown = 1.5; # >1 = slower
+    };
+  };
+  # Look & feel (pure data; packages stay in modules/core/services/sync/stylix.nix).
+  appearance = {
+    scheme = "gruvbox-dark"; # base16-schemes name
+    polarity = "dark"; # light | dark
+    font.size = 12; # pt; terminal/applications/desktop derive from it
+    opacity = 0.8; # 1.0 = opaque; <1 enables blur/transparent bg
+    wallpaper = {
+      # local (config/background/<path>) | gruvbox (AngelJumbo/gruvbox-wallpapers, <path> in repo)
+      # | remote ({url, hash} instead of path)
+      source = "gruvbox";
+      path = "wallpapers/brands/gruvbox-nix.png";
+      scaling = "center"; # fill | center | stretch | fit
+    };
+    toast = {
+      width = 400;
+      border = {
+        radius = 12;
+        size = 2;
+      };
+      layer = "top";
+      position = "top-center";
+      timeout = 3000;
+      history = 10;
+      offset = {
+        x = 0;
+        # ×2 via terminal.padding = 40px: clears the 32px top waybar with an 8px gap.
+        y = 25;
+      };
+      padding = {
+        x = 5;
+        y = 8;
+      };
+    };
+  };
+}

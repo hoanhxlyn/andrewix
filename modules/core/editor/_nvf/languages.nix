@@ -1,0 +1,60 @@
+{
+  enableFormat = true;
+  enableTreesitter = true;
+  enableDAP = false;
+  enableExtraDiagnostics = true;
+  bash.enable = true;
+  css.enable = true;
+  css.format.type = [
+    "biome"
+    "prettier"
+  ];
+  scss.enable = true;
+  scss.format.type = ["prettier"];
+  html.enable = true;
+  html.lsp.servers = ["superhtml"];
+  jq.enable = true;
+  json.enable = true;
+  just.enable = true;
+  lua = {
+    enable = true;
+    extraDiagnostics.types = ["selene"];
+  };
+  markdown = {
+    enable = true;
+    extensions.markview-nvim = {
+      enable = true;
+      setupOpts = {
+        experimental = {
+          fancy_comments = false;
+          prefer_nvim = true;
+          linewise_ignore_org_indent = true;
+        };
+      };
+    };
+    lsp.servers = [
+      "markdown-oxide"
+    ];
+    format.type = [
+      "prettier"
+    ];
+  };
+  nix.enable = true;
+  toml.enable = true;
+  typescript = {
+    enable = true;
+    extensions.ts-error-translator.enable = true;
+    lsp.servers = [
+      "typescript-go"
+    ];
+    extraDiagnostics.types = [
+      "eslint_d"
+    ];
+    format.type = [
+      "prettier"
+    ];
+  };
+  yaml.enable = true;
+  fish.enable = true;
+  xml.enable = true;
+}

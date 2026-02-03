@@ -1,0 +1,3 @@
+{
+  nvim-scrollbar.enable = true;
+}

@@ -1,0 +1,7 @@
+result
+.claude/*
+.direnv/
+*.qcow2
+/.*code/*
+!/.*code/skills
+!/.*code/taste

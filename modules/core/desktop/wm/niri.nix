@@ -1,0 +1,470 @@
+{
+  inputs,
+  __findFile,
+  ...
+}: {
+  flake-file.inputs.niri.url = "github:epireyn/niri-flake";
+
+  core.desktop.wm.niri = {host, ...}: {
+    includes = [
+      <core.desktop.statusbar.waybar>
+      <core.desktop.notification.mako>
+      <core.desktop.menu-launcher.fuzzel>
+      <core.desktop.misc>
+      <core.desktop.screenshot>
+    ];
+
+    nixos = {pkgs, ...}: let
+      record-screen = pkgs.writeShellScriptBin "record-screen" ''
+        wl-screenrec -f ~/Videos/recording_$(date +%Y%m%d_%H%M%S).mp4
+      '';
+    in {
+      nixpkgs.overlays = [inputs.niri.overlays.niri];
+      nix.settings = {
+        substituters = ["https://niri-epireyn.cachix.org"];
+        trusted-public-keys = ["niri-epireyn.cachix.org-1:tlVyFN7CtsDT+ZcLPS+ekFWeT1X6X4OqvWqbBMyIzFA="];
+      };
+      environment.systemPackages = with pkgs; [
+        acpilight
+        wl-screenrec
+        xwayland-satellite
+        networkmanagerapplet
+        bluetui
+        record-screen
+      ];
+      programs.niri = {
+        enable = true;
+        useNautilus = false;
+        package = pkgs.niri-stable;
+      };
+      security.polkit.enable = true;
+      services.playerctld.enable = true;
+    };
+
+    homeManager = {
+      lib,
+      config,
+      pkgs,
+      ...
+    }: let
+      action = config.lib.niri.actions;
+      # noctalia = cmd: ["noctalia-shell" "ipc" "call"] ++ (lib.splitString " " cmd);
+      terminalName = host.defaults.terminal;
+      browserBin =
+        {
+          zen = "zen-beta";
+          helium = "helium";
+          firefox = "firefox";
+        }.${
+          host.defaults.browser
+        };
+      # Generated binds (shrinks repetitive entries)
+      arrowFocus = builtins.listToAttrs (map (dir: {
+        name = "Mod+${dir}";
+        value = {
+          hotkey-overlay.hidden = true;
+          action =
+            {
+              Left = action.focus-column-left;
+              Down = action.focus-window-or-workspace-down;
+              Up = action.focus-window-or-workspace-up;
+              Right = action.focus-column-right;
+            }.${
+              dir
+            };
+        };
+      }) ["Left" "Down" "Up" "Right"]);
+      arrowMonitor = builtins.listToAttrs (map (dir: {
+        name = "Mod+Shift+${dir}";
+        value = {
+          hotkey-overlay.hidden = true;
+          action =
+            {
+              Left = action.focus-monitor-left;
+              Right = action.focus-monitor-right;
+            }.${
+              dir
+            };
+        };
+      }) ["Left" "Right"]);
+      wsFocus = builtins.listToAttrs (map (n: {
+        name = "Mod+${toString n}";
+        value = {
+          hotkey-overlay.hidden = true;
+          action.focus-workspace = n;
+        };
+      }) [1 2 3 4 5]);
+      wsMove = builtins.listToAttrs (map (n: {
+        name = "Mod+Ctrl+${toString n}";
+        value = {
+          hotkey-overlay.hidden = true;
+          action.move-column-to-workspace = n;
+        };
+      }) [1 2 3 4 5]);
+      arrowMove = builtins.listToAttrs (map (dir: {
+        name = "Mod+Ctrl+${dir}";
+        value = {
+          hotkey-overlay.hidden = true;
+          action =
+            {
+              Left = action.move-column-left;
+              Down = action.move-window-down-or-to-workspace-down;
+              Up = action.move-window-up-or-to-workspace-up;
+              Right = action.move-column-right;
+            }.${
+              dir
+            };
+        };
+      }) ["Left" "Down" "Up" "Right"]);
+    in {
+      imports = [inputs.niri.homeModules.config inputs.niri.homeModules.stylix];
+      nixpkgs.overlays = [inputs.niri.overlays.niri];
+      programs.niri = {
+        package = pkgs.niri-stable;
+        settings = {
+          input = {
+            keyboard = {
+              repeat-rate = host.input.keyboard.repeatRate;
+              repeat-delay = host.input.keyboard.repeatDelay;
+              track-layout = "global";
+            };
+            touchpad = {
+              inherit (host.input.touchpad) tap;
+              natural-scroll = host.input.touchpad.naturalScroll;
+              dwt = host.input.touchpad.disableWhileTyping;
+            };
+            mouse = {
+              accel-profile = host.input.mouse.accelProfile;
+            };
+            focus-follows-mouse.max-scroll-amount = "0%";
+            workspace-auto-back-and-forth = true;
+          };
+
+          cursor.hide-when-typing = host.accessibility.hideCursorWhenTyping;
+
+          animations = {
+            inherit (host.accessibility.animations) enable slowdown;
+          };
+
+          outputs = host.monitors or {};
+
+          layout = {
+            gaps = 10;
+            center-focused-column = "never";
+            default-column-width = {proportion = 0.7;};
+            preset-column-widths = [
+              {proportion = 0.7;}
+              {proportion = 0.5;}
+            ];
+            focus-ring = {
+              enable = true;
+              width = 3;
+            };
+            border = {
+              enable = false;
+              width = 3;
+            };
+          };
+          prefer-no-csd = true;
+
+          spawn-at-startup = [
+            {command = ["swaybg" "-i" config.stylix.image];}
+            {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];}
+            {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
+          ];
+
+          hotkey-overlay = {
+            skip-at-startup = true;
+            hide-not-bound = true;
+          };
+
+          screenshot-path = "~/Pictures/Screenshots/Screenshot_%Y-%m-%d_%H-%M-%S.png";
+
+          environment.QT_QPA_PLATFORM = "wayland;xcb";
+          environment.GTK_USE_PORTAL = "1";
+
+          switch-events = lib.mkIf (host.isLaptop or false) {
+            lid-close.action.spawn = ["${pkgs.niri-stable}/bin/niri" "msg" "action" "power-off-monitors"];
+          };
+
+          binds = with action;
+            lib.mkMerge [
+              {
+                # App launchers
+                "Mod+Space" = {
+                  hotkey-overlay.title = "Launcher";
+                  action.spawn = ["fuzzel"];
+                };
+                "Mod+T" = {
+                  hotkey-overlay.title = "Terminal";
+                  action.spawn = [terminalName];
+                };
+                # "Mod+E" = {
+                #   hotkey-overlay.title = "Yazi Files";
+                #   action.spawn = [terminalName "-e" "yazi"];
+                # };
+                "Mod+B" = {
+                  hotkey-overlay.title = "Browser";
+                  action.spawn = [browserBin];
+                };
+                "Mod+C" = {
+                  hotkey-overlay.title = "Calendar";
+                  action.spawn = ["waycal"];
+                };
+                "Mod+N" = {
+                  hotkey-overlay.title = "Network";
+                  action.spawn = ["nm-connection-editor"];
+                };
+                "Mod+Ctrl+B" = {
+                  hotkey-overlay.title = "Bluetooth";
+                  action.spawn = [terminalName "-e" "bluetui"];
+                };
+                "Mod+Y" = {
+                  hotkey-overlay.title = "Clipboard";
+                  action.spawn = ["fuzzel-clipboard"];
+                };
+                "Mod+Ctrl+Space" = {
+                  hotkey-overlay.title = "Hub";
+                  action.spawn = ["fuzzel-hub"];
+                };
+                "Mod+A" = {
+                  hotkey-overlay.title = "Audio";
+                  action.spawn = ["fuzzel-audio"];
+                };
+                "Mod+E" = {
+                  hotkey-overlay.title = "Emoji";
+                  action.spawn = ["fuzzel-emoji"];
+                };
+                "Mod+X" = {
+                  hotkey-overlay.title = "Power";
+                  action.spawn = ["fuzzel-power"];
+                };
+                "Mod+Ctrl+D" = {
+                  hotkey-overlay.title = "Dismiss Notification";
+                  action.spawn = ["makoctl" "dismiss"];
+                };
+                "Mod+Ctrl+N" = {
+                  hotkey-overlay.title = "Toggle DND";
+                  action.spawn = ["dnd-toggle"];
+                };
+                # Window management
+                "Mod+Q" = {
+                  hotkey-overlay.title = "Close window";
+                  action = close-window;
+                };
+                "Mod+F" = {
+                  hotkey-overlay.title = "Maximize column";
+                  action = maximize-column;
+                };
+                "Mod+W" = {
+                  hotkey-overlay.title = "Toggle column tabbed";
+                  action = toggle-column-tabbed-display;
+                };
+                "Mod+Slash".action = show-hotkey-overlay;
+                "Mod+O" = {
+                  repeat = false;
+                  hotkey-overlay.title = "Overview";
+                  action = toggle-overview;
+                };
+                "Mod+H".action = focus-column-left;
+                "Mod+J".action = focus-window-or-workspace-down;
+                "Mod+K".action = focus-window-or-workspace-up;
+                "Mod+L".action = focus-column-right;
+                "Mod+Comma".action = consume-or-expel-window-left;
+                "Mod+Period".action = consume-or-expel-window-right;
+                "Mod+R".action = switch-preset-column-width;
+                "Mod+Shift+R".action = switch-preset-window-height;
+                "Mod+Ctrl+R".action = reset-window-height;
+                "Mod+Ctrl+F".action = expand-column-to-available-width;
+                "Mod+Ctrl+C".action = center-visible-columns;
+                "Mod+V" = {
+                  hotkey-overlay.title = "Toggle floating";
+                  action = toggle-window-floating;
+                };
+                "Mod+Shift+V".action = switch-focus-between-floating-and-tiling;
+
+                # Move column (Ctrl + hjkl)
+                "Mod+Shift+H".action = focus-monitor-left;
+                "Mod+Shift+L".action = focus-monitor-right;
+                "Shift+Alt+H".action = move-column-to-monitor-left;
+                "Shift+Alt+L".action = move-column-to-monitor-right;
+                "Shift+Alt+Left".action = move-column-to-monitor-left;
+                "Shift+Alt+Right".action = move-column-to-monitor-right;
+                "Mod+Ctrl+H".action = move-column-left;
+                "Mod+Ctrl+J".action = move-window-down-or-to-workspace-down;
+                "Mod+Ctrl+K".action = move-window-up-or-to-workspace-up;
+                "Mod+Ctrl+L".action = move-column-right;
+
+                # Column resize (hidden — fine tuning)
+                "Mod+Minus" = {
+                  hotkey-overlay.hidden = true;
+                  action.set-column-width = "-10%";
+                };
+                "Mod+Equal" = {
+                  hotkey-overlay.hidden = true;
+                  action.set-column-width = "+10%";
+                };
+                "Mod+Shift+Minus" = {
+                  hotkey-overlay.hidden = true;
+                  action.set-window-height = "-10%";
+                };
+                "Mod+Shift+Equal" = {
+                  hotkey-overlay.hidden = true;
+                  action.set-window-height = "+10%";
+                };
+
+                # Screenshots & Recording
+                "Mod+S" = {
+                  hotkey-overlay.title = "Screenshot annotate";
+                  action.spawn = ["screenshot-annotate"];
+                };
+                "Mod+Shift+S" = {
+                  hotkey-overlay.title = "Screenshot fullscreen";
+                  action.spawn = ["screenshot-fullscreen"];
+                };
+                "Mod+Alt+S" = {
+                  hotkey-overlay.title = "Record screen";
+                  action.spawn = ["record-toggle"];
+                };
+
+                # Audio
+                "XF86AudioRaiseVolume" = {
+                  allow-when-locked = true;
+                  action.spawn = ["soundctl" "up"];
+                };
+                "XF86AudioLowerVolume" = {
+                  allow-when-locked = true;
+                  action.spawn = ["soundctl" "down"];
+                };
+                "XF86AudioMute" = {
+                  allow-when-locked = true;
+                  action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
+                };
+                "XF86AudioMicMute" = {
+                  allow-when-locked = true;
+                  action.spawn = ["wpctl" "set-mute" "@DEFAULT_SOURCE@" "toggle"];
+                };
+                "Mod+M" = {
+                  hotkey-overlay.title = "Mute";
+                  allow-when-locked = true;
+                  action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
+                };
+                "Mod+Page_Up" = {
+                  hotkey-overlay.title = "Volume up";
+                  allow-when-locked = true;
+                  action.spawn = ["soundctl" "up"];
+                };
+                "Mod+Page_Down" = {
+                  hotkey-overlay.title = "Volume down";
+                  allow-when-locked = true;
+                  action.spawn = ["soundctl" "down"];
+                };
+
+                # Media
+                "XF86AudioPlay" = {
+                  allow-when-locked = true;
+                  action.spawn = ["playerctl" "play-pause"];
+                };
+                "XF86AudioStop" = {
+                  allow-when-locked = true;
+                  action.spawn = ["playerctl" "stop"];
+                };
+                "XF86AudioPrev" = {
+                  allow-when-locked = true;
+                  action.spawn = ["playerctl" "previous"];
+                };
+                "XF86AudioNext" = {
+                  allow-when-locked = true;
+                  action.spawn = ["playerctl" "next"];
+                };
+
+                # Brightness
+                "XF86MonBrightnessUp" = {
+                  allow-when-locked = true;
+                  action.spawn = ["xbacklight" "-inc" "5"];
+                };
+                "XF86MonBrightnessDown" = {
+                  allow-when-locked = true;
+                  action.spawn = ["xbacklight" "-dec" "5"];
+                };
+              }
+              arrowFocus
+              arrowMonitor
+              wsFocus
+              wsMove
+              arrowMove
+              (lib.mkIf (host.isLaptop or false) {
+                "Mod+G" = {
+                  hotkey-overlay.title = "Battery";
+                  action.spawn = ["fuzzel-battery"];
+                };
+              })
+            ];
+          layer-rules = [
+            {
+              matches = [
+                {namespace = "^ironbar$";}
+                {namespace = "^waybar$";}
+              ];
+              background-effect.blur = true;
+            }
+          ];
+          window-rules = [
+            # Floatting windows
+            {
+              matches = [
+                {
+                  app-id = "firefox";
+                  title = "Picture-in-Picture";
+                }
+                {
+                  app-id = "zen*";
+                  title = "Picture-in-Picture";
+                }
+                {
+                  app-id = "helium";
+                  title = "Picture-in-Picture";
+                }
+              ];
+              open-floating = true;
+            }
+            # Terminals
+            {
+              matches = [
+                {app-id = "^Alacritty$";}
+                {app-id = "^com\\.mitchellh\\.ghostty$";}
+                {app-id = "kitty*";}
+                {app-id = "rio*";}
+                {app-id = "^org\\.wezfurlong\\.wezterm$";}
+              ];
+              background-effect.blur = true;
+              draw-border-with-background = false;
+            }
+            # Applications
+            {
+              matches = [
+                {app-id = "^cursor$";}
+                {app-id = "^helium$";}
+                {app-id = "^zen$";}
+                {app-id = "^steam$";} # main window sizes itself, don't let niri shrink the column
+                {app-id = "^libreoffice";} # tile normally, don't self-maximize
+              ];
+              open-maximized = false;
+              default-column-width = {proportion = 1.0;};
+            }
+            {
+              matches = [{}];
+              geometry-corner-radius = {
+                top-left = 3.0;
+                top-right = 3.0;
+                bottom-left = 3.0;
+                bottom-right = 3.0;
+              };
+              clip-to-geometry = true;
+            }
+          ];
+        };
+      };
+    };
+  };
+}

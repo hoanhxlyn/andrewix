@@ -1,0 +1,22 @@
+{
+  "attribution": {
+    "commit": ""
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.commandcode/hooks/caveman.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "mods": {
+    "sources": [
+      "hoanhxlyn/commandcode-statusline"
+    ]
+  }
+}

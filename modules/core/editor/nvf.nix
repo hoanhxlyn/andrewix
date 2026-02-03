@@ -1,0 +1,95 @@
+{
+  __findFile,
+  inputs,
+  self,
+  ...
+}: {
+  flake-file.inputs.nvf.url = "github:notashelf/nvf";
+
+  core.editor.nvf = {
+    includes = [];
+
+    nixos = {
+      pkgs,
+      host,
+      lib,
+      ...
+    }: let
+      L = key: "<leader>${key}";
+      mini = rec {
+        explorer = true;
+        picks = true;
+        animate = true;
+        notify = true;
+        indent_scope = true;
+        show_dotfiles = true;
+        tabline = true;
+        statusline = true;
+        clues = true;
+        starter = picks; # coupled: snacks picker <-> snacks dashboard, mini.pick <-> mini.starter
+      };
+    in {
+      imports = [inputs.nvf.nixosModules.default];
+      programs.nvf = {
+        enable = true;
+        settings.vim = let
+          cfg = import "${self}/modules/core/editor/_nvf/config.nix" {inherit host mini;};
+          keymapsData = import "${self}/modules/core/editor/_nvf/keymaps.nix" {inherit L host mini lib;};
+        in {
+          extraPackages = with pkgs; [
+            ueberzugpp
+            graphicsmagick
+            graphicsmagick-imagemagick-compat
+            tectonic
+            mermaid-cli
+            ghostscript
+            stylelint
+            oxlint
+            kdlfmt
+            vscode-langservers-extracted
+            yaml-language-server
+            sqlite
+            tree-sitter
+            prettier
+            markdownlint-cli2
+          ];
+          viAlias = false;
+          vimAlias = true;
+          syntaxHighlighting = true;
+          enableLuaLoader = true;
+          lineNumberMode = "relNumber";
+          searchCase = "smart";
+          inherit (cfg) options globals clipboard luaConfigRC;
+          inherit
+            (import "${self}/modules/core/editor/_nvf/autocmds.nix" {inherit lib mini;})
+            autocmds
+            augroups
+            ;
+          lsp = import "${self}/modules/core/editor/_nvf/lsp.nix" {inherit lib L;};
+          treesitter = import "${self}/modules/core/editor/_nvf/treesitter.nix" {inherit pkgs;};
+          formatter.conform-nvim = import "${self}/modules/core/editor/_nvf/formatter.nix" {inherit lib pkgs;};
+          diagnostics = import "${self}/modules/core/editor/_nvf/diagnostics.nix" {inherit lib self;};
+          languages = import "${self}/modules/core/editor/_nvf/languages.nix";
+          ui = import "${self}/modules/core/editor/_nvf/ui.nix";
+          visuals = import "${self}/modules/core/editor/_nvf/visuals.nix";
+          tabline = import "${self}/modules/core/editor/_nvf/tabline.nix" {inherit lib mini;};
+          statusline = import "${self}/modules/core/editor/_nvf/statusline.nix" {inherit mini;};
+          utility = import "${self}/modules/core/editor/_nvf/utility.nix" {inherit lib mini self;};
+          pluginRC = import "${self}/modules/core/editor/_nvf/plugin-rc.nix" {inherit inputs lib;};
+          autocomplete.blink-cmp = import "${self}/modules/core/editor/_nvf/cmp.nix" {inherit lib;};
+          mini = import "${self}/modules/core/editor/_nvf/mini.nix" {
+            inherit lib mini self;
+            inherit (keymapsData) leaderGroups;
+          };
+          lazy = import "${self}/modules/core/editor/_nvf/lazy.nix" {inherit pkgs L;};
+          inherit (keymapsData) keymaps;
+          notes.todo-comments.enable = !mini.picks;
+          binds.whichKey = import "${self}/modules/core/editor/_nvf/which-key.nix" {
+            inherit mini lib;
+            inherit (keymapsData) leaderGroups;
+          };
+        };
+      };
+    };
+  };
+}

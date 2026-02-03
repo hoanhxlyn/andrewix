@@ -1,0 +1,80 @@
+{
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[dockercompose]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
+  },
+  "css.validate": false,
+  "cursor.composer.editorConversationDensity": "detailed",
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "editor.codeActionsOnSave": {
+    "quickfix.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
+  },
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.cursorSurroundingLines": 3,
+  "editor.cursorWidth": 3,
+  "editor.fontLigatures": true,
+  "editor.formatOnSave": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.minimap.enabled": false,
+  "editor.mouseWheelZoom": true,
+  "editor.scrollBeyondLastLine": false,
+  "editor.stickyScroll.enabled": true,
+  "editor.tabSize": 2,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "extensions.autoCheckUpdates": false,
+  "files.associations": {
+    "*.tmpl": "shellscript"
+  },
+  "files.autoSave": "off",
+  "files.exclude": {
+    "**/.git": false
+  },
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "gitlens.graph.layout": "editor",
+  "json.schemaDownload.enable": true,
+  "less.validate": false,
+  "prettier.requireConfig": true,
+  "scss.validate": false,
+  "security.workspace.trust.enabled": false,
+  "tailwindCSS.classAttributes": [
+    "className"
+  ],
+  "tailwindCSS.classFunctions": [
+    "cva",
+    "cx",
+    "tw"
+  ],
+  "tailwindCSS.lint.cssConflict": "error",
+  "terminal.integrated.allowChords": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "update.mode": "none",
+  "window.commandCenter": false,
+  "window.menuBarVisibility": "hidden",
+  "workbench.activityBar.location": "top",
+  "workbench.colorTheme": "Kanagawa Wave",
+  "workbench.editor.customLabels.enabled": true,
+  "workbench.editor.customLabels.patterns": {
+    "**/src/**/index.{js,jsx,ts,tsx}": "${dirname(1)}/${dirname}"
+  },
+  "workbench.layoutControl.enabled": false,
+  "workbench.navigationControl.enabled": false,
+  "workbench.productIconTheme": "Tabler",
+  "workbench.welcomePage.walkthroughs.openOnInstall": false,
+  "gitlens.ai.model": "gitkraken"
+}
