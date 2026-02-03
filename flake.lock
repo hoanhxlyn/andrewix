@@ -35,6 +35,21 @@
         "type": "github"
       }
     },
+    "flake-file": {
+      "locked": {
+        "lastModified": 1769416693,
+        "narHash": "sha256-pPNc9y+Vhgf5qw9Qvb+8L7iWedX7dQ/7oRH0QWzwJkg=",
+        "owner": "vic",
+        "repo": "flake-file",
+        "rev": "c09729628983ed1e35c8dd43aa3df91a06f80e65",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vic",
+        "repo": "flake-file",
+        "type": "github"
+      }
+    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib"
@@ -207,6 +222,7 @@
       "inputs": {
         "aic8800": "aic8800",
         "flake-aspects": "flake-aspects",
+        "flake-file": "flake-file",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
         "import-tree": "import-tree",

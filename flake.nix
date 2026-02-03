@@ -1,51 +1,29 @@
+# DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
+# Use `nix run .#write-flake` to regenerate it.
 {
   description = "Andrewix - Dendritic Configuration";
 
+  outputs = inputs: import ./outputs.nix inputs;
+
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    flake-parts.url = "github:hercules-ci/flake-parts";
-
-    import-tree = {
-      url = "github:vic/import-tree";
-    };
-    
-    flake-aspects = {
-      url = "github:vic/flake-aspects";
-    };
-
-    serena = {
-      url = "github:oraios/serena";
-    };
-
     aic8800 = {
+      inputs.nixpkgs.follows = "nixpkgs";
       url = "github:kurumeii/aic8800-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
-
+    flake-aspects.url = "github:vic/flake-aspects";
+    flake-file.url = "github:vic/flake-file";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    home-manager = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/home-manager";
+    };
+    import-tree.url = "github:vic/import-tree";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     rust-overlay = {
-      url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:oxalica/rust-overlay";
     };
+    serena.url = "github:oraios/serena";
   };
 
-  outputs = inputs@{ flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "x86_64-linux" ];
-
-      imports = [
-        ./modules/flake/hosts.nix
-      ];
-
-      perSystem = { system, pkgs, ... }: {
-        devShells.default = pkgs.mkShell {
-          packages = [ pkgs.git pkgs.neovim ];
-        };
-      };
-    };
 }
