@@ -4,10 +4,9 @@
   pkgs,
   inputs,
   ...
-}:
-{
+}: {
   imports = [
-    (inputs.import-tree ./features)
+    (inputs.import-tree ./categories)
   ];
 
   users.users.${username} = {
@@ -19,17 +18,21 @@
     ];
     shell = pkgs.fish;
   };
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.supportedFilesystems = [ "fuse" ];
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+    supportedFilesystems = ["fuse"];
+    kernelPackages = pkgs.linuxPackages_latest;
+  };
   networking.networkmanager.enable = true;
   time.timeZone = "Asia/Ho_Chi_Minh";
   security.rtkit.enable = true;
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-  nix.settings.auto-optimise-store = true;
+  nix = {
+    settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    settings.auto-optimise-store = true;
+  };
   system.stateVersion = stateVersion;
 }

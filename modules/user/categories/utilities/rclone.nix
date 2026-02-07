@@ -1,12 +1,12 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   programs.rclone.enable = true;
   systemd.user.services.rclone-gdrive = {
     Unit = {
       Description = "Sync GG drive via rclone";
-      After = [ "default.target" ];
+      After = ["default.target"];
     };
     Install = {
-      WantedBy = [ "default.target" ];
+      WantedBy = ["default.target"];
     };
     Service = {
       Type = "simple";

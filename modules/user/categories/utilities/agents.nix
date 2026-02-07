@@ -1,4 +1,8 @@
-{ pkgs, inputs, ... }: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   programs.mcp = {
     enable = true;
     servers = {
@@ -38,6 +42,24 @@
         list = "deny";
         grep = "deny";
         glob = "deny";
+      };
+      lsp = {
+        nix = {
+          command = ["nil"];
+          extensions = [".nix"];
+        };
+      };
+      formatter = {
+        nixfmt = {
+          disabled = true;
+        };
+        alejandra = {
+          command = [
+            "alejandra"
+            "$FILE"
+          ];
+          extensions = [".nix"];
+        };
       };
       plugin = [
         "opencode-gemini-auth@latest"

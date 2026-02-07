@@ -1,4 +1,8 @@
-{ pkgs, username, ... }: {
+{
+  pkgs,
+  username,
+  ...
+}: {
   environment.systemPackages = with pkgs; [
     vim
     wget
@@ -19,13 +23,14 @@
     caprine
     gnomeExtensions.kimpanel
   ];
-
-  programs.fish.enable = true;
-  programs.nh = {
-    enable = true;
-    clean.enable = true;
-    clean.extraArgs = "--keep-since 2d --keep 5";
-    flake = "/home/${username}/dotconfigs";
+  programs = {
+    fish.enable = true;
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 2d --keep 5";
+      flake = "/home/${username}/dotconfigs";
+    };
+    firefox.enable = true;
   };
-  programs.firefox.enable = true;
 }

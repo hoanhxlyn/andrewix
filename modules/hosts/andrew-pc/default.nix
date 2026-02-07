@@ -1,16 +1,15 @@
-{ config, pkgs, ... }:
-
-{
+{config, ...}: {
   imports = [
     ../../system/configuration.nix
-    ./hardware-configuration.nix
+    # README: Copy the real config
+    # ./hardware-configuration.nix
   ];
 
   networking.hostName = "andrew-pc";
 
   # Nvidia Configuration
   hardware.graphics.enable = true;
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = ["nvidia"];
 
   hardware.nvidia = {
     modesetting.enable = true;

@@ -1,9 +1,11 @@
-inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-  systems = [ "x86_64-linux" ];
+inputs:
+inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+  systems = ["x86_64-linux"];
 
   imports = [
-    ./modules/flake/hosts.nix
+    ./modules/hosts.nix
     inputs.flake-file.flakeModules.default
+    inputs.git-hooks-nix.flakeModule
   ];
 
   flake-file = {
@@ -27,12 +29,39 @@ inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
         url = "github:oxalica/rust-overlay";
         inputs.nixpkgs.follows = "nixpkgs";
       };
+      git-hooks-nix.url = "github:cachix/git-hooks.nix";
     };
   };
 
-  perSystem = { system, pkgs, ... }: {
+  perSystem = {
+    pkgs,
+    config,
+    ...
+  }: {
+    formatter = pkgs.alejandra;
+
+    pre-commit.settings = {
+      hooks = {
+        statix.enable = true;
+        deadnix.enable = true;
+        nixfmt.enable = false;
+        alejandra.enable = true;
+      };
+    };
+
     devShells.default = pkgs.mkShell {
-      packages = [ pkgs.git pkgs.neovim ];
+      packages = with pkgs;
+        [
+          git
+          neovim
+          statix
+          deadnix
+          alejandra
+        ]
+        ++ [pkgs.pre-commit];
+      shellHook = ''
+        ${config.pre-commit.installationScript}
+      '';
     };
   };
 }

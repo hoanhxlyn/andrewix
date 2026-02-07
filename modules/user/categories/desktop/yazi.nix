@@ -1,8 +1,6 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   plug = pkgs.yaziPlugins;
-in
-{
+in {
   programs.yazi = {
     enable = true;
     plugins = {

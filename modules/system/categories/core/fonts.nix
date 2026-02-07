@@ -1,4 +1,8 @@
-{ pkgs, fontFamily, ... }: {
+{
+  pkgs,
+  fontFamily,
+  ...
+}: {
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
@@ -9,7 +13,7 @@
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {
-      monospace = [ "${fontFamily}" ];
+      monospace = ["${fontFamily}"];
     };
   };
 }
