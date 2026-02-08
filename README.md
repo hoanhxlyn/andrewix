@@ -1,47 +1,47 @@
 # Andrewix - NixOS & Home Manager Configuration
 
-## 🚀 Cách sử dụng nhanh
+## 🚀 Quick Start
 
-Để áp dụng cấu hình mới nhất:
-
+Apply latest configuration:
 ```bash
 nh os switch ~/dotconfigs
 ```
 
-Để cập nhật tất cả các thư viện (inputs):
-
+Update all inputs:
 ```bash
 nix flake update --flake ~/dotconfigs
 ```
 
-## 🛠 Cấu trúc thư mục
+## 🛠 Architecture
 
-- `modules/system/features/`: Chứa các module cấu hình cấp hệ thống (NixOS). Mọi file `.nix` thêm vào đây sẽ được tự động import.
-- `modules/user/features/`: Chứa các module cấu hình cấp người dùng (Home Manager). Mọi file `.nix` thêm vào đây sẽ được tự động import.
-- `modules/hosts/`: Cấu hình riêng cho từng thiết bị (Phần cứng, hostname).
-- `flake.nix`: Điểm bắt đầu của toàn bộ cấu hình.
+- `modules/system/categories/`: System-level NixOS modules (auto-imported)
+- `modules/user/categories/`: User-level Home Manager modules (auto-imported)  
+- `modules/hosts/`: Hardware-specific configurations
+- `flake.nix`: Auto-generated entry point (DO NOT EDIT)
+- `outputs.nix`: Main flake configuration using flake-parts
 
-## 📝 Cách chỉnh sửa & Thêm mới
+## 📝 Development Workflow
 
-### 1. Thay đổi cấu hình hiện có
-Tìm file tương ứng trong `modules/system/features/` (cho hệ thống) hoặc `modules/user/features/` (cho ứng dụng/cá nhân) và chỉnh sửa trực tiếp.
+### 1. Modify Existing Configuration
+Edit files in `modules/system/categories/` (system) or `modules/user/categories/` (user).
 
-### 2. Thêm tính năng mới
-Chỉ cần tạo một file `.nix` mới trong thư mục `features/` tương ứng.
-Ví dụ: Tạo `modules/user/features/vscode.nix` để cấu hình VS Code.
-
-Cấu trúc file mẫu:
+### 2. Add New Features
+Create `.nix` files in appropriate `categories/` directories. Example:
 ```nix
-{ pkgs, ... }: {
-  programs.vscode = {
-    enable = true;
-    # Thêm cấu hình của bạn ở đây
+{ config, lib, ... }: {
+  options.modules.desktop.vscode.enable = lib.mkEnableOption "vscode";
+  
+  config = lib.mkIf config.modules.desktop.vscode.enable {
+    programs.vscode.enable = true;
   };
 }
 ```
 
-### 3. Kiểm tra lỗi trước khi lưu
-Luôn chạy lệnh sau để đảm bảo không có lỗi cú pháp hoặc logic:
+### 3. Quality Assurance
+Always run before committing:
 ```bash
-nix flake check
+nix flake check    # Check for evaluation errors
+alejandra .        # Format code
+statix check       # Lint for best practices
+pre-commit run --all-files  # Run all hooks
 ```

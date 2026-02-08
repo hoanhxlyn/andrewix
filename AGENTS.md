@@ -15,11 +15,14 @@ nh os build ~/dotconfigs
 # Update all flake inputs
 nix flake update --flake ~/dotconfigs
 
-# Check flake for evaluation errors
+# Check flake for evaluation errors (run before commits)
 nix flake check
 
 # Regenerate flake.nix from modules (uses vic/flake-file)
 nix run .#write-flake
+
+# Test specific host configuration
+nix build .#nixosConfigurations.andrew-pc.config.system.build.toplevel
 
 # Cleanup nix garbage and old generations
 nh clean all
@@ -44,29 +47,20 @@ pre-commit run --all-files
 
 # Enter development shell with all tools
 nix develop
-```
 
-### Package Management
-```bash
-# Search for packages
-nh search <package-name>
-
-# Enter the project development shell
-nix develop
-
-# Enter CI-specific shell
-nix develop .#ci
+# Check specific file for syntax errors
+nix-instantiate --eval /path/to/file.nix
 ```
 
 ## Architecture & Conventions
 
 ### Module Structure (Auto-Discovery)
-- **NixOS System:** `modules/system/categories/` (auto-imported)
-- **Home Manager User:** `modules/user/categories/` (auto-imported)
+- **NixOS System:** `modules/system/aspects/` (auto-imported)
+- **Home Manager User:** `modules/user/aspects/` (auto-imported)
 - **Hosts:** `modules/hosts/<hostname>/` (host-specific configs)
 - **Flake Logic:** `modules/hosts.nix` (system definitions)
 
-We use `vic/import-tree` for automatic module discovery. Any `.nix` file in `categories/` directories is automatically imported and integrated into the build.
+We use `vic/import-tree` for automatic module discovery. Any `.nix` file in `aspects/` directories is automatically imported and integrated into the build.
 
 ### Module Categories
 - **System Categories:**
@@ -76,6 +70,32 @@ We use `vic/import-tree` for automatic module discovery. Any `.nix` file in `cat
   - `development/`: Git, Neovim, development tools
   - `desktop/`: Browsers, terminals, file managers
   - `utilities/`: KeePassXC, agents, shell, misc tools
+
+### Import Patterns
+```nix
+# Standard module import
+{
+  config,
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: { ... }
+
+# Home manager imports pattern
+{
+  username,
+  stateVersion,
+  ...
+} @ inputs: { ... }
+
+# Category imports (auto-discovered)
+imports = [
+  ./aspects/development
+  ./aspects/desktop
+  ./aspects/utilities
+];
+```
 
 ### Code Style Guidelines
 
@@ -87,7 +107,7 @@ We use `vic/import-tree` for automatic module discovery. Any `.nix` file in `cat
 
 #### Module Patterns
 - **Standard Input:** `{ config, pkgs, inputs, ... }: { ... }`
-- **Relative Imports:** Use `./module.nix` within categories
+- **Relative Imports:** Use `./module.nix` within aspects
 - **Parameter Passing:** Use `inherit` for repetitive attributes
 - **Organization:** Group by subsystem (`programs`, `services`, `environment`)
 
@@ -95,7 +115,7 @@ We use `vic/import-tree` for automatic module discovery. Any `.nix` file in `cat
 - **Files:** `kebab-case.nix` (e.g., `keepassxc.nix`, `git-config.nix`)
 - **Variables:** `camelCase` (e.g., `hostName`, `stateVersion`, `fontFamily`)
 - **Booleans:** Prefix with `enable` or `disable` (e.g., `enable = true`)
-- **Categories:** Use descriptive directory names (`categories/development`, `categories/desktop`)
+- **Categories:** Use descriptive directory names (`aspects/development`, `aspects/desktop`)
 
 #### Attribute Organization
 ```nix
@@ -116,6 +136,12 @@ We use `vic/import-tree` for automatic module discovery. Any `.nix` file in `cat
 - Use `...` ellipsis for parameter extensibility
 - Leverage specialArgs from `mkSystem` for shared values
 
+#### Types & Type Safety
+- Use `lib.mkEnableOption` for boolean options
+- Use `lib.mkOption` for typed attributes
+- Leverage `lib.types` for complex type definitions
+- Always validate inputs in option definitions
+
 ### Error Handling & Safety
 - **State Version:** Fixed at `25.11`. **Do not change** without manual migration
 - **Safety Loop:** Always run `nix flake check` before structural changes
@@ -127,37 +153,9 @@ We use `vic/import-tree` for automatic module discovery. Any `.nix` file in `cat
 - **statix:** Linting for best practices
 - **deadnix:** Detection of unused code
 
-## Repository Layout
-```text
-~/dotconfigs/
-├── flake.nix              # Auto-generated entry point (DO NOT EDIT)
-├── outputs.nix            # Main flake configuration (flake-parts)
-├── modules/
-│   ├── hosts.nix          # System definitions and mkSystem helper
-│   ├── system/            # NixOS system-level configs
-│   │   └── categories/    # Auto-imported system modules
-│   │       ├── core/      # Core programs, fonts, services
-│   │       └── shell/     # Shell environments
-│   └── user/              # Home Manager user-level configs
-│       ├── home.nix        # Main user configuration
-│       └── categories/    # Auto-imported user modules
-│           ├── development/ # Dev tools, git, neovim
-│           ├── desktop/   # GUI apps, browsers, terminals
-│           └── utilities/  # CLI tools and utilities
-├── hosts/                 # Hardware-specific configurations
-│   ├── andrew-pc/         # Desktop configuration
-│   └── andrew-laptop/     # Laptop configuration
-└── andrew.omp.json        # Oh My Posh theme
-```
-
 ## Important Variables
-- **Hostnames:** `andrew-pc` or `andrew-laptop` (defined in `modules/hosts.nix`)
+- **Hostnames:** `andrew-pc` or `andrew-laptop`
 - **Username:** `andrew`
 - **State Version:** `25.11` (do not modify)
 - **Font Family:** `CaskaydiaCove Nerd Font`
 - **System:** `x86_64-linux`
-
-## Development Environment
-- **LSP:** `nixd` for Nix, `lua-ls` for Lua
-- **Dev Shell:** Includes `git`, `neovim`, `alejandra`, `statix`, `deadnix`
-- **CI Shell:** Lightweight shell with just formatting/linting tools
