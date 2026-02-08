@@ -1,18 +1,11 @@
-{
-  config,
-  lib,
-  ...
-}: let
-  cfg = config.aspects;
-in {
-  imports =
-    [
-      ./core
-    ]
-    ++ lib.optional cfg.desktop.enable ./desktop
-    ++ lib.optional cfg.gpu.nvidia.enable ./gpu/nvidia.nix
-    ++ lib.optional cfg.gaming.xone.enable ./gaming
-    ++ lib.optional cfg.utilities.enable ./utilities;
+{lib, ...}: {
+  imports = [
+    ./core
+    ./desktop
+    ./gpu/nvidia.nix
+    ./gaming
+    ./utilities
+  ];
 
   options.aspects = with lib; {
     desktop.enable = mkEnableOption "Desktop environment (GNOME)" // {default = true;};
