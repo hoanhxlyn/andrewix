@@ -1,7 +1,7 @@
 {...}: {
   imports = [
     ../../system/configuration.nix
-    ../../system/aspects/gpu/nvidia
+    ../../system/aspects/gpu/nvidia.nix
     ./hardware-configuration.nix
   ];
 
