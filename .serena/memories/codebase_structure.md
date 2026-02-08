@@ -1,0 +1,5 @@
+- `modules/system/aspects/`: System-level NixOS modules.
+- `modules/user/aspects/`: User-level Home Manager modules.
+- `modules/hosts/`: Hardware-specific configurations.
+- `flake.nix`: Auto-generated entry point.
+- `outputs.nix`: Main flake configuration.

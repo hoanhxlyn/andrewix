@@ -1,0 +1,9 @@
+- **Apply changes:** `nh os switch ~/dotconfigs`
+- **Build without switching:** `nh os build ~/dotconfigs`
+- **Update inputs:** `nix flake update --flake ~/dotconfigs`
+- **Check for errors:** `nix flake check`
+- **Format:** `alejandra .`
+- **Lint:** `statix check`
+- **Find unused bindings:** `deadnix --fail`
+- **Run pre-commit hooks:** `pre-commit run --all-files`
+- **Enter dev shell:** `nix develop`

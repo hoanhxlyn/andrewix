@@ -1,0 +1,4 @@
+- NixOS
+- Home Manager
+- flake-parts
+- Nix (language)
