@@ -13,6 +13,19 @@
     inherit username stateVersion;
     homeDirectory = "/home/${username}";
   };
+
+  modules = {
+    desktop = {
+      yazi.enable = true;
+      browsers.enable = true;
+      alacritty.enable = true;
+    };
+    development = {
+      git.enable = true;
+      neovim.enable = true;
+    };
+  };
+
   gtk = {
     enable = true;
     font = {
