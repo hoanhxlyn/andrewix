@@ -6,7 +6,7 @@
   ...
 }: {
   imports = [
-    (inputs.import-tree ./categories)
+    (inputs.import-tree ./aspects)
   ];
 
   users.users.${username} = {
