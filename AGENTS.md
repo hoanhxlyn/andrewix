@@ -1,138 +1,96 @@
 # AGENTS.md - NixOS Dotfiles Configuration (Andrewix)
 
-This repository contains Andrew's NixOS and Home Manager configuration using flake-parts with automatic module discovery. The architecture follows a dendritic (tree-like) structure with category-based organization.
+Dendritic NixOS configuration using flake-parts with aspect-first architecture and automatic module discovery via `vic/import-tree`.
 
 ## Build, Lint & Test Commands
 
-### System Management
+### Quick Commands
+```bash
+nix develop                          # Enter dev shell with all tools
+nix flake check                      # Validate flake (RUN BEFORE COMMITS)
+alejandra .                          # Format all Nix files
+statix check && deadnix --fail       # Lint & find unused code
+pre-commit run --all-files           # Run all pre-commit hooks
+```
 
-*   **Apply changes and switch to new configuration:**
-    ```bash
-    nh os switch ~/dotconfigs
-    ```
-*   **Build configuration without switching (dry run):**
-    ```bash
-    nh os build ~/dotconfigs
-    ```
-*   **Update all flake inputs:**
-    ```bash
-    nix flake update --flake ~/dotconfigs
-    ```
-*   **Check flake for evaluation errors (run before commits):**
-    ```bash
-    nix flake check
-    ```
-*   **Regenerate flake.nix from modules (uses vic/flake-file):**
-    ```bash
-    nix run .#write-flake
-    ```
-*   **Cleanup nix garbage and old generations:**
-    ```bash
-    nh clean all
-    ```
-*   **Optimize nix store (deduplicate files):**
-    ```bash
-    nix store optimise
-    ```
+### Testing & Building
+```bash
+# Test specific host (validate without switching)
+nix build .#nixosConfigurations.andrew-pc.config.system.build.toplevel
+nix build .#nixosConfigurations.andrew-laptop.config.system.build.toplevel
 
-### Testing
+# Test single aspect by building a host that uses it
+nix build .#nixosConfigurations.andrew-pc  # Tests GPU (nvidia) + gaming (xone)
 
-This project does not have a traditional test suite. Testing is performed by building and evaluating the NixOS configuration.
+# Dry-run without applying
+nh os build ~/dotconfigs
+```
 
-*   **Test specific host configuration:**
-    ```bash
-    nix build .#nixosConfigurations.andrew-pc.config.system.build.toplevel
-    ```
+### System Changes
+```bash
+nh os switch ~/dotconfigs           # Apply config (actual switch)
+nix flake update --flake ~/dotconfigs  # Update all inputs
+nix run .#write-flake               # Regenerate flake.nix (auto-generated)
+nh clean all                         # Cleanup old generations
+nix store optimise                  # Deduplicate store (slow, optional)
+```
 
-### Code Quality & Formatting
+### Debugging
+```bash
+nix-instantiate --eval /path/to/file.nix  # Check file syntax
+nix eval .#nixosConfigurations.andrew-pc  # Evaluate full config
+nix flake metadata                   # Show flake inputs/outputs
+```
 
-*   **Format all Nix files (uses alejandra):**
-    ```bash
-    alejandra .
-    ```
-*   **Lint for Nix best practices (statix):**
-    ```bash
-    statix check
-    ```
-*   **Find unused bindings (deadnix):**
-    ```bash
-    deadnix --fail
-    ```
-*   **Run all pre-commit hooks manually:**
-    ```bash
-    pre-commit run --all-files
-    ```
-*   **Enter development shell with all tools:**
-    ```bash
-    nix develop
-    ```
-*   **Check specific file for syntax errors:**
-    ```bash
-    nix-instantiate --eval /path/to/file.nix
-    ```
+## Architecture
 
-## Architecture & Conventions
+### Module Structure
+-   **System aspects:** `modules/system/aspects/{core,desktop,gpu,gaming,utilities}/` → auto-imported
+-   **User aspects:** `modules/user/aspects/{development,desktop,utilities}/` → auto-imported via `vic/import-tree`
+-   **Hosts:** `modules/hosts/{andrew-pc,andrew-laptop}/default.nix` → enable specific aspects
+-   **Flake logic:** `modules/hosts.nix` (system definitions), `outputs.nix` (flake-parts config)
 
-### Module Structure (Auto-Discovery)
+### Aspect Enable Pattern
+System aspects use enable flags in `modules/system/aspects/default.nix`:
+```nix
+options.aspects = with lib; {
+  desktop.enable = mkEnableOption "Desktop environment (GNOME)" // {default = true;};
+  gpu.nvidia.enable = mkEnableOption "NVIDIA GPU support" // {default = false;};
+  gaming.xone.enable = mkEnableOption "Xbox One controller driver" // {default = false;};
+  utilities.enable = mkEnableOption "System utilities" // {default = true;};
+};
+```
+Host configs set these flags; each aspect is always imported but gated with `lib.mkIf config.aspects.*.enable`.
 
--   **NixOS System:** `modules/system/aspects/` (auto-imported)
--   **Home Manager User:** `modules/user/aspects/` (auto-imported)
--   **Hosts:** `modules/hosts/<hostname>/` (host-specific configs)
--   **Flake Logic:** `modules/hosts.nix` (system definitions)
+## Code Style Guidelines
 
-We use `vic/import-tree` for automatic module discovery. Any `.nix` file in `aspects/` directories is automatically imported and integrated into the build.
-
-### Module Categories
-
--   **System Categories:**
-    -   `core/`: Core system programs, fonts, i18n, services
-    -   `shell/`: Shell environments and CLI tools
--   **User Categories:**
-    -   `development/`: Git, Neovim, development tools
-    -   `desktop/`: Browsers, terminals, file managers
-    -   `utilities/`: KeePassXC, agents, shell, misc tools
-
-### Code Style Guidelines
-
-#### Nix Formatting
-
+### Formatting & Organization
 -   **Formatter:** `alejandra` (enforced by pre-commit)
 -   **Indentation:** 2 spaces (no tabs)
 -   **Line Length:** Prefer under 80 characters
--   **File Encoding:** UTF-8
+-   **Encoding:** UTF-8
 
-#### Naming Conventions
-
--   **Files:** `kebab-case.nix` (e.g., `keepassxc.nix`, `git-config.nix`)
--   **Variables:** `camelCase` (e.g., `hostName`, `stateVersion`, `fontFamily`)
+### Naming Conventions
+-   **Files:** `kebab-case.nix` (e.g., `keepassxc.nix`, `gpu-nvidia.nix`)
+-   **Variables:** `camelCase` (e.g., `hostName`, `stateVersion`)
 -   **Booleans:** Prefix with `enable` or `disable` (e.g., `enable = true`)
 
-#### Module Patterns
-
+### Module Patterns
 -   **Standard Input:** `{ config, pkgs, inputs, ... }: { ... }`
--   **Relative Imports:** Use `./module.nix` within aspects.
--   **Parameter Passing:** Use `inherit` for repetitive attributes.
--   **Organization:** Group by subsystem (`programs`, `services`, `environment`).
+-   **Imports:** Relative paths within aspects (e.g., `./gpu-nvidia.nix`)
+-   **Parameter Passing:** Use `inherit` for repetitive attributes
+-   **Organization:** Group by subsystem (`programs`, `services`, `environment`)
 
-#### Types & Type Safety
-
--   Use `lib.mkEnableOption` for boolean options.
--   Use `lib.mkOption` for typed attributes.
--   Leverage `lib.types` for complex type definitions.
--   Always validate inputs in option definitions.
+### Types & Type Safety
+-   Use `lib.mkEnableOption` for boolean options
+-   Use `lib.mkOption` for typed attributes with `lib.types`
+-   Always validate inputs in option definitions
 
 ### Error Handling & Safety
-
--   **State Version:** Fixed at `25.11`. **Do not change** without manual migration.
--   **Safety Loop:** Always run `nix flake check` before structural changes.
--   **Conditional Config:** Use `lib.mkIf`, `lib.mkDefault`, `lib.mkMerge` for conditional logic.
--   **Overrides:** Use `lib.mkOverride` for forcing specific values.
-
-### Pre-commit Hooks
-
--   **alejandra:** Code formatting
--   **statix:** Linting for best practices
--   **deadnix:** Detection of unused code
+-   **State Version:** Fixed at `25.11` (do not change without manual migration)
+-   **Pre-Commit Check:** Always run `nix flake check` before commits
+-   **Conditional Config:** Use `lib.mkIf`, `lib.mkDefault`, `lib.mkMerge`
+-   **Overrides:** Use `lib.mkOverride` for forcing specific values
 
 ## Important Variables
 

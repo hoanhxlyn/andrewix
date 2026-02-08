@@ -2,11 +2,10 @@
   stateVersion,
   username,
   pkgs,
-  inputs,
   ...
 }: {
   imports = [
-    (inputs.import-tree ./aspects)
+    ./aspects
   ];
 
   users.users.${username} = {
@@ -17,12 +16,6 @@
       "wheel"
     ];
     shell = pkgs.fish;
-  };
-  boot = {
-    loader.systemd-boot.enable = true;
-    loader.efi.canTouchEfiVariables = true;
-    supportedFilesystems = ["fuse"];
-    kernelPackages = pkgs.linuxPackages_latest;
   };
   networking.networkmanager.enable = true;
   time.timeZone = "Asia/Ho_Chi_Minh";

@@ -4,7 +4,8 @@
     ./hardware-configuration.nix
   ];
 
-  # Laptop specific hardware
-  hardware.aic8800.enable = true;
   networking.hostName = "andrew-laptop";
+  hardware.aic8800.enable = true;
+
+  # Laptop uses defaults: desktop, utilities enabled; gpu, gaming disabled
 }
