@@ -56,7 +56,9 @@
     };
 in {
   flake.nixosConfigurations = {
-    andrew-pc = mkSystem "andrew-pc" [];
+    andrew-pc = mkSystem "andrew-pc" [
+      inputs.aic8800.nixosModules.default
+    ];
 
     andrew-laptop = mkSystem "andrew-laptop" [
       inputs.aic8800.nixosModules.default
