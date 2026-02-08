@@ -1,5 +1,8 @@
-{inputs, ...}: {
+{...}: {
   imports = [
-    (inputs.import-tree.filterNot (path: baseNameOf path == "default.nix") ./.)
+    ./boot.nix
+    ./fonts.nix
+    ./i18n.nix
+    ./programs.nix
   ];
 }

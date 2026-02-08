@@ -7,7 +7,6 @@
     vim
     wget
     git
-    alacritty
     fuse
     usbutils
     pciutils
@@ -16,12 +15,9 @@
     cliphist
     nh
     ast-grep
-    brave
     pnpm
     nodePackages.nodejs
     bun
-    caprine
-    gnomeExtensions.kimpanel
   ];
   programs = {
     fish.enable = true;
@@ -31,6 +27,5 @@
       clean.extraArgs = "--keep-since 2d --keep 5";
       flake = "/home/${username}/dotconfigs";
     };
-    firefox.enable = true;
   };
 }
