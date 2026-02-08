@@ -1,0 +1,7 @@
+- **Formatter:** `alejandra`
+- **Indentation:** 2 spaces
+- **Line Length:** Under 80 characters
+- **File Naming:** `kebab-case.nix`
+- **Variable Naming:** `camelCase`
+- **Booleans:** Prefixed with `enable` or `disable`
+- **Module Structure:** Auto-discovery of `.nix` files in `modules/system/aspects/` and `modules/user/aspects/`.
