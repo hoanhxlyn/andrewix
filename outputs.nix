@@ -54,9 +54,6 @@ inputs.flake-parts.lib.mkFlake {inherit inputs;} {
         [
           git
           neovim
-          statix
-          deadnix
-          alejandra
         ]
         ++ [pkgs.pre-commit];
       shellHook = ''

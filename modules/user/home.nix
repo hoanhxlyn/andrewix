@@ -4,9 +4,9 @@
   ...
 } @ inputs: {
   imports = [
-    ./categories/development
-    ./categories/desktop
-    ./categories/utilities
+    ./aspects/development
+    ./aspects/desktop
+    ./aspects/utilities
   ];
   home = {
     # Do not override var here
