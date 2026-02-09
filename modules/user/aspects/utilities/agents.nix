@@ -17,7 +17,7 @@
           "@upstash/context7-mcp"
         ];
         env = {
-          api-key = "{env:CONTEXT_7_API_KEY}";
+          "api-key" = "{env:CONTEXT_7_API_KEY}";
         };
       };
       tavily = {

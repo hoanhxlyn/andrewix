@@ -23,13 +23,13 @@ nix build .#nixosConfigurations.andrew-laptop.config.system.build.toplevel
 nix build .#nixosConfigurations.andrew-pc  # Tests GPU (nvidia) + gaming (xone)
 
 # Dry-run without applying
-nh os build ~/dotconfigs
+nh os build .
 ```
 
 ### System Changes
 ```bash
-nh os switch ~/dotconfigs           # Apply config (actual switch)
-nix flake update --flake ~/dotconfigs  # Update all inputs
+nh os switch .           # Apply config (actual switch)
+nix flake update --flake .  # Update all inputs
 nix run .#write-flake               # Regenerate flake.nix (auto-generated)
 nh clean all                         # Cleanup old generations
 nix store optimise                  # Deduplicate store (slow, optional)

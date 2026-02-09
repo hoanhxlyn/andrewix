@@ -16,6 +16,7 @@
           layout = "us";
           variant = "";
         };
+        desktopManager.xterm.enable = false;
       };
       printing.enable = false;
       pulseaudio.enable = false;
@@ -35,7 +36,7 @@
       yelp # help
       rhythmbox # music
       gnome-contacts
-      xterm
+      gnome-maps
     ];
   };
 }

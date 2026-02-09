@@ -3,13 +3,18 @@
   fontFamily,
   ...
 }: {
+  environment.variables = {
+    GTK_IM_MODULE = "fcitx";
+    QT_IM_MODULE = "fcitx";
+    XMODIFIERS = "@im=fcitx";
+  };
   i18n = {
     inputMethod = {
       enable = true;
       type = "fcitx5";
       fcitx5 = {
         addons = with pkgs; [
-          kdePackages.fcitx5-unikey
+          fcitx5-vmk
           fcitx5-gtk
           kdePackages.fcitx5-qt
         ];
@@ -17,17 +22,24 @@
         ignoreUserConfig = false;
         settings = {
           addons = {
-            unikey.globalSection = {
-              InputMethod = "0";
-              OutputCharset = "0";
-              SpellCheck = "False";
+            vmk.globalSection = {
+              Mode = "vmkpre";
+              InputMethod = "Telex";
+              OutputCharset = "Unicode";
+              Gemini = "True";
+              ChromeX11 = "True";
             };
             classicui.globalSection = {
               Font = "${fontFamily} 11";
               MenuFont = "${fontFamily} 11";
             };
           };
-          globalOptions = {};
+          globalOptions = {
+            Hotkey = {
+              "TriggerKeys" = "Control+Shift_L";
+              "AltTriggerKeys" = "";
+            };
+          };
           inputMethod = {
             "Groups/0" = {
               Name = "Default";
@@ -35,7 +47,7 @@
               DefaultIM = "keyboard-us";
             };
             "Groups/0/Items/0".Name = "keyboard-us";
-            "Groups/0/Items/1".Name = "unikey";
+            "Groups/0/Items/1".Name = "vmk";
           };
         };
       };

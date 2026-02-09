@@ -6,11 +6,11 @@ This repository contains Andrew's NixOS and Home Manager configuration using fla
 
 *   **Apply latest configuration:**
     ```bash
-    nh os switch ~/dotconfigs
+    nh os switch .
     ```
 *   **Update all inputs:**
     ```bash
-    nix flake update --flake ~/dotconfigs
+    nix flake update --flake .
     ```
 *   **Check for evaluation errors:**
     ```bash

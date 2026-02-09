@@ -10,6 +10,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:kurumeii/aic8800-nix";
     };
+    fcitx5-vmk-nix = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:hoanhxlyn/fcitx5-vmk-nix";
+    };
     flake-aspects.url = "github:vic/flake-aspects";
     flake-file.url = "github:vic/flake-file";
     flake-parts.url = "github:hercules-ci/flake-parts";
