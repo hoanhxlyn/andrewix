@@ -32,9 +32,9 @@
               inherit system;
               overlays = [
                 (import inputs.rust-overlay)
-                {
+                (_: _: {
                   inherit (inputs.fcitx5-vmk-nix.packages.${system}) fcitx5-vmk;
-                }
+                })
               ];
               config.allowUnfree = true;
             };
