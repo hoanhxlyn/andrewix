@@ -23,15 +23,16 @@
         ignoreUserConfig = false;
         settings = {
           addons = {
-            # unikey.globalSection = {
-            #   InputMethod = "0";
-            #   OutputCharset = "0";
-            #   SpellCheck = "False";
-            # };
             bamboo.globalSection = {
               InputMethod = "Telex";
               OutputCharset = "Unicode";
               SpellCheck = "False";
+              Macro = "False";
+              ModernStyle = "True";
+              FreeMarking = "True";
+              DisplayUnderline = "False";
+              AutoNonVnRestore = "True";
+              CapitalizeMacro = "True";
             };
             classicui.globalSection = {
               Font = "${fontFamily} 11";
@@ -40,8 +41,8 @@
           };
           globalOptions = {
             Hotkey = {
-              "ToggleInputMethod" = "Control+Shift_L";
-              "SwitchKey" = "Shift_L";
+              "TriggerKeys" = "Control+Shift_L";
+              "AltTriggerKeys" = "";
             };
           };
           inputMethod = {
