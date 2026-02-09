@@ -30,6 +30,10 @@ inputs.flake-parts.lib.mkFlake {inherit inputs;} {
         inputs.nixpkgs.follows = "nixpkgs";
       };
       git-hooks-nix.url = "github:cachix/git-hooks.nix";
+      fcitx5-vmk-nix = {
+        url = "github:hoanhxlyn/fcitx5-vmk-nix";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
     };
   };
 
@@ -39,6 +43,10 @@ inputs.flake-parts.lib.mkFlake {inherit inputs;} {
     ...
   }: {
     formatter = pkgs.alejandra;
+
+    packages = {
+      inherit (inputs.fcitx5-vmk-nix.packages.${pkgs.system}) fcitx5-vmk;
+    };
 
     pre-commit.settings = {
       hooks = {

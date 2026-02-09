@@ -30,7 +30,12 @@
           {
             nixpkgs.pkgs = import inputs.nixpkgs {
               inherit system;
-              overlays = [(import inputs.rust-overlay)];
+              overlays = [
+                (import inputs.rust-overlay)
+                {
+                  inherit (inputs.fcitx5-vmk-nix.packages.${system}) fcitx5-vmk;
+                }
+              ];
               config.allowUnfree = true;
             };
 
