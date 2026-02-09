@@ -14,8 +14,7 @@
       type = "fcitx5";
       fcitx5 = {
         addons = with pkgs; [
-          # kdePackages.fcitx5-unikey
-          fcitx5-bamboo
+          fcitx5-vmk
           fcitx5-gtk
           kdePackages.fcitx5-qt
         ];
@@ -23,16 +22,12 @@
         ignoreUserConfig = false;
         settings = {
           addons = {
-            bamboo.globalSection = {
+            vmk.globalSection = {
+              Mode = "vmkpre";
               InputMethod = "Telex";
               OutputCharset = "Unicode";
-              SpellCheck = "False";
-              Macro = "False";
-              ModernStyle = "True";
-              FreeMarking = "True";
-              DisplayUnderline = "False";
-              AutoNonVnRestore = "True";
-              CapitalizeMacro = "True";
+              Gemini = "True";
+              ChromeX11 = "True";
             };
             classicui.globalSection = {
               Font = "${fontFamily} 11";
@@ -52,8 +47,7 @@
               DefaultIM = "keyboard-us";
             };
             "Groups/0/Items/0".Name = "keyboard-us";
-            # "Groups/0/Items/1".Name = "unikey";
-            "Groups/0/Items/1".Name = "bamboo";
+            "Groups/0/Items/1".Name = "vmk";
           };
         };
       };

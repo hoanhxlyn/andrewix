@@ -20,6 +20,26 @@
         "type": "github"
       }
     },
+    "fcitx5-vmk-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1770648106,
+        "narHash": "sha256-9BjqNWBhm3ueQxp2XgIRS3KFoTxWyB4Biu6oS4SWnm8=",
+        "owner": "hoanhxlyn",
+        "repo": "fcitx5-vmk-nix",
+        "rev": "e8e130649b6a1715b241ae1fb6d4273bc9d6c047",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hoanhxlyn",
+        "repo": "fcitx5-vmk-nix",
+        "type": "github"
+      }
+    },
     "flake-aspects": {
       "locked": {
         "lastModified": 1769723924,
@@ -294,6 +314,7 @@
     "root": {
       "inputs": {
         "aic8800": "aic8800",
+        "fcitx5-vmk-nix": "fcitx5-vmk-nix",
         "flake-aspects": "flake-aspects",
         "flake-file": "flake-file",
         "flake-parts": "flake-parts",
