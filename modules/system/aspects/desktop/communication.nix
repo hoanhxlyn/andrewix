@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: {
-  config = lib.mkIf config.aspects.utilities.enable {
+  config = lib.mkIf config.aspects.desktop.enable {
     environment.systemPackages = with pkgs; [
       caprine
       gnomeExtensions.kimpanel
