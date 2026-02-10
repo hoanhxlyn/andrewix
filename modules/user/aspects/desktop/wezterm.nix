@@ -12,8 +12,8 @@
         local mux = wezterm.mux
         local tab_pos = "top"
         local config = wezterm.config_builder()
-        -- local tabline = wez.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
-        local tabbar = wezterm.plugin.require("https://github.com/adriankarlen/bar.wezterm")
+        local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
+        -- local tabbar = wezterm.plugin.require("https://github.com/adriankarlen/bar.wezterm")
 
         local mods = {
         	C = "CTRL",
@@ -38,7 +38,7 @@
         config.font_size = 12
         config.freetype_load_target = "Light"
         config.line_height = 1
-        config.window_background_opacity = 1
+        config.window_background_opacity = 0.8
         config.default_cursor_style = "BlinkingBlock"
         config.cursor_blink_rate = 500
         config.tab_bar_at_bottom = false
@@ -147,20 +147,37 @@
         	{ key = "p", mods = join_mods({ mods.L, mods.S }), action = wezterm.action.PaneSelect({ alphabet = "123456", mode = "SwapWithActive", }), },
         }
 
-        -- wezterm.on("gui-startup", function(cmd)
-        -- 	local _, _, window = mux.spawn_window(cmd or {})
-        -- 	local gui_window = window:gui_window()
-        -- 	gui_window:maximize()
-        -- end)
+         wezterm.on("gui-startup", function(cmd)
+         	local _, _, window = mux.spawn_window(cmd or {})
+         	local gui_window = window:gui_window()
+         	gui_window:maximize()
+         end)
 
-        tabbar.apply_to_config(config, {
-        	position = tab_pos,
-        	modules = {
-        		clock = { enabled = false },
-        		zoom = { enabled = true },
-        		cwd = { enabled = false },
-        	},
-        })
+         tabline.setup({
+         	options = {
+         		theme = config.color_scheme,
+         	},
+         	sections = {
+         		tabline_a = {
+         			"hostname",
+         		},
+         		tab_active = {
+         			"index",
+         			{ "process", padding = { right = 1, left = 0 } },
+         		},
+         	},
+         })
+
+         tabline.apply_to_config(config)
+
+        -- tabbar.apply_to_config(config, {
+        -- 	position = tab_pos,
+        -- 	modules = {
+        -- 		clock = { enabled = false },
+        -- 		zoom = { enabled = true },
+        -- 		cwd = { enabled = false },
+        -- 	},
+        -- })
 
         return config
       '';
