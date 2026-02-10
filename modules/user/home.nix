@@ -18,7 +18,6 @@
     desktop = {
       yazi.enable = true;
       browsers.enable = true;
-      alacritty.enable = true;
     };
     development = {
       git.enable = true;

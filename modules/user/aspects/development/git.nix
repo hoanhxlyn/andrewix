@@ -14,8 +14,8 @@ in {
       git = {
         enable = true;
         settings = {
-          user.email = "babybangunny@gmail.com";
-          user.name = "Andrew Nguyen";
+          user.email = "hoanhxlyn@gmail.com";
+          user.name = "Hoang Anh";
         };
       };
       gh = {
