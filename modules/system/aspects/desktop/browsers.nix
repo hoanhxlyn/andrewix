@@ -4,10 +4,9 @@
   pkgs,
   ...
 }: {
-  config = lib.mkIf config.aspects.utilities.enable {
+  config = lib.mkIf config.aspects.desktop.enable {
     environment.systemPackages = with pkgs; [
       brave
-      alacritty
     ];
     programs.firefox.enable = true;
   };
