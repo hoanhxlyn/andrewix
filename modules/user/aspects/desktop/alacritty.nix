@@ -1,16 +1,10 @@
 {
-  config,
+  osConfig,
   lib,
   fontFamily,
   ...
-}: let
-  cfg = config.modules.desktop.alacritty;
-in {
-  options.modules.desktop.alacritty = {
-    enable = lib.mkEnableOption "alacritty";
-  };
-
-  config = lib.mkIf cfg.enable {
+}: {
+  config = lib.mkIf (osConfig.aspects.terminalEmulator == "alacritty") {
     programs.alacritty = {
       enable = true;
       theme = "tokyo_night";
