@@ -1,10 +1,4 @@
-{pkgs, ...}: {
-  home.packages = with pkgs; [
-    alejandra
-    deadnix
-    statix
-  ];
-
+_: {
   programs = {
     zoxide.enable = true;
     bat.enable = true;
