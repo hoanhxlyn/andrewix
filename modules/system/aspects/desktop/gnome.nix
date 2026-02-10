@@ -16,7 +16,7 @@
           layout = "us";
           variant = "";
         };
-        desktopManager.xterm.enable = false;
+        excludePackages = with pkgs; [xterm];
       };
       printing.enable = false;
       pulseaudio.enable = false;
@@ -37,6 +37,10 @@
       rhythmbox # music
       gnome-contacts
       gnome-maps
+      gnome-user-docs
+      gnome-calculator
+      simple-scan
+      gnome-contacts
     ];
   };
 }
