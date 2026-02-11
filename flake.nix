@@ -29,5 +29,9 @@
       url = "github:oxalica/rust-overlay";
     };
     serena.url = "github:oraios/serena";
+    stylix = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/stylix";
+    };
   };
 }

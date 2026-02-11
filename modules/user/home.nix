@@ -2,7 +2,7 @@
   username,
   stateVersion,
   ...
-} @ inputs: {
+}: {
   imports = [
     ./aspects/development
     ./aspects/desktop
@@ -22,14 +22,6 @@
     development = {
       git.enable = true;
       neovim.enable = true;
-    };
-  };
-
-  gtk = {
-    enable = true;
-    font = {
-      name = "${inputs.fontFamily}";
-      size = 12;
     };
   };
 }
