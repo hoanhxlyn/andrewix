@@ -147,39 +147,39 @@
         	{ key = "p", mods = join_mods({ mods.L, mods.S }), action = wezterm.action.PaneSelect({ alphabet = "123456", mode = "SwapWithActive", }), },
         }
 
-        -- wezterm.on("gui-startup", function(cmd)
-        -- 	local _, _, window = mux.spawn_window(cmd or {})
-        -- 	local gui_window = window:gui_window()
-        -- 	gui_window:maximize()
-        -- end)
+         -- Maximize window on startup
+         wezterm.on("gui-startup", function(cmd)
+           local _, _, window = mux.spawn_window(cmd or {})
+           window:gui_window():maximize()
+         end)
 
-         --tabline.setup({
-         --	options = {
-         --		theme = config.color_scheme,
-         --	},
-         --	sections = {
-         --		tabline_a = {
-         --			"hostname",
-         --		},
-         --		tab_active = {
-         --			"index",
-         --			{ "process", padding = { right = 1, left = 0 } },
-         --		},
-         --	},
-         --})
+          --tabline.setup({
+          --	options = {
+          --		theme = config.color_scheme,
+          --	},
+          --	sections = {
+          --		tabline_a = {
+          --			"hostname",
+          --		},
+          --		tab_active = {
+          --			"index",
+          --			{ "process", padding = { right = 1, left = 0 } },
+          --		},
+          --	},
+          --})
 
-         --tabline.apply_to_config(config)
+          --tabline.apply_to_config(config)
 
-        tabbar.apply_to_config(config, {
-        	position = tab_pos,
-        	modules = {
-        		clock = { enabled = false },
-        		zoom = { enabled = true },
-        		cwd = { enabled = false },
-        	},
-        })
+         tabbar.apply_to_config(config, {
+         	position = tab_pos,
+         	modules = {
+         		clock = { enabled = false },
+         		zoom = { enabled = true },
+         		cwd = { enabled = false },
+         	},
+         })
 
-        return config
+         return config
       '';
     };
   };
