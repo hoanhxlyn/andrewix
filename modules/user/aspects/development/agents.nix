@@ -1,6 +1,7 @@
 {
   pkgs,
   inputs,
+  lib,
   ...
 }: {
   programs.mcp = {
@@ -37,7 +38,7 @@
     enableMcpIntegration = true;
     settings = {
       username = "😺 Andrew Nguyen";
-      theme = "system";
+      theme = lib.mkDefault "system";
       permission = {
         list = "deny";
         grep = "deny";

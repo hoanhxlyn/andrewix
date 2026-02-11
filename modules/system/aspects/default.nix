@@ -1,6 +1,7 @@
 {lib, ...}: {
   imports = [
     ./core
+    ./core/stylix.nix
     ./desktop
     ./gpu/nvidia.nix
     ./gaming
@@ -9,6 +10,8 @@
   ];
 
   options.aspects = with lib; {
+    stylix.enable = mkEnableOption "Stylix theming" // {default = true;};
+
     desktop.enable = mkEnableOption "Desktop environment (GNOME)" // {default = true;};
 
     gpu.nvidia.enable = mkEnableOption "NVIDIA GPU driver support" // {default = false;};

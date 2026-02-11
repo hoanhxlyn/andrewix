@@ -34,6 +34,10 @@ inputs.flake-parts.lib.mkFlake {inherit inputs;} {
         url = "github:hoanhxlyn/fcitx5-vmk-nix";
         inputs.nixpkgs.follows = "nixpkgs";
       };
+      stylix = {
+        url = "github:nix-community/stylix";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
     };
   };
 
