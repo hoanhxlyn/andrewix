@@ -1,4 +1,4 @@
-_: {
+{lib, ...}: {
   programs = {
     zoxide.enable = true;
     bat.enable = true;
@@ -13,7 +13,7 @@ _: {
     btop = {
       enable = true;
       settings = {
-        color_theme = "tty";
+        color_theme = lib.mkDefault "tty";
         theme_background = false;
         vim_keys = true;
         proc_sorting = "memory";

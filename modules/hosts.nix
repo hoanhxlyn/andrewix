@@ -25,6 +25,7 @@
       modules =
         [
           ./hosts/${hostName}/default.nix
+          inputs.stylix.nixosModules.stylix
           # inputs.nvf.nixosModules.default
           inputs.home-manager.nixosModules.home-manager
           {
