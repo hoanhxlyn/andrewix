@@ -1,7 +1,14 @@
-- **Formatter:** `alejandra`
-- **Indentation:** 2 spaces
-- **Line Length:** Under 80 characters
-- **File Naming:** `kebab-case.nix`
-- **Variable Naming:** `camelCase`
-- **Booleans:** Prefixed with `enable` or `disable`
-- **Module Structure:** Auto-discovery of `.nix` files in `modules/system/aspects/` and `modules/user/aspects/`.
+- **Formatter:** `alejandra` (enforced by pre-commit)
+- **Indentation:** 2 spaces (no tabs)
+- **Line Length:** Prefer under 80 characters, hard limit at 100
+- **Encoding:** UTF-8
+- **Naming Conventions:**
+  - Files: `kebab-case.nix`
+  - Directories: `kebab-case`
+  - Variables/Options: `camelCase`
+  - Booleans: Prefix with `enable` or `disable`
+- **Module Structure:** Dendritic configuration using `flake-parts` with aspect-first architecture and automatic module discovery via `vic/import-tree`.
+- **Patterns:**
+  - Standard Input: `{ config, pkgs, inputs, lib, ... }: { ... }`
+  - Use `lib.mkEnableOption`, `lib.mkOption`, `lib.mkIf`, `lib.mkMerge`, `lib.mkDefault`.
+- **Safety:** State version fixed at `25.11`. ALWAYS run `nh os test .` before committing.

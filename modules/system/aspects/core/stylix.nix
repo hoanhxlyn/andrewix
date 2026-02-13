@@ -8,13 +8,13 @@
   config = lib.mkIf config.aspects.stylix.enable {
     stylix = {
       enable = true;
+      autoEnable = true;
       polarity = "dark";
-      base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-medium.yaml";
-
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
       cursor = {
         package = pkgs.bibata-cursors;
         name = "Bibata-Modern-Ice";
-        size = 24;
+        size = 20;
       };
 
       fonts = {
