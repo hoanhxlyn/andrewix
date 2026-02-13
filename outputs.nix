@@ -22,7 +22,7 @@ inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       flake-aspects.url = "github:vic/flake-aspects";
       serena.url = "github:oraios/serena";
       aic8800 = {
-        url = "github:kurumeii/aic8800-nix";
+        url = "github:hoanhxlyn/aic8800-nix";
         inputs.nixpkgs.follows = "nixpkgs";
       };
       rust-overlay = {

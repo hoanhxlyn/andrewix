@@ -1,9 +1,11 @@
-- **Apply changes:** `nh os switch ~/dotconfigs`
-- **Build without switching:** `nh os build ~/dotconfigs`
-- **Update inputs:** `nix flake update --flake ~/dotconfigs`
-- **Check for errors:** `nix flake check`
+- **Apply changes:** `nh os switch .` (requires sudo)
+- **Validate config:** `nh os test .` (RUN BEFORE COMMITS - requires sudo)
+- **Build without switching:** `nh os build .`
+- **Update all inputs:** `nix flake update --flake .`
+- **Search for packages:** `nh search <query>`
 - **Format:** `alejandra .`
-- **Lint:** `statix check`
-- **Find unused bindings:** `deadnix --fail`
+- **Lint:** `statix check && deadnix --fail`
 - **Run pre-commit hooks:** `pre-commit run --all-files`
 - **Enter dev shell:** `nix develop`
+- **Regenerate flake.nix:** `nix run .#write-flake`
+- **Build single host:** `nix build .#nixosConfigurations.andrew-pc.config.system.build.toplevel`

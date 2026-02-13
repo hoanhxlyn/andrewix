@@ -8,7 +8,7 @@
   inputs = {
     aic8800 = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:kurumeii/aic8800-nix";
+      url = "github:hoanhxlyn/aic8800-nix";
     };
     fcitx5-vmk-nix = {
       inputs.nixpkgs.follows = "nixpkgs";

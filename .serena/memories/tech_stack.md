@@ -1,4 +1,9 @@
-- NixOS
+- NixOS (Dendritic architecture)
 - Home Manager
 - flake-parts
-- Nix (language)
+- vic/import-tree (automatic module discovery)
+- vic/flake-file (auto-generated flake.nix)
+- alejandra (formatting)
+- nh (Nix Helper)
+- Neovim (configured declaratively via Home Manager)
+- Treesitter (managed via Nix)
