@@ -20,6 +20,7 @@ vim.o.laststatus = 3
 vim.o.signcolumn = "yes"
 vim.o.wrap = false
 vim.o.tabstop = 2
+vim.o.softtabstop = 2
 vim.o.shiftwidth = 2
 vim.o.cursorline = true
 vim.o.confirm = true
