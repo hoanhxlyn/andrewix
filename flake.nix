@@ -8,7 +8,11 @@
   inputs = {
     aic8800 = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:kurumeii/aic8800-nix";
+      url = "github:hoanhxlyn/aic8800-nix";
+    };
+    chezmoi-nvim = {
+      flake = false;
+      url = "github:xvzc/chezmoi.nvim";
     };
     fcitx5-vmk-nix = {
       inputs.nixpkgs.follows = "nixpkgs";
@@ -22,6 +26,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
     };
+    import-size-nvim = {
+      flake = false;
+      url = "github:stuckinsnow/import-size.nvim";
+    };
     import-tree.url = "github:vic/import-tree";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     rust-overlay = {
@@ -29,5 +37,17 @@
       url = "github:oxalica/rust-overlay";
     };
     serena.url = "github:oraios/serena";
+    stylix = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/stylix";
+    };
+    vim-rzip = {
+      flake = false;
+      url = "github:lbrayner/vim-rzip";
+    };
+    wezterm-types = {
+      flake = false;
+      url = "github:justinsgithub/wezterm-types";
+    };
   };
 }

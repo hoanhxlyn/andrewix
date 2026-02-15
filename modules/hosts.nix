@@ -25,7 +25,7 @@
       modules =
         [
           ./hosts/${hostName}/default.nix
-          # inputs.nvf.nixosModules.default
+          inputs.stylix.nixosModules.stylix
           inputs.home-manager.nixosModules.home-manager
           {
             nixpkgs.pkgs = import inputs.nixpkgs {
