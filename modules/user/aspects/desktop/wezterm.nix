@@ -35,10 +35,10 @@
 
         config.font = wezterm.font("${fontFamily}")
         config.adjust_window_size_when_changing_font_size = false
-        config.font_size = 12
+        config.font_size = ${toString osConfig.aspects.terminal.fontSize}
         config.freetype_load_target = "Light"
         config.line_height = 1
-        config.window_background_opacity = 0.8
+        config.window_background_opacity = ${toString osConfig.aspects.terminal.opacity}
         config.default_cursor_style = "BlinkingBlock"
         config.cursor_blink_rate = 500
         config.tab_bar_at_bottom = false
@@ -49,10 +49,10 @@
         config.enable_scroll_bar = false
         config.window_decorations = "NONE"
         config.window_padding = {
-        	bottom = 0,
-        	right = 0,
-        	left = 0,
-        	top = 0,
+        	bottom = ${toString osConfig.aspects.terminal.padding},
+        	right = ${toString osConfig.aspects.terminal.padding},
+        	left = ${toString osConfig.aspects.terminal.padding},
+        	top = ${toString osConfig.aspects.terminal.padding},
         }
 
         -- Leader Key: Alt+Q
