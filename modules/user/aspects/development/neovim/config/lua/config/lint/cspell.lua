@@ -234,7 +234,7 @@ utils.map("n", utils.L("csa"), function()
 		return
 	end
 	word_to_add = utils.uniq(word_to_add)
-	local result = vim.fn.confirm("Add " .. #word_to_add .. " word to dictionary ?", "\v&Yes\n&No", 1, "Question")
+	local result = vim.fn.confirm("Add " .. #word_to_add .. " word to dictionary ?", "&Yes\n&No", 1, "Question")
 	if result ~= 1 then
 		utils.notify("Cancelled", "WARN")
 		return

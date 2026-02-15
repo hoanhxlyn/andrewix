@@ -141,3 +141,37 @@ later(function()
     require("plugins.blink")
   end
 end)
+
+-- Optional self-test entry point for CI / integration tests.
+-- When NVIM_CONFIG_SELFTEST=1 is set in the environment, this block will
+-- attempt to load a subset of critical plugins and then exit Neovim with
+-- an appropriate status code.
+if vim.env.NVIM_CONFIG_SELFTEST == "1" then
+  local ok, err = pcall(function()
+    -- Core tooling
+    require("plugins.mason")
+    require("plugins.lspconfig")
+
+    -- Linters / formatters / debugging
+    require("plugins.nvim-lint")
+    require("plugins.conform")
+    require("plugins.dap")
+
+    -- UI essentials
+    if vim.g.mini.tabline then
+      require("plugins.mini.tabline")
+    else
+      require("plugins.lualine")
+    end
+    require("plugins.mini.statusline")
+    require("plugins.nvim-navic")
+  end)
+
+  if not ok then
+    vim.api.nvim_err_writeln("Neovim config self-test failed: " .. tostring(err))
+    -- Use cquit so that headless CI can detect failure via exit code.
+    vim.cmd("cquit 1")
+  else
+    vim.cmd("cquit 0")
+  end
+end
