@@ -22,7 +22,7 @@ inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       flake-aspects.url = "github:vic/flake-aspects";
       serena.url = "github:oraios/serena";
       aic8800 = {
-        url = "github:kurumeii/aic8800-nix";
+        url = "github:hoanhxlyn/aic8800-nix";
         inputs.nixpkgs.follows = "nixpkgs";
       };
       rust-overlay = {
@@ -33,6 +33,26 @@ inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       fcitx5-vmk-nix = {
         url = "github:hoanhxlyn/fcitx5-vmk-nix";
         inputs.nixpkgs.follows = "nixpkgs";
+      };
+      stylix = {
+        url = "github:nix-community/stylix";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
+      chezmoi-nvim = {
+        url = "github:xvzc/chezmoi.nvim";
+        flake = false;
+      };
+      import-size-nvim = {
+        url = "github:stuckinsnow/import-size.nvim";
+        flake = false;
+      };
+      wezterm-types = {
+        url = "github:justinsgithub/wezterm-types";
+        flake = false;
+      };
+      vim-rzip = {
+        url = "github:lbrayner/vim-rzip";
+        flake = false;
       };
     };
   };
