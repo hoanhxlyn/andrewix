@@ -1,6 +1,3 @@
-MiniDeps.add({
-	source = "xvzc/chezmoi.nvim",
-})
 require("chezmoi").setup({
 	edit = {
 		watch = true,

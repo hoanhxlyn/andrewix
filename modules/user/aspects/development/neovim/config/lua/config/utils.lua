@@ -443,18 +443,8 @@ H.setup_lsp = function(a, b)
     server, cfg = "*", a or {}
   end
   _G.mininvim._lsp_configs = _G.mininvim._lsp_configs or { ["*"] = {} }
-  vim.tbl_deep_extend("force", _G.mininvim._lsp_configs[server] or {}, cfg)
+  _G.mininvim._lsp_configs[server] = vim.tbl_deep_extend("force", _G.mininvim._lsp_configs[server] or {}, cfg)
   vim.lsp.config(server, cfg)
-end
-
---- @param f function Callback function
---- @param later? boolean Whether to run later
-local adaptive = function(f, later)
-  if later then
-    require("mini.deps").later(f)
-  else
-    require("mini.deps").now(f)
-  end
 end
 
 return H

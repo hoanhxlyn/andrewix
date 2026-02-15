@@ -1,9 +1,3 @@
-local add = require("mini.deps").add
-
-add("b0o/SchemaStore.nvim")
-add("nvim-lua/plenary.nvim")
-add("justinsgithub/wezterm-types")
-add("folke/lazydev.nvim")
 
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "lua" },

@@ -38,6 +38,22 @@ inputs.flake-parts.lib.mkFlake {inherit inputs;} {
         url = "github:nix-community/stylix";
         inputs.nixpkgs.follows = "nixpkgs";
       };
+      chezmoi-nvim = {
+        url = "github:xvzc/chezmoi.nvim";
+        flake = false;
+      };
+      import-size-nvim = {
+        url = "github:stuckinsnow/import-size.nvim";
+        flake = false;
+      };
+      wezterm-types = {
+        url = "github:justinsgithub/wezterm-types";
+        flake = false;
+      };
+      vim-rzip = {
+        url = "github:lbrayner/vim-rzip";
+        flake = false;
+      };
     };
   };
 

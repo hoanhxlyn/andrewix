@@ -1,19 +1,8 @@
 local colorscheme = "gruvbox-material"
 local transparent = false
-local add = require("mini.deps").add
-
-add("folke/tokyonight.nvim")
-add("f4z3r/gruvbox-material.nvim")
-add("ellisonleao/gruvbox.nvim")
-add("rebelot/kanagawa.nvim")
-add({ source = "catppuccin/nvim", name = "catppuccin" })
 require("gruvbox").setup({
   contrast = "",
   transparent_mode = transparent,
-})
-add({
-  source = "rose-pine/neovim",
-  name = "rose-pine",
 })
 require("gruvbox-material").setup({
   background = {

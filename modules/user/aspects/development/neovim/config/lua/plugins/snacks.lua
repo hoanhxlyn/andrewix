@@ -1,5 +1,4 @@
 local utils = require("config.utils")
-require("mini.deps").add("folke/snacks.nvim")
 
 require("snacks").setup({
   statuscolumn = {
@@ -261,8 +260,7 @@ if not vim.g.mini.picks then
   end, "Find buffer line")
   utils.map("n", utils.L("ft"), Snacks.picker.colorschemes, "Find colorschemes")
   require("mini.deps").later(function()
-    require("mini.deps").add("folke/todo-comments.nvim")
-    require("todo-comments").setup({
+        require("todo-comments").setup({
       signs = false,
     })
     utils.map("n", utils.L("fT"), function()

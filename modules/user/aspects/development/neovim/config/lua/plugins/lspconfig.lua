@@ -1,4 +1,3 @@
-require("mini.deps").add("neovim/nvim-lspconfig")
 local utils = require("config.utils")
 -- LspAttach
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -77,9 +76,3 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
-vim.api.nvim_create_autocmd({ "BufReadPre" }, {
-  once = true,
-  callback = function()
-    vim.cmd([[MasonToolsInstallSync]])
-  end,
-})

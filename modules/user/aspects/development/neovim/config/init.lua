@@ -1,29 +1,5 @@
 vim.g.start_time = vim.uv.hrtime()
-local path_package = vim.fn.stdpath("data") .. "/site"
-local mini_path = path_package .. "/pack/deps/start/mini.nvim"
-
-if not vim.uv.fs_stat(mini_path) then
-  vim.cmd('echo "Installing `mini.nvim`" | redraw')
-  local clone_cmd = {
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "--branch",
-    "stable",
-    "https://github.com/nvim-mini/mini.nvim",
-    mini_path,
-  }
-  vim.fn.system(clone_cmd)
-  vim.cmd("packadd mini.nvim | helptags ALL")
-  vim.cmd('echo "Installed `mini.nvim`" | redraw')
-end
-
-require("mini.deps").setup({
-  path = {
-    package = path_package,
-  },
-})
-
+require("mini.deps").setup()
 local now, later = MiniDeps.now, MiniDeps.later
 
 vim.g.mini = {
@@ -98,7 +74,6 @@ later(function()
   require("plugins.mini.git")
   require("plugins.mini.ai")
   require("plugins.mini.jump")
-  require("plugins.mini.sessions")
   require("plugins.mini.surround")
   require("plugins.mini.comment")
   require("plugins.mini.snippets")

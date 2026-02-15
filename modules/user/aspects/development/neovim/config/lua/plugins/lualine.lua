@@ -1,5 +1,4 @@
 ---@module 'mini.deps'
-MiniDeps.add("akinsho/bufferline.nvim")
 local utils = require("config.utils")
 require("bufferline").setup({
   options = {

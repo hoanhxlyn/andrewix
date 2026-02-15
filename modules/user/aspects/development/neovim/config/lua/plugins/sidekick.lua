@@ -1,4 +1,3 @@
-MiniDeps.add("folke/sidekick.nvim")
 local utils = require("config.utils")
 -- AGENT
 require("sidekick").setup({

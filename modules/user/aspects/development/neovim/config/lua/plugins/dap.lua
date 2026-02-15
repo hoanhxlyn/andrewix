@@ -1,12 +1,3 @@
-local add = require("mini.deps").add
-
-add("mfussenegger/nvim-dap")
-add({
-	source = "rcarriga/nvim-dap-ui",
-	depends = { "nvim-neotest/nvim-nio" },
-})
-add("theHamsta/nvim-dap-virtual-text")
-add("jay-babu/mason-nvim-dap.nvim")
 
 local dap = require("dap")
 local dapui = require("dapui")
