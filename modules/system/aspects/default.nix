@@ -21,5 +21,23 @@
       default = "none";
       description = "Choose which terminal emulator to enable (only one at a time).";
     };
+
+    terminal = {
+      opacity = mkOption {
+        type = types.float;
+        default = 0.8;
+        description = "Terminal window opacity";
+      };
+      fontSize = mkOption {
+        type = types.int;
+        default = 12;
+        description = "Terminal font size";
+      };
+      padding = mkOption {
+        type = types.int;
+        default = 3;
+        description = "Terminal window padding";
+      };
+    };
   };
 }

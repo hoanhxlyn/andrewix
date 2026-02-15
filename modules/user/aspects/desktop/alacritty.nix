@@ -7,18 +7,18 @@
   config = lib.mkIf (osConfig.aspects.terminalEmulator == "alacritty") {
     programs.alacritty = {
       enable = true;
-      theme = "tokyo_night";
+      # theme = "tokyo_night";
       settings = {
         window = {
-          padding.x = 3;
-          padding.y = 3;
+          padding.x = osConfig.aspects.terminal.padding;
+          padding.y = osConfig.aspects.terminal.padding;
           decorations = "None";
-          opacity = 0.9;
+          opacity = lib.mkForce osConfig.aspects.terminal.opacity;
           blur = true;
           startup_mode = "Maximized";
         };
         font = {
-          size = 12;
+          size = osConfig.aspects.terminal.fontSize;
           normal.family = "${fontFamily}";
           normal.style = "Regular";
         };

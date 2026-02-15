@@ -10,6 +10,7 @@
       enable = true;
       autoEnable = true;
       polarity = "dark";
+      opacity.terminal = config.aspects.terminal.opacity;
       base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
       cursor = {
         package = pkgs.bibata-cursors;
