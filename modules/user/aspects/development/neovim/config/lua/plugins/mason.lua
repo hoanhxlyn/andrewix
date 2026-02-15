@@ -1,10 +1,3 @@
-require("mini.deps").add({
-  source = "mason-org/mason.nvim",
-  depends = {
-    "mason-org/mason-lspconfig.nvim",
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-  },
-})
 
 require("mason").setup({
   automatic_installation = false,

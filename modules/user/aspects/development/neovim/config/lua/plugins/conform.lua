@@ -1,4 +1,3 @@
-require("mini.deps").add("stevearc/conform.nvim")
 vim.api.nvim_create_autocmd("BufRead", {
   callback = function()
     require("conform").setup({

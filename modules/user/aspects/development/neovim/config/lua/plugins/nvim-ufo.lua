@@ -1,11 +1,3 @@
-local add = require("mini.deps").add
-add("lbrayner/vim-rzip")
-add({
-	source = "kevinhwang91/nvim-ufo",
-	depends = {
-		"kevinhwang91/promise-async",
-	},
-})
 vim.api.nvim_create_autocmd("BufReadPost", {
 	callback = function()
 		vim.o.foldcolumn = "auto"

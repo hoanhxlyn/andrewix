@@ -1,15 +1,4 @@
 local utils = require("config.utils")
-MiniDeps.add({
-	source = "saghen/blink.cmp",
-	hooks = {
-		post_checkout = utils.build_blink,
-		post_install = utils.build_blink,
-	},
-	depends = {
-		"folke/lazydev.nvim",
-		"fang2hou/blink-copilot",
-	},
-})
 require("blink.cmp").setup({
 	keymap = {
 		preset = "enter",

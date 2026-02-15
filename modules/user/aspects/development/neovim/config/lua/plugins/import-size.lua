@@ -1,4 +1,3 @@
-require("mini.deps").add("stuckinsnow/import-size.nvim")
 local utils = require("config.utils")
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "javascript", "javascriptreact", "typescript", "typescriptreact" },

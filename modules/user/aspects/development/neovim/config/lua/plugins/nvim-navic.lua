@@ -1,9 +1,3 @@
-MiniDeps.add({
-	source = "SmiteshP/nvim-navic",
-	depends = {
-		"neovim/nvim-lspconfig",
-	},
-})
 require("nvim-navic").setup({
 	highlight = true,
 	depth_limit = 4,

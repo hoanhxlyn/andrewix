@@ -1,4 +1,3 @@
-require("mini.deps").add("windwp/nvim-ts-autotag")
 
 vim.api.nvim_create_autocmd("InsertEnter", {
 	callback = function()

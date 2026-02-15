@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }: let
   cfg = config.modules.development.neovim;
@@ -49,6 +50,59 @@ in {
         ]))
         nvim-treesitter-textobjects
         nvim-treesitter-context
+
+        # Plugins
+        mini-nvim
+        snacks-nvim
+        nvim-lspconfig
+        mason-nvim
+        mason-lspconfig-nvim
+        todo-comments-nvim
+        nvim-ts-context-commentstring
+        nvim-ts-autotag
+        bufferline-nvim
+        nvim-lint
+        sidekick-nvim
+        blink-cmp
+        conform-nvim
+        nvim-navic
+        lazydev-nvim
+        friendly-snippets
+        blink-copilot
+        nvim-ufo
+        promise-async
+        SchemaStore-nvim
+        plenary-nvim
+        tokyonight-nvim
+        gruvbox-material-nvim
+        gruvbox-nvim
+        kanagawa-nvim
+        catppuccin-nvim
+        rose-pine
+        nvim-dap
+        nvim-dap-ui
+        nvim-nio
+        nvim-dap-virtual-text
+        mason-nvim-dap-nvim
+
+        # Custom plugins from inputs
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "chezmoi-nvim";
+          src = inputs.chezmoi-nvim;
+          dependencies = [pkgs.vimPlugins.plenary-nvim];
+        })
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "import-size-nvim";
+          src = inputs.import-size-nvim;
+        })
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "wezterm-types";
+          src = inputs.wezterm-types;
+        })
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "vim-rzip";
+          src = inputs.vim-rzip;
+        })
       ];
 
       extraPackages = with pkgs; [
@@ -57,6 +111,7 @@ in {
         ghostscript
         tectonic
         imagemagick
+        gcc
         tree-sitter
         alejandra
         stylua
