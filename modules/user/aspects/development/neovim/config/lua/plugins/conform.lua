@@ -27,6 +27,7 @@ vim.api.nvim_create_autocmd("BufRead", {
         kdl = { "kdlfmt" },
         sh = { "shfmt" },
         nix = { "alejandra" },
+        toml = { "taplo" },
       },
       formatters = {
         biome = {
