@@ -1,10 +1,10 @@
-{lib, ...}: {
+{
+  lib,
+  inputs,
+  ...
+}: {
   imports = [
-    ./core
-    ./desktop
-    ./gpu
-    ./gaming
-    ./utilities
+    (inputs.import-tree.filterNot (path: baseNameOf path == "default.nix") ./.)
   ];
 
   options.aspects = with lib; {
@@ -16,13 +16,13 @@
       steam.enable = mkEnableOption "Steam gaming platform" // {default = false;};
     };
     utilities.enable = mkEnableOption "System utilities (browsers, power management, etc)" // {default = true;};
-    terminalEmulator = mkOption {
-      type = types.enum ["wezterm" "alacritty" "none"];
-      default = "none";
-      description = "Choose which terminal emulator to enable (only one at a time).";
-    };
-
+    fingerprint.enable = mkEnableOption "Fingerpint services" // {default = false;};
     terminal = {
+      whichOne = mkOption {
+        type = types.enum ["wezterm" "alacritty"];
+        default = "none";
+        description = "Choose which terminal emulator to enable (only one at a time).";
+      };
       opacity = mkOption {
         type = types.float;
         default = 0.8;

@@ -4,7 +4,7 @@
   fontFamily,
   ...
 }: {
-  config = lib.mkIf (osConfig.aspects.terminalEmulator == "wezterm") {
+  config = lib.mkIf (osConfig.aspects.terminal.whichOne == "wezterm") {
     programs.wezterm = {
       enable = true;
       extraConfig = ''
