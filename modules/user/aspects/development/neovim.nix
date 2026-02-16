@@ -124,6 +124,7 @@ in {
         taplo
         kdlfmt
         cspell
+        lsof
         # LSPs
         vtsls
         lua-language-server
