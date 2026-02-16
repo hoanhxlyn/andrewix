@@ -4,7 +4,7 @@
   fontFamily,
   ...
 }: {
-  config = lib.mkIf (osConfig.aspects.terminalEmulator == "alacritty") {
+  config = lib.mkIf (osConfig.aspects.terminal.whichOne == "alacritty") {
     programs.alacritty = {
       enable = true;
       # theme = "tokyo_night";
