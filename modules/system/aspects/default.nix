@@ -39,5 +39,8 @@
         description = "Terminal window padding";
       };
     };
+    dev = {
+      neovix.enable = mkEnableOption "neovim" // {default = true;};
+    };
   };
 }
