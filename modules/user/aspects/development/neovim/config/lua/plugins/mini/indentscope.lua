@@ -19,7 +19,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		"fzf",
 		"help",
 		"lazy",
-		"mason",
 		"neo-tree",
 		"notify",
 		"sidekick_terminal",
