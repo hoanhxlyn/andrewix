@@ -30,12 +30,12 @@
       };
       fontSize = mkOption {
         type = types.int;
-        default = 12;
+        default = 10;
         description = "Terminal font size";
       };
       padding = mkOption {
         type = types.int;
-        default = 3;
+        default = 2;
         description = "Terminal window padding";
       };
     };

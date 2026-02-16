@@ -11,6 +11,6 @@
     gpu.nvidia.enable = true;
     gaming.xone.enable = true;
     gaming.steam.enable = true;
-    terminalEmulator = "alacritty";
+    terminal.whichOne = "alacritty";
   };
 }
