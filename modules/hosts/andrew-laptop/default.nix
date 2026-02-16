@@ -7,6 +7,7 @@
   networking.hostName = "andrew-laptop";
   hardware.aic8800.enable = true;
   aspects = {
-    terminalEmulator = "alacritty";
+    terminal.whichOne = "alacritty";
+    fingerprint.enable = true;
   };
 }

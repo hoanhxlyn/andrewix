@@ -8,7 +8,7 @@
     interactiveShellInit = ''
       set fish_greeting
       fastfetch -c examples/13.jsonc
-      set -gx TAVILY_API_KEY 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
+      set -gx TAVILY_API_KEY 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
       set -gx CONTEXT_7_API_KEY ctx7sk-59f29886-91a0-408f-86a2-0c32e0e43f21
       set -u EDITOR nvim
     '';
