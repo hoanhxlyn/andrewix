@@ -15,7 +15,7 @@ in {
         enable = true;
         settings = {
           user.email = "hoanhxlyn@gmail.com";
-          user.name = "Hoang Anh";
+          user.name = "Andrew Nguyen";
         };
       };
       gh = {
