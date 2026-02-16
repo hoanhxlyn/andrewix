@@ -10,7 +10,7 @@
         enable = true;
         settings = {
           START_CHARGE_THRESH_BAT0 = 40;
-          STOP_CHARGE_THRESH_BAT0 = 85;
+          STOP_CHARGE_THRESH_BAT0 = 90;
 
           # CPU
           CPU_SCALING_GOVERNOR_ON_AC = "powersave";
