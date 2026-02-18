@@ -150,19 +150,6 @@ utils.map("n", utils.L("tf"), function()
   })
 end, "Terminal New (Float)")
 
-utils.map("n", utils.L("ty"), function()
-  Snacks.terminal.open("yazi", {
-    win = {
-      style = "float",
-      enter = true,
-      width = 0.7,
-      border = "rounded",
-      title = "Yazi",
-      title_pos = "center",
-    },
-  })
-end)
-
 utils.map("n", utils.L("td"), function()
   local terms = get_terms()
   if #terms == 0 then
@@ -260,7 +247,7 @@ if not vim.g.mini.picks then
   end, "Find buffer line")
   utils.map("n", utils.L("ft"), Snacks.picker.colorschemes, "Find colorschemes")
   require("mini.deps").later(function()
-        require("todo-comments").setup({
+    require("todo-comments").setup({
       signs = false,
     })
     utils.map("n", utils.L("fT"), function()

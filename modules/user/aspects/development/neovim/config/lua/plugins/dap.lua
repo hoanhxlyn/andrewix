@@ -11,11 +11,6 @@ for name, icon in pairs(_G.mininvim.icons.dap) do
 	vim.fn.sign_define(sign_name, { text = icon, texthl = sign_name, linehl = "", numhl = "" })
 end
 
-require("mason-nvim-dap").setup({
-	ensure_installed = {},
-	automatic_installation = false,
-})
-
 require("nvim-dap-virtual-text").setup({
 	enabled = true,
 })
