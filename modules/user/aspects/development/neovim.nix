@@ -5,7 +5,7 @@
   inputs,
   ...
 }: {
-  config = lib.mkIf osConfig.aspects.dev.neovix.enable {
+  config = lib.mkIf osConfig.aspects.dev.neovim.enable {
     programs.neovim = {
       enable = true;
       defaultEditor = true;

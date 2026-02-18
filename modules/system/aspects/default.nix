@@ -16,7 +16,7 @@
       steam.enable = mkEnableOption "Steam gaming platform" // {default = false;};
     };
     utilities.enable = mkEnableOption "System utilities (browsers, power management, etc)" // {default = true;};
-    fingerprint.enable = mkEnableOption "Fingerpint services" // {default = false;};
+    fingerprint.enable = mkEnableOption "Fingerprint services" // {default = false;};
     terminal = {
       whichOne = mkOption {
         type = types.enum ["wezterm" "alacritty"];
@@ -40,7 +40,7 @@
       };
     };
     dev = {
-      neovix.enable = mkEnableOption "neovim" // {default = true;};
+      neovim.enable = mkEnableOption "neovim" // {default = true;};
     };
   };
 }
