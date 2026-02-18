@@ -1,10 +1,11 @@
 {
+  __findFile ? __findFile,
   den,
   ...
 }: {
   andrewix.system.utilities = den.lib.parametric {
-    imports = [
-      ./power-management.nix
+    includes = [
+      <andrewix/system/utilities/power-management>
     ];
   };
 }

@@ -37,6 +37,7 @@ in {
     <andrewix/common>
     <andrewix/system/hostname/andrew-pc>
     <andrewix/system/hardware/andrew-pc>
+    <andrewix/system/aic8800>
     (<andrewix/system/gpu/nvidia>)
     <andrewix/system/gaming/xone>
     <andrewix/system/gaming/steam>
@@ -47,6 +48,7 @@ in {
     <andrewix/common>
     <andrewix/system/hostname/andrew-laptop>
     <andrewix/system/hardware/andrew-laptop>
+    <andrewix/system/aic8800>
     (<andrewix/system/terminal> {whichOne = "wezterm";})
   ];
 
@@ -58,6 +60,7 @@ in {
   ];
 
   den.default.includes = [
+    <den/unfree>
     <my/state-version>
   ];
 }

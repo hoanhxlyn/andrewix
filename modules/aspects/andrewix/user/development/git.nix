@@ -1,65 +1,55 @@
-{
-  config,
-  lib,
-  ...
-}: {
-  options.modules.development.git = {
-    enable = lib.mkEnableOption "git and related tools" // {default = true;};
-  };
-
-  config = lib.mkIf config.modules.development.git.enable {
-    programs = {
-      git = {
-        enable = true;
-        settings = {
-          user.email = "hoanhxlyn@gmail.com";
-          user.name = "Andrew Nguyen";
-        };
+{lib, ...}: {
+  programs = {
+    git = {
+      enable = lib.mkDefault true;
+      settings = {
+        user.email = "hoanhxlyn@gmail.com";
+        user.name = "Andrew Nguyen";
       };
-      gh = {
-        enable = true;
-        gitCredentialHelper.enable = true;
-        settings = {
-          editor = "nvim";
-        };
+    };
+    gh = {
+      enable = lib.mkDefault true;
+      gitCredentialHelper.enable = true;
+      settings = {
+        editor = "nvim";
       };
-      lazygit = {
-        enable = true;
-        settings = {
-          git = {
-            pagers = [
-              {
-                externalDiffCommand = "difft --color=always --display=inline";
-              }
+    };
+    lazygit = {
+      enable = lib.mkDefault true;
+      settings = {
+        git = {
+          pagers = [
+            {
+              externalDiffCommand = "difft --color=always --display=inline";
+            }
+          ];
+        };
+        gui = {
+          nerdFontsVersion = "3";
+          showBranchCommitHash = true;
+          showCommandLog = true;
+          spinner = {
+            frames = [
+              "⠋"
+              "⠙"
+              "⠹"
+              "⠸"
+              "⠼"
+              "⠴"
+              "⠦"
+              "⠧"
+              "⠇"
+              "⠏"
             ];
-          };
-          gui = {
-            nerdFontsVersion = "3";
-            showBranchCommitHash = true;
-            showCommandLog = true;
-            spinner = {
-              frames = [
-                "⠋"
-                "⠙"
-                "⠹"
-                "⠸"
-                "⠼"
-                "⠴"
-                "⠦"
-                "⠧"
-                "⠇"
-                "⠏"
-              ];
-              rate = 120;
-            };
+            rate = 120;
           };
         };
       };
-      difftastic = {
-        enable = true;
-        git.enable = true;
-        git.diffToolMode = true;
-      };
+    };
+    difftastic = {
+      enable = lib.mkDefault true;
+      git.enable = true;
+      git.diffToolMode = true;
     };
   };
 }

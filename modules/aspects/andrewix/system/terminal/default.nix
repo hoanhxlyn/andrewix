@@ -8,6 +8,7 @@
     opacity ? 0.8,
     fontSize ? 10,
     padding ? 2,
+    fontFamily ? "CaskaydiaCove Nerd Font",
     ...
   }: {
     options.aspects.terminal = with lib; {
@@ -30,6 +31,11 @@
         type = types.int;
         default = padding;
         description = "Terminal window padding";
+      };
+      fontFamily = mkOption {
+        type = types.str;
+        default = fontFamily;
+        description = "Terminal font family";
       };
     };
   });
