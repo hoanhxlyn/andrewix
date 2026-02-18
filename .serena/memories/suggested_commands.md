@@ -11,7 +11,7 @@
 ### Code Quality & Formatting
 `alejandra .` - Format all Nix files
 `statix check` - Lint for Nix best practices
-`deadnix --fail` - Find unused bindings
+`deadnix --no-underscore --fail` - Find unused bindings
 `pre-commit run --all-files` - Run all pre-commit hooks manually
 `nix develop` - Enter development shell with all tools
 `nix-instantiate --eval /path/to/file.nix` - Check specific file for syntax errors

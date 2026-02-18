@@ -9,7 +9,7 @@ Dendritic NixOS configuration using flake-parts with aspect-first architecture a
 nix develop                          # Enter dev shell with all tools
 nh os test .                         # Validate config (RUN BEFORE COMMITS - requires sudo)
 alejandra .                          # Format all Nix files
-statix check && deadnix --fail       # Lint & find unused code
+statix check && deadnix --no-underscore --fail       # Lint & find unused code
 pre-commit run --all-files           # Run all pre-commit hooks
 ```
 

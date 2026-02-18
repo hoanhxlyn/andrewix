@@ -71,7 +71,10 @@ inputs.flake-parts.lib.mkFlake {inherit inputs;} {
     pre-commit.settings = {
       hooks = {
         statix.enable = true;
-        deadnix.enable = true;
+        deadnix = {
+          enable = true;
+          extraArgs = ["--no-underscore"];
+        };
         nixfmt.enable = false;
         alejandra.enable = true;
       };

@@ -1,53 +1,39 @@
 # DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
 # Use `nix run .#write-flake` to regenerate it.
 {
-  description = "Andrewix - Dendritic Configuration";
-
-  outputs = inputs: import ./outputs.nix inputs;
+  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
 
   inputs = {
-    aic8800 = {
-      inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:hoanhxlyn/aic8800-nix";
-    };
-    chezmoi-nvim = {
+    den.url = "github:vic/den";
+    enthium = {
       flake = false;
-      url = "github:xvzc/chezmoi.nvim";
-    };
-    fcitx5-vmk-nix = {
-      inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:hoanhxlyn/fcitx5-vmk-nix";
+      url = "github:sunaku/enthium/v10";
     };
     flake-aspects.url = "github:vic/flake-aspects";
     flake-file.url = "github:vic/flake-file";
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    git-hooks-nix.url = "github:cachix/git-hooks.nix";
+    flake-parts = {
+      inputs.nixpkgs-lib.follows = "nixpkgs-lib";
+      url = "github:hercules-ci/flake-parts";
+    };
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
     };
-    import-size-nvim = {
-      flake = false;
-      url = "github:stuckinsnow/import-size.nvim";
-    };
     import-tree.url = "github:vic/import-tree";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    rust-overlay = {
+    nix-auto-follow = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:oxalica/rust-overlay";
+      url = "github:fzakaria/nix-auto-follow";
     };
-    serena.url = "github:oraios/serena";
-    stylix = {
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    nixos-wsl.url = "github:nix-community/nixos-wsl";
+    nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
+    nixpkgs-lib.follows = "nixpkgs";
+    systems.url = "github:nix-systems/default";
+    treefmt-nix = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:nix-community/stylix";
+      url = "github:numtide/treefmt-nix";
     };
-    vim-rzip = {
-      flake = false;
-      url = "github:lbrayner/vim-rzip";
-    };
-    wezterm-types = {
-      flake = false;
-      url = "github:justinsgithub/wezterm-types";
-    };
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
 }

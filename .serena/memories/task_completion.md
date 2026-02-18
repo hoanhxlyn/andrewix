@@ -18,7 +18,7 @@ statix check
 
 ### 3. Check for Unused Code
 ```bash
-deadnix --fail
+deadnix --no-underscore --fail
 ```
 - Detects unused bindings and variables
 - Fails if any found (useful for CI)
