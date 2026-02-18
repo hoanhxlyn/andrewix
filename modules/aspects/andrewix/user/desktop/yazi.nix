@@ -4,14 +4,13 @@
   lib,
   ...
 }: let
-  cfg = config.modules.desktop.yazi;
   plug = pkgs.yaziPlugins;
 in {
   options.modules.desktop.yazi = {
-    enable = lib.mkEnableOption "yazi";
+    enable = lib.mkEnableOption "yazi" // {default = true;};
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf config.modules.desktop.yazi.enable {
     programs.yazi = {
       enable = true;
       shellWrapperName = "y";

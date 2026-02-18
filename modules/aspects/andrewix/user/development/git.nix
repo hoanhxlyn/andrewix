@@ -2,14 +2,12 @@
   config,
   lib,
   ...
-}: let
-  cfg = config.modules.development.git;
-in {
+}: {
   options.modules.development.git = {
-    enable = lib.mkEnableOption "git and related tools";
+    enable = lib.mkEnableOption "git and related tools" // {default = true;};
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf config.modules.development.git.enable {
     programs = {
       git = {
         enable = true;

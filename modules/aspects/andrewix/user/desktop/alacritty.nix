@@ -1,23 +1,29 @@
 {
   osConfig,
   lib,
-  fontFamily,
   ...
-}: {
+}: let
+  terminalCfg = osConfig.aspects.terminal or {
+    whichOne = "alacritty";
+    padding = 2;
+    opacity = 0.8;
+    fontSize = 10;
+  };
+in {
   programs.alacritty = {
-    enable = lib.mkDefault (osConfig.aspects.terminal.whichOne == "alacritty");
+    enable = lib.mkDefault (terminalCfg.whichOne == "alacritty");
     settings = {
       window = {
-        padding.x = osConfig.aspects.terminal.padding;
-        padding.y = osConfig.aspects.terminal.padding;
+        padding.x = terminalCfg.padding;
+        padding.y = terminalCfg.padding;
         decorations = "None";
-        inherit (osConfig.aspects.terminal) opacity;
+        inherit (terminalCfg) opacity;
         blur = true;
         startup_mode = "Maximized";
       };
       font = {
-        size = osConfig.aspects.terminal.fontSize;
-        normal.family = "${fontFamily}";
+        size = terminalCfg.fontSize;
+        normal.family = "CaskaydiaCove Nerd Font";
         normal.style = "Regular";
       };
       selection = {
