@@ -8,8 +8,9 @@
     interactiveShellInit = ''
       set fish_greeting
       fastfetch -c examples/13.jsonc
-      set -gx TAVILY_API_KEY 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
-      set -gx CONTEXT_7_API_KEY ctx7sk-59f29886-91a0-408f-86a2-0c32e0e43f21
+      # API keys should be set via environment variables or secrets management
+      # Example: set -gx TAVILY_API_KEY (cat ~/.secrets/tavily_api_key)
+      # Example: set -gx CONTEXT_7_API_KEY (cat ~/.secrets/context7_api_key)
       set -u EDITOR nvim
     '';
     shellAliases = {

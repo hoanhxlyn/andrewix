@@ -153,22 +153,6 @@
            window:gui_window():maximize()
          end)
 
-          --tabline.setup({
-          --	options = {
-          --		theme = config.color_scheme,
-          --	},
-          --	sections = {
-          --		tabline_a = {
-          --			"hostname",
-          --		},
-          --		tab_active = {
-          --			"index",
-          --			{ "process", padding = { right = 1, left = 0 } },
-          --		},
-          --	},
-          --})
-
-          --tabline.apply_to_config(config)
 
          tabbar.apply_to_config(config, {
          	position = tab_pos,

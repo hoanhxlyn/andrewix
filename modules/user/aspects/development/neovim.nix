@@ -76,11 +76,6 @@
         nvim-dap-virtual-text
 
         # Custom plugins from inputs
-        # (pkgs.vimUtils.buildVimPlugin {
-        #   name = "chezmoi-nvim";
-        #   src = inputs.chezmoi-nvim;
-        #   dependencies = [pkgs.vimPlugins.plenary-nvim];
-        # })
         (pkgs.vimUtils.buildVimPlugin {
           name = "import-size-nvim";
           src = inputs.import-size-nvim;
