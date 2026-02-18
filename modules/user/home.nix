@@ -21,6 +21,7 @@
     };
     development = {
       git.enable = true;
+      neovim.enable = true;
     };
   };
 }

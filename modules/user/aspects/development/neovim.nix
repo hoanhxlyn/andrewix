@@ -1,11 +1,18 @@
 {
-  osConfig,
+  config,
   lib,
   pkgs,
   inputs,
   ...
-}: {
-  config = lib.mkIf osConfig.aspects.dev.neovix.enable {
+}: let
+  cfg = config.modules.development.neovim;
+  neovim-config = ./neovim/config;
+in {
+  options.modules.development.neovim = {
+    enable = lib.mkEnableOption "neovim";
+  };
+
+  config = lib.mkIf cfg.enable {
     programs.neovim = {
       enable = true;
       defaultEditor = true;
@@ -48,6 +55,8 @@
         mini-nvim
         snacks-nvim
         nvim-lspconfig
+        mason-nvim
+        mason-lspconfig-nvim
         todo-comments-nvim
         nvim-ts-context-commentstring
         nvim-ts-autotag
@@ -74,13 +83,14 @@
         nvim-dap-ui
         nvim-nio
         nvim-dap-virtual-text
+        mason-nvim-dap-nvim
 
         # Custom plugins from inputs
-        # (pkgs.vimUtils.buildVimPlugin {
-        #   name = "chezmoi-nvim";
-        #   src = inputs.chezmoi-nvim;
-        #   dependencies = [pkgs.vimPlugins.plenary-nvim];
-        # })
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "chezmoi-nvim";
+          src = inputs.chezmoi-nvim;
+          dependencies = [pkgs.vimPlugins.plenary-nvim];
+        })
         (pkgs.vimUtils.buildVimPlugin {
           name = "import-size-nvim";
           src = inputs.import-size-nvim;
@@ -96,6 +106,7 @@
       ];
 
       extraPackages = with pkgs; [
+        # Tools
         mermaid-cli
         ghostscript
         tectonic
@@ -113,21 +124,23 @@
         taplo
         kdlfmt
         cspell
-        stylelint
         lsof
+        # LSPs
         vtsls
         lua-language-server
         tailwindcss-language-server
         vscode-langservers-extracted
         yaml-language-server
         nil
+        # Debuggers
         vscode-js-debug
-        fish-lsp
       ];
     };
 
+    home.packages = [pkgs.fish];
+
     xdg.configFile.nvim = {
-      source = ./neovim/config;
+      source = neovim-config;
       recursive = true;
     };
   };
