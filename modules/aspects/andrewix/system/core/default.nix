@@ -1,5 +1,4 @@
 {
-  username,
   pkgs,
   den,
   ...
@@ -15,15 +14,6 @@
     ];
 
     config = {
-      users.users.${username} = {
-        isNormalUser = true;
-        description = "Andrew Nguyen";
-        extraGroups = [
-          "networkmanager"
-          "wheel"
-        ];
-        shell = pkgs.fish;
-      };
       networking.networkmanager.enable = true;
       time.timeZone = "Asia/Ho_Chi_Minh";
       security.rtkit.enable = true;
