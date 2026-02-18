@@ -1,8 +1,4 @@
-{
-  pkgs,
-  fontFamily,
-  ...
-}: {
+{pkgs, ...}: {
   environment.variables = {
     GTK_IM_MODULE = "fcitx";
     QT_IM_MODULE = "fcitx";
@@ -30,8 +26,8 @@
               ChromeX11 = "True";
             };
             classicui.globalSection = {
-              Font = "${fontFamily} 11";
-              MenuFont = "${fontFamily} 11";
+              Font = "CaskaydiaCove Nerd Font 11";
+              MenuFont = "CaskaydiaCove Nerd Font 11";
             };
           };
           globalOptions = {

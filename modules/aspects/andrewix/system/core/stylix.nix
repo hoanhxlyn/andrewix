@@ -2,16 +2,13 @@
   pkgs,
   lib,
   config,
-  fontFamily,
   ...
-}: let
-  terminal_aspects = config.aspects.terminal;
-in {
+}: {
   stylix = {
-    enable = lib.mkDefault config.aspects.stylix.enable;
+    enable = lib.mkDefault true;
     autoEnable = true;
     polarity = "dark";
-    opacity.terminal = terminal_aspects.opacity;
+    opacity.terminal = config.aspects.terminal.opacity or 0.8;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
     cursor = {
       package = pkgs.bibata-cursors;
@@ -22,7 +19,7 @@ in {
     fonts = {
       monospace = {
         package = pkgs.nerd-fonts.caskaydia-cove;
-        name = fontFamily;
+        name = "CaskaydiaCove Nerd Font";
       };
       sansSerif = {
         package = pkgs.inter;
@@ -37,10 +34,10 @@ in {
         name = "Noto Color Emoji";
       };
       sizes = {
-        applications = terminal_aspects.fontSize;
-        terminal = terminal_aspects.fontSize;
-        desktop = lib.add terminal_aspects.fontSize 2;
-        popups = lib.add terminal_aspects.fontSize 2;
+        applications = config.aspects.terminal.fontSize or 10;
+        terminal = config.aspects.terminal.fontSize or 10;
+        desktop = lib.add (config.aspects.terminal.fontSize or 10) 2;
+        popups = lib.add (config.aspects.terminal.fontSize or 10) 2;
       };
     };
   };

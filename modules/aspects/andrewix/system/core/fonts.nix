@@ -1,8 +1,4 @@
-{
-  pkgs,
-  fontFamily,
-  ...
-}: {
+{pkgs, ...}: {
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
@@ -15,7 +11,7 @@
     enable = true;
     defaultFonts = {
       emoji = ["Noto Color Emoji"];
-      monospace = ["${fontFamily} Fira Code Nerd Fonts"];
+      monospace = ["CaskaydiaCove Nerd Font" "Fira Code Nerd Font"];
       sansSerif = ["Inter"];
       serif = ["Inter"];
     };
