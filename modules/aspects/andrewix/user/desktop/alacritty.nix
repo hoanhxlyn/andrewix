@@ -8,6 +8,7 @@
     padding = 2;
     opacity = 0.8;
     fontSize = 10;
+    fontFamily = "CaskaydiaCove Nerd Font";
   };
 in {
   programs.alacritty = {
@@ -23,7 +24,7 @@ in {
       };
       font = {
         size = terminalCfg.fontSize;
-        normal.family = "CaskaydiaCove Nerd Font";
+        normal.family = terminalCfg.fontFamily;
         normal.style = "Regular";
       };
       selection = {

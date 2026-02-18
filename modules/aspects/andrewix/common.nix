@@ -5,7 +5,6 @@
 }: {
   andrewix.common = den.lib.parametric {
     includes = [
-      <andrewix/system/unfree>
       <andrewix/system/overlays>
       <andrewix/system/core>
       <andrewix/system/desktop>
