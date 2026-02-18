@@ -3,11 +3,9 @@
   lib,
   pkgs,
   inputs,
+  self,
   ...
-}: let
-  # Use a cleaner path reference relative to the repo root
-  configPath = ../../../../config/neovim/config;
-in {
+}: {
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -129,7 +127,7 @@ in {
     };
 
     xdg.configFile.nvim = {
-      source = configPath;
+      source = "${self}/config/neovim/config";
       recursive = true;
     };
   };
