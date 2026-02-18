@@ -3,6 +3,7 @@
   lib,
   pkgs,
   inputs,
+  self,
   ...
 }: {
   config = lib.mkIf osConfig.aspects.dev.neovix.enable {
@@ -127,7 +128,7 @@
     };
 
     xdg.configFile.nvim = {
-      source = ./neovim/config;
+      source = "${self}/config/neovim";
       recursive = true;
     };
   };
