@@ -1,3 +1,6 @@
+# Power management configuration using TLP
+# Optimizes battery life and CPU power settings for laptops
+# Disables power-profiles-daemon in favor of TLP for better control
 {
   config,
   lib,

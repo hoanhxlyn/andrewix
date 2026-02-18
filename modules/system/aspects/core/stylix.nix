@@ -1,3 +1,6 @@
+# Stylix theming configuration
+# Provides system-wide theming using base16 color schemes
+# Automatically themes terminal, desktop, and applications
 {
   pkgs,
   lib,

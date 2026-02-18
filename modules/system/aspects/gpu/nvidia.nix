@@ -1,3 +1,5 @@
+# NVIDIA GPU driver configuration
+# Enables proprietary NVIDIA drivers with hardware acceleration
 {
   config,
   lib,
