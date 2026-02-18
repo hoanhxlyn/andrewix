@@ -5,12 +5,11 @@
   inputs,
   ...
 }: {
-  config = lib.mkIf osConfig.aspects.dev.neovix.enable {
-    programs.neovim = {
-      enable = true;
-      defaultEditor = true;
-      vimAlias = true;
-      vimdiffAlias = true;
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    vimAlias = true;
+    vimdiffAlias = true;
 
       plugins = with pkgs.vimPlugins; [
         (nvim-treesitter.withPlugins (p: [

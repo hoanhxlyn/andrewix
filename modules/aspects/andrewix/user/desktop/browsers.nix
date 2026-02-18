@@ -4,14 +4,13 @@
   lib,
   ...
 }: let
-  cfg = config.modules.desktop.browsers;
   keepass = pkgs.keepassxc;
 in {
   options.modules.desktop.browsers = {
-    enable = lib.mkEnableOption "browsers";
+    enable = lib.mkEnableOption "browsers" // {default = true;};
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf config.modules.desktop.browsers.enable {
     programs = {
       firefox = {
         enable = true;

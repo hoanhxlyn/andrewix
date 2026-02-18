@@ -1,10 +1,16 @@
 {
   osConfig,
   lib,
-  fontFamily,
   ...
-}: {
-  config = lib.mkIf (osConfig.aspects.terminal.whichOne == "wezterm") {
+}: let
+  terminalCfg = osConfig.aspects.terminal or {
+    whichOne = "wezterm";
+    padding = 2;
+    opacity = 0.8;
+    fontSize = 10;
+  };
+in {
+  config = lib.mkIf (terminalCfg.whichOne == "wezterm") {
     programs.wezterm = {
       enable = true;
       extraConfig = ''
@@ -33,12 +39,12 @@
         	return result
         end
 
-        config.font = wezterm.font("${fontFamily}")
+        config.font = wezterm.font("CaskaydiaCove Nerd Font")
         config.adjust_window_size_when_changing_font_size = false
-        config.font_size = ${toString osConfig.aspects.terminal.fontSize}
+        config.font_size = ${toString terminalCfg.fontSize}
         config.freetype_load_target = "Light"
         config.line_height = 1
-        config.window_background_opacity = ${toString osConfig.aspects.terminal.opacity}
+        config.window_background_opacity = ${toString terminalCfg.opacity}
         config.default_cursor_style = "BlinkingBlock"
         config.cursor_blink_rate = 500
         config.tab_bar_at_bottom = false
@@ -49,10 +55,10 @@
         config.enable_scroll_bar = false
         config.window_decorations = "NONE"
         config.window_padding = {
-        	bottom = ${toString osConfig.aspects.terminal.padding},
-        	right = ${toString osConfig.aspects.terminal.padding},
-        	left = ${toString osConfig.aspects.terminal.padding},
-        	top = ${toString osConfig.aspects.terminal.padding},
+        	bottom = ${toString terminalCfg.padding},
+        	right = ${toString terminalCfg.padding},
+        	left = ${toString terminalCfg.padding},
+        	top = ${toString terminalCfg.padding},
         }
 
         -- Leader Key: Alt+Q
