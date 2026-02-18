@@ -1,14 +1,17 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }: let
+  # Check if keepassxc is enabled in the config
+  keepassEnabled = config.programs.keepassxc.enable or false;
   keepass = pkgs.keepassxc;
 in {
   programs = {
     firefox = {
       enable = lib.mkDefault true;
-      nativeMessagingHosts = [keepass];
+      nativeMessagingHosts = lib.optional keepassEnabled keepass;
       profiles.default = {
         id = 0;
         isDefault = true;
@@ -25,7 +28,7 @@ in {
     };
     brave = {
       enable = lib.mkDefault true;
-      nativeMessagingHosts = [keepass];
+      nativeMessagingHosts = lib.optional keepassEnabled keepass;
     };
   };
 }
