@@ -4,10 +4,11 @@
   outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
 
   inputs = {
+    aic8800.url = "github:hoanhxlyn/aic8800-nix";
     den.url = "github:vic/den";
-    enthium = {
-      flake = false;
-      url = "github:sunaku/enthium/v10";
+    fcitx5-vmk-nix = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:hoanhxlyn/fcitx5-vmk-nix";
     };
     flake-aspects.url = "github:vic/flake-aspects";
     flake-file.url = "github:vic/flake-file";
@@ -24,9 +25,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:fzakaria/nix-auto-follow";
     };
-    nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-index-database.url = "github:nix-community/nix-index-database";
-    nixos-wsl.url = "github:nix-community/nixos-wsl";
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
     nixpkgs-lib.follows = "nixpkgs";
     systems.url = "github:nix-systems/default";
@@ -34,6 +32,5 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:numtide/treefmt-nix";
     };
-    vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
 }

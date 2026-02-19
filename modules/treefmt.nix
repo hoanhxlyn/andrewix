@@ -19,10 +19,7 @@
       projectRoot = inputs.flake-file;
       programs = {
         alejandra.enable = true;
-        deadnix = {
-          enable = true;
-          args = ["--no-underscore"];
-        };
+        deadnix.enable = true;
         statix.enable = true;
         nixf-diagnose.enable = true;
       };

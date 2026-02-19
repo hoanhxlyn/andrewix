@@ -4,7 +4,13 @@
     includes = [
       <den/primary-user>
       (<den/user-shell> "fish")
-      <andrew/terminals>
+      (<andrew/terminals> {
+        whichOne = "alacritty";
+        fontSize = 11;
+        padding = 2;
+        opacity = 0.8;
+        fontFamily = "FiraCode Nerd Font";
+      })
     ];
   };
 }
