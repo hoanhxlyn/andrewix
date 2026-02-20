@@ -20,6 +20,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
     };
+    import-size-nvim = {
+      flake = false;
+      url = "github:stuckinsnow/import-size.nvim";
+    };
     import-tree.url = "github:vic/import-tree";
     nix-auto-follow = {
       inputs.nixpkgs.follows = "nixpkgs";
@@ -27,10 +31,29 @@
     };
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
     nixpkgs-lib.follows = "nixpkgs";
+    stylix = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/stylix";
+    };
     systems.url = "github:nix-systems/default";
     treefmt-nix = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:numtide/treefmt-nix";
+    };
+    vim-rzip = {
+      flake = false;
+      url = "github:lbrayner/vim-rzip";
+    };
+    wezterm-types = {
+      flake = false;
+      url = "github:justinsgithub/wezterm-types";
+    };
+    zen-browser = {
+      inputs = {
+        home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs";
+      };
+      url = "github:0xc000022070/zen-browser-flake";
     };
   };
 }
