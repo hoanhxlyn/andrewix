@@ -1,4 +1,4 @@
-{self, ...}: {
+{
   andrew.sync = path: {
     homeManager = {pkgs, ...}: {
       programs = {
@@ -10,7 +10,7 @@
               ConfigVersion = 2;
               UpdateCheckMessageShown = true;
               BackupBeforeSave = true;
-              BackupFilePathPattern = "${self}${path}/backups/Keepasx/{DB_FILENAME}.old.kdbx";
+              BackupFilePathPattern = "/home/andrew/${path}/backups/Keepasx/{DB_FILENAME}.old.kdbx";
             };
             GUI = {
               MonospaceNotes = true;
@@ -51,15 +51,15 @@
           };
           Service = {
             Type = "simple";
-            ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${self}/${path}";
+            ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p /home/andrew/${path}";
             ExecStart = ''
-              ${pkgs.rclone}/bin/rclone mount gdrive: ${path} \
+              ${pkgs.rclone}/bin/rclone mount gdrive: /home/andrew/${path} \
               --vfs-cache-max-age 24h \
               --dir-cache-time 1h \
               --vfs-cache-mode full \
               --config %h/.config/rclone/rclone.conf
             '';
-            ExecStop = "${pkgs.fuse}/bin/fusermount -u ${path}";
+            ExecStop = "${pkgs.fuse}/bin/fusermount -u /home/andrew/${path}";
             Restart = "on-failure";
             RestartSec = "10s";
           };

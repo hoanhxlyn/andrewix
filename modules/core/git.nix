@@ -1,13 +1,18 @@
 {
-  core.git = gitCfg: {
-    nixos.programs = {
-      git = {
-        enable = true;
-        settings = gitCfg.settings;
-      };
+  core.git = {settings, ...}: {
+    homeManager.programs = {
       gh = {
         enable = true;
         gitCredentialHelper.enable = true;
+      };
+      difftastic = {
+        enable = true;
+        git.enable = true;
+        git.diffToolMode = true;
+      };
+      git = {
+        enable = true;
+        inherit settings;
       };
       lazygit = {
         enable = true;
@@ -40,11 +45,6 @@
             };
           };
         };
-      };
-      difftastic = {
-        enable = true;
-        git.enable = true;
-        git.diffToolMode = true;
       };
     };
   };
