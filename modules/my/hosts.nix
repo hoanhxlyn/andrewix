@@ -1,40 +1,30 @@
 {__findFile ? __findFile, ...}: let
   arch = "x86_64-linux";
-  username = "andrew";
+  name = "Andrew Nguyen";
+  userName = "andrew";
 in {
   den = {
     hosts.${arch} = {
       andrew-laptop = {
+        hostName = "andrew-laptop";
         description = "Personal laptop";
-        users.${username}.aspect = "laptop";
+        users.${name}.userName = {inherit userName;};
       };
       andrew-pc = {
+        hostName = "andrew-pc";
         description = "Personal pc";
-        users.${username}.aspect = "pc";
+        users.${name} = {inherit userName;};
       };
     };
 
-    homes.${arch}.${username} = {};
+    # homes.${arch}.${name} = {
+    #   inherit userName;
+    # };
 
     aspects = {
-      ${username}.includes = [<my/user>];
-      laptop.includes = [
-        <core.bootable>
-        <core.gnome>
-        <core.fonts>
-        <core.xserver>
-        <core.network>
-        <core.i18n>
-      ];
-      pc.includes = [
-        <core.bootable>
-        <core.gnome>
-        <core.fonts>
-        <core.xserver>
-        <core.network>
-        <core.i18n>
-        <core.nvidia>
-      ];
+      # ${name}.includes = [<my/user>];
+      andrew-laptop.includes = [<my/devices/home-laptop>];
+      andrew-pc.includes = [<my/devices/home-pc>];
     };
   };
 }
