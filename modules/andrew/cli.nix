@@ -1,5 +1,5 @@
 {lib, ...}: {
-  core.cli = {
+  andrew.cli = {
     nixos = {pkgs, ...}: {
       environment.systemPackages = with pkgs; [
         fuse
@@ -13,7 +13,7 @@
         bun
       ];
     };
-    homeManager = {user, ...}: {
+    homeManager = {
       programs = {
         fastfetch.enable = true;
         bun.enable = true;
@@ -28,7 +28,7 @@
           enable = true;
           clean.enable = true;
           clean.extraArgs = "--keep-since 2d --keep 5";
-          flake = "/home/${user.username}/andrewix";
+          flake = "/home/andrew/andrewix";
         };
         btop = {
           enable = true;

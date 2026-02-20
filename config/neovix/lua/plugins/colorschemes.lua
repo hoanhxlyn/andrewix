@@ -1,4 +1,4 @@
-local colorscheme = "catppuccin"
+local colorscheme = "gruvbox-material"
 local transparent = true
 require("gruvbox").setup({
   contrast = "",

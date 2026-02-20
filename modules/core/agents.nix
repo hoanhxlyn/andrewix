@@ -3,9 +3,8 @@
   inputs,
   ...
 }: {
-  flake-file.inputs = {
-    serena.url = "github:oraios/serena";
-  };
+  flake-file.inputs.serena.url = "github:oraios/serena";
+
   core.agents.homeManager = {pkgs, ...}: {
     programs.mcp = {
       enable = true;

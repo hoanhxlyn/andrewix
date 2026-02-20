@@ -9,6 +9,9 @@
   };
 
   core.i18n.nixos = {pkgs, ...}: {
+    environment.systemPackages = [
+      pkgs.gnomeExtensions.kimpanel
+    ];
     i18n = {
       inputMethod = {
         enable = true;

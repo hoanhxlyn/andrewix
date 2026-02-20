@@ -20,7 +20,14 @@ in {
       <core.xserver>
       <core.network>
       <core.i18n>
-      (<den/user-shell> "fish")
+      <core.timezone>
+      (<core.stylix> {
+        inherit terminal;
+        theme = "gruvbox-material-dark-hard";
+      })
+
+      (<core.git> git)
+      <core.agents>
       (<andrew/sync> "/mnt/gdrive")
       <andrew/editor/neovix>
       <andrew/shell>
@@ -28,13 +35,8 @@ in {
       <andrew/browsers/zen>
       (<andrew/terminals/alacritty> terminal)
       <andrew/yazi>
-      (<core.stylix> {
-        inherit terminal;
-        theme = "gruvbox-material-dark-hard";
-      })
-      <core.cli>
-      (<core.git> git)
-      <core.agents>
+      <andrew/cli>
+      <andrew/communications/caprine>
     ];
     home-laptop.includes = [
       <my.devices/base>
