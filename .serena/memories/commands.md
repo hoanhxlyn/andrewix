@@ -4,7 +4,7 @@
 - **Update all inputs:** `nix flake update --flake .`
 - **Search for packages:** `nh search <query>`
 - **Format:** `alejandra .`
-- **Lint:** `statix check && deadnix --fail`
+- **Lint:** `statix check && deadnix --no-underscore --fail`
 - **Run pre-commit hooks:** `pre-commit run --all-files`
 - **Enter dev shell:** `nix develop`
 - **Regenerate flake.nix:** `nix run .#write-flake`

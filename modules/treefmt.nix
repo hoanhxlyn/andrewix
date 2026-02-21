@@ -1,0 +1,38 @@
+{
+  inputs,
+  lib,
+  ...
+}: {
+  imports = [
+    inputs.flake-file.flakeModules.nix-auto-follow
+    inputs.treefmt-nix.flakeModule
+  ];
+
+  flake-file.inputs.treefmt-nix = {
+    url = lib.mkDefault "github:numtide/treefmt-nix";
+    inputs.nixpkgs.follows = lib.mkDefault "nixpkgs";
+  };
+
+  perSystem = {self', ...}: {
+    packages.fmt = self'.formatter;
+    treefmt = {
+      projectRoot = inputs.flake-file;
+      programs = {
+        alejandra.enable = true;
+        deadnix.enable = true;
+        statix.enable = true;
+        nixf-diagnose.enable = true;
+      };
+      settings.on-unmatched = lib.mkDefault "fatal";
+      settings.global.excludes = [
+        "modules/*"
+        "LICENSE"
+        "flake.lock"
+        "*/flake.lock"
+        ".envrc"
+        ".direnv/*"
+        "*/.gitignore"
+      ];
+    };
+  };
+}
