@@ -24,7 +24,8 @@
         desktopManager.gnome.enable = true;
         xserver.excludePackages = with pkgs; [xterm];
       };
-
+      # Disable nixos manual
+      documentation.nixos.enable = false;
       # Exclude default Gnome applications
       environment.gnome.excludePackages = with pkgs; [
         gnome-tour
