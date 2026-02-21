@@ -25,20 +25,20 @@ in {
         inherit terminal;
         theme = "gruvbox-material-dark-hard";
       })
-
       (<core.git> git)
       <core.agents>
       (<andrew/sync> "/mnt/gdrive")
       <andrew/editor/neovix>
-      <andrew/editor/zed>
+      # <andrew/editor/zed> # Doesn't really benefit much for me
       <andrew/editor/vscode>
       <andrew/shell>
       # <andrew/browsers/firefox>
       <andrew/browsers/zen>
       <andrew/browsers/brave> # Need a chromium for web dev
       (<andrew/terminals/alacritty> terminal)
-      <andrew/yazi>
-      <andrew/cli>
+      <andrew/cli/nodejs>
+      <andrew/cli/utils>
+      <andrew/cli/tui>
       <andrew/communications/caprine>
       <andrew/communications/discord>
     ];

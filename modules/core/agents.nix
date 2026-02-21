@@ -6,6 +6,7 @@
   flake-file.inputs.serena.url = "github:oraios/serena";
 
   core.agents.homeManager = {pkgs, ...}: {
+    programs.uv.enable = true;
     programs.mcp = {
       enable = true;
       servers = {
