@@ -55,7 +55,7 @@
             }
             {
               id = "zen-compact-mode-shortcut-toggle";
-              key = "\\";
+              key = "|";
               modifiers = {
                 control = true;
                 shift = true;
