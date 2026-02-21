@@ -1,7 +1,14 @@
-{
-  andrew.communications.provides.discord.nixos = {pkgs, ...}: {
-    environment.systemPackages = [
-      pkgs.discord
+{__findFile, ...}: {
+  andrew.communications.provides.discord = {
+    includes = [
+      (<den/unfree> [
+        "discord"
+      ])
     ];
+    nixos = {pkgs, ...}: {
+      environment.systemPackages = [
+        pkgs.discord
+      ];
+    };
   };
 }
