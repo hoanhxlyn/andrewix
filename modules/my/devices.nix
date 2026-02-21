@@ -37,6 +37,7 @@ in {
       <andrew/yazi>
       <andrew/cli>
       <andrew/communications/caprine>
+      <andrew/communications/discord>
     ];
     home-laptop.includes = [
       <my.devices/base>
