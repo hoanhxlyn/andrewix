@@ -31,6 +31,7 @@ in {
       (<andrew/sync> "/mnt/gdrive")
       <andrew/editor/neovix>
       <andrew/editor/zed>
+      <andrew/editor/vscode>
       <andrew/shell>
       <andrew/browsers/firefox>
       <andrew/browsers/zen>
