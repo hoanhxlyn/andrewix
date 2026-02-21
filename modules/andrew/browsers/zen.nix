@@ -39,7 +39,7 @@
             # Look and feels
             "zen.tabs.show-newtab-vertical" = false;
             "zen.view.show-newtab-button-top" = false;
-            "zen.view.compact.enable-at-startup" = false;
+            "zen.view.compact.enable-at-startup" = true;
             "zen.urlbar.behavior" = true;
             "sidebar.visibility" = "hide-sidebar";
             # Search
