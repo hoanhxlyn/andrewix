@@ -1,27 +1,22 @@
 # DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
 # Use `nix run .#write-flake` to regenerate it.
 {
-  description = "Andrewix - Dendritic Configuration";
 
-  outputs = inputs: import ./outputs.nix inputs;
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
-    aic8800 = {
-      inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:hoanhxlyn/aic8800-nix";
-    };
-    chezmoi-nvim = {
-      flake = false;
-      url = "github:xvzc/chezmoi.nvim";
-    };
+    aic8800.url = "github:hoanhxlyn/aic8800-nix";
+    den.url = "github:vic/den";
     fcitx5-vmk-nix = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:hoanhxlyn/fcitx5-vmk-nix";
     };
     flake-aspects.url = "github:vic/flake-aspects";
     flake-file.url = "github:vic/flake-file";
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    git-hooks-nix.url = "github:cachix/git-hooks.nix";
+    flake-parts = {
+      inputs.nixpkgs-lib.follows = "nixpkgs-lib";
+      url = "github:hercules-ci/flake-parts";
+    };
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
@@ -31,15 +26,21 @@
       url = "github:stuckinsnow/import-size.nvim";
     };
     import-tree.url = "github:vic/import-tree";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    rust-overlay = {
+    nix-auto-follow = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:oxalica/rust-overlay";
+      url = "github:fzakaria/nix-auto-follow";
     };
+    nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
+    nixpkgs-lib.follows = "nixpkgs";
     serena.url = "github:oraios/serena";
     stylix = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/stylix";
+    };
+    systems.url = "github:nix-systems/default";
+    treefmt-nix = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:numtide/treefmt-nix";
     };
     vim-rzip = {
       flake = false;
@@ -49,5 +50,13 @@
       flake = false;
       url = "github:justinsgithub/wezterm-types";
     };
+    zen-browser = {
+      inputs = {
+        home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs";
+      };
+      url = "github:0xc000022070/zen-browser-flake";
+    };
   };
+
 }
