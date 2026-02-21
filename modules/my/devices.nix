@@ -33,8 +33,9 @@ in {
       <andrew/editor/zed>
       <andrew/editor/vscode>
       <andrew/shell>
-      <andrew/browsers/firefox>
+      # <andrew/browsers/firefox>
       <andrew/browsers/zen>
+      <andrew/browsers/brave> # Need a chromium for web dev
       (<andrew/terminals/alacritty> terminal)
       <andrew/yazi>
       <andrew/cli>
