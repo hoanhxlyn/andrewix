@@ -30,6 +30,7 @@ in {
       <core.agents>
       (<andrew/sync> "/mnt/gdrive")
       <andrew/editor/neovix>
+      <andrew/editor/zed>
       <andrew/shell>
       <andrew/browsers/firefox>
       <andrew/browsers/zen>
