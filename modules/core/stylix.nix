@@ -30,10 +30,12 @@
         targets.firefox.profileNames = ["default"];
         targets.zen-browser.profileNames = ["default"];
         fonts = {
-          monospace.package = pkgs.nerd-fonts.fira-code;
-          monospace.name = "FiraCode Nerd Font";
-          sansSerif.package = pkgs.inter;
-          serif.package = pkgs.inter;
+          monospace = {
+            package = pkgs.nerd-fonts.fira-code;
+            name = "FiraCode Nerd Font";
+          };
+          # sansSerif.package = pkgs.inter;
+          # serif.package = pkgs.inter;
           emoji.package = pkgs.noto-fonts-color-emoji;
           sizes = {
             applications = terminal.fontSize;
