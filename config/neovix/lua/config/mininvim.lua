@@ -236,6 +236,12 @@ _G.mininvim = {
         glyph = "",
         hl = "MiniIconsBlue",
       },
+      agents = {
+        type = "file",
+        files = { "agents.md", "AGENTS.md" },
+        glyph = "󰚩",
+        hl = "MiniIconsGrey",
+      },
     },
   },
   tw_colors = {

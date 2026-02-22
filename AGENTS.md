@@ -1,136 +1,182 @@
-# AGENTS.md - NixOS Dotfiles Configuration (Andrewix)
+# AGENTS.md - Guidelines for Coding Agents
 
-Dendritic NixOS configuration using flake-parts with aspect-first architecture and automatic module discovery via `vic/import-tree`.
+## Build/Lint/Test Commands
 
-## Build, Lint & Test Commands
-
-### Quick Commands
+### Apply Configuration
 ```bash
-nix develop                          # Enter dev shell with all tools
-nh os test .                         # Validate config (RUN BEFORE COMMITS - requires sudo)
-alejandra .                          # Format all Nix files
-statix check && deadnix --no-underscore --fail       # Lint & find unused code
-pre-commit run --all-files           # Run all pre-commit hooks
+nh os switch .                          # Apply latest config (requires sudo)
+nh os test .                            # Validate config before commit (requires sudo)
+nh os build .                           # Build without switching
 ```
 
-### Searching for Packages
-When looking for a package name in nixpkgs, ALWAYS use:
+### Update & Maintenance
 ```bash
-nh search <query>
+nix flake update --flake .              # Update all flake inputs
+nix flake check                         # Check for evaluation errors
+nh search <query>                       # Search for packages
 ```
-Avoid using `nix-env -qa` or `nix search` as `nh search` provides a more readable and efficient interface for this project.
 
-### Testing & Building (Single Aspect)
+### Formatting & Linting
 ```bash
-# Test specific host (validate without switching)
-nix build .#nixosConfigurations.andrew-pc.config.system.build.toplevel
-nix build .#nixosConfigurations.andrew-laptop.config.system.build.toplevel
-
-# Evaluate and debug
-nix eval .#nixosConfigurations.andrew-pc.config.aspects.gpu.nvidia.enable
-nix-instantiate --eval /path/to/file.nix  # Check file syntax
-
-# Dry-run build
-nh os build .
+alejandra .                             # Format all Nix files
+statix check                            # Lint for Nix best practices
+deadnix --no-underscore --fail          # Find dead code
+pre-commit run --all-files              # Run all pre-commit hooks
 ```
 
-### System Changes
+### Build Single Host
 ```bash
-nh os switch .           # Apply config (actual switch)
-nix flake update --flake .  # Update all inputs
-nix run .#write-flake               # Regenerate flake.nix (auto-generated)
-nh clean all                         # Cleanup old generations
+nh os build .                    # Build default host
+nh os build . --hostname andrew-pc
+nh os build . --hostname andrew-laptop
 ```
 
-## Architecture
-
-### Module Structure
-- **System aspects:** `modules/system/aspects/{core,desktop,gpu,gaming,utilities}/` → auto-imported
-- **User aspects:** `modules/user/aspects/{development,desktop,utilities}/` → auto-imported via `vic/import-tree`
-- **Hosts:** `modules/hosts/{andrew-pc,andrew-laptop}/default.nix` → enable specific aspects
-- **Flake logic:** `modules/hosts.nix` (system definitions), `outputs.nix` (flake-parts config)
-
-### Aspect Enable Pattern
-System aspects use enable flags in `modules/system/aspects/default.nix`:
-```nix
-options.aspects = with lib; {
-  desktop.enable = mkEnableOption "Desktop environment (GNOME)" // {default = true;};
-  gpu.nvidia.enable = mkEnableOption "NVIDIA GPU support" // {default = false;};
-  gaming.xone.enable = mkEnableOption "Xbox One controller driver" // {default = false;};
-  utilities.enable = mkEnableOption "System utilities" // {default = true;};
-};
+### Regenerate flake.nix
+```bash
+nix run .#write-flake                   # Regenerate auto-generated flake.nix
 ```
-Host configs set these flags; each aspect is always imported but gated with `lib.mkIf config.aspects.*.enable`.
+
+**Note:** There are no unit tests in this configuration repository. Validation is done via `nh os test .` and `nix flake check`.
+
+## Project Architecture
+
+This is a NixOS and Home Manager configuration using **flake-parts** with **dendritic (aspect-first) architecture** and automatic module discovery via `vic/import-tree`.
+
+### Directory Structure
+```
+├── flake.nix              # Auto-generated entry point (DO NOT EDIT)
+├── modules/
+│   ├── dendritic.nix      # Dendritic module loader
+│   ├── namespace.nix      # Namespace definitions (core, andrew, my)
+│   ├── defaults.nix       # Default includes for all hosts
+│   ├── home-manager.nix   # Home Manager integration
+│   ├── treefmt.nix        # Formatting configuration
+│   ├── core/              # System-level aspects (NixOS modules)
+│   ├── andrew/            # User-level aspects (Home Manager modules)
+│   ├── my/                # Host/user definitions and custom settings
+│   └── hosts.nix          # Host discovery
+├── hosts/                 # Hardware-specific configurations
+│   ├── andrew-pc/
+│   └── andrew-laptop/
+└── config/                # Configuration files (neovim, etc.)
+```
+
+### Hosts
+- `andrew-pc`: Desktop configuration
+- `andrew-laptop`: Laptop configuration
+
+### Key Variables
+- Username: `andrew`
+- System: `x86_64-linux`
+- State Version: `25.11` (DO NOT MODIFY)
 
 ## Code Style Guidelines
 
-### Formatting & Organization
-- **Formatter:** `alejandra` (enforced by pre-commit) - MUST run before commits
+### Formatting
+- **Formatter:** `alejandra` (enforced by treefmt)
 - **Indentation:** 2 spaces (no tabs)
 - **Line Length:** Prefer under 80 characters, hard limit at 100
 - **Encoding:** UTF-8
-- **Newline:** Trailing newlines required, no trailing whitespace
 
 ### Naming Conventions
-- **Files:** `kebab-case.nix` (e.g., `keepassxc.nix`, `gpu-nvidia.nix`)
-- **Directories:** `kebab-case` (e.g., `gpu-nvidia`, `package-manager`)
-- **Variables/Options:** `camelCase` (e.g., `hostName`, `stateVersion`)
+- **Files:** `kebab-case.nix`
+- **Directories:** `kebab-case`
+- **Variables/Options:** `camelCase`
 - **Booleans:** Prefix with `enable` or `disable` (e.g., `enable = true`)
-- **Package names:** Use attribute name from nixpkgs (e.g., `pkgs.keepassxc`)
 
-### Module Patterns
-- **Standard Input:** `{ config, pkgs, inputs, lib, ... }: { ... }`
-- **Imports:** Relative paths within aspects (e.g., `./gpu-nvidia.nix`)
-- **Parameter Passing:** Use `inherit` for repetitive attributes
-- **Organization:** Group by subsystem: `imports`, `options`, `config.services`, `config.programs`, `config.environment`
+### Module Structure Pattern
 
-### Types & Type Safety
-- Use `lib.mkEnableOption` for boolean options with `{default = true/false;}`
-- Use `lib.mkOption` for typed attributes with `lib.types.*`
-- Common types: `lib.types.bool`, `lib.types.str`, `lib.types.int`, `lib.types.listOf lib.types.str`
-- Always validate inputs in option definitions with `lib.asserts`
-- Use `lib.mkIf` for conditional configuration
-
-### Error Handling & Safety
-- **State Version:** Fixed at `25.11` (do not change without manual migration)
-- **Validation:** ALWAYS run `nh os test .` before committing changes to verify the build.
-- **Conditional Config:** Use `lib.mkIf`, `lib.mkDefault`, `lib.mkMerge`
-- **Overrides:** Use `lib.mkOverride` for forcing specific values
-- **Assertions:** Use `lib.asserts.assertTrue` for validation
-
-### Nix Language Patterns
+#### Standard Aspect Module
 ```nix
-# Preferred: mkIf for conditionals
-environment.systemPackages = lib.mkIf config.aspects.gaming.enable [
-  pkgs.xone-driver
-];
-
-# Preferred: mkDefault for sensible defaults
-services.foo.enable = lib.mkDefault true;
-
-# Preferred: mkMerge for merging multiple sources
-users.users = lib.mkMerge [
-  (lib.mkIf cfg.createUser { "${username}" = { ... }; })
-  (lib.mkIf cfg.extraGroups { "${username}" = { extraGroups = [...]; }; })
-];
+{__findFile, ...}: {
+  core.featureName = {
+    includes = [  # Optional: include other aspects
+      (<den/unfree> ["package-name"])
+    ];
+    nixos = {config, pkgs, ...}: {
+      # NixOS system configuration
+    };
+    homeManager = {pkgs, ...}: {
+      # Home Manager user configuration
+    };
+  };
+}
 ```
 
-## Important Variables
-- **Hostnames:** `andrew-pc`, `andrew-laptop`
-- **Username:** `andrew`
-- **State Version:** `25.11`
-- **Font Family:** `CaskaydiaCove Nerd Font`
+#### Provides Pattern (for modular features)
+```nix
+{lib, self, ...}: {
+  andrew.category.provides.featureName = {
+    nixos = {pkgs, ...}: {
+      environment.systemPackages = with pkgs [ package1 package2 ];
+    };
+    homeManager = {pkgs, ...}: {
+      programs.tool = { enable = true; };
+    };
+  };
+}
+```
 
-## Common Operations
+### Standard Function Arguments
+```nix
+{config, pkgs, inputs, lib, self, __findFile, ...}: { ... }
+```
 
-### Adding a New Package
-1. Search for the correct package name with `nh search <package>`
-2. Add to appropriate aspect's `environment.systemPackages` or `home.sessionVariables`
-3. Run `nh os test .` to validate the build
-4. Use `alejandra .` to format
+Common argument patterns:
+- `{__findFile, ...}:` - For modules using den includes
+- `{config, pkgs, ...}:` - For NixOS/homeManager configs
+- `{lib, ...}:` - When only lib functions needed
+- `{inputs, self, ...}:` - When referencing flake inputs
 
-### Adding a New Host
-1. Create directory `modules/hosts/<hostname>/`
-2. Add `default.nix` with host configuration
-3. Add to `modules/hosts.nix` with aspect selections
-4. Test with `nix build .#nixosConfigurations.<hostname>.config.system.build.toplevel`
+### Imports & Includes
+- Use `includes = [ ... ]` for den aspect dependencies
+- Use angle bracket syntax for den paths: `<den/define-user>`, `<my/devices/home-pc>`
+- Use `imports = [ ... ]` for Home Manager module imports
+
+### Common Functions
+- `lib.mkEnableOption` - Create boolean enable options
+- `lib.mkOption` - Create custom options
+- `lib.mkIf` - Conditional configuration
+- `lib.mkMerge` - Merge multiple configurations
+- `lib.mkDefault` - Set default values
+
+### Flake Inputs Pattern
+When adding new flake inputs, add to the module that uses them:
+```nix
+{
+  inputs,
+  ...
+}: {
+  flake-file.inputs.newInput = {
+    url = "github:owner/repo";
+    inputs.nixpkgs.follows = "nixpkgs";  # If it uses nixpkgs
+  };
+}
+```
+
+## Error Handling
+
+- Use `lib.mkDefault` for values that can be overridden
+- Check configurations with `nix flake check` before committing
+- Always run `nh os test .` before `nh os switch .` to catch errors
+
+## Important Rules
+
+1. **NEVER** edit `flake.nix` directly - it is auto-generated
+2. **NEVER** change the state version (`25.11`)
+3. **ALWAYS** run `nh os test .` before committing changes
+4. **ALWAYS** format code with `alejandra .` before committing
+5. **ALWAYS** check for lint errors with `statix check`
+6. Use `with pkgs;` for package lists to reduce verbosity
+7. Use `inherit` for variable assignments when appropriate
+8. Place related packages in the same `environment.systemPackages` list
+
+## Pre-commit Hooks
+
+The project uses treefmt-nix with these formatters/linters:
+- `alejandra` - Nix formatter
+- `deadnix` - Dead code detection
+- `statix` - Nix linter
+- `nixf-diagnose` - Additional Nix diagnostics
+
+Excluded paths: `modules/*`, `LICENSE`, `flake.lock`, `.envrc`, `.direnv/*`
