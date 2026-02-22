@@ -1,0 +1,48 @@
+{
+  "files.autoSave": "off",
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "editor.formatOnSave": false,
+  "editor.tabSize": 2,
+  "editor.mouseWheelZoom": true,
+  "editor.fontLigatures": true,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.guides.bracketPairs": "active",
+  "editor.stickyScroll.enabled": true,
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorWidth": 3,
+  "editor.cursorSurroundingLines": 3,
+  "editor.codeActionsOnSave": {
+    "quickfix.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
+  },
+  "editor.minimap.enabled": false,
+  "window.menuBarVisibility": "compact",
+  "window.commandCenter": false,
+  "workbench.activityBar.location": "top",
+  "workbench.navigationControl.enabled": false,
+  "workbench.layoutControl.enabled": false,
+  "workbench.productIconTheme": "Tabler",
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.welcomePage.walkthroughs.openOnInstall": false,
+  "security.workspace.trust.enabled": false,
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "biome.suggestInstallingGlobally": false,
+  "biome.requireConfiguration": true,
+  "tailwindCSS.lint.cssConflict": "error",
+  "tailwindCSS.classAttributes": [
+    "className"
+  ],
+  "tailwindCSS.classFunctions": [
+    "cva",
+    "cx",
+    "tw"
+  ],
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "nix.formatterPath": "alejandra"
+}
