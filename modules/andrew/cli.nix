@@ -15,6 +15,16 @@
         bun.enable = true;
       };
     };
+    nix = {
+      nixos = {pkgs, ...}: {
+        environment.systemPackages = with pkgs; [
+          alejandra
+          statix
+          deadnix
+        ];
+      };
+        
+    };
 
     utils.nixos = {pkgs, ...}: {
       environment.systemPackages = with pkgs; [

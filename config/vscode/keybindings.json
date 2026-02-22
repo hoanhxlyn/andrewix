@@ -1,0 +1,7 @@
+[
+  {
+    "key": "alt+shift+f",
+    "command": "editor.action.formatDocument",
+    "when": "editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly && !inCompositeEditor"
+  }
+]
