@@ -1,0 +1,67 @@
+{
+  // Files ======================
+  "files.autoSave": "off",
+  "files.associations": {
+    "*.tmpl": "shellscript",
+  },
+  // Git ======================
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  // Editor ==================
+  "editor.formatOnSave": false,
+  "editor.tabSize": 2,
+  "editor.mouseWheelZoom": true,
+  "editor.fontLigatures": true,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.guides.bracketPairs": "active",
+  "editor.stickyScroll.enabled": true,
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorWidth": 3,
+  "editor.cursorSurroundingLines": 3,
+  "editor.codeActionsOnSave": {
+    "quickfix.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
+  },
+  "editor.minimap.enabled": false,
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  // windows ===================
+  "window.menuBarVisibility": "hidden", //compact
+  "window.commandCenter": false,
+  // workbench ==========================
+  "workbench.activityBar.location": "top",
+  "workbench.navigationControl.enabled": false,
+  "workbench.layoutControl.enabled": false,
+  "workbench.productIconTheme": "Tabler",
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.welcomePage.walkthroughs.openOnInstall": false,
+  "workbench.editor.customLabels.enabled": true,
+  "workbench.editor.customLabels.patterns": {
+    "**/src/**/index.{js,jsx,ts,tsx}": "${dirname(1)}/${dirname}",
+  },
+  // Security ==========================
+  "security.workspace.trust.enabled": false,
+  //Explorer ===========================
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  // LSP
+  "biome.suggestInstallingGlobally": false,
+  "biome.requireConfiguration": true,
+  "tailwindCSS.lint.cssConflict": "error",
+  "tailwindCSS.classAttributes": [
+    "className"
+  ],
+  "tailwindCSS.classFunctions": [
+    "cva",
+    "cx",
+    "tw"
+  ],
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "nix.formatterPath": "alejandra",
+  "css.validate": false,
+  "scss.validate": false,
+  "less.validate": false,
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+}
