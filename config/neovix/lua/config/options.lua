@@ -28,3 +28,4 @@ vim.o.formatoptions = "jcroqlnt" -- tcqj
 vim.o.grepformat = "%f:%l:%c:%m"
 vim.o.grepprg = "rg --vimgrep"
 vim.o.scrolloff = 3
+vim.opt.iskeyword:append({ "@", "-" })
