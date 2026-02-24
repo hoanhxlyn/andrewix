@@ -217,7 +217,7 @@ vim.api.nvim_create_autocmd("CursorHold", {
 
         if author and date_ts and summary then
           -- Calculate relative time
-          local rel_time = utils.get_relative_time(tonumber(date_ts))
+          local rel_time = utils.get_relative_time(tonumber(date_ts) or 0)
           -- Format your text here
           local text = string.format(" (%s) %s -> %s", rel_time, author, summary)
 

@@ -5,6 +5,7 @@ require("gruvbox").setup({
   transparent_mode = transparent,
 })
 require("gruvbox-material").setup({
+  contrast = "soft",
   background = {
     transparent = transparent,
   },
