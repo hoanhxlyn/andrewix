@@ -1,37 +1,25 @@
-{__findFile, ...}: {
+{
+  lib,
+  self,
+  __findFile,
+  ...
+}: {
   andrew.editor.provides.vscode = {
     includes = [
-      (<den/unfree> ["vscode-extension-github-copilot"])
+      (<den/unfree> ["vscode"])
     ];
     homeManager = {pkgs, ...}: {
       programs.vscode = {
         enable = true;
-        package = pkgs.vscodium;
         profiles.default = {
-          userSettings = {
-            # TODO: add more here
-            "files.autoSave" = "off";
-            "editor.formatOnSave" = true;
-            "editor.tabSize" = 2;
-            "editor.mouseWheelZoom" = true;
-            "workbench.activityBar.location" = "top";
-            "window.menuBarVisibility" = "compact";
-            "workbench.navigationControl.enabled" = false;
-            "workbench.layoutControl.enabled" = false;
-            "security.workspace.trust.enabled" = false;
-            "[jsonc]" = {
-              "editor.defaultFormatter" = "esbenp.prettier-vscode";
-            };
-            # Extension stuff
-            "biome.suggestInstallingGlobally" = false;
-            "biome.requireConfiguration" = true;
-          };
+          userSettings = lib.importJSON "${self}/config/vscode/settings.json";
+          keybindings = lib.importJSON "${self}/config/vscode/keybindings.json";
           enableMcpIntegration = true;
           enableUpdateCheck = false;
           enableExtensionUpdateCheck = false;
           extensions = with pkgs.vscode-extensions; [
             # TODO: add more here
-            bbenoist.nix
+            jnoortheen.nix-ide
             biomejs.biome
             sumneko.lua
             dbaeumer.vscode-eslint
@@ -41,8 +29,15 @@
             stylelint.vscode-stylelint
             formulahendry.auto-rename-tag
             christian-kohler.path-intellisense
-            github.copilot
-            github.copilot-chat
+            editorconfig.editorconfig
+            usernamehw.errorlens
+            yoavbls.pretty-ts-errors
+            jgclark.vscode-todo-highlight
+            prisma.prisma
+            github.vscode-pull-request-github
+            gitlab.gitlab-workflow
+            zguolee.tabler-icons
+            vscode-icons-team.vscode-icons
           ];
         };
       };

@@ -38,6 +38,7 @@ in {
       # (<andrew/terminals/alacritty> terminal)
       (<andrew/terminals/wezterm> terminal)
       <andrew/cli/nodejs>
+      <andrew/cli/nix>
       <andrew/cli/utils>
       <andrew/cli/tui>
       <andrew/communications/caprine>
