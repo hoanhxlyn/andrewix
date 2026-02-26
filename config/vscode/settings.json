@@ -1,8 +1,7 @@
 {
-  // Files ======================
   "files.autoSave": "off",
   "files.associations": {
-    "*.tmpl": "shellscript",
+    "*.tmpl": "shellscript"
   },
   // Git ======================
   "git.autofetch": true,
@@ -25,10 +24,8 @@
   },
   "editor.minimap.enabled": false,
   "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
-  // windows ===================
-  "window.menuBarVisibility": "hidden", //compact
+  "window.menuBarVisibility": "hidden",
   "window.commandCenter": false,
-  // workbench ==========================
   "workbench.activityBar.location": "top",
   "workbench.navigationControl.enabled": false,
   "workbench.layoutControl.enabled": false,
@@ -37,14 +34,11 @@
   "workbench.welcomePage.walkthroughs.openOnInstall": false,
   "workbench.editor.customLabels.enabled": true,
   "workbench.editor.customLabels.patterns": {
-    "**/src/**/index.{js,jsx,ts,tsx}": "${dirname(1)}/${dirname}",
+    "**/src/**/index.{js,jsx,ts,tsx}": "${dirname(1)}/${dirname}"
   },
-  // Security ==========================
   "security.workspace.trust.enabled": false,
-  //Explorer ===========================
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
-  // LSP
   "biome.suggestInstallingGlobally": false,
   "biome.requireConfiguration": true,
   "tailwindCSS.lint.cssConflict": "error",
@@ -63,5 +57,5 @@
   "less.validate": false,
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
-  },
+  }
 }
