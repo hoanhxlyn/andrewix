@@ -23,7 +23,6 @@
           deadnix
         ];
       };
-        
     };
 
     utils.nixos = {pkgs, ...}: {
