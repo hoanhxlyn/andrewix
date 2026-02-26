@@ -1,7 +1,12 @@
 {
   "files.autoSave": "off",
+  "files.associations": {
+    "*.tmpl": "shellscript"
+  },
+  // Git ======================
   "git.autofetch": true,
   "git.confirmSync": false,
+  // Editor ==================
   "editor.formatOnSave": false,
   "editor.tabSize": 2,
   "editor.mouseWheelZoom": true,
@@ -18,7 +23,8 @@
     "source.organizeImports.biome": "explicit"
   },
   "editor.minimap.enabled": false,
-  "window.menuBarVisibility": "compact",
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "window.menuBarVisibility": "hidden",
   "window.commandCenter": false,
   "workbench.activityBar.location": "top",
   "workbench.navigationControl.enabled": false,
@@ -26,10 +32,11 @@
   "workbench.productIconTheme": "Tabler",
   "workbench.iconTheme": "vscode-icons",
   "workbench.welcomePage.walkthroughs.openOnInstall": false,
-  "security.workspace.trust.enabled": false,
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
+  "workbench.editor.customLabels.enabled": true,
+  "workbench.editor.customLabels.patterns": {
+    "**/src/**/index.{js,jsx,ts,tsx}": "${dirname(1)}/${dirname}"
   },
+  "security.workspace.trust.enabled": false,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "biome.suggestInstallingGlobally": false,
@@ -44,5 +51,11 @@
     "tw"
   ],
   "typescript.updateImportsOnFileMove.enabled": "always",
-  "nix.formatterPath": "alejandra"
+  "nix.formatterPath": "alejandra",
+  "css.validate": false,
+  "scss.validate": false,
+  "less.validate": false,
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }
