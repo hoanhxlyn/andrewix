@@ -1,1 +1,0 @@
-This repository contains NixOS and Home Manager configurations using flake-parts with automatic module discovery. It's a personal dotfiles configuration for a user named Andrew.
