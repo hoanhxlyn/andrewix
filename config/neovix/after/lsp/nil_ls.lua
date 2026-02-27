@@ -1,11 +1,14 @@
 return {
   settings = {
-    ['nil'] = {
+    ["nil"] = {
       formatting = {
-        command = { 'alejandra' },
+        command = { "alejandra" },
       },
       nix = {
-        autoArchive = true,
+        flake = {
+          autoArchive = true,
+          autoEvalInputs = true,
+        },
       },
     },
   },
