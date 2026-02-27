@@ -3,10 +3,8 @@
   "files.associations": {
     "*.tmpl": "shellscript"
   },
-  // Git ======================
   "git.autofetch": true,
   "git.confirmSync": false,
-  // Editor ==================
   "editor.formatOnSave": false,
   "editor.tabSize": 2,
   "editor.mouseWheelZoom": true,

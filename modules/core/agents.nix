@@ -15,7 +15,7 @@
         "@upstash/context7-mcp"
       ];
       env = {
-        "api-key" = builtins.getEnv "CONTEXT_7_API_KEY";
+        "api-key" = "{env:CONTEXT_7_API_KEY}";
       };
     };
     tavily = {
@@ -25,8 +25,11 @@
         "tavily-mcp@latest"
       ];
       env = {
-        TAVILY_API_KEY = builtins.getEnv "TAVILY_API_KEY";
+        TAVILY_API_KEY = "{env:TAVILY_API_KEY}";
       };
+    };
+    deepwiki = {
+      url = "https://mcp.deepwiki.com/mcp";
     };
   };
 in {
@@ -39,7 +42,7 @@ in {
       servers = mcpServers;
     };
     programs.gemini-cli = {
-      enable = true;
+      enable = false;
       settings = {
         context = {
           fileName = ["AGENTS.md" "CONTEXT.md" "GEMINI.md"];
