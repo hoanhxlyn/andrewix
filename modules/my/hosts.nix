@@ -8,7 +8,7 @@ in {
       andrew-laptop = {
         hostName = "andrew-laptop";
         description = "Personal laptop";
-        users.${name}.userName = {inherit userName;};
+        users.${name} = {inherit userName;};
       };
       andrew-pc = {
         hostName = "andrew-pc";
@@ -17,14 +17,19 @@ in {
       };
     };
 
-    # homes.${arch}.${name} = {
-    #   inherit userName;
-    # };
+    homes.${arch}.${name} = {
+      inherit userName;
+    };
 
     aspects = {
-      # ${name}.includes = [<my/user>];
-      andrew-laptop.includes = [<my/devices/home-laptop>];
+      andrew-laptop = {
+        includes = [<my/devices/home-laptop>];
+        user.description = name;
+      };
       andrew-pc.includes = [<my/devices/home-pc>];
+
+      # Standalone home-manager (for non-NixOS Linux)
+      # ${name}.includes = [<my/devices/base>];
     };
   };
 }
