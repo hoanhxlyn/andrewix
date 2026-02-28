@@ -11,6 +11,8 @@
     };
     editor = "nvim";
   };
+  gdrive-path = "/mnt/gdrive";
+  theme = "gruvbox-dark";
 in {
   my.devices.provides = {
     base.includes = [
@@ -23,11 +25,12 @@ in {
       <core.timezone>
       (<core.stylix> {
         inherit terminal;
-        theme = "gruvbox-dark";
+        inherit theme;
       })
       (<core.git> git)
       <core.agents>
-      (<andrew/sync/rclone> "/mnt/gdrive")
+      (<andrew/sync/rclone> gdrive-path)
+      (<andrew/sync/keepassxc> gdrive-path)
 
       <andrew/editor/neovix>
       # <andrew/editor/zed> # Doesn't really benefit much for me

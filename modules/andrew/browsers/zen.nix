@@ -40,7 +40,8 @@
             "zen.tabs.show-newtab-vertical" = false;
             "zen.view.show-newtab-button-top" = false;
             "zen.view.compact.enable-at-startup" = true;
-            "zen.urlbar.behavior" = true;
+            "zen.view.use-single-toolbar" = false;
+            "zen.urlbar.behavior" = "float";
             "sidebar.visibility" = "hide-sidebar";
             # Search
             "browser.search.separatePrivateDefault" = false;
@@ -54,10 +55,11 @@
               };
             }
             {
-              id = "zen-compact-mode-shortcut-toggle";
+              id = "zen-compact-mode-toggle";
               key = "|";
               modifiers = {
                 control = true;
+                shift = true;
               };
             }
           ];
