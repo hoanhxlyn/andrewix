@@ -23,11 +23,12 @@ in {
       <core.timezone>
       (<core.stylix> {
         inherit terminal;
-        theme = "gruvbox-material-dark-hard";
+        theme = "gruvbox-dark";
       })
       (<core.git> git)
       <core.agents>
-      (<andrew/sync> "/mnt/gdrive")
+      (<andrew/sync/rclone> "/mnt/gdrive")
+
       <andrew/editor/neovix>
       # <andrew/editor/zed> # Doesn't really benefit much for me
       <andrew/editor/vscode>
