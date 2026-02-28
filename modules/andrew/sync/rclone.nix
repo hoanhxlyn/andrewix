@@ -1,5 +1,5 @@
 {
-  andrew.sync = path: {
+  andrew.sync.provides.rclone = path: {
     homeManager = {pkgs, ...}: {
       programs = {
         rclone.enable = true;
@@ -26,6 +26,9 @@
             Browser = {
               Enabled = true;
               Browser_AllowLocalhostWithPasskeys = true;
+            };
+            PasswordGenerator = {
+              Length = 18;
             };
             Security = {
               LockDatabaseScreenLock = false;

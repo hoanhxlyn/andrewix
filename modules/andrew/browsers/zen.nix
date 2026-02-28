@@ -58,7 +58,6 @@
               key = "|";
               modifiers = {
                 control = true;
-                shift = true;
               };
             }
           ];
