@@ -20,6 +20,7 @@
       programs.zen-browser = {
         enable = true;
         nativeMessagingHosts = [keepass];
+        suppressXdgMigrationWarning = true;
         profiles.default = {
           id = 0;
           isDefault = true;
