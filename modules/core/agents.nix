@@ -2,88 +2,89 @@
   lib,
   inputs,
   ...
-}: let
-  mcpServers = {
-    serena = {
-      url = "http://localhost:12345/mcp";
-      timeout = 2000;
-    };
-    context7 = {
-      command = "pnpm";
-      args = [
-        "dlx"
-        "@upstash/context7-mcp"
-      ];
-      env = {
-        "api-key" = "{env:CONTEXT_7_API_KEY}";
-      };
-    };
-    tavily = {
-      command = "pnpm";
-      args = [
-        "dlx"
-        "tavily-mcp@latest"
-      ];
-      env = {
-        TAVILY_API_KEY = "{env:TAVILY_API_KEY}";
-      };
-    };
-    deepwiki = {
-      url = "https://mcp.deepwiki.com/mcp";
-    };
-  };
-in {
+}: {
   flake-file.inputs.serena.url = "github:oraios/serena";
 
   core.agents.homeManager = {pkgs, ...}: {
     programs.uv.enable = true;
     programs.mcp = {
       enable = true;
-      servers = mcpServers;
-    };
-    programs.gemini-cli = {
-      enable = false;
-      settings = {
-        context = {
-          fileName = ["AGENTS.md" "CONTEXT.md" "GEMINI.md"];
+      servers = {
+        serena = {
+          url = "http://localhost:12345/mcp";
+          timeout = 2000;
         };
-        general = {
-          preferredEditor = "neovim";
-          vimMode = false;
-          disableAutoUpdate = true;
-          previewFeatures = true;
+        context7 = {
+          command = "pnpm";
+          args = [
+            "dlx"
+            "@upstash/context7-mcp"
+          ];
+          env = {
+            "api-key" = "{env:CONTEXT_7_API_KEY}";
+          };
         };
-        ui = {
-          hideWindowTitle = false;
-          hideTips = true;
-          hideBanner = true;
-          hideFooter = true;
-          showMemoryUsage = false;
-          showLineNumbers = true;
-          showCitations = true;
-          accessibility.disableLoadingPhrases = true;
-          hideContextSummary = false;
-          footer.hideCWD = true;
-          footer.hideSandboxStatus = true;
-          useFullWidth = true;
-          useAlternateBuffer = true;
-          showStatusInTitle = true;
-          showModelInfoInChat = true;
+        tavily = {
+          command = "pnpm";
+          args = [
+            "dlx"
+            "tavily-mcp@latest"
+          ];
+          environment = {
+            TAVILY_API_KEY = "{env:TAVILY_API_KEY}";
+          };
         };
-        tools = {
-          shell.showColor = true;
-          exclude = [
-            "list_directory"
-            "glob"
-            "search_file_content"
-            "web_fetch"
-            "google_web_search"
+        deepwiki = {
+          command = "pnpm";
+          args = [
+            "dlx"
+            "mcp-deepwiki@latest"
           ];
         };
-        security.auth.selectedType = "oauth-personal";
-        inherit mcpServers;
       };
     };
+    # programs.gemini-cli = {
+    #   enable = false;
+    #   settings = {
+    #     context = {
+    #       fileName = ["AGENTS.md" "CONTEXT.md" "GEMINI.md"];
+    #     };
+    #     general = {
+    #       preferredEditor = "neovim";
+    #       vimMode = false;
+    #       disableAutoUpdate = true;
+    #       previewFeatures = true;
+    #     };
+    #     ui = {
+    #       hideWindowTitle = false;
+    #       hideTips = true;
+    #       hideBanner = true;
+    #       hideFooter = true;
+    #       showMemoryUsage = false;
+    #       showLineNumbers = true;
+    #       showCitations = true;
+    #       accessibility.disableLoadingPhrases = true;
+    #       hideContextSummary = false;
+    #       footer.hideCWD = true;
+    #       footer.hideSandboxStatus = true;
+    #       useFullWidth = true;
+    #       useAlternateBuffer = true;
+    #       showStatusInTitle = true;
+    #       showModelInfoInChat = true;
+    #     };
+    #     tools = {
+    #       shell.showColor = true;
+    #       exclude = [
+    #         "list_directory"
+    #         "glob"
+    #         "search_file_content"
+    #         "web_fetch"
+    #         "google_web_search"
+    #       ];
+    #     };
+    #     security.auth.selectedType = "oauth-personal";
+    #   };
+    # };
     programs.opencode = {
       enable = true;
       enableMcpIntegration = true;
@@ -116,6 +117,18 @@ in {
         plugin = [
           "opencode-gemini-auth@latest"
         ];
+        agent = {
+          commit = {
+            description = "Generate a git commit convention for changes";
+            prompt = "Generate a git commit convention for changes";
+          };
+        };
+        command = {
+          commit = {
+            description = "Generate a git commit convention for changes";
+            template = "Generate a git commit convention for changes";
+          };
+        };
       };
     };
 
