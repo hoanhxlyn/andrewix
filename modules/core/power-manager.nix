@@ -1,30 +1,47 @@
-{
+{lib, ...}: {
   core.power-manager.nixos = {
+    config,
+    pkgs,
+    ...
+  }: {
+    boot = {
+      extraModulePackages = with config.boot.kernelPackages; [
+        acpi_call
+      ];
+      kernelModules = ["acpi_call"];
+    };
+
     services = {
-      power-profiles-daemon.enable = false;
+      power-profiles-daemon.enable = lib.mkForce false;
       tlp = {
         enable = true;
         settings = {
-          start_charge_thresh_bat0 = 40;
-          stop_charge_thresh_bat0 = 90;
+          # CPU
+          CPU_SCALING_GOVERNOR_ON_AC = "powersave";
+          CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+          CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
+          CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+          CPU_ENERGY_PERF_POLICY_ON_SAV = "power";
+          CPU_BOOST_ON_BAT = 0;
 
-          # cpu
-          cpu_scaling_governor_on_ac = "powersave";
-          cpu_scaling_governor_on_bat = "powersave";
-          cpu_energy_perf_policy_on_ac = "balance_performance";
-          cpu_energy_perf_policy_on_bat = "power";
-          cpu_boost_on_bat = 0;
-          platform_profile_on_ac = "performance";
-          platform_profile_on_bat = "low-power";
+          # Platform Profiles
+          PLATFORM_PROFILE_ON_AC = "performance";
+          PLATFORM_PROFILE_ON_BAT = "low-power";
+          PLATFORM_PROFILE_ON_SAV = "low-power";
 
-          # pcie & runtime pm
-          pcie_aspm_on_ac = "default";
-          pcie_aspm_on_bat = "powersupersave";
-          runtime_pm_on_ac = "on";
-          runtime_pm_on_bat = "auto";
+          # Battery Charge Thresholds
+          START_CHARGE_THRESH_BAT0 = 40;
+          STOP_CHARGE_THRESH_BAT0 = 80;
+          RESTORE_THRESHOLDS_ON_BAT = 1;
 
-          # peripherals
-          usb_autosuspend = 0;
+          # PCIE & Runtime PM
+          PCIE_ASPM_ON_AC = "default";
+          PCIE_ASPM_ON_BAT = "powersupersave";
+          RUNTIME_PM_ON_AC = "on";
+          RUNTIME_PM_ON_BAT = "auto";
+
+          # Peripherals
+          USB_AUTOSUSPEND = 0;
         };
       };
     };
