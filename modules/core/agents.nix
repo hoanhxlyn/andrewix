@@ -34,6 +34,13 @@
             TAVILY_API_KEY = "{env:TAVILY_API_KEY}";
           };
         };
+        deepwiki = {
+          command = "pnpm";
+          args = [
+            "dlx"
+            "mcp-deepwiki@latest"
+          ];
+        };
       };
     };
     # programs.gemini-cli = {
@@ -110,6 +117,18 @@
         plugin = [
           "opencode-gemini-auth@latest"
         ];
+        agent = {
+          commit = {
+            description = "Generate a git commit convention for changes";
+            prompt = "Generate a git commit convention for changes";
+          };
+        };
+        command = {
+          commit = {
+            description = "Generate a git commit convention for changes";
+            template = "Generate a git commit convention for changes";
+          };
+        };
       };
     };
 
