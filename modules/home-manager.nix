@@ -8,12 +8,12 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
   den = {
-    default.includes = [den._.home-manager den.aspects.hm den._.inputs' den._.self'];
-
-    aspects.hm.homeManager = {pkgs, ...}: {
-      home.packages = [
-        inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.default
-      ];
-    };
+    ctx.hm-host.includes = [
+      ({pkgs, ...}: {
+        home.packages = [
+          inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.default
+        ];
+      })
+    ];
   };
 }
