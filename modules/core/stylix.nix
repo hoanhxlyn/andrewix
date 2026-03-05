@@ -31,8 +31,8 @@
         targets.zen-browser.profileNames = ["default"];
         fonts = {
           monospace = {
-            package = pkgs.nerd-fonts.fira-code;
-            name = "FiraCode Nerd Font";
+            # package = pkgs.nerd-fonts.fira-code;
+            name = "CaskaydiaCove Nerd Font";
           };
           # sansSerif.package = pkgs.inter;
           # serif.package = pkgs.inter;
