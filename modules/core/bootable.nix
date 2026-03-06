@@ -5,6 +5,7 @@
       loader.efi.canTouchEfiVariables = true;
       supportedFilesystems = ["fuse"];
       kernelPackages = pkgs.linuxPackages_latest;
+      plymouth.enable = true;
     };
   };
 }
