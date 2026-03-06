@@ -1,4 +1,8 @@
-{__findFile ? __findFile, lib, ...}: {
+{
+  __findFile ? __findFile,
+  lib,
+  ...
+}: {
   den = {
     default.includes = [
       <den/define-user>
@@ -11,6 +15,6 @@
       })
     ];
 
-    base.user.classes = lib.mkDefault [ "homeManager" ];
+    base.user.classes = lib.mkDefault ["homeManager"];
   };
 }
