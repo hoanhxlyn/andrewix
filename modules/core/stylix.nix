@@ -12,30 +12,28 @@
     theme,
     ...
   }: {
-    homeManager = {pkgs, ...}: {
+    nixos = {
+      pkgs,
+      config,
+      ...
+    }: {
       imports = [
-        inputs.stylix.homeModules.stylix
+        inputs.stylix.nixosModules.stylix
       ];
       stylix = {
         enable = true;
         autoEnable = true;
-        polarity = "dark";
-        opacity.terminal = terminal.opacity;
         base16Scheme = "${pkgs.base16-schemes}/share/themes/${theme}.yaml";
+        polarity = "dark";
         cursor = {
           package = pkgs.bibata-cursors;
           name = "Bibata-Modern-Ice";
           size = 20;
         };
-        targets.firefox.profileNames = ["default"];
-        targets.zen-browser.profileNames = ["default"];
         fonts = {
           monospace = {
-            # package = pkgs.nerd-fonts.fira-code;
             name = "CaskaydiaCove Nerd Font";
           };
-          # sansSerif.package = pkgs.inter;
-          # serif.package = pkgs.inter;
           emoji.package = pkgs.noto-fonts-color-emoji;
           sizes = {
             applications = terminal.fontSize;
@@ -44,6 +42,21 @@
             popups = lib.add terminal.fontSize 2;
           };
         };
+        targets.plymouth.enable = true;
+      };
+    };
+    homeManager = {
+      pkgs,
+      config,
+      ...
+    }: {
+      # The Stylix NixOS module automatically themes Home Manager.
+      stylix = {
+        enable = true;
+        autoEnable = true;
+        opacity.terminal = terminal.opacity;
+        targets.firefox.profileNames = ["default"];
+        targets.zen-browser.profileNames = ["default"];
       };
     };
   };
