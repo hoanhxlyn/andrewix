@@ -22,6 +22,7 @@
   },
   "editor.minimap.enabled": false,
   "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "editor.scrollBeyondLastLine": false,
   "window.menuBarVisibility": "hidden",
   "window.commandCenter": false,
   "workbench.activityBar.location": "top",
@@ -55,5 +56,16 @@
   "less.validate": false,
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
-  }
+  },
+  "chat.viewSessions.orientation": "stacked",
+  "chat.agent.thinking.phrases": {
+    "mode": "replace",
+    "phrases": [
+      "Cooking up something good...",
+      "Let me think...",
+      "Here's what I'm thinking...",
+      "Analyzing the code...",
+      "Just a moment..."
+    ],
+  },
 }
