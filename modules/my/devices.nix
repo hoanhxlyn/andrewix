@@ -39,7 +39,7 @@ in {
       # <andrew/browsers/firefox>
       <andrew/browsers/zen>
       <andrew/browsers/brave> # Need a chromium for web dev
-      # (<andrew/terminals/alacritty> terminal)
+      (<andrew/terminals/alacritty> terminal)
       (<andrew/terminals/wezterm> terminal)
       <andrew/cli/nodejs>
       <andrew/cli/nix>
