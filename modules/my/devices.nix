@@ -1,6 +1,6 @@
 {__findFile ? __findFile, ...}: let
   terminal = {
-    fontSize = 12;
+    fontSize = 13;
     padding = 2;
     opacity = 0.8;
   };
