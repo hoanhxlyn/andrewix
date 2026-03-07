@@ -15,6 +15,7 @@
         };
         "org/gnome/mutter" = {
           dynamic-workspaces = true;
+          experimental-features = ["scale-monitor-framebuffer"];
         };
       };
     };
