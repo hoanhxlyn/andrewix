@@ -117,16 +117,10 @@
         plugin = [
           "opencode-gemini-auth@latest"
         ];
-        agent = {
-          commit = {
-            description = "Generate a git commit convention for changes";
-            prompt = "Generate a git commit convention for changes";
-          };
-        };
         command = {
           commit = {
-            description = "Generate a git commit convention for changes";
-            template = "Generate a git commit convention for changes";
+            description = "Auto generate commit message";
+            template = "Generate a git convention message for changes";
           };
         };
       };
