@@ -35,7 +35,7 @@
   "workbench.editor.customLabels.patterns": {
     "**/src/**/index.{js,jsx,ts,tsx}": "${dirname(1)}/${dirname}"
   },
-  "workbench.browser.enableChatTools": true;
+  "workbench.browser.enableChatTools": true,
   "security.workspace.trust.enabled": false,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
