@@ -9,6 +9,7 @@
       (<den/unfree> ["vscode"])
     ];
     homeManager = {pkgs, ...}: {
+      stylix.targets.vscode.enable = false;
       programs.vscode = {
         enable = true;
         profiles.default = {
@@ -19,6 +20,7 @@
           enableExtensionUpdateCheck = false;
           extensions = with pkgs.vscode-extensions; [
             # TODO: add more here
+            jdinhlife.gruvbox
             jnoortheen.nix-ide
             biomejs.biome
             sumneko.lua
