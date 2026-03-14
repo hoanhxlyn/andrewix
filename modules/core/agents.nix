@@ -79,7 +79,7 @@
           command = {
             commit = {
               description = "Auto generate commit message";
-              template = "Generate a git convention message for changes";
+              template = "Generate a git convention message for changes. DO NOT commit them !";
             };
           };
         };
