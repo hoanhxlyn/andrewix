@@ -4,13 +4,7 @@
       programs = {
         gh = {
           enable = true;
-          gitCredentialHelper = {
-            enable = true;
-            hosts = [
-              "https://github.com"
-              "https://gist.github.com"
-            ];
-          };
+          gitCredentialHelper.enable = true;
         };
         difftastic = {
           enable = true;
