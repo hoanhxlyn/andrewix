@@ -47,6 +47,7 @@ in {
       <andrew/cli/tui>
       <andrew/communications/caprine>
       <andrew/communications/discord>
+      <andrew/vpn/proton>
     ];
     home-laptop.includes = [
       <my.devices/base>
