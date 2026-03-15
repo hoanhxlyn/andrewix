@@ -1,18 +1,29 @@
 {
   core.git = {settings, ...}: {
-    homeManager.programs = {
-      gh = {
-        enable = true;
-        gitCredentialHelper.enable = true;
-      };
-      difftastic = {
-        enable = true;
-        git.enable = true;
-        git.diffToolMode = true;
-      };
-      git = {
-        enable = true;
-        inherit settings;
+    homeManager = {pkgs, ...}: {
+      programs = {
+        gh = {
+          enable = true;
+          gitCredentialHelper.enable = true;
+        };
+        difftastic = {
+          enable = true;
+          git.enable = true;
+          git.diffToolMode = true;
+        };
+        git = {
+          enable = true;
+          inherit settings;
+          extraConfig = {
+            # Use GCM as the default (handles GitLab, etc.)
+            credential.helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
+            credential.credentialStore = "secretservice";
+
+            # Explicitly use 'gh' for GitHub/Gist hosts
+            "credential \"https://github.com\"".helper = "!${pkgs.gh}/bin/gh auth git-credential";
+            "credential \"https://gist.github.com\"".helper = "!${pkgs.gh}/bin/gh auth git-credential";
+          };
+        };
       };
       lazygit = {
         enable = true;
@@ -46,6 +57,7 @@
           };
         };
       };
+      home.packages = [pkgs.git-credential-manager];
     };
   };
 }
