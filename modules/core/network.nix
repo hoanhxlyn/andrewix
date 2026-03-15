@@ -5,6 +5,7 @@ in {
     networking = {
       nameservers = dns;
       networkmanager.enable = true;
+      firewall.checkReversePath = "loose";
     };
   };
 }
