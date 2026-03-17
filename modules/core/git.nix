@@ -4,7 +4,7 @@
       programs = {
         gh = {
           enable = true;
-          gitCredentialHelper.enable = true;
+          gitCredentialHelper.enable = false;
         };
         difftastic = {
           enable = true;
@@ -18,10 +18,8 @@
             # Use GCM as the default (handles GitLab, etc.)
             credential.helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
             credential.credentialStore = "secretservice";
-
-            # Explicitly use 'gh' for GitHub/Gist hosts
-            "credential \"https://github.com\"".helper = "!${pkgs.gh}/bin/gh auth git-credential";
-            "credential \"https://gist.github.com\"".helper = "!${pkgs.gh}/bin/gh auth git-credential";
+            credential.guiOptions = "askpass";
+            credential.askPass = "${pkgs.gnome-askpass-bearer}/bin/gnome-askpass-bearer";
           };
         };
       };
@@ -57,7 +55,10 @@
           };
         };
       };
-      home.packages = [pkgs.git-credential-manager];
+      home.packages = with pkgs; [
+        git-credential-manager
+        gnome-askpass-bearer
+      ];
     };
   };
 }
