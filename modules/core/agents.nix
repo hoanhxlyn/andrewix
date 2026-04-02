@@ -22,7 +22,7 @@
               "@upstash/context7-mcp"
             ];
             env = {
-              "api-key" = "{env:CONTEXT_7_API_KEY}";
+              "CONTEXT7_API_KEY" = "{env:CONTEXT_7_API_KEY}";
             };
           };
           tavily = {
@@ -31,7 +31,7 @@
               "dlx"
               "tavily-mcp@latest"
             ];
-            environment = {
+            env = {
               TAVILY_API_KEY = "{env:TAVILY_API_KEY}";
             };
           };
@@ -73,7 +73,7 @@
               extensions = [".nix"];
             };
           };
-          plugin = [
+          plugins = [
             "opencode-gemini-auth@latest"
             "opencode-agent-skills"
           ];
