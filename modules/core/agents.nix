@@ -75,6 +75,7 @@
           };
           plugin = [
             "opencode-gemini-auth@latest"
+            "opencode-agent-skills"
           ];
           command = {
             commit = {
