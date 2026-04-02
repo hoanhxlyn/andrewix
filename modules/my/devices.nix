@@ -53,7 +53,6 @@ in {
       <my.devices/base>
       <core.wifi>
       <core.power-manager>
-      # <andrew/virtualisation/waydroid>
     ];
     home-pc.includes = [
       <my.devices/base>
