@@ -49,7 +49,6 @@
         enableMcpIntegration = true;
         settings = {
           username = "😺 Andrew Nguyen";
-          theme = lib.mkDefault "system";
           permission = {
             list = "deny";
             grep = "deny";
@@ -73,7 +72,7 @@
               extensions = [".nix"];
             };
           };
-          plugins = [
+          plugin = [
             "opencode-gemini-auth@latest"
             "opencode-agent-skills"
           ];
