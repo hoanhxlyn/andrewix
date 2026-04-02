@@ -8,7 +8,7 @@
       nixos = {pkgs, ...}: {
         environment.systemPackages = with pkgs; [
           pnpm
-          nodePackages.nodejs
+          nodejs
         ];
       };
       homeManager.programs = {
