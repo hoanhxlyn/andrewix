@@ -9,9 +9,11 @@
       (<den/unfree> ["vscode"])
     ];
     homeManager = {pkgs, ...}: {
-      stylix.targets.vscode.enable = false;
+      stylix.targets.vscode.enable = true;
+      stylix.targets.vscode.colors.enable = false;
       programs.vscode = {
         enable = true;
+        mutableExtensionsDir = true;
         profiles.default = {
           userSettings = lib.importJSON "${self}/config/vscode/settings.json";
           keybindings = lib.importJSON "${self}/config/vscode/keybindings.json";
@@ -20,6 +22,10 @@
           enableExtensionUpdateCheck = false;
           extensions = with pkgs.vscode-extensions; [
             jdinhlife.gruvbox
+            qufiwefefwoyn.kanagawa
+            Catppuccin.catppuccin-vsc
+            Catppuccin.catppuccin-vsc-icons
+            enkia.tokyo-night
             jnoortheen.nix-ide
             biomejs.biome
             sumneko.lua
@@ -39,6 +45,8 @@
             gitlab.gitlab-workflow
             zguolee.tabler-icons
             vscode-icons-team.vscode-icons
+            sst-dev.opencode
+            oxc.oxc-vscode
           ];
         };
       };
