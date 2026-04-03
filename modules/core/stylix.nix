@@ -12,19 +12,15 @@
     theme,
     ...
   }: {
-    nixos = {
-      pkgs,
-      config,
-      ...
-    }: {
+    nixos = {pkgs, ...}: {
       imports = [
         inputs.stylix.nixosModules.stylix
       ];
       stylix = {
         enable = true;
         autoEnable = true;
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/${theme}.yaml";
-        polarity = "dark";
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/${theme.schema}.yaml";
+        inherit (theme) polarity;
         cursor = {
           package = pkgs.bibata-cursors;
           name = "Bibata-Modern-Ice";
