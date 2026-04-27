@@ -20,7 +20,7 @@
         <my/state-version>
       ];
       nixos = {
-        home-manager.backupFileExtension = ".bak";
+        home-manager.backupFileExtension = "bak";
       };
     };
     schema.user.classes = lib.mkDefault ["homeManager"];
