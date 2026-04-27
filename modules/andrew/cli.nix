@@ -21,6 +21,7 @@
           alejandra
           statix
           deadnix
+          nps
         ];
       };
     };
