@@ -117,7 +117,7 @@ NixOS + Home Manager config using **flake-parts** with **dendritic (aspect-first
 
 ## Important Rules
 
-1. **NEVER** edit `flake.nix` directly - auto-generated
+1. **NEVER** edit `flake.nix` directly - auto-generated via `nix run .#write-flake`
 2. **NEVER** change state version (`25.11`)
 3. **ALWAYS** run `nh os test .` before committing
 4. **ALWAYS** format with `alejandra .` before committing
