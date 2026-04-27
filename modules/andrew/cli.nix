@@ -3,7 +3,7 @@
   self,
   ...
 }: {
-  andrew.cli.provides = {
+  den.aspects.andrew._.cli._ = {
     nodejs = {
       nixos = {pkgs, ...}: {
         environment.systemPackages = with pkgs; [
@@ -67,6 +67,7 @@
             };
           };
         };
+        xdg.configFile."YouTube Music/config.json".force = true;
         xdg.configFile."YouTube Music/config.json".source = "${self}/config/youtube-music/config.json";
       };
     };

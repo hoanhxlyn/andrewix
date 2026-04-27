@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  andrew.editor.provides.zed.homeManager = {pkgs, ...}: {
+  den.aspects.andrew._.editor._.zed.homeManager = {pkgs, ...}: {
     programs.zed-editor = {
       enable = true;
       extensions = [
@@ -22,7 +22,6 @@
           "context" = "Editor && vim_mode == normal && !menu";
           "bindings" = {
             "shift-y" = "vim::YankToEndOfLine";
-            # f section
             "space f f" = "file_finder::Toggle";
             "space f c" = "zed::OpenSettingsFile";
             "space f k" = "zed::OpenKeymapFile";
@@ -33,7 +32,6 @@
             "space f i" = "icon_theme_selector::Toggle";
             "space f r" = "vim::ToggleRegistersView";
             "space f d" = "diagnostics::Deploy";
-            # Buffer
             "shift-l" = "pane::ActivateNextItem";
             "shift-h" = "pane::ActivatePreviousItem";
             "space b d" = "pane::CloseActiveItem";
@@ -46,7 +44,6 @@
             "space b g" = "pane::JoinAll";
             "space b p" = "pane::TogglePinTab";
             "space b P" = "pane::UnpinAllTabs";
-            # LSP
             "space l s" = "outline::Toggle";
             "space l S" = "project_symbols::Toggle";
             "space l d" = "editor::GoToDefinition";
@@ -58,7 +55,6 @@
             "space c r" = "editor::Rename";
             "space c f" = "editor::Format";
             "space c o" = "editor::OrganizeImports";
-            # Misc
             "ctrl-a" = "editor::SelectAll";
             "ctrl-s" = "workspace::Save";
             "ctrl-j" = "workspace::ActivatePaneDown";
@@ -72,7 +68,6 @@
             "z C" = "editor::FoldAll";
             "z O" = "editor::UnfoldAll";
             "space a a" = "agent::ToggleFocus";
-            #Git
             "space g r" = "git::Restore";
             "space g s" = "git::Blame";
             "space g g" = "git_panel::ToggleFocus";
@@ -81,7 +76,6 @@
         {
           "context" = "vim_operator == a || vim_operator == i || vim_operator == cs";
           "bindings" = {
-            # mini.ai plugin behavior
             "Q" = "vim::MiniQuotes";
             "B" = "vim::MiniBrackets";
           };
@@ -93,7 +87,6 @@
             "alt-k" = "editor::MoveLineUp";
           };
         }
-        # File panel (netrw)
         {
           "context" = "ProjectPanel && not_editing";
           "bindings" = {
@@ -106,7 +99,6 @@
             "p" = "project_panel::Paste";
             "q" = "workspace::ToggleLeftDock";
             "space e" = "workspace::ToggleLeftDock";
-            # Navigate between panel
             "ctrl-h" = "workspace::ActivatePaneLeft";
             "ctrl-l" = "workspace::ActivatePaneRight";
             "ctrl-k" = "workspace::ActivatePaneUp";
@@ -117,8 +109,8 @@
           "context" = "Terminal";
           "bindings" = {
             "ctrl-shift-j" = "workspace::ToggleZoom";
-            "ctrl-n" = null; # Disable new terminal tab
-            "ctrl-p" = null; # Disable open project
+            "ctrl-n" = null;
+            "ctrl-p" = null;
             "ctrl-shift-n" = "workspace::NewTerminal";
             "ctrl-w" = "pane::CloseActiveItem";
           };
@@ -203,7 +195,6 @@
         "file_finder" = {
           "modal_max_width" = "large";
         };
-        # LSP
         "lsp" = {
           "biome" = {
             "settings" = {

@@ -4,7 +4,7 @@
   __findFile,
   ...
 }: {
-  andrew.editor.provides.vscode = {
+  den.aspects.andrew._.editor._.vscode = {
     includes = [
       (<den/unfree> ["vscode"])
     ];
@@ -19,7 +19,6 @@
           enableUpdateCheck = false;
           enableExtensionUpdateCheck = false;
           extensions = with pkgs.vscode-extensions; [
-            # TODO: add more here
             jdinhlife.gruvbox
             jnoortheen.nix-ide
             biomejs.biome

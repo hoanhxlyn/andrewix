@@ -1,5 +1,5 @@
 {
-  andrew.sync.provides.rclone = path: {
+  den.aspects.andrew._.sync._.rclone = path: {
     homeManager = {pkgs, ...}: {
       programs.rclone.enable = true;
       systemd.user.services.rclone-gdrive = {

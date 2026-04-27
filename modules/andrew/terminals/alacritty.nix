@@ -1,5 +1,5 @@
 {
-  andrew.terminals.provides.alacritty = terminal: {
+  den.aspects.andrew._.terminals._.alacritty = terminal: {
     homeManager = {
       programs.alacritty = {
         enable = true;
