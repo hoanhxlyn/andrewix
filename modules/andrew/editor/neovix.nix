@@ -1,5 +1,6 @@
 {
   self,
+  inputs,
   __findFile,
   ...
 }: {
@@ -21,6 +22,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
+
   den.aspects.andrew._.editor._.neovix = {
     includes = [
       (<den/unfree> [
@@ -30,11 +32,11 @@
     homeManager = {pkgs, ...}: {
       programs.neovim = {
         enable = true;
-        package = pkgs.neovim-nightly;
         defaultEditor = true;
         vimAlias = true;
         viAlias = true;
         vimdiffAlias = true;
+        package = inputs.neovim-nightly.packages.${pkgs.system}.default;
 
         plugins = with pkgs.vimPlugins; [
           (nvim-treesitter.withPlugins (p: [
@@ -97,18 +99,21 @@
           nvim-dap-ui
           nvim-nio
           nvim-dap-virtual-text
-          # (pkgs.vimUtils.buildVimPlugin {
-          #   pname = "import-size-nvim";
-          #   src = inputs.import-size-nvim;
-          # })
-          # (pkgs.vimUtils.buildVimPlugin {
-          #   pname = "wezterm-types";
-          #   src = inputs.wezterm-types;
-          # })
-          # (pkgs.vimUtils.buildVimPlugin {
-          #   pname = "vim-rzip";
-          #   src = inputs.vim-rzip;
-          # })
+          (pkgs.vimUtils.buildVimPlugin {
+            pname = "import-size-nvim";
+            version = "unstable-2025-01-01";
+            src = inputs.import-size-nvim;
+          })
+          (pkgs.vimUtils.buildVimPlugin {
+            pname = "wezterm-types";
+            version = "unstable-2025-01-01";
+            src = inputs.wezterm-types;
+          })
+          (pkgs.vimUtils.buildVimPlugin {
+            pname = "vim-rzip";
+            version = "unstable-2025-01-01";
+            src = inputs.vim-rzip;
+          })
         ];
 
         extraPackages = with pkgs; [
