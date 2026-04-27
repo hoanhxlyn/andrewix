@@ -1,5 +1,4 @@
 {
-  inputs,
   self,
   __findFile,
   ...
@@ -18,7 +17,7 @@
       flake = false;
     };
   };
-  andrew.editor.provides.neovix = {
+  den.aspects.andrew._.editor._.neovix = {
     includes = [
       (<den/unfree> [
         "copilot-language-server"
@@ -64,7 +63,6 @@
           nvim-treesitter-textobjects
           nvim-treesitter-context
 
-          # Plugins
           mini-nvim
           snacks-nvim
           nvim-lspconfig
@@ -94,18 +92,18 @@
           nvim-dap-ui
           nvim-nio
           nvim-dap-virtual-text
-          (pkgs.vimUtils.buildVimPlugin {
-            name = "import-size-nvim";
-            src = inputs.import-size-nvim;
-          })
-          (pkgs.vimUtils.buildVimPlugin {
-            name = "wezterm-types";
-            src = inputs.wezterm-types;
-          })
-          (pkgs.vimUtils.buildVimPlugin {
-            name = "vim-rzip";
-            src = inputs.vim-rzip;
-          })
+          # (pkgs.vimUtils.buildVimPlugin {
+          #   pname = "import-size-nvim";
+          #   src = inputs.import-size-nvim;
+          # })
+          # (pkgs.vimUtils.buildVimPlugin {
+          #   pname = "wezterm-types";
+          #   src = inputs.wezterm-types;
+          # })
+          # (pkgs.vimUtils.buildVimPlugin {
+          #   pname = "vim-rzip";
+          #   src = inputs.vim-rzip;
+          # })
         ];
 
         extraPackages = with pkgs; [

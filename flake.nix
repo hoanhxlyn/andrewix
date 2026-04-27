@@ -7,54 +7,43 @@
     aic8800.url = "github:hoanhxlyn/aic8800-nix";
     den.url = "github:vic/den";
     fcitx5-vmk-nix = {
-      inputs.nixpkgs.follows = "nixpkgs";
       url = "github:hoanhxlyn/fcitx5-vmk-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-aspects.url = "github:vic/flake-aspects";
     flake-file.url = "github:vic/flake-file";
     flake-parts = {
-      inputs.nixpkgs-lib.follows = "nixpkgs-lib";
       url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     home-manager = {
-      inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     import-size-nvim = {
-      flake = false;
       url = "github:stuckinsnow/import-size.nvim";
+      flake = false;
     };
     import-tree.url = "github:vic/import-tree";
-    nix-auto-follow = {
-      inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:fzakaria/nix-auto-follow";
-    };
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
-    nixpkgs-lib.follows = "nixpkgs";
     serena.url = "github:oraios/serena";
     stylix = {
-      inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/stylix";
-    };
-    systems.url = "github:nix-systems/default";
-    treefmt-nix = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:numtide/treefmt-nix";
     };
     vim-rzip = {
-      flake = false;
       url = "github:lbrayner/vim-rzip";
+      flake = false;
     };
     wezterm-types = {
-      flake = false;
       url = "github:justinsgithub/wezterm-types";
+      flake = false;
     };
     zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
       inputs = {
         home-manager.follows = "home-manager";
         nixpkgs.follows = "nixpkgs";
       };
-      url = "github:0xc000022070/zen-browser-flake";
     };
   };
 }

@@ -1,8 +1,4 @@
-{
-  lib,
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
   flake-file.inputs.serena.url = "github:oraios/serena";
 
   core.agents.homeManager = {pkgs, ...}: {
