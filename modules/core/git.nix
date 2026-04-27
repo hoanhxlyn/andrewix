@@ -1,51 +1,53 @@
 {
   core.git = {
-    homeManager.programs = {
-      gh = {
-        enable = true;
-        gitCredentialHelper.enable = true;
-      };
-      difftastic = {
-        enable = true;
-        git.enable = true;
-        git.diffToolMode = true;
-      };
-      git = {
-        enable = true;
-        settings = {
-          user.email = "hoanhxlyn@gmail.com";
-          user.name = "Andrew Nguyen";
-          core.editor = "nvim";
+    homeManager = {pkgs, ...}: {
+      programs = {
+        gh = {
+          enable = true;
+          gitCredentialHelper.enable = true;
         };
-      };
-      lazygit = {
-        enable = true;
-        settings = {
-          git = {
-            pagers = [
-              {
-                externalDiffCommand = "difft --color=always --display=inline";
-              }
-            ];
+        difftastic = {
+          enable = true;
+          git.enable = true;
+          git.diffToolMode = true;
+        };
+        git = {
+          enable = true;
+          settings = {
+            user.email = "hoanhxlyn@gmail.com";
+            user.name = "Andrew Nguyen";
+            core.editor = "nvim";
           };
-          gui = {
-            nerdFontsVersion = "3";
-            showBranchCommitHash = true;
-            showCommandLog = true;
-            spinner = {
-              frames = [
-                "⠋"
-                "⠙"
-                "⠹"
-                "⠸"
-                "⠼"
-                "⠴"
-                "⠦"
-                "⠧"
-                "⠇"
-                "⠏"
+        };
+        lazygit = {
+          enable = true;
+          settings = {
+            git = {
+              pagers = [
+                {
+                  externalDiffCommand = "difft --color=always --display=inline";
+                }
               ];
-              rate = 120;
+            };
+            gui = {
+              nerdFontsVersion = "3";
+              showBranchCommitHash = true;
+              showCommandLog = true;
+              spinner = {
+                frames = [
+                  "⠋"
+                  "⠙"
+                  "⠹"
+                  "⠸"
+                  "⠼"
+                  "⠴"
+                  "⠦"
+                  "⠧"
+                  "⠇"
+                  "⠏"
+                ];
+                rate = 120;
+              };
             };
           };
         };
