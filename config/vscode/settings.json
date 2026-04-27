@@ -5,6 +5,7 @@
   },
   "git.autofetch": true,
   "git.confirmSync": false,
+  "gitlens.graph.layout": "editor",
   "editor.formatOnSave": false,
   "editor.tabSize": 2,
   "editor.mouseWheelZoom": true,
@@ -42,6 +43,7 @@
   "explorer.confirmDragAndDrop": false,
   "biome.suggestInstallingGlobally": false,
   "biome.requireConfiguration": true,
+  "prettier.requireConfig": true,
   "tailwindCSS.lint.cssConflict": "error",
   "tailwindCSS.classAttributes": [
     "className"

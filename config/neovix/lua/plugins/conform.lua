@@ -1,5 +1,23 @@
 vim.api.nvim_create_autocmd("BufRead", {
   callback = function()
+    local valid_oxfmt_config = {
+      "oxfmt.json",
+      ".oxfmt.json",
+      "oxfmt.yaml",
+      "oxfmt.yml",
+      "oxfmt.toml",
+      "oxfmt.config.ts",
+    }
+    local function has_oxfmt_config()
+      for _, config_file in ipairs(valid_oxfmt_config) do
+        local path = vim.fn.getcwd() .. "/" .. config_file
+        if vim.uv.fs_stat(path) then
+          return true
+        end
+      end
+      return false
+    end
+
     require("conform").setup({
       notify_on_error = true,
       default_format_opts = {
@@ -18,12 +36,12 @@ vim.api.nvim_create_autocmd("BufRead", {
         lua = { "stylua" },
         json = { "biome" },
         yaml = { "yamlfix" },
-        javascript = { "biome", "prettierd" },
-        typescript = { "biome", "prettierd" },
-        typescriptreact = { "biome", "prettierd" },
-        javascriptreact = { "biome", "prettierd" },
-        css = { "biome", "prettierd" },
-        scss = { "biome", "prettierd" },
+        javascript = { "biome", "oxfmt", "prettierd" },
+        typescript = { "biome", "oxfmt", "prettierd" },
+        typescriptreact = { "biome", "oxfmt", "prettierd" },
+        javascriptreact = { "biome", "oxfmt", "prettierd" },
+        css = { "biome", "oxfmt", "prettierd" },
+        scss = { "biome", "oxfmt", "prettierd" },
         kdl = { "kdlfmt" },
         sh = { "shfmt" },
         nix = { "alejandra" },
@@ -32,6 +50,11 @@ vim.api.nvim_create_autocmd("BufRead", {
       formatters = {
         biome = {
           require_cwd = true,
+        },
+        oxfmt = {
+          condition = function(_, ctx)
+            return has_oxfmt_config()
+          end,
         },
         stylua = {},
         yamlfix = {},

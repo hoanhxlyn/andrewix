@@ -1,9 +1,5 @@
 {lib, ...}: {
-  core.power-manager.nixos = {
-    config,
-    pkgs,
-    ...
-  }: {
+  core.power-manager.nixos = {config, ...}: {
     boot = {
       extraModulePackages = with config.boot.kernelPackages; [
         acpi_call

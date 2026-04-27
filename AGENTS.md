@@ -33,35 +33,46 @@ nix run .#write-flake               # Regenerate flake.nix (DO NOT edit manually
 
 ## Project Architecture
 
-NixOS + Home Manager config using **flake-parts** with **dendritic (aspect-first) architecture** and automatic module discovery via `vic/import-tree`.
+NixOS + Home Manager config using **flake-parts** with a **dendritic (aspect-first)
+architecture** and automatic module discovery via `vic/import-tree`.
 
 ### Directory Structure
 ```
 ├── flake.nix           # Auto-generated (DO NOT EDIT)
+├── flake.lock          # Pinned dependency lockfile
 ├── modules/
-│   ├── dendritic.nix  # Dendritic module loader
+│   ├── dendritic.nix   # Dendritic module loader (vic/den framework)
 │   ├── namespace.nix   # Namespace definitions (core, andrew, my)
-│   ├── defaults.nix   # Default includes for all hosts
+│   ├── defaults.nix    # Default includes for all hosts
 │   ├── home-manager.nix
-│   ├── treefmt.nix
-│   ├── core/          # System-level aspects (NixOS modules)
-│   ├── andrew/        # User-level aspects (Home Manager)
-│   └── my/            # Host/user definitions
-├── hosts/              # Hardware-specific configs
+│   ├── treefmt.nix     # Formatting/linting pipeline
+│   ├── core/           # System-level aspects (NixOS)
+│   ├── andrew/         # User-level aspects (Home Manager)
+│   └── my/             # Host/user identity definitions
+├── hosts/              # Hardware-specific configs (filesystems, hardware)
 │   ├── andrew-pc/
 │   └── andrew-laptop/
-└── config/             # Config files (neovim, etc.)
+└── config/             # Non-Nix application configs
+    └── neovix/         # Neovim config (Lua)
 ```
+
+### Namespace Conventions
+- `core.<name>` — System-level aspect; configures NixOS
+- `andrew.<category>` — User-level aspect; configures Home Manager
+- `andrew.<category>.provides.<name>` — Parameterized/factory aspect
+- `my.<name>` — Identity/host definitions (users, devices, state)
 
 ### Key Variables
 - Username: `andrew`
 - System: `x86_64-linux`
 - State Version: `25.11` (DO NOT MODIFY)
 
-## Code Style Guidelines
+---
+
+## Nix Code Style
 
 ### Formatting
-- **Formatter:** `alejandra` (enforced by treefmt)
+- **Formatter:** `alejandra` (enforced via treefmt + pre-commit)
 - **Indentation:** 2 spaces (no tabs)
 - **Line Length:** Prefer under 80 chars, hard limit at 100
 
@@ -70,42 +81,47 @@ NixOS + Home Manager config using **flake-parts** with **dendritic (aspect-first
 - **Variables/Options:** `camelCase`
 - **Booleans:** Prefix with `enable`/`disable`
 
-### Module Structure Pattern
+### Module Structure Patterns
+
+Simple aspect (no external deps):
+```nix
+{
+  core.sound.nixos = {
+    services.pipewire.enable = true;
+  };
+}
+```
+
+Aspect with den includes (angle-bracket imports):
 ```nix
 {__findFile, ...}: {
-  core.featureName = {
-    includes = [ (<den/unfree> ["package"]) ];
+  core.nvidia = {
+    includes = [ (<den/unfree> ["nvidia-x11"]) ];
     nixos = {config, pkgs, ...}: { /* NixOS config */ };
     homeManager = {pkgs, ...}: { /* Home Manager config */ };
   };
 }
 ```
 
-### Standard Function Arguments
-- `{__findFile, ...}:` - Modules using den includes
-- `{config, pkgs, ...}:` - NixOS/homeManager configs
-- `{lib, ...}:` - Only lib functions needed
-- `{inputs, self, ...}:` - Referencing flake inputs
-
-### Imports & Includes
-- Use `includes = [ ... ]` for den aspect dependencies
-- Use angle bracket syntax: `<den/define-user>`, `<my/devices/home-pc>`
-- Use `imports = [ ... ]` for Home Manager module imports
-
-### Common Functions
-- `lib.mkEnableOption` - Boolean enable options
-- `lib.mkOption` - Custom options
-- `lib.mkIf` - Conditional configuration
-- `lib.mkMerge` - Merge multiple configs
-- `lib.mkDefault` - Set default values (overrideable)
-
-### Flake Inputs Pattern
+Parameterized/factory aspect:
 ```nix
-{inputs, ...}: {
-  flake-file.inputs.newInput = {
-    url = "github:owner/repo";
+{
+  andrew.terminals.provides.alacritty = terminal: {
+    homeManager = {
+      programs.alacritty.settings.font.size = terminal.fontSize;
+    };
+  };
+}
+```
+
+Flake input declaration (feeds into auto-generated `flake.nix`):
+```nix
+{lib, inputs, ...}: {
+  flake-file.inputs.stylix = {
+    url = "github:nix-community/stylix";
     inputs.nixpkgs.follows = "nixpkgs";
   };
+  core.stylix = { ... };
 }
 ```
 
@@ -120,16 +136,19 @@ NixOS + Home Manager config using **flake-parts** with **dendritic (aspect-first
 2. **NEVER** change state version (`25.11`)
 3. **ALWAYS** test with `nix run .#<host> -- test` before switching
 4. **ALWAYS** format with `alejandra .` before committing
-5. **ALWAYS** check lint with `statix check`
-6. Use `with pkgs;` for package lists
-7. Use `inherit` when appropriate
-8. Place related packages in same `environment.systemPackages` list
-9. Always use context7 and websearch to research and confirm your knowledge
+5. **ALWAYS** check lint with `statix check` and `deadnix --no-underscore --fail`
+6. Use context7 and websearch to research unfamiliar NixOS/HM options
+7. Prefer `includes` over `imports` for aspect composition within this repo
+
+---
 
 ## Pre-commit Hooks
-- `alejandra` - Nix formatter
-- `deadnix` - Dead code detection
-- `statix` - Nix linter
-- `nixf-diagnose` - Additional diagnostics
 
-Excluded: `modules/*`, `LICENSE`, `flake.lock`, `.envrc`, `.direnv/*`
+| Hook | Purpose |
+|---|---|
+| `alejandra` | Nix formatter |
+| `deadnix` | Dead Nix code detection |
+| `statix` | Nix best-practices linter |
+| `nixf-diagnose` | Additional Nix diagnostics |
+
+Excluded paths: `modules/*`, `LICENSE`, `flake.lock`, `*/flake.lock`, `.envrc`, `.direnv/*`
