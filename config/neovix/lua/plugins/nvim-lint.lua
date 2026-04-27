@@ -1,5 +1,6 @@
 local lint = require("lint")
 local cspell_util = require("config.lint.cspell")
+local oxc_config = require("config.lint.oxc")
 local utils = require("config.utils")
 local opts = {
   linters_by_ft = {

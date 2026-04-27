@@ -135,6 +135,8 @@
           kdlfmt
           cspell
           stylelint
+          oxlint
+          oxfmt
           lsof
           vtsls
           lua-language-server
