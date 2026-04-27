@@ -11,7 +11,6 @@
             blur = true;
             startup_mode = "Maximized";
           };
-          font.size = terminal.fontSize;
           selection = {
             save_to_clipboard = true;
           };

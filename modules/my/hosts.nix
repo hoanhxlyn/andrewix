@@ -1,7 +1,7 @@
 {__findFile, ...}: let
   arch = "x86_64-linux";
   terminal = {
-    fontSize = 13;
+    fontSize = 12;
     padding = 2;
     opacity = 0.8;
   };

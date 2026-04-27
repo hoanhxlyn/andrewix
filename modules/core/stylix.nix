@@ -32,7 +32,7 @@
         };
         fonts = {
           monospace = {
-            name = "CaskaydiaCove Nerd Font";
+            name = "FiraCode Nerd Font";
           };
           emoji.package = pkgs.noto-fonts-color-emoji;
           sizes = {
