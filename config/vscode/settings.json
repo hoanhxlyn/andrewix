@@ -51,7 +51,7 @@
     "cx",
     "tw"
   ],
-  "typescript.updateImportsOnFileMove.enabled": "always",
+  "js/ts.updateImportsOnFileMove.enabled": "always",
   "nix.formatterPath": "alejandra",
   "css.validate": false,
   "scss.validate": false,
