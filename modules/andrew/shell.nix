@@ -1,5 +1,5 @@
 {self, ...}: {
-  andrew.shell.homeManager = {pkgs, ...}: {
+  den.aspects.andrew._.shell.homeManager = {pkgs, ...}: {
     programs = {
       oh-my-posh = {
         enable = true;
@@ -37,9 +37,9 @@
           set -u EDITOR nvim
         '';
         shellAliases = {
-          rev = "nh os switch";
-          clean = "nh clean all";
-          update = "nix flake update";
+          # rev = "nh os switch";
+          # clean = "nh clean all";
+          # update = "nix flake update";
           ll = "eza --long --icons";
           ls = "eza --all";
           cd = "z";

@@ -1,6 +1,7 @@
 {
-  andrew.sync.provides.keepassxc = path: {
+  den.aspects.andrew._.sync._.keepassxc = path: {
     homeManager = {pkgs, ...}: {
+      xdg.configFile."keepassxc/keepassxc.ini".force = true;
       programs.keepassxc = {
         enable = true;
         settings = {

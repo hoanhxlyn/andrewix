@@ -1,16 +1,14 @@
 {
-  andrew.browsers.provides.brave.homeManager = {pkgs, ...}: let
-    keepass = pkgs.keepassxc;
-  in {
+  den.aspects.andrew._.browsers._.brave.homeManager = {pkgs, ...}: {
     programs.chromium = {
       enable = true;
       package = pkgs.brave;
       extensions = [
-        {id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";} # ublock
-        {id = "oboonakemofpalcgghocfoadofidjkkk";} # keepassxc
-        {id = "fmkadmapgofadopljbjfkapdkoienihi";} # React dev tools
+        {id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";}
+        {id = "oboonakemofpalcgghocfoadofidjkkk";}
+        {id = "fmkadmapgofadopljbjfkapdkoienihi";}
       ];
-      nativeMessagingHosts = [keepass];
+      nativeMessagingHosts = [pkgs.keepassxc];
     };
   };
 }
