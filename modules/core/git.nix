@@ -1,9 +1,12 @@
 {
   core.git = {
+    nixos = {pkgs, ...}: {
+      environment.systemPackages = [pkgs.git-credential-manager];
+    };
     homeManager = {pkgs, ...}: {
       programs = {
         gh = {
-          enable = true;
+          enable = false;
           gitCredentialHelper.enable = true;
         };
         difftastic = {
@@ -17,6 +20,7 @@
             user.email = "hoanhxlyn@gmail.com";
             user.name = "Andrew Nguyen";
             core.editor = "nvim";
+            credential.credentialStore = "secretservice";
           };
         };
         lazygit = {
@@ -52,7 +56,6 @@
           };
         };
       };
-      home.packages = [pkgs.git-credential-manager];
     };
   };
 }
