@@ -32,7 +32,7 @@
           config.adjust_window_size_when_changing_font_size = false
           config.freetype_load_target = "Light"
           config.line_height = 1
-          config.window_background_opacity = ${toString terminal.opacity}
+          config.window_background_opacity = 1
           config.default_cursor_style = "BlinkingBlock"
           config.cursor_blink_rate = 500
           config.tab_bar_at_bottom = false
