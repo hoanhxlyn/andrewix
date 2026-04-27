@@ -1,8 +1,4 @@
-{
-  lib,
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
   flake-file.inputs.serena.url = "github:oraios/serena";
 
   core.agents.homeManager = {pkgs, ...}: {
@@ -49,7 +45,6 @@
         enableMcpIntegration = true;
         settings = {
           username = "😺 Andrew Nguyen";
-          theme = lib.mkDefault "system";
           permission = {
             list = "deny";
             grep = "deny";

@@ -1,5 +1,5 @@
 {
-  core.git = {settings, ...}: {
+  core.git = {
     homeManager.programs = {
       gh = {
         enable = true;
@@ -12,7 +12,11 @@
       };
       git = {
         enable = true;
-        inherit settings;
+        settings = {
+          user.email = "hoanhxlyn@gmail.com";
+          user.name = "Andrew Nguyen";
+          core.editor = "nvim";
+        };
       };
       lazygit = {
         enable = true;
