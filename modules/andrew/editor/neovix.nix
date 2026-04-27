@@ -16,6 +16,10 @@
       url = "github:lbrayner/vim-rzip";
       flake = false;
     };
+    neovim-nightly = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   den.aspects.andrew._.editor._.neovix = {
     includes = [
@@ -26,6 +30,7 @@
     homeManager = {pkgs, ...}: {
       programs.neovim = {
         enable = true;
+        package = pkgs.neovim-nightly;
         defaultEditor = true;
         vimAlias = true;
         viAlias = true;
