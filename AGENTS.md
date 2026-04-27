@@ -4,33 +4,32 @@
 
 ### Apply Configuration
 ```bash
-nh os switch .              # Apply latest config (requires sudo)
-nh os test .                # Validate config before commit (requires sudo)
-nh os build .               # Build without switching
+nix run .#andrew-laptop -- switch   # Apply config to andrew-laptop
+nix run .#andrew-pc -- switch       # Apply config to andrew-pc
+nix run .#andrew-laptop -- test      # Validate config before commit (requires sudo)
 ```
 
 ### Update & Maintenance
 ```bash
-nix flake update --flake .  # Update all flake inputs
-nix flake check             # Check for evaluation errors
-nh search <query>           # Search for packages
+nix flake update --flake .          # Update all flake inputs
+nix flake check                     # Check for evaluation errors
+nps <query>                         # Search packages
 ```
 
 ### Formatting & Linting
 ```bash
-alejandra .                 # Format all Nix files
-statix check                # Lint for Nix best practices
-deadnix --no-underscore --fail  # Find dead code
-pre-commit run --all-files  # Run all pre-commit hooks
+alejandra .                         # Format all Nix files
+statix check                        # Lint for Nix best practices
+deadnix --no-underscore --fail      # Find dead code
+pre-commit run --all-files         # Run all pre-commit hooks
 ```
 
 ### Build Single Host
 ```bash
-nh os build . --hostname andrew-pc
-nh os build . --hostname andrew-laptop
+nix run .#write-flake               # Regenerate flake.nix (DO NOT edit manually)
 ```
 
-**Note:** No unit tests - validation via `nh os test .` and `nix flake check`.
+**Note:** No unit tests - validation via `nix run .#<host> -- test` and `nix flake check`.
 
 ## Project Architecture
 
@@ -113,13 +112,13 @@ NixOS + Home Manager config using **flake-parts** with **dendritic (aspect-first
 ## Error Handling
 - Use `lib.mkDefault` for overridable values
 - Run `nix flake check` before committing
-- Always run `nh os test .` before `nh os switch .`
+- Always test with `nix run .#<host> -- test` before switching
 
 ## Important Rules
 
 1. **NEVER** edit `flake.nix` directly - auto-generated via `nix run .#write-flake`
 2. **NEVER** change state version (`25.11`)
-3. **ALWAYS** run `nh os test .` before committing
+3. **ALWAYS** test with `nix run .#<host> -- test` before switching
 4. **ALWAYS** format with `alejandra .` before committing
 5. **ALWAYS** check lint with `statix check`
 6. Use `with pkgs;` for package lists

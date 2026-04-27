@@ -12,12 +12,6 @@
       zoxide.enable = true;
       bat.enable = true;
       ripgrep.enable = true;
-      nh = {
-        enable = true;
-        clean.enable = true;
-        clean.extraArgs = "--keep-since 2d --keep 5";
-        flake = "/home/andrew/andrewix";
-      };
       tealdeer = {
         enable = true;
         enableAutoUpdates = true;
@@ -37,9 +31,6 @@
           set -u EDITOR nvim
         '';
         shellAliases = {
-          # rev = "nh os switch";
-          # clean = "nh clean all";
-          # update = "nix flake update";
           ll = "eza --long --icons";
           ls = "eza --all";
           cd = "z";
