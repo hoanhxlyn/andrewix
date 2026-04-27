@@ -7,10 +7,11 @@
       mcp = {
         enable = true;
         servers = {
-          serena = {
-            url = "http://localhost:12345/mcp";
-            timeout = 2000;
-          };
+          # serena = {
+          #   enabled = false;
+          #   url = "http://localhost:12345/mcp";
+          #   timeout = 2000;
+          # };
           context7 = {
             command = "pnpm";
             args = [
@@ -69,7 +70,6 @@
             };
           };
           plugin = [
-            "opencode-gemini-auth@latest"
             "opencode-agent-skills"
           ];
           command = {
