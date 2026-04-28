@@ -1,6 +1,7 @@
 {
   lib,
   self,
+  __findFile,
   ...
 }: {
   den.aspects.andrew._.cli._ = {
@@ -25,18 +26,45 @@
         ];
       };
     };
+    utils = {user, ...}: {
+      includes = [(<den/unfree> ["ngrok"])];
+      nixos = {pkgs, ...}: {
+        environment.systemPackages = with pkgs; [
+          fuse
+          usbutils
+          pciutils
+          wl-clipboard
+          wl-clip-persist
+          cliphist
+          ngrok
+        ];
+        systemd.timers."refresh-nps-cache" = {
+          wantedBy = ["timers.target"];
+          timerConfig = {
+            OnCalendar = "weekly"; # or however often you'd like
+            Persistent = true;
+            Unit = "refresh-nps-cache.service";
+          };
+        };
 
-    utils.nixos = {pkgs, ...}: {
-      environment.systemPackages = with pkgs; [
-        fuse
-        usbutils
-        pciutils
-        wl-clipboard
-        wl-clip-persist
-        cliphist
-      ];
+        systemd.services."refresh-nps-cache" = {
+          # Make sure `nix` and `nix-env` are findable by systemd.services.
+          path = ["/run/current-system/sw/"];
+          serviceConfig = {
+            Type = "oneshot";
+            User = "${user.userName}"; # ⚠️ replace with your "username" or "${user}", if it's defined
+          };
+          script = ''
+            set -eu
+            echo "Start refreshing nps cache..."
+            # ⚠️ note the use of overlay (as described above), adjust if needed
+            # ⚠️ use `nps -dddd -e -r` if you use flakes
+            ${pkgs.nps}/bin/nps -r -dddd
+            echo "... finished nps cache with exit code $?."
+          '';
+        };
+      };
     };
-
     tui = {
       nixos = {pkgs, ...}: {
         environment.systemPackages = with pkgs; [
