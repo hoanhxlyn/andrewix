@@ -26,7 +26,6 @@
   "editor.scrollBeyondLastLine": false,
   "window.menuBarVisibility": "hidden",
   "window.commandCenter": false,
-  "workbench.colorTheme": "Gruvbox Dark Medium",
   "workbench.activityBar.location": "top",
   "workbench.navigationControl.enabled": false,
   "workbench.layoutControl.enabled": false,

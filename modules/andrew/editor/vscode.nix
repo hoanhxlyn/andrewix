@@ -22,9 +22,8 @@
           enableExtensionUpdateCheck = false;
           extensions = with pkgs.vscode-extensions; [
             jdinhlife.gruvbox
-            qufiwefefwoyn.kanagawa
-            Catppuccin.catppuccin-vsc
-            Catppuccin.catppuccin-vsc-icons
+            catppuccin.catppuccin-vsc
+            catppuccin.catppuccin-vsc-icons
             enkia.tokyo-night
             jnoortheen.nix-ide
             biomejs.biome
@@ -45,8 +44,10 @@
             gitlab.gitlab-workflow
             zguolee.tabler-icons
             vscode-icons-team.vscode-icons
-            sst-dev.opencode
-            oxc.oxc-vscode
+            # Do not have that yet
+            # sst-dev.opencode
+            # qufiwefefwoyn.kanagawa
+            # oxc.oxc-vscode
           ];
         };
       };

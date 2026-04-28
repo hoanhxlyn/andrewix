@@ -6,7 +6,6 @@
     opacity = 0.8;
   };
   gdrive-path = "/mnt/gdrive";
-  theme = "gruvbox-dark";
 in {
   den = {
     hosts.${arch} = {
@@ -14,6 +13,7 @@ in {
     };
     aspects.andrew-laptop = {
       nixos = {pkgs, ...}: {
+        boot.kernelParams = ["acpi_backlight=native"];
         environment.systemPackages = [pkgs.neovim pkgs.git pkgs.firefox];
       };
     };
@@ -25,10 +25,7 @@ in {
       <core.network>
       <core.i18n>
       <core.timezone>
-      (<core.stylix> {
-        inherit terminal;
-        inherit theme;
-      })
+      (<core.stylix> terminal)
       <core.git>
       <core.agents>
       <core.wifi>
