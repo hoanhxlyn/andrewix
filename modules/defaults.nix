@@ -25,4 +25,7 @@
     };
     schema.user.classes = lib.mkDefault ["homeManager"];
   };
+  perSystem = {pkgs, ...}: {
+    packages = den.lib.nh.denPackages {fromFlake = true;} pkgs;
+  };
 }
