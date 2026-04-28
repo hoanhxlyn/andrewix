@@ -7,11 +7,7 @@
     url = "github:nix-community/stylix";
     inputs.nixpkgs.follows = "nixpkgs";
   };
-  core.stylix = {
-    terminal,
-    theme,
-    ...
-  }: {
+  core.stylix = terminal: {
     nixos = {pkgs, ...}: {
       imports = [
         inputs.stylix.nixosModules.stylix
@@ -19,8 +15,8 @@
       stylix = {
         enable = true;
         autoEnable = true;
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/${theme.schema}.yaml";
-        inherit (theme) polarity;
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark.yaml";
+        polarity = "dark";
         cursor = {
           package = pkgs.bibata-cursors;
           name = "Bibata-Modern-Ice";
