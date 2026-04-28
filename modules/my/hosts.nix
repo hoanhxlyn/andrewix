@@ -34,6 +34,7 @@ in {
       (<andrew/sync/rclone> gdrive-path)
       (<andrew/sync/keepassxc> gdrive-path)
       <andrew/editor/vscode>
+      <andrew/editor/cursor>
       <andrew/shell>
       <andrew/browsers/firefox>
       <andrew/browsers/zen>
