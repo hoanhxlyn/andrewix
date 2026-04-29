@@ -1,49 +1,64 @@
 {
-  "files.autoSave": "off",
-  "files.associations": {
-    "*.tmpl": "shellscript"
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
-  "git.autofetch": true,
-  "git.confirmSync": false,
-  "gitlens.graph.layout": "editor",
-  "editor.formatOnSave": false,
-  "editor.tabSize": 2,
-  "editor.mouseWheelZoom": true,
-  "editor.fontLigatures": true,
-  "editor.unicodeHighlight.ambiguousCharacters": false,
-  "editor.guides.bracketPairs": "active",
-  "editor.stickyScroll.enabled": true,
-  "editor.cursorSmoothCaretAnimation": "on",
-  "editor.cursorBlinking": "smooth",
-  "editor.cursorWidth": 3,
-  "editor.cursorSurroundingLines": 3,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "biome.requireConfiguration": true,
+  "biome.suggestInstallingGlobally": false,
+  "chat.editor.fontFamily": "FiraCode Nerd Font",
+  "chat.editor.fontSize": 16.0,
+  "chat.fontFamily": "DejaVu Sans",
+  "chat.viewSessions.orientation": "stacked",
+  "css.validate": false,
+  "debug.console.fontFamily": "FiraCode Nerd Font",
+  "debug.console.fontSize": 16.0,
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
   "editor.codeActionsOnSave": {
     "quickfix.biome": "explicit",
     "source.organizeImports.biome": "explicit"
   },
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.cursorSurroundingLines": 3,
+  "editor.cursorWidth": 3,
+  "editor.fontFamily": "FiraCode Nerd Font",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 16.0,
+  "editor.formatOnSave": false,
+  "editor.guides.bracketPairs": "active",
+  "editor.inlayHints.fontFamily": "FiraCode Nerd Font",
+  "editor.inlineSuggest.fontFamily": "FiraCode Nerd Font",
   "editor.minimap.enabled": false,
-  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "editor.minimap.sectionHeaderFontSize": 10.285714285714286,
+  "editor.mouseWheelZoom": true,
   "editor.scrollBeyondLastLine": false,
-  "window.menuBarVisibility": "hidden",
-  "window.commandCenter": false,
-  "workbench.activityBar.location": "top",
-  "workbench.navigationControl.enabled": false,
-  "workbench.layoutControl.enabled": false,
-  "workbench.productIconTheme": "Tabler",
-  "workbench.iconTheme": "vscode-icons",
-  "workbench.welcomePage.walkthroughs.openOnInstall": false,
-  "workbench.editor.customLabels.enabled": true,
-  "workbench.editor.customLabels.patterns": {
-    "**/src/**/index.{js,jsx,ts,tsx}": "${dirname(1)}/${dirname}"
-  },
-  "workbench.browser.enableChatTools": true,
-  "security.workspace.trust.enabled": false,
+  "editor.stickyScroll.enabled": true,
+  "editor.tabSize": 2,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
-  "biome.suggestInstallingGlobally": false,
-  "biome.requireConfiguration": true,
+  "extensions.autoCheckUpdates": false,
+  "files.associations": {
+    "*.tmpl": "shellscript"
+  },
+  "files.autoSave": "off",
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "gitlens.graph.layout": "editor",
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  "less.validate": false,
+  "markdown.preview.fontFamily": "DejaVu Sans",
+  "markdown.preview.fontSize": 16.0,
+  "nix.formatterPath": "alejandra",
+  "notebook.markup.fontFamily": "DejaVu Sans",
   "prettier.requireConfig": true,
-  "tailwindCSS.lint.cssConflict": "error",
+  "scm.inputFontFamily": "FiraCode Nerd Font",
+  "scm.inputFontSize": 14.857142857142858,
+  "screencastMode.fontSize": 64.0,
+  "scss.validate": false,
+  "security.workspace.trust.enabled": false,
   "tailwindCSS.classAttributes": [
     "className"
   ],
@@ -52,23 +67,24 @@
     "cx",
     "tw"
   ],
-  "js/ts.updateImportsOnFileMove.enabled": "always",
-  "nix.formatterPath": "alejandra",
-  "css.validate": false,
-  "scss.validate": false,
-  "less.validate": false,
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
+  "tailwindCSS.lint.cssConflict": "error",
+  "terminal.integrated.fontSize": 16.0,
+  "update.mode": "none",
+  "window.commandCenter": false,
+  "window.menuBarVisibility": "hidden",
+  "workbench.activityBar.location": "top",
+  "workbench.browser.enableChatTools": true,
+  "workbench.colorTheme": "Stylix",
+  "workbench.editor.customLabels.enabled": true,
+  "workbench.editor.customLabels.patterns": {
+    "**/src/**/index.{js,jsx,ts,tsx}": "${dirname(1)}/${dirname}"
   },
-  "chat.viewSessions.orientation": "stacked",
-  "chat.agent.thinking.phrases": {
-    "mode": "replace",
-    "phrases": [
-      "Cooking up something good...",
-      "Let me think...",
-      "Here's what I'm thinking...",
-      "Analyzing the code...",
-      "Just a moment..."
-    ]
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.layoutControl.enabled": false,
+  "workbench.navigationControl.enabled": false,
+  "workbench.productIconTheme": "Tabler",
+  "workbench.welcomePage.walkthroughs.openOnInstall": false,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
