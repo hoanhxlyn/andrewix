@@ -1,5 +1,5 @@
 {
-  den.aspects.andrew._.browsers._.firefox.homeManager = {
+  den.aspects.my._.browsers._.firefox.homeManager = {
     pkgs,
     config,
     ...

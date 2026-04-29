@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.andrew._.editor._.zed.homeManager = {pkgs, ...}: {
+  den.aspects.my._.editor._.zed.homeManager = {pkgs, ...}: {
     programs.zed-editor = {
       enable = true;
       extensions = [

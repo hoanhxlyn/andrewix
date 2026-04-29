@@ -16,11 +16,26 @@
         (den._.import-tree._.host ../hosts)
         den._.self'
         den._.inputs'
-        <my/nix-settings>
-        <my/state-version>
       ];
+      homeManager = {
+        home.stateVersion = "26.05";
+      };
       nixos = {
+        system.stateVersion = "26.05";
         home-manager.backupFileExtension = "bak";
+        nix = {
+          optimise.automatic = true;
+          settings = {
+            experimental-features = [
+              "nix-command"
+              "flakes"
+            ];
+            trusted-users = [
+              "root"
+              "@wheel"
+            ];
+          };
+        };
       };
     };
     schema.user.classes = lib.mkDefault ["homeManager"];
