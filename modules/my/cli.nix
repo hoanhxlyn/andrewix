@@ -4,7 +4,7 @@
   __findFile,
   ...
 }: {
-  den.aspects.andrew._.cli._ = {
+  den.aspects.my._.cli._ = {
     nodejs = {
       nixos = {pkgs, ...}: {
         environment.systemPackages = with pkgs; [

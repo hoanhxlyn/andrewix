@@ -10,7 +10,7 @@
       home-manager.follows = "home-manager";
     };
   };
-  den.aspects.andrew._.browsers._.zen.homeManager = {pkgs, ...}: let
+  den.aspects.my._.browsers._.zen.homeManager = {pkgs, ...}: let
     keepass = pkgs.keepassxc;
   in {
     imports = [

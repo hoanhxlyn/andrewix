@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.andrew._.editor._.cursor = {
+  den.aspects.my._.editor._.cursor = {
     includes = [
       (<den/unfree> ["cursor"])
     ];

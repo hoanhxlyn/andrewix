@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.andrew._.gaming._.xone = {
+  den.aspects.my._.gaming._.xone = {
     includes = [
       (<den/unfree> [
         "xone-dongle-firmware"
