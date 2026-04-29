@@ -1,60 +1,55 @@
 # Andrewix - NixOS & Home Manager Configuration
 
-This repository contains Andrew's NixOS and Home Manager configuration using flake-parts with automatic module discovery.
+Personal NixOS + Home Manager configuration using flake-parts with a dendritic
+(aspect-first) architecture and automatic module discovery via `vic/import-tree`
++ `vic/den`.
 
-## 🚀 Quick Start
-
-*   **Apply latest configuration:**
-    ```bash
-    nh os switch .
-    ```
-*   **Update all inputs:**
-    ```bash
-    nix flake update --flake .
-    ```
-*   **Check for evaluation errors:**
-    ```bash
-    nix flake check
-    ```
-
-## 🛠 Architecture
-
-This configuration follows a dendritic (tree-like) structure with category-based organization.
-
--   `modules/system/aspects/`: System-level NixOS modules (auto-imported).
--   `modules/user/aspects/`: User-level Home Manager modules (auto-imported).
--   `modules/hosts/`: Hardware-specific configurations for different machines.
--   `flake.nix`: The main flake entry point, auto-generated from the modules.
--   `outputs.nix`: The main flake configuration using flake-parts.
-
-We use `vic/import-tree` for automatic module discovery. Any `.nix` file in the `aspects/` directories is automatically imported and integrated into the build.
-
-## 📝 Development Workflow
-
-### 1. Modify Existing Configuration
-
-To modify the configuration, edit the appropriate `.nix` files in `modules/system/aspects/` for system-wide changes, or `modules/user/aspects/` for user-specific settings.
-
-### 2. Add New Features
-
-To add a new feature, create a new `.nix` file in the relevant `aspects/` subdirectory. For example, to add a new development tool, you might create `modules/user/aspects/development/new-tool.nix`.
-
-### 3. Quality Assurance
-
-Before committing any changes, please run the following commands to ensure code quality and consistency:
+## Quick Start
 
 ```bash
-# Format all Nix files
-alejandra .
+# Apply configuration (pick your host)
+nix run .#andrew-laptop -- switch
+nix run .#andrew-pc -- switch
 
-# Lint for Nix best practices
-statix check
+# Validate before committing (requires sudo)
+nix run .#<host> -- test
+
+# Update all flake inputs
+nix flake update --flake .
 
 # Check for evaluation errors
 nix flake check
-
-# Run all pre-commit hooks
-pre-commit run --all-files
 ```
 
-For more detailed information on commands, conventions, and architecture, please refer to the `AGENTS.md` file.
+## Architecture
+
+| Path | Purpose |
+|---|---|
+| `modules/core/` | System-level aspects (NixOS config) |
+| `modules/my/` | User-level aspects (Home Manager config) |
+| `modules/defaults.nix` | Default includes + state version for all hosts |
+| `modules/devices.nix` | Device-level aspect composition |
+| `modules/hosts.nix` | Host definitions (`andrew-laptop`, `andrew-pc`) |
+| `modules/users/andrew.nix` | User identity + included aspects |
+| `hosts/<host>/_nixos/` | Hardware-specific configs (filesystems, kernel modules) |
+| `config/` | Non-Nix application configs |
+| `flake.nix` | Auto-generated entry point (DO NOT EDIT) |
+
+Any `.nix` file under `modules/` is auto-discovered via `vic/import-tree`.
+Aspects are composed through `den.aspects.<name>.includes` using angle-bracket
+imports like `<core/sound>` or `<my/shell>`.
+
+## Development Workflow
+
+1. **Edit** the relevant `.nix` file under `modules/core/` or `modules/my/`
+2. **Add features** by creating new `.nix` files in the appropriate subdirectory
+3. **Validate** before committing:
+
+```bash
+nix flake check          # Evaluation errors
+alejandra .              # Format
+statix check             # Lint
+deadnix --no-underscore --fail  # Dead code
+```
+
+See `AGENTS.md` for detailed conventions, module patterns, and important rules.
