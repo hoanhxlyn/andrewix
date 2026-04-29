@@ -12,6 +12,16 @@
       imports = [
         inputs.stylix.nixosModules.stylix
       ];
+      fonts.packages = with pkgs; [
+        nerd-fonts.jetbrains-mono
+        nerd-fonts.fira-code
+        nerd-fonts.caskaydia-cove
+        font-awesome
+        inter
+        noto-fonts-color-emoji
+        noto-fonts-cjk-sans
+        noto-fonts
+      ];
       stylix = {
         enable = true;
         autoEnable = true;

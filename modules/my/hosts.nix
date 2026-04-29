@@ -20,7 +20,6 @@ in {
     aspects.andrew.includes = [
       <core.bootable>
       <core.gnome>
-      <core.fonts>
       <core.xserver>
       <core.network>
       <core.i18n>
@@ -48,6 +47,7 @@ in {
       <andrew/communications/caprine>
       <andrew/communications/discord>
       <andrew/vpn/proton>
+      <andrew/office/teams>
     ];
   };
 }
