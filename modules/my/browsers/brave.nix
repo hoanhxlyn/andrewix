@@ -1,5 +1,5 @@
 {
-  den.aspects.andrew._.browsers._.brave.homeManager = {pkgs, ...}: {
+  den.aspects.my._.browsers._.brave.homeManager = {pkgs, ...}: {
     programs.chromium = {
       enable = true;
       package = pkgs.brave;

@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.andrew._.communications._.discord = {
+  den.aspects.my._.communications._.discord = {
     includes = [
       (<den/unfree> [
         "discord"
