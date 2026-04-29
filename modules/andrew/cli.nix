@@ -24,6 +24,7 @@
           deadnix
           nps
         ];
+        programs.nix-ld.enable = true;
       };
     };
     utils = {user, ...}: {
@@ -37,6 +38,7 @@
           wl-clip-persist
           cliphist
           ngrok
+          mockoon
         ];
         systemd.timers."refresh-nps-cache" = {
           wantedBy = ["timers.target"];
