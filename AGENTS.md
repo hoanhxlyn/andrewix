@@ -6,7 +6,7 @@
 ```bash
 nix run .#andrew-laptop -- switch   # Apply config to andrew-laptop
 nix run .#andrew-pc -- switch       # Apply config to andrew-pc
-nix run .#andrew-laptop -- test      # Validate config before commit (requires sudo)
+nix run .#<host> -- test             # Validate config before commit (requires sudo)
 ```
 
 ### Update & Maintenance
@@ -21,10 +21,11 @@ nps <query>                         # Search packages
 alejandra .                         # Format all Nix files
 statix check                        # Lint for Nix best practices
 deadnix --no-underscore --fail      # Find dead code
-pre-commit run --all-files         # Run all pre-commit hooks
 ```
 
-### Build Single Host
+Tools are installed via Nix (`modules/my/cli.nix`), not via pre-commit hooks.
+
+### Regenerate Flake
 ```bash
 nix run .#write-flake               # Regenerate flake.nix (DO NOT edit manually)
 ```
@@ -34,7 +35,7 @@ nix run .#write-flake               # Regenerate flake.nix (DO NOT edit manually
 ## Project Architecture
 
 NixOS + Home Manager config using **flake-parts** with a **dendritic (aspect-first)
-architecture** and automatic module discovery via `vic/import-tree`.
+architecture** and automatic module discovery via `vic/import-tree` + `vic/den`.
 
 ### Directory Structure
 ```
@@ -42,37 +43,36 @@ architecture** and automatic module discovery via `vic/import-tree`.
 ├── flake.lock          # Pinned dependency lockfile
 ├── modules/
 │   ├── dendritic.nix   # Dendritic module loader (vic/den framework)
-│   ├── namespace.nix   # Namespace definitions (core, andrew, my)
+│   ├── namespace.nix   # Namespace definitions (core, my)
 │   ├── defaults.nix    # Default includes for all hosts
-│   ├── home-manager.nix
-│   ├── treefmt.nix     # Formatting/linting pipeline
+│   ├── hosts.nix       # Host definitions (andrew-laptop, andrew-pc)
+│   ├── devices.nix     # Device-level aspect composition (andrew-laptop)
 │   ├── core/           # System-level aspects (NixOS)
-│   ├── andrew/         # User-level aspects (Home Manager)
-│   └── my/             # Host/user identity definitions
-├── hosts/              # Hardware-specific configs (filesystems, hardware)
-│   ├── andrew-pc/
-│   └── andrew-laptop/
+│   ├── my/             # User-level aspects (Home Manager)
+│   └── users/          # User identity + aspect includes (andrew.nix)
+├── hosts/              # Hardware-specific configs
+│   └── <host>/_nixos/  # filesystems.nix, hardware-configuration.nix
 └── config/             # Non-Nix application configs
-    └── neovix/         # Neovim config (Lua)
 ```
 
 ### Namespace Conventions
 - `core.<name>` — System-level aspect; configures NixOS
-- `andrew.<category>` — User-level aspect; configures Home Manager
-- `andrew.<category>.provides.<name>` — Parameterized/factory aspect
-- `my.<name>` — Identity/host definitions (users, devices, state)
+- `my/<category>` — User-level aspects; configures Home Manager
+- `my/<category>.provides.<name>` — Parameterized/factory aspects
+- `den.aspects.andrew.includes` — User composition (in `users/andrew.nix`)
+- `den.aspects.<hostname>` — Device composition (in `devices.nix`)
 
 ### Key Variables
 - Username: `andrew`
 - System: `x86_64-linux`
-- State Version: `25.11` (DO NOT MODIFY)
+- State Version: `26.05` (DO NOT MODIFY)
 
 ---
 
 ## Nix Code Style
 
 ### Formatting
-- **Formatter:** `alejandra` (enforced via treefmt + pre-commit)
+- **Formatter:** `alejandra`
 - **Indentation:** 2 spaces (no tabs)
 - **Line Length:** Prefer under 80 chars, hard limit at 100
 
@@ -133,22 +133,9 @@ Flake input declaration (feeds into auto-generated `flake.nix`):
 ## Important Rules
 
 1. **NEVER** edit `flake.nix` directly - auto-generated via `nix run .#write-flake`
-2. **NEVER** change state version (`25.11`)
+2. **NEVER** change state version (`26.05`)
 3. **ALWAYS** test with `nix run .#<host> -- test` before switching
 4. **ALWAYS** format with `alejandra .` before committing
 5. **ALWAYS** check lint with `statix check` and `deadnix --no-underscore --fail`
 6. Use context7 and websearch to research unfamiliar NixOS/HM options
 7. Prefer `includes` over `imports` for aspect composition within this repo
-
----
-
-## Pre-commit Hooks
-
-| Hook | Purpose |
-|---|---|
-| `alejandra` | Nix formatter |
-| `deadnix` | Dead Nix code detection |
-| `statix` | Nix best-practices linter |
-| `nixf-diagnose` | Additional Nix diagnostics |
-
-Excluded paths: `modules/*`, `LICENSE`, `flake.lock`, `*/flake.lock`, `.envrc`, `.direnv/*`

@@ -23,7 +23,7 @@
     };
   };
 
-  den.aspects.andrew._.editor._.neovix = {
+  den.aspects.my._.editor._.neovix = {
     includes = [
       (<den/unfree> [
         "copilot-language-server"
@@ -99,6 +99,7 @@
           nvim-dap-ui
           nvim-nio
           nvim-dap-virtual-text
+          markview-nvim
           (pkgs.vimUtils.buildVimPlugin {
             pname = "import-size-nvim";
             version = "unstable-2025-01-01";

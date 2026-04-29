@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.andrew._.gaming._.steam = {
+  den.aspects.my._.gaming._.steam = {
     includes = [
       (<den/unfree> [
         "steam"

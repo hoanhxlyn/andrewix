@@ -1,5 +1,5 @@
 {
-  den.aspects.andrew._.terminals._.wezterm = terminal: {
+  den.aspects.my._.terminals._.wezterm = terminal: {
     homeManager = {
       programs.wezterm = {
         enable = true;

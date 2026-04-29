@@ -4,7 +4,7 @@
   __findFile,
   ...
 }: {
-  den.aspects.andrew._.editor._.vscode = {
+  den.aspects.my._.editor._.vscode = {
     includes = [
       (<den/unfree> ["vscode"])
     ];
