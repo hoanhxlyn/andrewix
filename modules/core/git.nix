@@ -1,14 +1,33 @@
 {
   core.git = {
-    nixos = {pkgs, ...}: {
-      environment.systemPackages = [pkgs.git-credential-manager];
-    };
+    includes = [
+      ({host, ...}:
+        if host.wsl.enable
+        then {
+          homeManager.programs.gh = {
+            enable = true;
+            gitCredentialHelper.enable = true;
+          };
+        }
+        else {
+          nixos = {pkgs, ...}: {
+            environment.systemPackages = [pkgs.git-credential-manager];
+          };
+          homeManager = {pkgs, ...}: {
+            programs = {
+              gh.enable = false;
+              difftastic = {
+                enable = true;
+                git.enable = true;
+                git.diffToolMode = true;
+              };
+              git.settings.credential.credentialStore = "secretservice";
+            };
+          };
+        })
+    ];
     homeManager = {pkgs, ...}: {
       programs = {
-        gh = {
-          enable = false;
-          gitCredentialHelper.enable = true;
-        };
         difftastic = {
           enable = true;
           git.enable = true;
@@ -20,7 +39,6 @@
             user.email = "hoanhxlyn@gmail.com";
             user.name = "Andrew Nguyen";
             core.editor = "nvim";
-            credential.credentialStore = "secretservice";
           };
         };
         lazygit = {
