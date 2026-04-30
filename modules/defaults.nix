@@ -13,7 +13,6 @@
         <den/define-user>
         (<den/user-shell> "fish")
         <den/mutual-provider>
-        (den._.import-tree._.host ../hosts)
         den._.self'
         den._.inputs'
       ];
