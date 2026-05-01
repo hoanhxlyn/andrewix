@@ -2,7 +2,7 @@ let
   stateVersion = "26.05";
   backupFileExtension = "bak";
 in {
-  core.nix-settings = {
+  core.nix-setting = {
     homeManager.home.stateVersion = stateVersion;
     nixos = {
       system.stateVersion = stateVersion;
