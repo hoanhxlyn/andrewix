@@ -45,8 +45,8 @@ architecture** and automatic module discovery via `vic/import-tree` + `vic/den`.
 │   ├── dendritic.nix   # Dendritic module loader (vic/den framework)
 │   ├── namespace.nix   # Namespace definitions (core, my)
 │   ├── defaults.nix    # Default includes for all hosts
-│   ├── hosts.nix       # Host definitions (andrew-laptop, andrew-pc)
-│   ├── devices.nix     # Device-level aspect composition (andrew-laptop)
+│   ├── hosts.nix       # Host definitions (andrew-laptop, andrew-pc, andrew-{home,work}-wsl)
+│   ├── devices/        # Per-device aspect files (laptop.nix, wsl.nix)
 │   ├── core/           # System-level aspects (NixOS)
 │   ├── my/             # User-level aspects (Home Manager)
 │   └── users/          # User identity + aspect includes (andrew.nix)
@@ -60,7 +60,7 @@ architecture** and automatic module discovery via `vic/import-tree` + `vic/den`.
 - `my/<category>` — User-level aspects; configures Home Manager
 - `my/<category>.provides.<name>` — Parameterized/factory aspects
 - `den.aspects.andrew.includes` — User composition (in `users/andrew.nix`)
-- `den.aspects.<hostname>` — Device composition (in `devices.nix`)
+- `den.aspects.<hostname>` — Device composition (in `modules/devices/`)
 
 ### Key Variables
 - Username: `andrew`
