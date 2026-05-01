@@ -28,8 +28,8 @@ nix flake check
 | `modules/core/` | System-level aspects (NixOS config) |
 | `modules/my/` | User-level aspects (Home Manager config) |
 | `modules/defaults.nix` | Default includes + state version for all hosts |
-| `modules/devices.nix` | Device-level aspect composition |
-| `modules/hosts.nix` | Host definitions (`andrew-laptop`, `andrew-pc`) |
+| `modules/devices/` | Per-device aspect files (laptop.nix, wsl.nix) |
+| `modules/hosts.nix` | Host definitions (`andrew-laptop`, `andrew-pc`, `andrew-{home,work}-wsl`) |
 | `modules/users/andrew.nix` | User identity + included aspects |
 | `hosts/<host>/_nixos/` | Hardware-specific configs (filesystems, kernel modules) |
 | `config/` | Non-Nix application configs |
