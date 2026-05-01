@@ -21,7 +21,7 @@
             user.name = "Andrew Nguyen";
             init.defaultBranch = "main";
             core.editor = "nvim";
-            credential.helper = lib.mkIf host.wsl.enable "/mnt/c/Users/hoanganh/scoop/root/apps/git/current/mingw64/bin/git-credential-manager.exe";
+            credential.helper = lib.mkIf host.wsl.enable "/mnt/c/Users/${host.windowsName}/scoop/root/apps/git/current/mingw64/bin/git-credential-manager.exe";
             credential.credentialStore = "secretservice";
           };
         };

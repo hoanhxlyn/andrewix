@@ -4,9 +4,15 @@ in {
   den.hosts.${arch} = {
     andrew-laptop.users.andrew = {};
     andrew-pc.users.andrew = {};
-    andrew-wsl = {
+    andrew-home-wsl = {
       wsl.enable = true;
       users.andrew = {};
+      windowsName = "hoanganh";
+    };
+    andrew-work-wsl = {
+      wsl.enable = true;
+      users.andrew = {};
+      windowsName = "andrew.nguyen1";
     };
   };
 }
