@@ -15,27 +15,8 @@
         <den/mutual-provider>
         den._.self'
         den._.inputs'
+        <core.nix-setting>
       ];
-      homeManager = {
-        home.stateVersion = "26.05";
-      };
-      nixos = {
-        system.stateVersion = "26.05";
-        home-manager.backupFileExtension = "bak";
-        nix = {
-          optimise.automatic = true;
-          settings = {
-            experimental-features = [
-              "nix-command"
-              "flakes"
-            ];
-            trusted-users = [
-              "root"
-              "@wheel"
-            ];
-          };
-        };
-      };
     };
     schema.user.classes = lib.mkDefault ["homeManager"];
   };
