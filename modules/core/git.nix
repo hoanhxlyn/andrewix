@@ -1,32 +1,13 @@
 {
-  core.git = {
-    includes = [
-      ({host, ...}:
-        if host.wsl.enable
-        then {
-          homeManager.programs.gh = {
-            enable = true;
-            gitCredentialHelper.enable = true;
-          };
-        }
-        else {
-          nixos = {pkgs, ...}: {
-            environment.systemPackages = [pkgs.git-credential-manager];
-          };
-          homeManager = {pkgs, ...}: {
-            programs = {
-              gh.enable = false;
-              difftastic = {
-                enable = true;
-                git.enable = true;
-                git.diffToolMode = true;
-              };
-              git.settings.credential.credentialStore = "secretservice";
-            };
-          };
-        })
-    ];
-    homeManager = {pkgs, ...}: {
+  core.git = {host, ...}: {
+    nixos = {pkgs, ...}: {
+      environment.systemPackages = [pkgs.git-credential-manager];
+    };
+    homeManager = {
+      pkgs,
+      lib,
+      ...
+    }: {
       programs = {
         difftastic = {
           enable = true;
@@ -38,7 +19,10 @@
           settings = {
             user.email = "hoanhxlyn@gmail.com";
             user.name = "Andrew Nguyen";
+            init.defaultBranch = "main";
             core.editor = "nvim";
+            credential.helper = lib.mkIf host.wsl.enable "/mnt/c/Users/hoanganh/scoop/root/apps/git/current/mingw64/bin/git-credential-manager.exe";
+            credential.credentialStore = "secretservice";
           };
         };
         lazygit = {
@@ -56,18 +40,7 @@
               showBranchCommitHash = true;
               showCommandLog = true;
               spinner = {
-                frames = [
-                  "⠋"
-                  "⠙"
-                  "⠹"
-                  "⠸"
-                  "⠼"
-                  "⠴"
-                  "⠦"
-                  "⠧"
-                  "⠇"
-                  "⠏"
-                ];
+                frames = ["⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏"];
                 rate = 120;
               };
             };
