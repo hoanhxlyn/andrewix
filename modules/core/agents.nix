@@ -40,9 +40,8 @@
         settings = {
           username = "😺 Andrew Nguyen";
           permission = {
-            list = "deny";
-            grep = "deny";
-            glob = "deny";
+            webfetch = "deny";
+            websearch = "deny";
           };
           lsp = {
             nix = {
