@@ -29,6 +29,7 @@
         ngrok
         mockoon
         wget
+        just
       ];
       programs = {
         nix-ld.enable = true;
