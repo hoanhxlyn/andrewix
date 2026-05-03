@@ -43,6 +43,8 @@
           "zen.urlbar.behavior" = "float";
           "sidebar.visibility" = "hide-sidebar";
           "browser.search.separatePrivateDefault" = false;
+          "browser.tabs.fadeOutUnloadedTabs" = true;
+          "browser.tabs.min_inactive_duration_before_unload" = 300000;
         };
         keyboardShortcuts = [
           {
