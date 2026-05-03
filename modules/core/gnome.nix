@@ -40,6 +40,12 @@
         simple-scan
         gnome-contacts
       ];
+      environment.systemPackages = with pkgs; [
+        gnomeExtensions.blur-my-shell
+        gnomeExtensions.dash-to-panel
+        gnomeExtensions.essential-tweaks
+        gnome-tweaks
+      ];
 
       # systemd.services."getty@tty1".enable = false;
       # systemd.services."autovt@tty1".enable = false;

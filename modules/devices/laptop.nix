@@ -12,7 +12,7 @@
 in {
   den.aspects.andrew-laptop = {
     provides.to-users.includes = [
-      (den._.import-tree._.host ../hosts)
+      (den._.import-tree._.host ../../hosts)
       <core.bootable>
       <core.gnome>
       <core.xserver>
@@ -23,10 +23,11 @@ in {
       <core.agents>
       <core.wifi>
       <core.power-manager>
+      (<core.stylix> terminal)
       <my/editor/neovix>
       <my/shell>
       <my/cli/essentials>
-      (<core.stylix> terminal)
+      <my/cli/tui>
       <my/browsers/firefox>
       <my/communications/caprine>
       <my/communications/discord>
@@ -40,7 +41,6 @@ in {
       (<my/sync/keepassxc> gdrive-path)
       <my/editor/vscode>
       <my/editor/cursor>
-      <my/cli/tui>
     ];
   };
 }
