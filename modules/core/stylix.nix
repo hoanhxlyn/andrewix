@@ -8,7 +8,11 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
   core.stylix = terminal: {
-    nixos = {pkgs, ...}: {
+    nixos = {
+      pkgs,
+      config,
+      ...
+    }: {
       imports = [
         inputs.stylix.nixosModules.stylix
       ];
@@ -33,9 +37,9 @@
           size = 20;
         };
         fonts = {
-          monospace = {
-            name = "FiraCode Nerd Font";
-          };
+          serif = config.stylix.fonts.sansSerif;
+          sansSerif.name = "Noto Sans";
+          monospace.name = "FiraCode Nerd Font";
           emoji.package = pkgs.noto-fonts-color-emoji;
           sizes = {
             applications = terminal.fontSize;

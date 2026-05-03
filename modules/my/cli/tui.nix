@@ -1,10 +1,10 @@
-{
-  __findFile,
-  lib,
-  ...
-}: {
-  den.aspects.my._.cli._.tui = {self, ...}: {
-    homeManager = {pkgs, ...}: let
+{__findFile, ...}: {
+  den.aspects.my._.cli._.tui = {
+    homeManager = {
+      pkgs,
+      lib,
+      ...
+    }: let
       plug = pkgs.yaziPlugins;
     in {
       programs = {
