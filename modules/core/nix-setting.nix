@@ -8,8 +8,11 @@ in {
       system.stateVersion = stateVersion;
       home-manager.backupFileExtension = backupFileExtension;
       nix = {
-        optimise.automatic = true;
+        gc.automatic = true;
+        gc.dates = "daily";
+
         settings = {
+          auto-optimise-store = true;
           experimental-features = [
             "nix-command"
             "flakes"

@@ -59,7 +59,7 @@
       stylix = {
         enable = true;
         autoEnable = true;
-        # opacity.terminal = terminal.opacity;
+        opacity.terminal = terminal.opacity;
         targets.firefox.profileNames = ["default"];
         targets.zen-browser.profileNames = ["default"];
       };
