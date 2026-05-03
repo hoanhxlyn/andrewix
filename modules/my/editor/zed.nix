@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.my._.editor._.zed.homeManager = {pkgs, ...}: {
+  den.aspects.my._.editor._.zed.homeManager = {
     programs.zed-editor = {
       enable = true;
       extensions = [
@@ -214,12 +214,7 @@
         };
         "agent" = {
           "always_allow_tool_actions" = true;
-          "default_model" = {
-            "provider" = "copilot_chat";
-            "model" = "claude-sonnet-4.5";
-          };
           "model_parameters" = [];
-          "dock" = "left";
         };
         "context_servers" = {
           "mcp-server-brave-search" = {
@@ -227,12 +222,6 @@
             "settings" = {
               "brave_api_key" = "{BRAVE_API_KEY}";
             };
-          };
-          "serena" = {
-            "settings" = {};
-            "enabled" = true;
-            "headers" = {};
-            "url" = "http://localhost:12345/mcp";
           };
           "mcp-server-figma" = {
             "enabled" = true;

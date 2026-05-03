@@ -147,6 +147,8 @@
           nil
           vscode-js-debug
           fish-lsp
+          just-lsp
+          just-formatter
         ];
       };
 

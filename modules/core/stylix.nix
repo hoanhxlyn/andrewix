@@ -48,20 +48,8 @@
             popups = lib.add terminal.fontSize 2;
           };
         };
-        targets.plymouth.enable = true;
-      };
-    };
-    homeManager = {
-      pkgs,
-      config,
-      ...
-    }: {
-      stylix = {
-        enable = true;
-        autoEnable = true;
         opacity.terminal = terminal.opacity;
-        targets.firefox.profileNames = ["default"];
-        targets.zen-browser.profileNames = ["default"];
+        targets.plymouth.enable = true;
       };
     };
   };
