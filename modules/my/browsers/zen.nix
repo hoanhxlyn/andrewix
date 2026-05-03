@@ -16,6 +16,7 @@
     imports = [
       inputs.zen-browser.homeModules.beta
     ];
+    stylix.targets.zen-browser.profileNames = ["default"];
     programs.zen-browser = {
       enable = true;
       nativeMessagingHosts = [keepass];

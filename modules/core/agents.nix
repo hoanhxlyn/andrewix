@@ -1,5 +1,5 @@
 {
-  core.agents.homeManager = {pkgs, ...}: {
+  core.agents.homeManager = {
     programs = {
       uv.enable = true;
       mcp = {

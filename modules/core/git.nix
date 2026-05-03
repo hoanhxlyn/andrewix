@@ -3,11 +3,7 @@
     nixos = {pkgs, ...}: {
       environment.systemPackages = [pkgs.git-credential-manager];
     };
-    homeManager = {
-      pkgs,
-      lib,
-      ...
-    }: {
+    homeManager = {lib, ...}: {
       programs = {
         difftastic = {
           enable = true;
