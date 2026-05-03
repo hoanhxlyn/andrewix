@@ -27,3 +27,6 @@ update:
 
 gc:
     nix store gc --debug
+
+clean-up:
+    nix-collect-garbage  --delete-old
