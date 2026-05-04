@@ -29,4 +29,4 @@ gc:
     nix store gc --debug
 
 clean-up:
-    nix-collect-garbage  --delete-old
+    sudo nix-collect-garbage  --delete-old
