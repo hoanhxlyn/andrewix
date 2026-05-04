@@ -30,3 +30,6 @@ gc:
 
 clean-up:
     sudo nix-collect-garbage  --delete-old
+
+search *args:
+    nps -e {{ args }}
