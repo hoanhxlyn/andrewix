@@ -10,8 +10,8 @@
   };
   gdrive-path = "/mnt/gdrive";
 in {
-  den.aspects.andrew-laptop = {
-    provides.to-users.includes = [
+  den.aspects = {
+    workstation.includes = [
       (den._.import-tree._.host ../../hosts)
       <core.bootable>
       <core.gnome>
@@ -41,6 +41,15 @@ in {
       (<my/sync/keepassxc> gdrive-path)
       <my/editor/vscode>
       <my/editor/cursor>
+    ];
+    andrew-laptop.provides.to-users.includes = [
+      <workstation>
+    ];
+    andrew-pc.provides.to-users.includes = [
+      <workstation>
+      # <core.nvidia>
+      # <my/gaming/steam>
+      # <my/gaming/xone>
     ];
   };
 }
