@@ -34,6 +34,9 @@ vim.api.nvim_create_autocmd("BufRead", {
         biome = {
           require_cwd = true,
         },
+        oxfmt = {
+          require_cwd = true,
+        },
         stylua = {},
         yamlfix = {},
         ["markdown-toc"] = {
