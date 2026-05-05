@@ -1,17 +1,8 @@
 local lint = require("lint")
-local conform = require("conform")
 local valid_config_file = {
   "oxlintrc.json",
   ".oxlintrc.json",
   "oxlint.config.ts",
-}
-local valid_oxfmt_config = {
-  "oxfmt.json",
-  ".oxfmt.json",
-  "oxfmt.yaml",
-  "oxfmt.yml",
-  "oxfmt.toml",
-  "oxfmt.config.ts",
 }
 
 local function config_path()
@@ -53,19 +44,3 @@ else
     end
   end
 end
-
-local function has_oxfmt_config()
-  for _, config_file in ipairs(valid_oxfmt_config) do
-    local path = vim.fn.getcwd() .. "/" .. config_file
-    if vim.uv.fs_stat(path) then
-      return true
-    end
-  end
-  return false
-end
-
-conform.formatters.oxfmt = {
-  condition = function()
-    return has_oxfmt_config()
-  end,
-}
