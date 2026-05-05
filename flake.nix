@@ -1,11 +1,15 @@
 # DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
 # Use `nix run .#write-flake` to regenerate it.
 {
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
+  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
 
   inputs = {
     aic8800.url = "github:hoanhxlyn/aic8800-nix";
     den.url = "github:vic/den";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     fcitx5-vmk-nix = {
       url = "github:hoanhxlyn/fcitx5-vmk-nix";
       inputs.nixpkgs.follows = "nixpkgs";
