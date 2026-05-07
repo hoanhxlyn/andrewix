@@ -1,8 +1,5 @@
 {
   core.git = {host, ...}: {
-    nixos = {pkgs, ...}: {
-      environment.systemPackages = [pkgs.git-credential-manager];
-    };
     homeManager = {lib, ...}: {
       programs = {
         difftastic = {
@@ -19,9 +16,8 @@
             core.editor = "nvim";
             credential.helper = lib.mkMerge [
               (lib.mkIf host.wsl.enable "/mnt/c/Users/${host.windowsName}/scoop/root/apps/git/current/mingw64/bin/git-credential-manager.exe")
-              (lib.mkIf (!host.wsl.enable) "manager")
+              (lib.mkIf (!host.wsl.enable) "store")
             ];
-            credential.credentialStore = "secretservice";
           };
         };
         lazygit = {
@@ -29,9 +25,7 @@
           settings = {
             git = {
               pagers = [
-                {
-                  externalDiffCommand = "difft --color=always --display=inline";
-                }
+                {externalDiffCommand = "difft --color=always --display=inline";}
               ];
             };
             gui = {

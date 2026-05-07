@@ -139,3 +139,4 @@ Flake input declaration (feeds into auto-generated `flake.nix`):
 5. **ALWAYS** check lint with `statix check` and `deadnix --no-underscore --fail`
 6. Use context7 and websearch to research unfamiliar NixOS/HM options
 7. Prefer `includes` over `imports` for aspect composition within this repo
+8. Activate caveman skill **EVERYTIME** *ALL THE TIME*
