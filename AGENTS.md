@@ -1,89 +1,72 @@
-# AGENTS.md - Guidelines for Coding Agents
+# AGENTS.md — Andrewix NixOS Config
 
-## Build/Lint/Test Commands
+## Quick Commands
 
-### Apply Configuration
+Use Justfile shortcuts (preferred):
+
 ```bash
-nix run .#andrew-laptop -- switch   # Apply config to andrew-laptop
-nix run .#andrew-pc -- switch       # Apply config to andrew-pc
-nix run .#<host> -- test             # Validate config before commit (requires sudo)
+just fmt          # alejandra .
+just lint         # statix check + deadnix --no-underscore --fail
+just check        # nix flake check
+just switch <h>   # nix run .#<host> -- switch
+just test <h>     # nix run .#<host> -- test (needs sudo)
+just build <h>    # nix run .#<host> -- build
+just update       # nix flake update --commit-lock-file (commits lock!)
+just search <pkg> # nps -e <pkg>
+just gc           # nix store gc
+just clean-up     # sudo nix-collect-garbage --delete-old
 ```
 
-### Update & Maintenance
+Default host = `hostname -s` (auto-detected). Hosts: `andrew-laptop`, `andrew-pc`, `andrew-home-wsl`, `andrew-work-wsl`.
+
+Raw commands when justfile unavailable:
+
 ```bash
-nix flake update --flake .          # Update all flake inputs
-nix flake check                     # Check for evaluation errors
-nps <query>                         # Search packages
+nix flake check                          # Eval errors
+nix run .#write-flake                    # Regenerate flake.nix
+nix flake update --flake .               # Update inputs (no commit)
 ```
 
-### Formatting & Linting
-```bash
-alejandra .                         # Format all Nix files
-statix check                        # Lint for Nix best practices
-deadnix --no-underscore --fail      # Find dead code
+## Validation Pipeline (Run Before Commit)
+
+```
+just fmt && just lint && just check && just test <host>
 ```
 
-Tools are installed via Nix (`modules/my/cli.nix`), not via pre-commit hooks.
+`just test` requires sudo.
 
-### Regenerate Flake
-```bash
-nix run .#write-flake               # Regenerate flake.nix (DO NOT edit manually)
-```
+## Architecture
 
-**Note:** No unit tests - validation via `nix run .#<host> -- test` and `nix flake check`.
+NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto module discovery via `vic/import-tree`.
 
-## Project Architecture
+| Dir | Purpose |
+|-----|---------|
+| `modules/core/` | System-level aspects → NixOS config |
+| `modules/my/` | User-level aspects → Home Manager config |
+| `modules/hosts.nix` | Host definitions (4 hosts) |
+| `modules/devices/` | Per-device aspects (laptop.nix, wsl.nix) |
+| `modules/users/andrew.nix` | User identity + aspect includes |
+| `modules/defaults.nix` | Default includes for all hosts |
+| `modules/dendritic.nix` | Framework bootstrapping |
+| `hosts/<host>/_nixos/` | Hardware configs (filesystems, kernel modules) |
+| `disko/<host>/` | Disk partitioning configs |
+| `config/` | Non-Nix app configs |
+| `flake.nix` | **Auto-generated. DO NOT EDIT.** |
 
-NixOS + Home Manager config using **flake-parts** with a **dendritic (aspect-first)
-architecture** and automatic module discovery via `vic/import-tree` + `vic/den`.
+## Conventions
 
-### Directory Structure
-```
-├── flake.nix           # Auto-generated (DO NOT EDIT)
-├── flake.lock          # Pinned dependency lockfile
-├── modules/
-│   ├── dendritic.nix   # Dendritic module loader (vic/den framework)
-│   ├── namespace.nix   # Namespace definitions (core, my)
-│   ├── defaults.nix    # Default includes for all hosts
-│   ├── hosts.nix       # Host definitions (andrew-laptop, andrew-pc, andrew-{home,work}-wsl)
-│   ├── devices/        # Per-device aspect files (laptop.nix, wsl.nix)
-│   ├── core/           # System-level aspects (NixOS)
-│   ├── my/             # User-level aspects (Home Manager)
-│   └── users/          # User identity + aspect includes (andrew.nix)
-├── hosts/              # Hardware-specific configs
-│   └── <host>/_nixos/  # filesystems.nix, hardware-configuration.nix
-└── config/             # Non-Nix application configs
-```
+- **Namespace:** `core.<name>` = NixOS, `my/<cat>` = Home Manager
+- **Factory aspects:** `my/<cat>.provides.<name>` = parameterized
+- **Composition:** `den.aspects.<name>.includes` using angle-bracket imports
+- **Compose aspects with `includes`** not `imports` within this repo
+- **Files:** `kebab-case.nix`, **Options:** `camelCase`
+- **Booleans:** prefix with `enable`/`disable`
+- **Override defaults:** `lib.mkDefault`
+- **Formatter:** `alejandra`, 2-space indent, ≤100 chars hard limit
 
-### Namespace Conventions
-- `core.<name>` — System-level aspect; configures NixOS
-- `my/<category>` — User-level aspects; configures Home Manager
-- `my/<category>.provides.<name>` — Parameterized/factory aspects
-- `den.aspects.andrew.includes` — User composition (in `users/andrew.nix`)
-- `den.aspects.<hostname>` — Device composition (in `modules/devices/`)
+### Module Patterns
 
-### Key Variables
-- Username: `andrew`
-- System: `x86_64-linux`
-- State Version: `26.05` (DO NOT MODIFY)
-
----
-
-## Nix Code Style
-
-### Formatting
-- **Formatter:** `alejandra`
-- **Indentation:** 2 spaces (no tabs)
-- **Line Length:** Prefer under 80 chars, hard limit at 100
-
-### Naming Conventions
-- **Files/Directories:** `kebab-case.nix` / `kebab-case`
-- **Variables/Options:** `camelCase`
-- **Booleans:** Prefix with `enable`/`disable`
-
-### Module Structure Patterns
-
-Simple aspect (no external deps):
+Simple aspect:
 ```nix
 {
   core.sound.nixos = {
@@ -92,51 +75,50 @@ Simple aspect (no external deps):
 }
 ```
 
-Aspect with den includes (angle-bracket imports):
+With includes + nixos + homeManager:
 ```nix
 {__findFile, ...}: {
-  core.nvidia = {
-    includes = [ (<den/unfree> ["nvidia-x11"]) ];
-    nixos = {config, pkgs, ...}: { /* NixOS config */ };
-    homeManager = {pkgs, ...}: { /* Home Manager config */ };
+  core.aspect = {
+    includes = [ (<den/dep> ["pkg-name"]) ];
+    nixos = {config, pkgs, ...}: { /* NixOS */ };
+    homeManager = {pkgs, ...}: { /* Home Manager */ };
   };
 }
 ```
 
-Parameterized/factory aspect:
+Factory:
 ```nix
 {
-  andrew.terminals.provides.alacritty = terminal: {
-    homeManager = {
-      programs.alacritty.settings.font.size = terminal.fontSize;
-    };
+  my.category.provides.name = param: {
+    homeManager = { /* use param */ };
   };
 }
 ```
 
-Flake input declaration (feeds into auto-generated `flake.nix`):
+Flake input:
 ```nix
 {lib, inputs, ...}: {
-  flake-file.inputs.stylix = {
-    url = "github:nix-community/stylix";
+  flake-file.inputs.foo = {
+    url = "github:owner/repo";
     inputs.nixpkgs.follows = "nixpkgs";
   };
-  core.stylix = { ... };
 }
 ```
 
-## Error Handling
-- Use `lib.mkDefault` for overridable values
-- Run `nix flake check` before committing
-- Always test with `nix run .#<host> -- test` before switching
+## Hard Rules
 
-## Important Rules
+1. **NEVER edit `flake.nix`** — use `nix run .#write-flake`
+2. **NEVER change stateVersion** (currently `26.05`)
+3. **NEVER commit without** `just fmt && just lint && just check`
+4. User: `andrew`, System: `x86_64-linux`
+5. No unit tests — validate via `just check` + `just test <host>`
+6. Tools installed via Nix (`modules/my/cli.nix`) — no pre-commit hooks
+7. Research unfamiliar NixOS/HM options with context7 + websearch
+8. Activate caveman skill **always**
 
-1. **NEVER** edit `flake.nix` directly - auto-generated via `nix run .#write-flake`
-2. **NEVER** change state version (`26.05`)
-3. **ALWAYS** test with `nix run .#<host> -- test` before switching
-4. **ALWAYS** format with `alejandra .` before committing
-5. **ALWAYS** check lint with `statix check` and `deadnix --no-underscore --fail`
-6. Use context7 and websearch to research unfamiliar NixOS/HM options
-7. Prefer `includes` over `imports` for aspect composition within this repo
-8. Activate caveman skill **EVERYTIME** *ALL THE TIME*
+## Garbage Collection
+
+```bash
+just gc        # User store GC
+just clean-up  # System-wide GC + delete old gens (sudo)
+```
