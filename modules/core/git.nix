@@ -2,6 +2,9 @@
   core.git = {host, ...}: {
     homeManager = {lib, ...}: {
       programs = {
+        git-credential-keepassxc = lib.mkIf (!host.wsl.enable) {
+          enable = true;
+        };
         difftastic = {
           enable = true;
           git.enable = true;
@@ -14,10 +17,7 @@
             user.name = "Andrew Nguyen";
             init.defaultBranch = "main";
             core.editor = "nvim";
-            credential.helper = lib.mkMerge [
-              (lib.mkIf host.wsl.enable "/mnt/c/Users/${host.windowsName}/scoop/root/apps/git/current/mingw64/bin/git-credential-manager.exe")
-              (lib.mkIf (!host.wsl.enable) "store")
-            ];
+            credential.helper = lib.mkIf host.wsl.enable "/mnt/c/Users/${host.windowsName}/scoop/root/apps/git/current/mingw64/bin/git-credential-manager.exe";
           };
         };
         lazygit = {
