@@ -26,8 +26,8 @@
         interactiveShellInit = ''
           set fish_greeting
           ${pkgs.fastfetch}/bin/fastfetch -c examples/13.jsonc
-          set -gx TAVILY_API_KEY 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
-          set -gx CONTEXT_7_API_KEY ctx7sk-59f29886-91a0-408f-86a2-0c32e0e43f21
+          set -gx CONTEXT7_API_KEY (secret-tool lookup Title "context7" 2>/dev/null)
+          set -gx TAVILY_API_KEY (secret-tool lookup Title "tavily" 2>/dev/null)
           set -u EDITOR nvim
         '';
         shellAliases = {
@@ -36,7 +36,6 @@
           cd = "z";
           cat = "bat";
           grep = "rg";
-          man = "tldr";
         };
         plugins = [
           {

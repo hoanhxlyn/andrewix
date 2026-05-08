@@ -19,11 +19,16 @@
         };
       };
     };
-    nixos = {pkgs, ...}: {
+    nixos = {
+      pkgs,
+      lib,
+      ...
+    }: {
       services = {
         displayManager.gdm.enable = true;
         desktopManager.gnome.enable = true;
         xserver.excludePackages = with pkgs; [xterm];
+        gnome.gnome-keyring.enable = lib.mkForce false;
       };
       # Disable nixos manual
       documentation.nixos.enable = false;

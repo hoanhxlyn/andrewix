@@ -6,19 +6,14 @@
         enable = true;
         servers = {
           context7 = {
-            command = "pnpm";
-            args = [
-              "dlx"
-              "@upstash/context7-mcp"
-            ];
-            env = {
-              CONTEXT7_API_KEY = "{env:CONTEXT_7_API_KEY}";
+            url = "https://mcp.context7.com/mcp";
+            headers = {
+              CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
             };
           };
           tavily = {
-            command = "pnpm";
+            command = "bunx";
             args = [
-              "dlx"
               "tavily-mcp@latest"
             ];
             env = {
