@@ -1,55 +1,54 @@
-# Andrewix - NixOS & Home Manager Configuration
+# Andrewix — NixOS + Home Manager Config
 
-Personal NixOS + Home Manager configuration using flake-parts with a dendritic
-(aspect-first) architecture and automatic module discovery via `vic/import-tree`
-+ `vic/den`.
+Personal NixOS + Home Manager config using flake-parts with dendritic architecture.
 
 ## Quick Start
 
 ```bash
-# Apply configuration (pick your host)
-nix run .#andrew-laptop -- switch
-nix run .#andrew-pc -- switch
+just switch <host>        # Apply config
+just test <host>          # Validate (requires sudo)
+just check                # Eval errors
+just update               # Update flake inputs (commits lock)
+just fmt && just lint     # Format + lint
+```
 
-# Validate before committing (requires sudo)
+Hosts: `andrew-laptop`, `andrew-pc`, `andrew-home-wsl`, `andrew-work-wsl`.
+Default host auto-detected via `hostname -s`.
+
+### No Justfile?
+
+```bash
+nix run .#<host> -- switch
 nix run .#<host> -- test
-
-# Update all flake inputs
-nix flake update --flake .
-
-# Check for evaluation errors
 nix flake check
+nix flake update --flake .
+alejandra . && statix check && deadnix --no-underscore --fail
 ```
 
 ## Architecture
 
 | Path | Purpose |
-|---|---|
-| `modules/core/` | System-level aspects (NixOS config) |
-| `modules/my/` | User-level aspects (Home Manager config) |
-| `modules/defaults.nix` | Default includes + state version for all hosts |
-| `modules/devices/` | Per-device aspect files (laptop.nix, wsl.nix) |
-| `modules/hosts.nix` | Host definitions (`andrew-laptop`, `andrew-pc`, `andrew-{home,work}-wsl`) |
-| `modules/users/andrew.nix` | User identity + included aspects |
-| `hosts/<host>/_nixos/` | Hardware-specific configs (filesystems, kernel modules) |
-| `config/` | Non-Nix application configs |
-| `flake.nix` | Auto-generated entry point (DO NOT EDIT) |
+|------|---------|
+| `modules/core/` | System-level aspects → NixOS |
+| `modules/my/` | User-level aspects → Home Manager |
+| `modules/devices/` | Per-device aspects (laptop, wsl) |
+| `modules/defaults.nix` | Default includes for all hosts |
+| `modules/hosts.nix` | Host definitions |
+| `modules/users/andrew.nix` | User identity + aspect composition |
+| `hosts/<host>/_nixos/` | Hardware configs |
+| `disko/<host>/` | Disk partitioning |
+| `config/` | Non-Nix app configs |
+| `flake.nix` | **Auto-generated. DO NOT EDIT.** |
 
-Any `.nix` file under `modules/` is auto-discovered via `vic/import-tree`.
-Aspects are composed through `den.aspects.<name>.includes` using angle-bracket
-imports like `<core/sound>` or `<my/shell>`.
+Aspects auto-discovered. Compose via `den.aspects.<name>.includes` with angle-bracket imports (`<core/sound>`, `<my/shell>`).
 
-## Development Workflow
-
-1. **Edit** the relevant `.nix` file under `modules/core/` or `modules/my/`
-2. **Add features** by creating new `.nix` files in the appropriate subdirectory
-3. **Validate** before committing:
+## Garbage Collection
 
 ```bash
-nix flake check          # Evaluation errors
-alejandra .              # Format
-statix check             # Lint
-deadnix --no-underscore --fail  # Dead code
+just gc        # User store
+just clean-up  # System-wide + delete old gens (sudo)
 ```
 
-See `AGENTS.md` for detailed conventions, module patterns, and important rules.
+## More
+
+See `AGENTS.md` for conventions, module patterns, and rules.
