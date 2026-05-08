@@ -33,3 +33,6 @@ clean-up:
 
 search *args:
     nps -e {{ args }}
+
+list-gen:
+    nixos-rebuild list-generations
