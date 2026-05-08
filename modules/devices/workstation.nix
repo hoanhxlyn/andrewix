@@ -23,7 +23,6 @@ in {
       <core.git>
       <core.agents>
       <core.wifi>
-      <core.power-manager>
       (<core.stylix> terminal)
       <my/editor/neovix>
       <my/shell>
@@ -45,9 +44,11 @@ in {
     ];
     andrew-laptop.provides.to-users.includes = [
       <workstation>
+      <core.power-manager>
     ];
     andrew-pc.provides.to-users.includes = [
       <workstation>
+      <core.nvidia>
     ];
   };
 }
