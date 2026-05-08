@@ -1,7 +1,7 @@
 {
   den.aspects.my._.sync._.keepassxc = path: {
     homeManager = {pkgs, ...}: {
-      xdg.configFile."keepassxc/keepassxc.ini".force = true;
+      home.packages = [pkgs.libsecret];
       programs.keepassxc = {
         enable = true;
         settings = {
@@ -18,7 +18,7 @@
             TrayIconAppearance = "colorful";
             MinimizeOnClose = true;
             MinimizeToTray = false;
-            CompactMode = true;
+            CompactMode = false;
             ShowExpiredEntriesOnDatabaseUnlock = false;
             HidePasswords = false;
           };
@@ -40,6 +40,7 @@
             HideTotpPreviewPanel = true;
             LockDatabaseIdle = false;
           };
+          FdoSecrets.Enabled = true;
         };
       };
       systemd.user.services.keepassxc-autostart = {
@@ -49,6 +50,7 @@
             "graphical-session-pre.target"
             "rclone-gdrive.service"
           ];
+          Requires = ["rclone-gdrive.service"];
         };
         Install = {
           WantedBy = ["graphical-session.target"];
