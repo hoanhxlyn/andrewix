@@ -7,7 +7,9 @@
     url = "github:nix-community/stylix";
     inputs.nixpkgs.follows = "nixpkgs";
   };
-  core.stylix = terminal: {
+  core.stylix = {host, ...}: let
+    terminal = host.terminal;
+  in {
     nixos = {
       pkgs,
       config,
@@ -34,7 +36,7 @@
         cursor = {
           package = pkgs.bibata-cursors;
           name = "Bibata-Modern-Ice";
-          size = 24;
+          size = lib.mul terminal.fontSize 2;
         };
         fonts = {
           serif = config.stylix.fonts.sansSerif;
@@ -42,8 +44,8 @@
           monospace.name = "FiraCode Nerd Font";
           emoji.package = pkgs.noto-fonts-color-emoji;
           sizes = {
-            applications = terminal.fontSize + 2;
-            terminal = terminal.fontSize;
+            applications = lib.add terminal.fontSize 2;
+            terminal = lib.add terminal.fontSize 1;
             desktop = lib.add terminal.fontSize 2;
             popups = lib.add terminal.fontSize 2;
           };
