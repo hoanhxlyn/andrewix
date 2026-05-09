@@ -1,5 +1,7 @@
 {
-  den.aspects.my._.sync._.keepassxc = path: {
+  den.aspects.my._.sync._.keepassxc = {host, ...}: let
+    path = host.gdrive-path;
+  in {
     homeManager = {pkgs, ...}: {
       home.packages = [pkgs.libsecret];
       programs.keepassxc = {
