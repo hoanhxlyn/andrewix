@@ -36,10 +36,11 @@ test h=host *args:
 switch h=host *args:
     nix run .#{{ h }} -- switch {{ args }}
 
-# Update flake inputs, commit lockfile
+# Update flake inputs
 [group('nixos')]
 update:
-    nix flake update --commit-lock-file
+    nix run .#write-flake
+    nix flake update
 
 # User store garbage collection
 [group('nixos')]

@@ -42,6 +42,7 @@
       <workstation>
       <core.nvidia>
       <my/terminals/alacritty>
+      <my/gaming/waydroid>
     ];
   };
 }
