@@ -10,7 +10,6 @@
     ];
     homeManager = {pkgs, ...}: {
       stylix.targets.vscode.enable = true;
-      stylix.targets.vscode.colors.enable = false;
       programs.vscode = {
         enable = true;
         mutableExtensionsDir = true;
