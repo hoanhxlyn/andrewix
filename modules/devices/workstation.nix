@@ -6,7 +6,7 @@
   terminal = {
     fontSize = 12;
     padding = 2;
-    opacity = 1.0;
+    opacity = 0.8;
   };
   gdrive-path = "/mnt/gdrive";
 in {
