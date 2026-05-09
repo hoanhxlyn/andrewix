@@ -34,7 +34,7 @@
         cursor = {
           package = pkgs.bibata-cursors;
           name = "Bibata-Modern-Ice";
-          size = 20;
+          size = 24;
         };
         fonts = {
           serif = config.stylix.fonts.sansSerif;
@@ -42,7 +42,7 @@
           monospace.name = "FiraCode Nerd Font";
           emoji.package = pkgs.noto-fonts-color-emoji;
           sizes = {
-            applications = terminal.fontSize;
+            applications = terminal.fontSize + 2;
             terminal = terminal.fontSize;
             desktop = lib.add terminal.fontSize 2;
             popups = lib.add terminal.fontSize 2;
