@@ -12,8 +12,6 @@
       <core.agents>
       <core.wifi>
       <core.stylix>
-      <core.devices-monitors>
-      <my/editor/neovix>
       <my/shell>
       <my/cli/essentials>
       <my/cli/tui>
@@ -37,17 +35,16 @@
       <workstation>
       # <my/wm/niri>
       <my/de/gnome>
+      <my/terminals/alacritty>
+      <my/editor/neovix>
       <core.power-manager>
     ];
-
-    andrew-pc = {
-      provides.to-users.includes = [
-        <workstation>
-        <core.nvidia>
-        # <my/wm/niri>
-        <my/de/gnome>
-        <my/terminals/alacritty>
-      ];
-    };
+    andrew-pc.provides.to-users.includes = [
+      <workstation>
+      <core.nvidia>
+      <my/terminals/alacritty>
+      <my/editor/nvf>
+      <my/gaming/waydroid>
+    ];
   };
 }
