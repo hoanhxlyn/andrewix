@@ -2,14 +2,7 @@
   den,
   __findFile,
   ...
-}: let
-  terminal = {
-    fontSize = 12;
-    padding = 2;
-    opacity = 0.8;
-  };
-  gdrive-path = "/mnt/gdrive";
-in {
+}: {
   den.aspects = {
     workstation.includes = [
       (den._.import-tree._.host ../../hosts)
@@ -23,7 +16,7 @@ in {
       <core.git>
       <core.agents>
       <core.wifi>
-      (<core.stylix> terminal)
+      <core.stylix>
       <my/editor/neovix>
       <my/shell>
       <my/cli/essentials>
@@ -35,20 +28,20 @@ in {
       <my/office/teams>
       <my/browsers/zen>
       <my/browsers/brave> # Need a chromium for web dev
-      (<my/terminals/alacritty> terminal)
-      (<my/terminals/wezterm> terminal)
-      (<my/sync/rclone> gdrive-path)
-      (<my/sync/keepassxc> gdrive-path)
+      <my/sync/rclone>
+      <my/sync/keepassxc>
       <my/editor/vscode>
       <my/editor/cursor>
     ];
     andrew-laptop.provides.to-users.includes = [
       <workstation>
+      <my/terminals/alacritty>
       <core.power-manager>
     ];
     andrew-pc.provides.to-users.includes = [
       <workstation>
       <core.nvidia>
+      <my/terminals/alacritty>
     ];
   };
 }
