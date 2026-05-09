@@ -1,5 +1,7 @@
 {
-  den.aspects.my._.terminals._.alacritty = terminal: {
+  den.aspects.my._.terminals._.alacritty = {host, ...}: let
+    terminal = host.terminal;
+  in {
     homeManager = {
       programs.alacritty = {
         enable = true;
