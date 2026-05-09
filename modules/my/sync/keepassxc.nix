@@ -40,7 +40,10 @@
             HideTotpPreviewPanel = true;
             LockDatabaseIdle = false;
           };
-          FdoSecrets.Enabled = true;
+          FdoSecrets = {
+            Enabled = true;
+            ConfirmAccessItem = false;
+          };
         };
       };
       systemd.user.services.keepassxc-autostart = {
