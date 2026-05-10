@@ -50,9 +50,22 @@
             popups = lib.add terminal.fontSize 2;
           };
         };
-        opacity.terminal = terminal.opacity;
+        opacity = {
+          terminal = terminal.opacity;
+          desktop = terminal.opacity;
+          popups = terminal.opacity;
+          applications = terminal.opacity;
+        };
         targets.plymouth.enable = true;
       };
+    };
+    homeManager.stylix.targets.neovim = let
+      is-transparent = terminal.fontSize < 1.0;
+    in {
+      colors.enable = true;
+      transparentBackground.main = is-transparent;
+      transparentBackground.numberLine = is-transparent;
+      transparentBackground.signColumn = is-transparent;
     };
   };
 }

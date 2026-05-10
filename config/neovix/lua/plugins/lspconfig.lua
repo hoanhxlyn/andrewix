@@ -70,8 +70,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		utils.map("n", utils.L("cd"), vim.diagnostic.open_float, "Code show diagnostic", { buffer = args.buf })
 		utils.map("n", utils.L("cr"), vim.lsp.buf.rename, "LSP: rename", { buffer = args.buf })
 
-		if client.name == "vtsls" then
+		if client.name == "vtsls" or client.name == "tsgo" then
 			utils.map("n", utils.L("co"), utils.action("source.organizeImports"), "[TS] Organize imports", { buffer = args.buf })
+		end
+		if client.name == "vtsls" then
 			utils.map(
 				"n",
 				utils.L("cv"),
@@ -93,7 +95,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- Enable Servers
 local servers = {
-	"vtsls",
+	-- "vtsls", -- disabled, replaced by tsgo
+	"tsgo",
 	"lua_ls",
 	"tailwindcss",
 	"jsonls",
