@@ -1,7 +1,6 @@
 {
   __findFile,
   inputs,
-  lib,
   ...
 }: {
   flake-file.inputs.nvf.url = "github:notashelf/nvf";
@@ -39,7 +38,6 @@
           lsp.inlayHints.enable = true;
           lsp.lspconfig.enable = true;
           lsp.lightbulb.enable = true;
-          lsp.lightbulb.autocmd.enable = true;
           lsp.mappings = {
             codeAction = L "ca";
             format = L "cf";
@@ -84,7 +82,10 @@
             bash.enable = true;
             css.enable = true;
             scss.enable = true;
-            css.format.type = ["biome" "prettierd"];
+            css.format.type = [
+              "biome"
+              "prettierd"
+            ];
             scss.format.type = ["prettierd"];
             html.enable = true;
             html.lsp.servers = ["superhtml"];
@@ -102,27 +103,41 @@
             toml.enable = true;
             typescript.enable = true;
             typescript.extensions.ts-error-translator.enable = true;
-            typescript.extraDiagnostics.types = ["biomejs" "eslint_d"];
-            typescript.format.type = ["biome" "prettierd"];
+            typescript.extraDiagnostics.types = [
+              "biomejs"
+              "eslint_d"
+            ];
+            typescript.format.type = [
+              "biome"
+              "prettierd"
+            ];
             typescript.lsp.servers = ["typescript-go"];
             yaml.enable = true;
           };
-          # Spellcheck modules
-          spellcheck = {
-            enable = true;
-            ignoreTerminal = true;
-            ignoredFiletypes = ["markdown" "gitcommit" "toggleterm"];
-            languages = ["en"];
-            programmingWordlist.enable = true;
-          };
           # UI modules
           ui.breadcrumbs.enable = true;
+          ui.ui2.enable = true;
+          ui.borders.enable = true;
           # Utility modules
           utility.snacks-nvim.enable = true;
           utility.images.image-nvim.enable = true;
           # Autocomplete modules
-          autocomplete.blink-cmp.enable = true;
-          autocomplete.blink-cmp.friendly-snippets.enable = true;
+          autocomplete.blink-cmp = {
+            enable = true;
+            friendly-snippets.enable = true;
+            setupOpts = {
+              keymap.preset = "enter";
+              cmdline.keymap.preset = "cmdline";
+            };
+            sourcePlugins = {
+              lazydev.enable = true;
+              lazydev.package = "lazydev-nvim";
+              lazydev.module = "lazydev.integration.blink";
+              emoji.enable = false;
+              ripgrep.enable = true;
+              spell.enable = true;
+            };
+          };
           # Mini modules
           mini.ai.enable = true;
           mini.git.enable = true;
@@ -184,7 +199,7 @@
                 {
                   mode = "n";
                   key = "zk";
-                  action = ''                                
+                  action = ''
                     function()
                       local winid = require('ufo').peekFoldedLinesUnderCursor();
                       if not winid then 
@@ -198,12 +213,24 @@
                 open_fold_hl_timeout = 150;
                 preview = {
                   win_config = {
-                    border = ["╔" "═" "╗" "║" "╝" "═" "╚" "║"];
+                    border = [
+                      "╔"
+                      "═"
+                      "╗"
+                      "║"
+                      "╝"
+                      "═"
+                      "╚"
+                      "║"
+                    ];
                     winhighlight = "Normal:Folded";
                     winblend = 0;
                   };
                 };
-                provider_selector = ["lsp" "indent"];
+                provider_selector = [
+                  "lsp"
+                  "indent"
+                ];
               };
             };
             ${pkgs.vimPlugins.sidekick-nvim.pname} = {
