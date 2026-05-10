@@ -28,7 +28,7 @@
             wrap = false;
             shiftwidth = 2;
             tabstop = 2;
-            foldcolumn = "1";
+            foldcolumn = "auto";
             foldlevel = 99;
             foldlevelstart = 99;
             foldenable = true;
@@ -41,7 +41,6 @@
           lsp.formatOnSave = true;
           lsp.inlayHints.enable = true;
           lsp.lspconfig.enable = true;
-          lsp.lightbulb.enable = true;
           lsp.mappings = {
             codeAction = L "ca";
             format = L "cf";
@@ -119,7 +118,6 @@
             yaml.enable = true;
           };
           # UI modules
-          ui.breadcrumbs.enable = true;
           ui.ui2.enable = true;
           ui.borders.enable = true;
           ui.nvim-ufo.enable = true;
@@ -175,37 +173,69 @@
           mini.jump2d.enable = true;
           mini.visits.enable = true;
           mini.clue.enable = true;
+
           # Lazy pluygins modules
-          lazy.enable = true;
-          lazy.plugins = {
-            ${pkgs.vimPlugins.sidekick-nvim.pname} = {
-              package = pkgs.vimPlugins.sidekick-nvim;
-              setupModule = "sidekick";
-              setupOpts = {
-                nes.enable = false;
-                cli.win.layout = "right";
-                cli.win.split.width = 80;
+          lazy = {
+            enable = true;
+            plugins = {
+              ${pkgs.vimPlugins.sidekick-nvim.pname} = {
+                package = pkgs.vimPlugins.sidekick-nvim;
+                setupModule = "sidekick";
+                setupOpts = {
+                  nes.enable = false;
+                  cli.win.layout = "right";
+                  cli.win.split.width = 80;
+                };
+                keys = [
+                  {
+                    mode = "n";
+                    key = L "aa";
+                    desc = "Agent: toggle";
+                    action = ''
+                      function()
+                        require("sidekick.cli").toggle({ filter = {installed = true} })
+                      end
+                    '';
+                    lua = true;
+                  }
+                  {
+                    mode = ["x"];
+                    key = L "as";
+                    desc = "Agent: send selection";
+                    action = ''
+                      function()
+                        require("sidekick.cli").send({msg = "{this}", filter = { installed = true } })
+                      end
+                    '';
+                    lua = true;
+                  }
+                  {
+                    mode = "n";
+                    key = L "af";
+                    desc = "Agent: Send File";
+                    action = ''
+                      function()
+                        require("sidekick.cli").send({ msg = "{file}", filter = { installed = true } })
+                      end
+                    '';
+                    lua = true;
+                  }
+                ];
               };
-              keys = [
-                {
-                  mode = "n";
-                  key = L "aa";
-                  desc = "Agent: toggle";
-                  action = ''function() require("sidekick.cli").toggle({ filter = {installed = true} }) end'';
-                }
-                {
-                  mode = ["x"];
-                  key = L "as";
-                  desc = "Agent: send selection";
-                  action = ''function() require("sidekick.cli").send({msg = "{this}"}, filter = { installed = true }) end'';
-                }
-                {
-                  mode = "n";
-                  key = L "af";
-                  desc = "Agent: Send File";
-                  action = ''function() require("sidekick.cli").send({ msg = "{file}", filter = {installed = true} }) end'';
-                }
-              ];
+              ${pkgs.vimPlugins.nvim-navic.pname} = {
+                package = pkgs.vimPlugins.nvim-navic;
+                setupModule = "nvim-navic";
+                lazy = true;
+                setupOpts = {
+                  highlight = true;
+                  depth_limit = 4;
+                  lsp.auto_attach = true;
+                  lazy_update_context = true;
+                };
+                after = ''
+                  vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}";
+                '';
+              };
             };
           };
         };
