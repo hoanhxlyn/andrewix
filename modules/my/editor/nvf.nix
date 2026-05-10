@@ -34,29 +34,34 @@
             foldenable = true;
           };
           globals.maplocalleader = "\\";
-          clipboard.enable = true;
+          clipboard = {
+            enable = true;
+            providers.wl-copy.enable = true;
+          };
           extraPackages = with pkgs; [ueberzugpp];
-          # LSP config
-          lsp.enable = true;
-          lsp.formatOnSave = true;
-          lsp.inlayHints.enable = true;
-          lsp.lspconfig.enable = true;
-          lsp.mappings = {
-            codeAction = L "ca";
-            format = L "cf";
-            hover = L "lh";
-            goToDefinition = L "ld";
-            goToDeclaration = L "lD";
-            goToType = L "lt";
-            listReferences = L "lr";
-            listDocumentSymbols = L "ls";
-            listImplementations = L "li";
-            listWorkspaceSymbols = L "lS";
-            nextDiagnostic = "]d";
-            previousDiagnostic = "[d";
-            openDiagnosticFloat = L "cd";
-            renameSymbol = L "cr";
-            signatureHelp = "<c-/>";
+          lsp = {
+            # LSP config
+            enable = true;
+            formatOnSave = true;
+            inlayHints.enable = true;
+            lspconfig.enable = true;
+            mappings = {
+              codeAction = L "ca";
+              format = L "cf";
+              hover = L "lh";
+              goToDefinition = L "ld";
+              goToDeclaration = L "lD";
+              goToType = L "lt";
+              listReferences = L "lr";
+              listDocumentSymbols = L "ls";
+              listImplementations = L "li";
+              listWorkspaceSymbols = L "lS";
+              nextDiagnostic = "]d";
+              previousDiagnostic = "[d";
+              openDiagnosticFloat = L "cd";
+              renameSymbol = L "cr";
+              signatureHelp = "<c-/>";
+            };
           };
           # Treeesitter modules
           treesitter = {
@@ -117,13 +122,17 @@
             typescript.lsp.servers = ["typescript-go"];
             yaml.enable = true;
           };
-          # UI modules
-          ui.ui2.enable = true;
-          ui.borders.enable = true;
-          ui.nvim-ufo.enable = true;
-          # Utility modules
-          utility.snacks-nvim.enable = true;
-          utility.images.image-nvim.enable = true;
+          ui = {
+            # UI modules
+            ui2.enable = true;
+            borders.enable = true;
+            nvim-ufo.enable = true;
+          };
+          utility = {
+            # Utility modules
+            snacks-nvim.enable = true;
+            images.image-nvim.enable = true;
+          };
           # Autocomplete modules
           autocomplete.blink-cmp = {
             enable = true;
