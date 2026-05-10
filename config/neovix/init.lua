@@ -24,7 +24,7 @@ now(function()
   require("plugins.mini.sessions")
   require("plugins.mini.clues")
   require("plugins.mini.starter")
-  require("plugins.colorschemes")
+  -- require("plugins.colorschemes")
   if vim.g.mini.notify then
     require("plugins.mini.notify")
   end
@@ -87,6 +87,8 @@ later(function()
     require("plugins.mini.picks")
   end
   require("plugins.mini.visits")
+  -- require("plugins.mini.base16")
+  require("plugins.mini.hues")
 end)
 later(function()
   if vim.g.mini.indent then
