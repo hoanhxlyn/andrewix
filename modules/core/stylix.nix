@@ -31,7 +31,7 @@
       stylix = {
         enable = true;
         autoEnable = true;
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark.yaml";
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-pale.yaml";
         polarity = "dark";
         cursor = {
           package = pkgs.bibata-cursors;
