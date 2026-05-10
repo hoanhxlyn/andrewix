@@ -28,6 +28,10 @@
             wrap = false;
             shiftwidth = 2;
             tabstop = 2;
+            foldcolumn = "1";
+            foldlevel = 99;
+            foldlevelstart = 99;
+            foldenable = true;
           };
           globals.maplocalleader = "\\";
           clipboard.enable = true;
@@ -118,6 +122,7 @@
           ui.breadcrumbs.enable = true;
           ui.ui2.enable = true;
           ui.borders.enable = true;
+          ui.nvim-ufo.enable = true;
           # Utility modules
           utility.snacks-nvim.enable = true;
           utility.images.image-nvim.enable = true;
@@ -132,7 +137,7 @@
             sourcePlugins = {
               lazydev.enable = true;
               lazydev.package = "lazydev-nvim";
-              lazydev.module = "lazydev.integration.blink";
+              lazydev.module = "lazydev.integrations.blink";
               emoji.enable = false;
               ripgrep.enable = true;
               spell.enable = true;
@@ -173,66 +178,6 @@
           # Lazy pluygins modules
           lazy.enable = true;
           lazy.plugins = {
-            ${pkgs.vimPlugins.nvim-ufo.pname} = {
-              package = pkgs.vimPlugins.nvim-ufo;
-              setupModule = "ufo";
-              event = ["BufReadPost"];
-              keys = [
-                {
-                  mode = "n";
-                  key = "zO";
-                  action = ''function() require("ufo").openAllFolds() end'';
-                  desc = "Ufo: Open all folds";
-                }
-                {
-                  mode = "n";
-                  key = "zC";
-                  action = ''function() require("ufo").closeAllFolds() end'';
-                  desc = "Ufo: Close all folds";
-                }
-                {
-                  mode = "n";
-                  key = "zi";
-                  action = ''function() require("ufo").inspect() end'';
-                  desc = "Ufo: inspect fold";
-                }
-                {
-                  mode = "n";
-                  key = "zk";
-                  action = ''
-                    function()
-                      local winid = require('ufo').peekFoldedLinesUnderCursor();
-                      if not winid then 
-                        vim.lsp.buf.hover(); 
-                      end
-                    end'';
-                  desc = "Ufo: inspect fold";
-                }
-              ];
-              setupOpts = {
-                open_fold_hl_timeout = 150;
-                preview = {
-                  win_config = {
-                    border = [
-                      "╔"
-                      "═"
-                      "╗"
-                      "║"
-                      "╝"
-                      "═"
-                      "╚"
-                      "║"
-                    ];
-                    winhighlight = "Normal:Folded";
-                    winblend = 0;
-                  };
-                };
-                provider_selector = [
-                  "lsp"
-                  "indent"
-                ];
-              };
-            };
             ${pkgs.vimPlugins.sidekick-nvim.pname} = {
               package = pkgs.vimPlugins.sidekick-nvim;
               setupModule = "sidekick";
