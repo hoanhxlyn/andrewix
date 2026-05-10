@@ -43,9 +43,13 @@ require("snacks").setup({
   bigfile = { enabled = true },
   image = { enabled = true },
   input = { enabled = true },
-  indent = { enabled = not vim.g.mini.notify, style = "compact", margin = {
-    top = 2,
-  } },
+  notifier = {
+    enabled = not vim.g.mini.notify,
+    style = "compact",
+    margin = {
+      top = 2,
+    },
+  },
   -- Styles
   styles = {
     notification = {
@@ -198,7 +202,7 @@ utils.map("n", utils.L("tl"), function()
     end,
   }, function(choice)
     if choice then
-      choice.term:toggle({ win = { enter = false } })
+      choice.term:toggle()
     end
   end)
 end, "Terminal List/Select")

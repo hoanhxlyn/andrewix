@@ -92,14 +92,14 @@
           tokyonight-nvim
           gruvbox-material-nvim
           gruvbox-nvim
-          kanagawa-nvim
           catppuccin-nvim
-          rose-pine
           nvim-dap
           nvim-dap-ui
           nvim-nio
           nvim-dap-virtual-text
           markview-nvim
+          blink-ripgrep-nvim
+
           (pkgs.vimUtils.buildVimPlugin {
             pname = "import-size-nvim";
             version = "unstable-2025-01-01";
@@ -139,7 +139,8 @@
           oxlint
           oxfmt
           lsof
-          vtsls
+          # vtsls
+          typescript-go
           lua-language-server
           tailwindcss-language-server
           vscode-langservers-extracted
