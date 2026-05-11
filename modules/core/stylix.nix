@@ -45,7 +45,7 @@
           emoji.package = pkgs.noto-fonts-color-emoji;
           sizes = {
             applications = lib.add terminal.fontSize 1;
-            terminal = lib.add terminal.fontSize 0;
+            terminal = lib.add terminal.fontSize 1;
             desktop = lib.add terminal.fontSize 2;
             popups = lib.add terminal.fontSize 2;
           };
