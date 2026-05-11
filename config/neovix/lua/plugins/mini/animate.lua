@@ -8,7 +8,7 @@ MiniAnimate.setup({
       unit = "total",
     }),
   },
-  resize = { enable = false },
-  open = { enable = false },
-  close = { enable = false },
+  resize = { enable = true },
+  open = { enable = true },
+  close = { enable = true },
 })

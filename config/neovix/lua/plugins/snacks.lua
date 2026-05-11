@@ -34,6 +34,7 @@ require("snacks").setup({
     },
   },
   animate = {
+    enabled = not vim.g.animate,
     easing = "inOutQuad",
   },
   quickfile = { enabled = false },

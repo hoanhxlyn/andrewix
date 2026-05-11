@@ -280,15 +280,7 @@ utils.map("n", utils.L("gb"), toggle_blame, "Git toggle git Blame")
 utils.map("n", utils.L("gd"), diff_this, "Git diff against commit")
 utils.map("n", utils.L("gh"), MiniDiff.toggle_overlay, "Git toggle git overlay")
 utils.map("n", utils.L("gt"), toggle_diff_style, "Git toggle diff Style")
-utils.map("n", utils.L("gu"), function()
-  MiniExtra.pickers.git_hunks()
-end, "Git unstaged hunks")
-utils.map("n", utils.L("gs"), function()
-  MiniExtra.pickers.git_hunks({
-    scope = "staged",
-  })
-end, "Git staged hunks")
-utils.map("n", utils.L("gc"), function()
+utils.map("n", utils.L("gC"), function()
   MiniExtra.pickers.git_commits({
     path = vim.api.nvim_buf_get_name(0),
   })

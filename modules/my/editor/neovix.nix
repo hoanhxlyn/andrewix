@@ -76,7 +76,8 @@
           todo-comments-nvim
           nvim-ts-context-commentstring
           nvim-ts-autotag
-          bufferline-nvim
+          # bufferline-nvim
+          # lualine-nvim
           nvim-lint
           sidekick-nvim
           blink-cmp
@@ -84,21 +85,18 @@
           nvim-navic
           lazydev-nvim
           friendly-snippets
-          blink-copilot
+          # blink-copilot
           nvim-ufo
           promise-async
           SchemaStore-nvim
           plenary-nvim
-          tokyonight-nvim
-          gruvbox-material-nvim
-          gruvbox-nvim
-          catppuccin-nvim
           nvim-dap
           nvim-dap-ui
           nvim-nio
           nvim-dap-virtual-text
           markview-nvim
           blink-ripgrep-nvim
+          diffview-nvim
 
           (pkgs.vimUtils.buildVimPlugin {
             pname = "import-size-nvim";

@@ -15,7 +15,6 @@ vim.o.foldlevel = 99 -- Necessary
 vim.o.foldlevelstart = 99
 vim.o.splitright = true
 vim.o.splitbelow = true
-vim.o.cmdheight = 1
 vim.o.laststatus = 3
 vim.o.signcolumn = "yes"
 vim.o.wrap = false
