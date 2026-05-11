@@ -38,9 +38,8 @@ now(function()
 end)
 now(function()
   require("plugins.snacks")
-end)
-now(function()
   require("plugins.treesitter")
+  require("plugins.ui2")
 end)
 later(function()
   -- Mini.plugins that doesnt need config
@@ -89,24 +88,6 @@ later(function()
   end
   require("plugins.mini.visits")
   require("plugins.mini.colors")
-end)
-later(function()
-  require("vim._core.ui2").enable({
-    enable = true,
-    cmd = {
-      height = 1,
-    },
-    dialog = {
-      height = 0.5,
-    },
-    pager = {
-      height = 1,
-    },
-    msg = {
-      height = 0.5,
-      timeout = 4000,
-    },
-  })
 end)
 later(function()
   if vim.g.mini.indent then
