@@ -8,7 +8,7 @@
         settings = {
           window = {
             padding.x = terminal.padding;
-            padding.y = terminal.padding;
+            padding.y = builtins.sub terminal.padding terminal.padding;
             decorations = "None";
             blur = true;
             startup_mode = "Maximized";
