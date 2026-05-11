@@ -31,7 +31,7 @@
       stylix = {
         enable = true;
         autoEnable = true;
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-pale.yaml";
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-medium.yaml";
         polarity = "dark";
         cursor = {
           package = pkgs.bibata-cursors;
@@ -41,11 +41,11 @@
         fonts = {
           serif = config.stylix.fonts.sansSerif;
           sansSerif.name = "Noto Sans";
-          monospace.name = "FiraCode Nerd Font";
+          monospace.name = "CaskaydiaCove Nerd Font";
           emoji.package = pkgs.noto-fonts-color-emoji;
           sizes = {
-            applications = lib.add terminal.fontSize 2;
-            terminal = lib.add terminal.fontSize 1;
+            applications = lib.add terminal.fontSize 1;
+            terminal = lib.add terminal.fontSize 0;
             desktop = lib.add terminal.fontSize 2;
             popups = lib.add terminal.fontSize 2;
           };
@@ -58,14 +58,6 @@
         };
         targets.plymouth.enable = true;
       };
-    };
-    homeManager.stylix.targets.neovim = let
-      is-transparent = terminal.fontSize < 1.0;
-    in {
-      colors.enable = true;
-      transparentBackground.main = is-transparent;
-      transparentBackground.numberLine = is-transparent;
-      transparentBackground.signColumn = is-transparent;
     };
   };
 }

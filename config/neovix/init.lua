@@ -11,6 +11,7 @@ vim.g.mini = {
   notify = true,
   indent = true,
   explorer = true,
+  use_hue = true,
 }
 
 now(function()
@@ -87,8 +88,7 @@ later(function()
     require("plugins.mini.picks")
   end
   require("plugins.mini.visits")
-  -- require("plugins.mini.base16")
-  require("plugins.mini.hues")
+  require("plugins.mini.colors")
 end)
 later(function()
   require("vim._core.ui2").enable({
