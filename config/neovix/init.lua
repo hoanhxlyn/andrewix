@@ -91,6 +91,24 @@ later(function()
   require("plugins.mini.hues")
 end)
 later(function()
+  require("vim._core.ui2").enable({
+    enable = true,
+    cmd = {
+      height = 1,
+    },
+    dialog = {
+      height = 0.5,
+    },
+    pager = {
+      height = 1,
+    },
+    msg = {
+      height = 0.5,
+      timeout = 4000,
+    },
+  })
+end)
+later(function()
   if vim.g.mini.indent then
     require("plugins.mini.indentscope")
   end
