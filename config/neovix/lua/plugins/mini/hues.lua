@@ -4,5 +4,5 @@ require("mini.hues").setup({
   n_hues = 8,
   saturation = "low",
   accent = "bg",
-  autoadujst = true,
+  autoadjust = true,
 })
