@@ -47,7 +47,7 @@ require("blink.cmp").setup({
     },
   },
   sources = {
-    default = { "lsp", "path", "snippets", "buffer", "lazydev", "ripgrep" },
+    default = { "lsp", "path", "snippets", "buffer", "lazydev" },
     providers = {
       lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
       ripgrep = {
@@ -77,7 +77,6 @@ require("blink.cmp").setup({
     implementation = "prefer_rust",
     sorts = {
       "exact",
-      "label",
       "score",
       "sort_text",
     },
