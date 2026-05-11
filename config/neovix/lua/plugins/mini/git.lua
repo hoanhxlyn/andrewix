@@ -285,3 +285,36 @@ utils.map("n", utils.L("gC"), function()
     path = vim.api.nvim_buf_get_name(0),
   })
 end, "Git commit current buffer")
+
+local actions = require("diffview.actions")
+
+require("diffview").setup({
+  view = {
+    default = { layout = "diff2_horizontal" },
+    merge_tool = {
+      layout = "diff3_horizontal",
+      disable_diagnostics = true,
+      winbar_info = true,
+    },
+    file_history = { layout = "diff2_horizontal" },
+  },
+  keymaps = {
+    view = {
+      { "n", "]x", actions.next_conflict, { desc = "Merge: next conflict" } },
+      { "n", "[x", actions.prev_conflict, { desc = "Merge: prev conflict" } },
+      { "n", "<leader>co", actions.conflict_choose("ours"), { desc = "Merge: choose ours" } },
+      { "n", "<leader>ct", actions.conflict_choose("theirs"), { desc = "Merge: choose theirs" } },
+      { "n", "<leader>cb", actions.conflict_choose("base"), { desc = "Merge: choose base" } },
+      { "n", "<leader>ca", actions.conflict_choose("all"), { desc = "Merge: choose all" } },
+      { "n", "dx", actions.conflict_choose("none"), { desc = "Merge: delete conflict" } },
+      { "n", "<leader>cO", actions.conflict_choose_all("ours"), { desc = "Merge: choose ours (file)" } },
+      { "n", "<leader>cT", actions.conflict_choose_all("theirs"), { desc = "Merge: choose theirs (file)" } },
+      { "n", "<leader>cB", actions.conflict_choose_all("base"), { desc = "Merge: choose base (file)" } },
+      { "n", "<leader>cA", actions.conflict_choose_all("all"), { desc = "Merge: choose all (file)" } },
+    },
+  },
+})
+
+utils.map("n", utils.L("gv"), "<cmd>DiffviewOpen<cr>", "Git diffview open")
+-- utils.map("n", utils.L("gf"), "<cmd>DiffviewFileHistory %<cr>", "Git diffview file history")
+utils.map("n", utils.L("gc"), "<cmd>DiffviewClose<cr>", "Git diffview close")
