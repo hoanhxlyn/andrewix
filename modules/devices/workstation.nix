@@ -5,7 +5,6 @@
 }: {
   den.aspects = {
     workstation.includes = [
-      (den._.import-tree._.host ../../hosts)
       <core.bootable>
       <core.disko>
       <core.gnome>
@@ -33,16 +32,26 @@
       <my/editor/vscode>
       <my/editor/cursor>
     ];
-    andrew-laptop.provides.to-users.includes = [
-      <workstation>
-      <my/terminals/alacritty>
-      <core.power-manager>
-    ];
-    andrew-pc.provides.to-users.includes = [
-      <workstation>
-      <core.nvidia>
-      <my/terminals/alacritty>
-      <my/gaming/waydroid>
-    ];
+    andrew-laptop = {
+      includes = [
+        (den.batteries.import-tree.host ../../hosts)
+      ];
+      provides.to-users.includes = [
+        <workstation>
+        <my/terminals/alacritty>
+        <core.power-manager>
+      ];
+    };
+    andrew-pc = {
+      includes = [
+        (den.batteries.import-tree.host ../../hosts)
+      ];
+      provides.to-users.includes = [
+        <workstation>
+        <core.nvidia>
+        <my/terminals/alacritty>
+        <my/gaming/waydroid>
+      ];
+    };
   };
 }

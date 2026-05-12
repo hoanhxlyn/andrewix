@@ -7,14 +7,14 @@
   den = {
     default = {
       includes = [
-        <den/define-user>
-        <den/primary-user>
-        <den/hostname>
-        <den/define-user>
-        (<den/user-shell> "fish")
-        <den/mutual-provider>
-        den._.self'
-        den._.inputs'
+        <den.batteries.define-user>
+        <den.batteries.primary-user>
+        <den.batteries.hostname>
+        <den.batteries.define-user>
+        (<den.batteries.user-shell> "fish")
+        <den.batteries.mutual-provider>
+        den.batteries.self'
+        den.batteries.inputs'
         <core.nix-setting>
       ];
     };

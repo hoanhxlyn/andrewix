@@ -1,7 +1,7 @@
 {__findFile, ...}: {
   den.aspects.my._.editor._.cursor = {
     includes = [
-      (<den/unfree> ["cursor"])
+      (<den.batteries.unfree> ["cursor"])
     ];
     nixos = {pkgs, ...}: {
       environment.systemPackages = [
