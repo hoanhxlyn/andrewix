@@ -1,7 +1,7 @@
 {__findFile, ...}: {
-  den.aspects.my._.communications._.discord = {
+  den.aspects.my.communications.discord = {
     includes = [
-      (<den/unfree> [
+      (<den.batteries.unfree> [
         "discord"
       ])
     ];

@@ -1,5 +1,5 @@
 {
-  den.aspects.my._.sync._.keepassxc = {host, ...}: let
+  den.aspects.my.sync.keepassxc = {host, ...}: let
     path = host.gdrive-path;
   in {
     homeManager = {pkgs, ...}: {

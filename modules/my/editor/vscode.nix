@@ -4,9 +4,9 @@
   __findFile,
   ...
 }: {
-  den.aspects.my._.editor._.vscode = {
+  den.aspects.my.editor.vscode = {
     includes = [
-      (<den/unfree> ["vscode"])
+      (<den.batteries.unfree> ["vscode"])
     ];
     homeManager = {pkgs, ...}: {
       stylix.targets.vscode.enable = true;

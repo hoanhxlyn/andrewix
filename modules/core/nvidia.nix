@@ -1,7 +1,7 @@
 {__findFile, ...}: {
   core.nvidia = {
     includes = [
-      (<den/unfree> [
+      (<den.batteries.unfree> [
         "nvidia-x11"
         "nvidia-settings"
         "nvidia-kernel-modules"

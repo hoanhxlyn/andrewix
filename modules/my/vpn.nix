@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.my._.vpn._.proton = {
+  den.aspects.my.vpn.proton = {
     nixos = {pkgs, ...}: {
       environment.systemPackages = [
         pkgs.proton-vpn
