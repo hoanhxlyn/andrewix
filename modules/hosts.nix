@@ -14,7 +14,7 @@ in {
       users.andrew = {};
     };
     andrew-pc = {
-      terminal = terminal // {fontSize = 11;};
+      inherit terminal;
       inherit gdrive-path;
       users.andrew = {};
     };

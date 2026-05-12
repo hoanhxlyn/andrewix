@@ -23,9 +23,9 @@
     };
   };
 
-  den.aspects.my._.editor._.neovix = {
+  den.aspects.my.editor.neovix = {
     includes = [
-      (<den/unfree> [
+      (<den.batteries.unfree> [
         "copilot-language-server"
       ])
     ];

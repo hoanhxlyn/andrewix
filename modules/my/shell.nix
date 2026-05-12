@@ -1,5 +1,5 @@
 {self, ...}: {
-  den.aspects.my._.shell.homeManager = {pkgs, ...}: {
+  den.aspects.my.shell.homeManager = {pkgs, ...}: {
     programs = {
       oh-my-posh = {
         enable = true;

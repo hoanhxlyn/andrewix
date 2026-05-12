@@ -1,7 +1,7 @@
 {__findFile, ...}: {
-  den.aspects.my._.cli._.essentials = {
+  den.aspects.my.cli.essentials = {
     includes = [
-      (<den/unfree> ["ngrok"])
+      (<den.batteries.unfree> ["ngrok"])
       ({host, ...}:
         if host.wsl.enable
         then {}

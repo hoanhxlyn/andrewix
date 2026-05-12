@@ -8,7 +8,7 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
   core.stylix = {host, ...}: let
-    terminal = host.terminal;
+    inherit (host) terminal;
   in {
     nixos = {
       pkgs,
@@ -45,7 +45,7 @@
           emoji.package = pkgs.noto-fonts-color-emoji;
           sizes = {
             applications = lib.add terminal.fontSize 1;
-            terminal = lib.add terminal.fontSize 1;
+            terminal = lib.add terminal.fontSize 0;
             desktop = lib.add terminal.fontSize 2;
             popups = lib.add terminal.fontSize 2;
           };

@@ -1,5 +1,5 @@
 {
-  den.aspects.my._.communications._.caprine.nixos = {pkgs, ...}: {
+  den.aspects.my.communications.caprine.nixos = {pkgs, ...}: {
     environment.systemPackages = [
       pkgs.caprine
     ];

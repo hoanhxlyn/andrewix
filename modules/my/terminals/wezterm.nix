@@ -1,5 +1,5 @@
 {lib, ...}: {
-  den.aspects.my._.terminals._.wezterm = terminal: let
+  den.aspects.my.terminals.wezterm = terminal: let
     mods = {
       C = "CTRL";
       M = "ALT";

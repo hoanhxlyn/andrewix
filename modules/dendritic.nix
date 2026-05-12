@@ -4,8 +4,8 @@
   ...
 }: {
   flake-file.inputs = {
-    flake-file.url = lib.mkDefault "github:vic/flake-file";
-    den.url = lib.mkDefault "github:vic/den";
+    flake-file.url = lib.mkForce "github:denful/flake-file";
+    den.url = lib.mkForce "github:denful/den";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
