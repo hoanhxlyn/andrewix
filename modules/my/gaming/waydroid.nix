@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.my._.gaming._.waydroid = {
+  den.aspects.my.gaming.waydroid = {
     nixos = {pkgs, ...}: {
       environment.systemPackages = [pkgs.waydroid-helper];
       # Network configuration for Waydroid

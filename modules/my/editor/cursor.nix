@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.my._.editor._.cursor = {
+  den.aspects.my.editor.cursor = {
     includes = [
       (<den.batteries.unfree> ["cursor"])
     ];

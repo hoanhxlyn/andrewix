@@ -12,6 +12,14 @@
     environment.systemPackages = [
       pkgs.gnomeExtensions.kimpanel
     ];
+    nix.settings = {
+      trusted-substituters = [
+        "https://fcitx5-vmk.cachix.org"
+      ];
+      trusted-public-keys = [
+        "fcitx5-vmk.cachix.org-1:eLf62OecQ2PKZkI6MPP5/QCE0Yx/ETYYKSD0lCG/LYc="
+      ];
+    };
     i18n = {
       inputMethod = {
         enable = true;

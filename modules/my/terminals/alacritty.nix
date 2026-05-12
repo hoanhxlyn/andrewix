@@ -1,6 +1,6 @@
 {
-  den.aspects.my._.terminals._.alacritty = {host, ...}: let
-    terminal = host.terminal;
+  den.aspects.my.terminals.alacritty = {host, ...}: let
+    inherit (host) terminal;
   in {
     homeManager = {
       programs.alacritty = {

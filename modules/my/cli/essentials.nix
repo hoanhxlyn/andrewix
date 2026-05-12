@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.my._.cli._.essentials = {
+  den.aspects.my.cli.essentials = {
     includes = [
       (<den.batteries.unfree> ["ngrok"])
       ({host, ...}:

@@ -5,6 +5,7 @@
 }: {
   den.aspects = {
     workstation.includes = [
+      (den.batteries.import-tree.host ../../hosts)
       <core.bootable>
       <core.disko>
       <core.gnome>
@@ -33,9 +34,6 @@
       <my/editor/cursor>
     ];
     andrew-laptop = {
-      includes = [
-        (den.batteries.import-tree.host ../../hosts)
-      ];
       provides.to-users.includes = [
         <workstation>
         <my/terminals/alacritty>
@@ -43,9 +41,6 @@
       ];
     };
     andrew-pc = {
-      includes = [
-        (den.batteries.import-tree.host ../../hosts)
-      ];
       provides.to-users.includes = [
         <workstation>
         <core.nvidia>

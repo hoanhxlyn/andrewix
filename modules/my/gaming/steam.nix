@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.my._.gaming._.steam = {
+  den.aspects.my.gaming.steam = {
     includes = [
       (<den.batteries.unfree> [
         "steam"

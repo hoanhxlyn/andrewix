@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.my._.cli._.tui = {
+  den.aspects.my.cli.tui = {
     homeManager = {
       pkgs,
       lib,
