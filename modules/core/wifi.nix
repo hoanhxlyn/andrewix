@@ -3,13 +3,23 @@
   inputs,
   ...
 }: {
-  flake-file.inputs.aic8800.url = lib.mkDefault "github:hoanhxlyn/aic8800-nix";
+  flake-file.inputs.aic8800 = {
+    url = lib.mkDefault "github:hoanhxlyn/aic8800-nix";
+    inputs.nixpkgs.follows = lib.mkDefault "nixpkgs";
+  };
   core.wifi.nixos = {pkgs, ...}: {
     imports = [
       inputs.aic8800.nixosModules.default
     ];
+    nix.settings = {
+      trusted-substituters = [
+        "https://aic8800-nix.cachix.org"
+      ];
+      trusted-public-keys = [
+        "aic8800-nix.cachix.org-1:prQpnv5lMiN+SlLsuOt+vdf2EkBInFqE1rMTZf/JsdE="
+      ];
+    };
     hardware.aic8800.enable = true;
-    # Enable usb-modeswitch to handle ZeroCD (mass storage) mode
     hardware.usb-modeswitch.enable = true;
     # Ignore Tenda WiFi USB storage part to prevent automounting in udisks2 (GNOME)
     # and trigger usb-modeswitch to switch to WiFi mode
