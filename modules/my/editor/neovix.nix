@@ -117,6 +117,7 @@
 
         extraPackages = with pkgs; [
           mermaid-cli
+          mercurial
           ghostscript
           tectonic
           imagemagick
