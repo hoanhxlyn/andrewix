@@ -55,7 +55,7 @@ clean-up:
 # Search nix packages
 [group('info')]
 search *args:
-    nps -e {{ args }} | fzf --cycle --layout=reverse-list --border rounded --height 80% --preview-window right:40%:wrap
+    nps -e {{ args }} | fzf --cycle --layout=reverse-list --border rounded --height 80% --preview-window right:40%:wrap --bind 'enter:become(echo -n {1} | wl-copy)'
 
 # List system generations
 [group('nixos')]
