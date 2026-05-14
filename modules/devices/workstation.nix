@@ -17,6 +17,7 @@
       <core.agents>
       <core.wifi>
       <core.stylix>
+      <core.devices-monitors>
       <my/editor/neovix>
       <my/shell>
       <my/cli/essentials>
