@@ -23,6 +23,7 @@ miniclue.setup({
 		{ mode = "n", keys = "<leader>p", desc = "+ Package" },
 		{ mode = "n", keys = "<leader>t", desc = "+ Terminal" },
 		{ mode = "n", keys = "<leader>w", desc = "+ Window" },
+		{ mode = "n", keys = "<leader>y", desc = "+ Yank" },
 		miniclue.gen_clues.builtin_completion(),
 		miniclue.gen_clues.g(),
 		miniclue.gen_clues.marks(),
