@@ -34,6 +34,7 @@
         enableMcpIntegration = true;
         settings = {
           username = "😺 Andrew Nguyen";
+          autoupdate = false;
           permission = {
             webfetch = "deny";
             websearch = "deny";

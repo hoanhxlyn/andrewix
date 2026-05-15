@@ -76,8 +76,8 @@
           todo-comments-nvim
           nvim-ts-context-commentstring
           nvim-ts-autotag
-          # bufferline-nvim
-          # lualine-nvim
+          bufferline-nvim
+          lualine-nvim
           nvim-lint
           sidekick-nvim
           blink-cmp
