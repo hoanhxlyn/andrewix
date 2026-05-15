@@ -8,8 +8,11 @@ in {
       system.stateVersion = stateVersion;
       home-manager.backupFileExtension = backupFileExtension;
       nix = {
-        gc.automatic = true;
-        gc.dates = "daily";
+        gc = {
+          automatic = true;
+          dates = "daily";
+          options = "--delete-older-than 7d";
+        };
 
         settings = {
           auto-optimise-store = true;
