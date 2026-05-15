@@ -3,7 +3,7 @@ require("mini.deps").setup()
 local now, later = MiniDeps.now, MiniDeps.later
 
 vim.g.mini = {
-  tabline = true,
+  tabline = false,
   animate = true,
   completion = false,
   picks = true,

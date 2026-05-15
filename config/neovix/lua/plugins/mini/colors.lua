@@ -7,7 +7,7 @@ if vim.g.mini.use_hue then
   MiniHues.setup({
     background = primary_bg,
     foreground = primary_fg,
-    saturation = "lowmedium",
+    saturation = "medium",
   })
 else
   local palette = MiniBase16.mini_palette(primary_bg, primary_fg, 50)
