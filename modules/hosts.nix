@@ -16,6 +16,18 @@ in {
     andrew-pc = {
       inherit terminal;
       inherit gdrive-path;
+      monitors = {
+        "HDMI-A-1" = {
+          resolution = "1920x1080";
+          refresh-rate = 74.973;
+          primary = false;
+        };
+        "HDMI-A-2" = {
+          resolution = "1920x1080";
+          refresh-rate = 74.973;
+          primary = true;
+        };
+      };
       users.andrew = {};
     };
     andrew-home-wsl = {

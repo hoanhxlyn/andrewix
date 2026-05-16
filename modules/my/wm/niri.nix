@@ -9,7 +9,9 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  den.aspects.my.wm.niri = {
+  den.aspects.my.wm.niri = {host, ...}: let
+    monitors = host.monitors or {};
+  in {
     includes = [
       (<core.login-manager> "niri")
       <my/de/noctalia>
@@ -41,28 +43,58 @@
         input = {
           keyboard = {
             repeat-rate = 25;
-            repeat-delay = 300;
-            xkb = {};
-            numlock = true;
+            repeat-delay = 250;
+            xkb = {
+              layout = "us";
+              options = "compose:ralt,ctrl:nocaps";
+              model = "";
+            };
           };
           touchpad = {
             tap = true;
             natural-scroll = true;
             dwt = true;
           };
-          mouse = {
-            accel-profile = "flat";
+          # mouse = {
+          #   accel-profile = "flat";
+          # };
+          focus-follows-mouse.max-scroll-amount = "0%";
+        };
+
+        cursor.hide-when-typing = true;
+
+        animations = {
+          enable = true;
+          slowdown = 1.5;
+        };
+
+        outputs = {
+          "HDMI-A-2" = {
+            focus-at-startup = true;
+            mode = {
+              height = 1080;
+              width = 1920;
+              refresh = 74.973;
+            };
+          };
+          "HDMI-A-1" = {
+            focus-at-startup = false;
+            mode = {
+              height = 1080;
+              width = 1920;
+              refresh = 74.973;
+            };
           };
         };
 
         layout = {
-          gaps = 8;
+          gaps = 10;
           center-focused-column = "never";
           default-column-width = {proportion = 0.5;};
           preset-column-widths = [
-            {proportion = 0.33333;}
+            {proportion = 0.3;}
             {proportion = 0.5;}
-            {proportion = 0.66667;}
+            {proportion = 0.7;}
           ];
           focus-ring = {
             enable = true;
@@ -94,15 +126,6 @@
         environment = {
           QT_QPA_PLATFORM = "wayland";
           DISPLAY = null;
-        };
-
-        cursor = {
-          hide-when-typing = true;
-        };
-
-        animations = {
-          enable = true;
-          slowdown = 1.5;
         };
 
         binds = with config.lib.niri.actions; {
