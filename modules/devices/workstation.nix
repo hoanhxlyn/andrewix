@@ -1,14 +1,9 @@
-{
-  den,
-  __findFile,
-  ...
-}: {
+{__findFile, ...}: {
   den.aspects = {
     workstation.includes = [
-      (den.batteries.import-tree.host ../../hosts)
+      (<den.batteries.import-tree.host> ../../hosts)
       <core.bootable>
       <core.disko>
-      <core.gnome>
       <core.xserver>
       <core.network>
       <core.i18n>
@@ -34,19 +29,22 @@
       <my/editor/vscode>
       <my/editor/cursor>
     ];
-    andrew-laptop = {
-      provides.to-users.includes = [
-        <workstation>
-        <my/terminals/alacritty>
-        <core.power-manager>
-      ];
-    };
+
+    andrew-laptop.provides.to-users.includes = [
+      <workstation>
+      <my/wm/niri>
+      # <my/de/gnome>
+      <my/terminals/alacritty>
+      <core.power-manager>
+    ];
+
     andrew-pc = {
       provides.to-users.includes = [
         <workstation>
         <core.nvidia>
+        <my/wm/niri>
+        # <my/de/gnome>
         <my/terminals/alacritty>
-        <my/gaming/waydroid>
       ];
     };
   };

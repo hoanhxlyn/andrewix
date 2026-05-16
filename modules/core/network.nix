@@ -7,5 +7,6 @@ in {
       networkmanager.enable = true;
       firewall.checkReversePath = "loose";
     };
+    hardware.bluetooth.enable = true;
   };
 }
