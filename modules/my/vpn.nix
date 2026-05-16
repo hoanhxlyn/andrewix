@@ -3,6 +3,7 @@
     nixos = {pkgs, ...}: {
       environment.systemPackages = [
         pkgs.proton-vpn
+        pkgs.proton-vpn-cli
         pkgs.wireguard-tools
       ];
     };
