@@ -9,6 +9,7 @@
 
     services = {
       power-profiles-daemon.enable = lib.mkForce false;
+      upower.enable = true;
       tlp = {
         enable = true;
         settings = {

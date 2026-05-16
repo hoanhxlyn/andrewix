@@ -9,9 +9,6 @@
   };
 
   core.i18n.nixos = {pkgs, ...}: {
-    environment.systemPackages = [
-      pkgs.gnomeExtensions.kimpanel
-    ];
     nix.settings = {
       trusted-substituters = [
         "https://fcitx5-vmk.cachix.org"

@@ -1,7 +1,7 @@
 local MiniBase16 = require("mini.base16")
 local MiniHues = require("mini.hues")
-local primary_bg = "#292828"
-local primary_fg = "#ddc7a1"
+local primary_bg = "#1d2021"
+local primary_fg = "#d5c4a1"
 
 if vim.g.mini.use_hue then
   MiniHues.setup({
