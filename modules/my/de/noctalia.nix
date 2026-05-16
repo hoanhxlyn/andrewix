@@ -169,7 +169,7 @@
           };
 
           nightLight = {
-            enabled = true;
+            enabled = false;
             forced = false;
             autoSchedule = true;
             nightTemp = "4000";
