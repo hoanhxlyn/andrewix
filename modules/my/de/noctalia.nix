@@ -40,8 +40,6 @@
                   id = "ControlCenter";
                   useDistroLogo = true;
                 }
-                {id = "Network";}
-                {id = "Bluetooth";}
               ];
               center = [
                 {
@@ -52,12 +50,14 @@
               ];
               right = [
                 {id = "Tray";}
+                {id = "Network";}
                 {
                   alwaysShowPercentage = false;
                   id = "Battery";
                   warningThreshold = 30;
                 }
                 {id = "Volume";}
+                {id = "Bluetooth";}
                 {id = "Brightness";}
                 {
                   formatHorizontal = "HH:mm";
