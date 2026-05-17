@@ -26,10 +26,9 @@
         grim
         playerctl
         xwayland-satellite
+        nautilus
       ];
-      programs.niri = {
-        enable = true;
-      };
+      programs.niri.enable = true;
     };
 
     homeManager = {
