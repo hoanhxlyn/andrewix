@@ -9,9 +9,7 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  den.aspects.my.wm.niri = {host, ...}: let
-    monitors = host.monitors or {};
-  in {
+  den.aspects.my.wm.niri = {
     includes = [
       (<core.login-manager> "niri")
       <my/de/noctalia>
@@ -31,18 +29,14 @@
       programs.niri.enable = true;
     };
 
-    homeManager = {
-      pkgs,
-      config,
-      ...
-    }: let
+    homeManager = {config, ...}: let
       noctalia = cmd: ["noctalia-shell" "ipc" "call"] ++ (lib.splitString " " cmd);
     in {
       programs.niri.settings = {
         input = {
           keyboard = {
             repeat-rate = 25;
-            repeat-delay = 250;
+            repeat-delay = 300;
             xkb = {
               layout = "us";
               options = "compose:ralt,ctrl:nocaps";
@@ -97,7 +91,7 @@
           ];
           focus-ring = {
             enable = true;
-            width = 3;
+            width = 4;
             # active = "#7fc8ff";
             # inactive = "#505050";
           };
@@ -132,13 +126,18 @@
           "Mod+S".action.spawn = noctalia "controlCenter toggle";
           "Mod+Comma".action.spawn = noctalia "settings toggle";
           "Mod+Return".action.spawn = ["alacritty"];
+          "Mod+T".action.spawn = ["alacritty"];
+          "Mod+E".action.spawn = ["nautilus"];
+          "Mod+B".action.spawn = ["zen-beta"];
+          "Mod+Shift+B".action.spawn = noctalia "bluetoothManager toggle";
+          "Mod+Y".action.spawn = noctalia "plugin:clipper toggle";
           "Mod+Q".action = close-window;
-          "Mod+F".action = fullscreen-window;
+          "Mod+F".action = maximize-column;
           "Mod+O" = {
             repeat = false;
             action = toggle-overview;
           };
-          "Mod+L".action.spawn = noctalia "lockScreen lock";
+          "Mod+semicolon".action.spawn = noctalia "lockScreen lock";
           "Mod+1".action.focus-workspace = 1;
           "Mod+2".action.focus-workspace = 2;
           "Mod+3".action.focus-workspace = 3;
@@ -160,23 +159,19 @@
           "Mod+H".action = focus-column-left;
           "Mod+J".action = focus-window-down;
           "Mod+K".action = focus-window-up;
-          "Mod+semicolon".action.spawn = noctalia "lockScreen lock";
-          "Mod+Left".action = focus-column-left;
-          "Mod+Down".action = focus-window-down;
-          "Mod+Up".action = focus-window-up;
-          "Mod+Right".action = focus-column-right;
+          "Mod+L".action = focus-column-right;
           "Mod+Ctrl+H".action = move-column-left;
           "Mod+Ctrl+J".action = move-window-down;
           "Mod+Ctrl+K".action = move-window-up;
           "Mod+Ctrl+L".action = move-column-right;
-          "Mod+Ctrl+Left".action = move-column-left;
-          "Mod+Ctrl+Down".action = move-window-down;
-          "Mod+Ctrl+Up".action = move-window-up;
-          "Mod+Ctrl+Right".action = move-column-right;
           "Mod+R".action = switch-preset-column-width;
           "Mod+Shift+R".action = switch-preset-window-height;
           "Mod+V".action = toggle-window-floating;
           "Mod+Shift+V".action = switch-focus-between-floating-and-tiling;
+          "Mod+Minus".action.set-column-width = "-10%";
+          "Mod+Equal".action.set-column-width = "+10%";
+          "Mod+Shift+Minus".action.set-window-height = "-10%";
+          "Mod+Shift+Equal".action.set-window-height = "+10%";
           "Print".action.spawn = ["niri" "msg" "action" "screenshot"];
           "Mod+Shift+S".action.spawn = ["niri" "msg" "action" "screenshot-screen"];
           "Mod+Escape" = {
@@ -185,6 +180,8 @@
           };
           "Mod+Shift+E".action = quit;
           "Mod+Shift+P".action = power-off-monitors;
+          "Mod+WheelScrollDown".action = focus-workspace-down;
+          "Mod+WheelScrollUp".action = focus-workspace-up;
           "XF86AudioRaiseVolume" = {
             allow-when-locked = true;
             action.spawn = noctalia "volume increase";
@@ -209,19 +206,39 @@
             allow-when-locked = true;
             action.spawn = noctalia "brightness decrease";
           };
-          "Mod+WheelScrollDown".action = focus-workspace-down;
-          "Mod+WheelScrollUp".action = focus-workspace-up;
         };
 
         window-rules = [
+          {
+            matches = [{app-id = "alacritty";}];
+            default-column-width = {proportion = 0.5;};
+          }
           {
             matches = [
               {
                 app-id = "firefox";
                 title = "Picture-in-Picture";
               }
+              {
+                app-id = "zen";
+                title = "Picture-in-Picture";
+              }
+              {
+                app-id = "zen-beta";
+                title = "Picture-in-Picture";
+              }
             ];
             open-floating = true;
+          }
+          {
+            matches = [{}];
+            geometry-corner-radius = {
+              top-left = 3.0;
+              top-right = 3.0;
+              bottom-left = 3.0;
+              bottom-right = 3.0;
+            };
+            clip-to-geometry = true;
           }
         ];
       };
