@@ -48,6 +48,7 @@ NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto
 | `modules/dendritic.nix` | Framework bootstrapping |
 | `hosts/<host>/_nixos/` | Hardware configs (filesystems, kernel modules) |
 | `disko/<host>/` | Disk partitioning configs |
+| `secrets/` | sops-nix encrypted secrets |
 | `config/` | Non-Nix app configs |
 | `flake.nix` | **Auto-generated. DO NOT EDIT.** |
 

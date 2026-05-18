@@ -26,8 +26,8 @@
         interactiveShellInit = ''
           set fish_greeting
           ${pkgs.fastfetch}/bin/fastfetch -c examples/13.jsonc
-          set -gx CONTEXT7_API_KEY (secret-tool lookup Title "context7" 2>/dev/null)
-          set -gx TAVILY_API_KEY (secret-tool lookup Title "tavily" 2>/dev/null)
+          set -gx CONTEXT7_API_KEY (cat ~/.config/sops-nix/secrets/CONTEXT7_API_KEY 2>/dev/null; or echo "")
+          set -gx TAVILY_API_KEY (cat ~/.config/sops-nix/secrets/TAVILY_API_KEY 2>/dev/null; or echo "")
           set -u EDITOR nvim
         '';
         shellAliases = {

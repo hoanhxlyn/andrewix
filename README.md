@@ -37,6 +37,7 @@ alejandra . && statix check && deadnix --no-underscore --fail
 | `modules/users/andrew.nix` | User identity + aspect composition |
 | `hosts/<host>/_nixos/` | Hardware configs |
 | `disko/<host>/` | Disk partitioning |
+| `secrets/` | sops-nix encrypted secrets |
 | `config/` | Non-Nix app configs |
 | `flake.nix` | **Auto-generated. DO NOT EDIT.** |
 
@@ -48,6 +49,15 @@ Aspects auto-discovered. Compose via `den.aspects.<name>.includes` with angle-br
 just gc        # User store
 just clean-up  # System-wide + delete old gens (sudo)
 ```
+
+## Secrets
+
+Encrypted with [sops-nix](https://github.com/Mic92/sops-nix) using a shared age key.
+
+- **Encrypted file:** `secrets/secrets.yaml` (safe to commit)
+- **Age key location:** `~/.config/sops-nix/keys.txt` on each host
+- **Edit secrets:** `sops secrets/secrets.yaml`
+- **Setup new host:** copy the shared age private key to `~/.config/sops-nix/keys.txt`
 
 ## More
 
