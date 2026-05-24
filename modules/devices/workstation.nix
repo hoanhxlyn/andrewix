@@ -32,8 +32,8 @@
 
     andrew-laptop.provides.to-users.includes = [
       <workstation>
-      <my/wm/niri>
-      # <my/de/gnome>
+      # <my/wm/niri>
+      <my/de/gnome>
       <my/terminals/alacritty>
       <core.power-manager>
     ];
@@ -42,8 +42,8 @@
       provides.to-users.includes = [
         <workstation>
         <core.nvidia>
-        <my/wm/niri>
-        # <my/de/gnome>
+        # <my/wm/niri>
+        <my/de/gnome>
         <my/terminals/alacritty>
       ];
     };
