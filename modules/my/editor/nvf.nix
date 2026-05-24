@@ -6,7 +6,7 @@
 }: {
   flake-file.inputs.nvf.url = "github:notashelf/nvf";
 
-  den.aspects.my._.editor._.nvf = {
+  den.aspects.my.editor.nvf = {
     includes = [
       (<den/unfree> ["copilot-language-server"])
     ];

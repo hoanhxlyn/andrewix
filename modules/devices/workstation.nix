@@ -41,6 +41,7 @@
     ];
     andrew-pc.provides.to-users.includes = [
       <workstation>
+      <my/de/gnome>
       <core.nvidia>
       <my/terminals/alacritty>
       <my/editor/nvf>
