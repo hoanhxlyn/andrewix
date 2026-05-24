@@ -24,5 +24,17 @@
     "args": {
       "text": "\\\r\n"
     }
+  },
+  {
+    "key": "",
+    "command": "editor.action.inlineDiffs.acceptPartialEdit"
+  },
+  {
+    "key": "",
+    "command": "editor.action.inlineDiffs.acceptPartialEdit"
+  },
+  {
+    "key": "",
+    "command": "aichat.newfollowupaction"
   }
 ]
