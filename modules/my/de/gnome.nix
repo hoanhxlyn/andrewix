@@ -1,7 +1,7 @@
 {__findFile, ...}: {
   den.aspects.my.de.gnome = {
     includes = [
-      <core.login-manager>
+      (<core.login-manager> "gnome")
     ];
     homeManager = {
       dconf.settings = {
