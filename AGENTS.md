@@ -7,7 +7,6 @@ Use Justfile shortcuts (preferred):
 ```bash
 just fmt          # alejandra .
 just lint         # statix check + deadnix --no-underscore --fail
-just check        # nix flake check
 just switch <h>   # nix run .#<host> -- switch
 just test <h>     # nix run .#<host> -- test (needs sudo)
 just build <h>    # nix run .#<host> -- build
@@ -22,7 +21,6 @@ Default host = `hostname -s` (auto-detected). Hosts: `andrew-laptop`, `andrew-pc
 Raw commands when justfile unavailable:
 
 ```bash
-nix flake check                          # Eval errors
 nix run .#write-flake                    # Regenerate flake.nix
 nix flake update --flake .               # Update inputs (no commit)
 ```
@@ -109,9 +107,9 @@ Flake input:
 
 1. **NEVER edit `flake.nix`** — use `nix run .#write-flake`
 2. **NEVER change stateVersion** (currently `26.05`)
-3. **NEVER commit without** `just fmt && just lint && just check`
+3. **NEVER commit without** `just fmt && just lint && just build`
 4. User: `andrew`, System: `x86_64-linux`
-5. No unit tests — validate via `just check` + `just test <host>`
+5. No unit tests — validate via `just build` + `just test <host>`
 6. Tools installed via Nix (`modules/my/cli.nix`) — no pre-commit hooks
 7. Research unfamiliar NixOS/HM options with context7 + websearch
 8. Activate caveman skill **always**

@@ -3,7 +3,7 @@
     path = host.gdrive-path;
   in {
     homeManager = {pkgs, ...}: {
-      home.packages = [pkgs.libsecret];
+      home.packages = with pkgs; [libsecret procps];
       programs.keepassxc = {
         enable = true;
         settings = {
@@ -62,9 +62,13 @@
         };
         Service = {
           Type = "simple";
+          # Kill lingering gnome-keyring-daemon so KeePassXC can own Secret Service
+          ExecStartPre = "${pkgs.procps}/bin/pkill -9 gnome-keyring-daemon 2>/dev/null || true";
           ExecStart = "${pkgs.keepassxc}/bin/keepassxc";
           Restart = "on-failure";
           RestartSec = "10s";
+          # Ensure D-Bus session is available for Secret Service
+          Environment = ["DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus"];
         };
       };
     };

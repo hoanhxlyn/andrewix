@@ -1,5 +1,8 @@
-{
-  core.gnome = {
+{__findFile, ...}: {
+  den.aspects.my.de.gnome = {
+    includes = [
+      <core.login-manager>
+    ];
     homeManager = {
       dconf.settings = {
         "org/gnome/desktop/peripherals/touchpad" = {
@@ -25,13 +28,10 @@
       ...
     }: {
       services = {
-        displayManager.gdm.enable = true;
         desktopManager.gnome.enable = true;
         xserver.excludePackages = with pkgs; [xterm];
         gnome.gnome-keyring.enable = lib.mkForce false;
       };
-      # Disable nixos manual
-      documentation.nixos.enable = false;
       # Exclude default Gnome applications
       environment.gnome.excludePackages = with pkgs; [
         gnome-tour
@@ -50,10 +50,8 @@
         gnomeExtensions.dash-to-panel
         gnomeExtensions.essential-tweaks
         gnome-tweaks
+        pkgs.gnomeExtensions.kimpanel
       ];
-
-      # systemd.services."getty@tty1".enable = false;
-      # systemd.services."autovt@tty1".enable = false;
     };
   };
 }
