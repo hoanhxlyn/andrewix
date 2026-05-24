@@ -7,6 +7,8 @@ in {
     nixos = {
       system.stateVersion = stateVersion;
       home-manager.backupFileExtension = backupFileExtension;
+      # Disable nixos manual
+      documentation.nixos.enable = false;
       nix = {
         gc = {
           automatic = true;
