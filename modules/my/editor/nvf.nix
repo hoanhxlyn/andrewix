@@ -270,7 +270,7 @@
               };
               content.filter = lib.mkLuaInline ''
                 function(fs_entry)
-                  if ${mini.show_dotfiles} then return true;
+                  if ${lib.boolToString mini.show_dotfiles} then return true;
                   return not vim.startswith(fs_entry, ".")
                 end
               '';
@@ -387,7 +387,21 @@
               };
             };
           };
-          mini.animate.enable = mini.animate;
+          mini.animate = {
+            enable = mini.animate;
+            setupOpts = {
+              cursor.enable = false;
+              scroll = {
+                enable = false;
+                timing = lib.mkLuaInline ''
+                  MiniAnimate.gen_timing.quadratic({ unit = "total" });
+                '';
+              };
+              resize.enable = true;
+              open.enable = true;
+              close.enable = true;
+            };
+          };
           mini.trailspace.enable = true;
           mini.indentscope = {
             enable = mini.indent_scope;
@@ -395,8 +409,26 @@
               options.try_as_border = true;
             };
           };
-          mini.jump.enable = true;
-          mini.jump2d.enable = true;
+          mini.jump = {
+            enable = true;
+            setupOpts = {
+              mappings = {
+                forward = "f";
+                backward = "F";
+                repeat_jump = ";";
+              };
+            };
+          };
+          mini.jump2d = {
+            enable = true;
+            setupOpts = {
+              labels = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL";
+              view.dim = true;
+              mappings = {
+                start_jumping = "<leader>j";
+              };
+            };
+          };
           mini.visits.enable = true;
           mini.clue = {
             enable = true;
@@ -571,6 +603,15 @@
               '';
               lua = true;
               desc = "Notify: History";
+            }
+            {
+              key = L "j";
+              mode = ["n" "x" "o"];
+              desc = " Start jumping around";
+              lua = true;
+              action = ''
+                MiniJump2d.start(MiniJump2d.builtin_opts.query)
+              '';
             }
           ];
         };

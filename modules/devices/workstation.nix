@@ -1,7 +1,7 @@
 {__findFile, ...}: {
   den.aspects = {
     workstation.includes = [
-      (<den.batteries.import-tree.host> ../../hosts)
+      (<den/batteries/import-tree/host> ../../hosts)
       <core.bootable>
       <core.disko>
       <core.xserver>
@@ -12,6 +12,7 @@
       <core.agents>
       <core.wifi>
       <core.stylix>
+      <core.devices-monitors>
       <my/shell>
       <my/cli/essentials>
       <my/cli/tui>
@@ -35,7 +36,6 @@
       <workstation>
       # <my/wm/niri>
       <my/de/gnome>
-      <my/terminals/alacritty>
       <my/editor/neovix>
       <core.power-manager>
     ];
@@ -43,9 +43,7 @@
       <workstation>
       <my/de/gnome>
       <core.nvidia>
-      <my/terminals/alacritty>
       <my/editor/nvf>
-      <my/gaming/waydroid>
     ];
   };
 }
