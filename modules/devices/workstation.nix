@@ -28,13 +28,15 @@
       <my/sync/keepassxc>
       <my/editor/vscode>
       <my/editor/cursor>
+      <my/terminals/alacritty>
+      <my/vm/podman>
+      <my/office/markdown>
     ];
 
     andrew-laptop.provides.to-users.includes = [
       <workstation>
       # <my/wm/niri>
       <my/de/gnome>
-      <my/terminals/alacritty>
       <core.power-manager>
     ];
 
