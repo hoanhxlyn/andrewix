@@ -13,6 +13,9 @@
             "lazygit" = plug.lazygit;
           };
         };
+        dbeaver = {
+          enable = true;
+        };
       };
       # xdg.configFile."YouTube Music/config.json".force = true;
       # xdg.configFile."YouTube Music/config.json".source = "${self}/config/youtube-music/config.json";

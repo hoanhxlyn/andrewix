@@ -34,6 +34,9 @@
     "*.tmpl": "shellscript"
   },
   "files.autoSave": "off",
+  "files.exclude": {
+    "**/.git": false
+  },
   "git.autofetch": true,
   "git.confirmSync": false,
   "gitlens.graph.layout": "editor",
