@@ -1,8 +1,5 @@
-{__findFile, ...}: {
+{
   den.aspects.my.de.gnome = {
-    includes = [
-      (<core.login-manager> "gnome")
-    ];
     homeManager = {
       dconf.settings = {
         "org/gnome/desktop/peripherals/touchpad" = {
@@ -18,7 +15,7 @@
         };
         "org/gnome/mutter" = {
           dynamic-workspaces = true;
-          experimental-features = ["scale-monitor-framebuffer"];
+          experimental-features = ["scale-monitor-framebuffer" "kms-modifiers"];
         };
       };
     };
@@ -31,6 +28,7 @@
         desktopManager.gnome.enable = true;
         xserver.excludePackages = with pkgs; [xterm];
         gnome.gnome-keyring.enable = lib.mkForce false;
+        displayManager.gdm.enable = true;
       };
       # Exclude default Gnome applications
       environment.gnome.excludePackages = with pkgs; [
@@ -49,8 +47,8 @@
         gnomeExtensions.blur-my-shell
         gnomeExtensions.dash-to-panel
         gnomeExtensions.essential-tweaks
+        gnomeExtensions.kimpanel
         gnome-tweaks
-        pkgs.gnomeExtensions.kimpanel
       ];
     };
   };
