@@ -10,6 +10,7 @@
 
     nixos = {config, ...}: {
       boot = {
+        kernelParams = ["nvidia-drm.fbdev=1"];
         initrd.kernelModules = [
           "nvidia"
           "nvidia_modeset"
@@ -17,6 +18,10 @@
           "nvidia_drm"
         ];
         extraModulePackages = [config.boot.kernelPackages.nvidia_x11];
+        extraModprobeConfig = ''
+          options nvidia NVreg_PreserveVideoMemoryAllocations=1
+          options nvidia NVreg_EnableGpuFirmware=0
+        '';
       };
       services.xserver.videoDrivers = ["nvidia"];
       hardware = {
@@ -31,6 +36,19 @@
           powerManagement.enable = true;
           powerManagement.finegrained = false;
           modesetting.enable = true;
+          nvidiaPersistenced = true;
+        };
+      };
+      systemd.services.gdm-nvidia-wayland = {
+        before = ["display-manager.service"];
+        wantedBy = ["display-manager.service"];
+        script = ''
+          mkdir -p /run/gdm/runtime-config/daemon
+          echo true > /run/gdm/runtime-config/daemon/WaylandEnable
+        '';
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
         };
       };
     };

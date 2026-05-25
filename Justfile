@@ -26,6 +26,11 @@ check:
 build h=host *args:
     nix run .#{{ h }} -- build {{ args }}
 
+# Boot new build at next restart
+[group('nixos')]
+boot h=host *args:
+    nix run .#{{ h }} -- boot {{ args }}
+
 # Test system config
 [group('nixos')]
 test h=host *args:
