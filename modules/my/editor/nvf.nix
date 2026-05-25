@@ -72,6 +72,19 @@
                 end
               '';
             }
+            {
+              event = ["BufWritePost"];
+              callback = lib.generators.mkLuaInline ''
+                function(args)
+                  local path = vim.api.nvim_buf_get_name(args.buf)
+                  if path ~= "" then
+                    path = vim.fn.fnamemodify(path, ":~:.")
+                  end
+                  vim.notify("Saved " .. vim.inspect(path))
+                end
+              '';
+              desc = "MiniNotify Saved";
+            }
           ];
           augroups = [
             {
@@ -240,23 +253,64 @@
           mini.ai = {
             enable = true;
             setupOpts.custom_textobjects = {
-              L = "MiniExtra.gen_ai_spec.line()";
-              f = ''MiniAi.gen_spec.function_call({ name_pattern = "[%w_]" })'';
-              F = ''MiniAi.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" })'';
-              o = ''MiniAi.gen_spec.treesitter({ a = { "@block.outer", "@loop.outer", "@conditional.outer" }, i = { "@block.inner", "@loop.inner", "@conditional.inner" } })'';
-              B = "MiniExtra.gen_ai_spec.line()";
-              D = "MiniExtra.gen_ai_spec.line()";
-              I = "MiniExtra.gen_ai_spec.line()";
-              u = "MiniAi.gen_spec.function_call()";
-              U = ''MiniAi.gen_spec.function_call({ name_pattern = "[%w_]" })'';
-              N = "MiniExtra.gen_ai_spec.line()";
+              L = lib.generators.mkLuaInline "require('mini.extra').gen_ai_spec.line()";
+              f = lib.generators.mkLuaInline ''require("mini.ai").gen_spec.function_call({ name_pattern = "[%w_]" })'';
+              F = lib.generators.mkLuaInline ''require("mini.ai").gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" })'';
+              o = lib.generators.mkLuaInline ''require("mini.ai").gen_spec.treesitter({ a = { "@block.outer", "@loop.outer", "@conditional.outer" }, i = { "@block.inner", "@loop.inner", "@conditional.inner" } })'';
+              B = lib.generators.mkLuaInline "require('mini.extra').gen_ai_spec.buffer()";
+              D = lib.generators.mkLuaInline "require('mini.extra').gen_ai_spec.diagnostic()";
+              I = lib.generators.mkLuaInline "require('mini.extra').gen_ai_spec.indent()";
+              u = lib.generators.mkLuaInline ''require("mini.ai").gen_spec.function_call()'';
+              U = lib.generators.mkLuaInline ''require("mini.ai").gen_spec.function_call({ name_pattern = "[%w_]" })'';
+              N = lib.generators.mkLuaInline "require('mini.extra').gen_ai_spec.number()";
             };
           };
           mini.git.enable = true;
-          mini.diff.enable = true;
+          mini.diff = {
+            enable = true;
+            setupOpts = {
+              view.style = "number";
+              mappings = {
+                reset = "<leader>gr";
+                textobject = "gh";
+                goto_first = "[H";
+                goto_last = "]H";
+                goto_next = "]h";
+                goto_prev = "[h";
+              };
+            };
+          };
           mini.misc.enable = true;
           mini.move.enable = true;
-          mini.pick.enable = mini.picks;
+          mini.pick = {
+            enable = mini.picks;
+            setupOpts = {
+              options = {
+                content_from_bottom = false;
+                use_cache = true;
+              };
+              window.config = lib.generators.mkLuaInline ''
+                function()
+                  local height = math.floor(0.618 * vim.o.lines)
+                  local width = math.floor(0.618 * vim.o.columns)
+                  return {
+                    anchor = "NW",
+                    height = height,
+                    width = width,
+                    row = math.floor(0.5 * (vim.o.lines - height)),
+                    col = math.floor(0.5 * (vim.o.columns - width)),
+                  }
+                end
+              '';
+              mappings = {
+                toggle_preview = "<c-k>";
+                toggle_info = "?";
+                refine = "<c-q>";
+                move_start = "";
+                choose_marked = "<c-g>";
+              };
+            };
+          };
           mini.files = {
             enable = mini.explorer;
             setupOpts = {
@@ -268,12 +322,6 @@
                 synchronize = "<c-s>";
                 show_help = "?";
               };
-              content.filter = lib.mkLuaInline ''
-                function(fs_entry)
-                  if ${lib.boolToString mini.show_dotfiles} then return true;
-                  return not vim.startswith(fs_entry, ".")
-                end
-              '';
             };
           };
           mini.extra.enable = true;
@@ -281,8 +329,14 @@
           mini.pairs = {
             enable = true;
             setupOpts = {
-              skip_next = ''[=[%w%%%'%[%]"%.%`%$]='';
+              modes = {
+                insert = true;
+                command = false;
+                terminal = false;
+              };
+              skip_next = ''[=[%w%%%'%[%]"%.%`%$]=]'';
               skip_unbalanced = true;
+              markdown = true;
             };
           };
           mini.basics = {
@@ -333,7 +387,12 @@
               '';
             };
           };
-          mini.snippets.enable = true;
+          mini.snippets = {
+            enable = true;
+            setupOpts = {
+              mappings.expand = "<c-j>";
+            };
+          };
           mini.surround = {
             enable = true;
             setupOpts = {
@@ -354,9 +413,11 @@
           mini.operators = {
             enable = true;
             setupOpts = {
+              evaluate = {};
               exchanges.prefix = "<Leader>ox";
               multiply.prefix = "<Leader>om";
               replace.prefix = "<Leader>or";
+              sort = {};
             };
           };
           mini.cursorword.enable = true;
@@ -393,9 +454,7 @@
               cursor.enable = false;
               scroll = {
                 enable = false;
-                timing = lib.mkLuaInline ''
-                  MiniAnimate.gen_timing.quadratic({ unit = "total" });
-                '';
+                timing = lib.mkLuaInline ''require("mini.animate").gen_timing.quadratic({ unit = "total" }); '';
               };
               resize.enable = true;
               open.enable = true;
@@ -407,6 +466,24 @@
             enable = mini.indent_scope;
             setupOpts = {
               options.try_as_border = true;
+              draw.animation = lib.generators.mkLuaInline ''require("mini.indentscope").gen_animation.quadratic({ easing = "in-out", duration = 200, unit = "total" })'';
+              ignore_filetypes = [
+                "Trouble"
+                "alpha"
+                "dashboard"
+                "fzf"
+                "help"
+                "lazy"
+                "neo-tree"
+                "notify"
+                "sidekick_terminal"
+                "snacks_dashboard"
+                "snacks_notif"
+                "snacks_terminal"
+                "snacks_win"
+                "toggleterm"
+                "trouble"
+              ];
             };
           };
           mini.jump = {
@@ -437,9 +514,181 @@
               window.config.anchor = "SW";
               window.config.row = "auto";
               window.config.col = "auto";
+              clues = [
+                {
+                  mode = "n";
+                  keys = "<leader>a";
+                  desc = "+ Agents";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>b";
+                  desc = "+ Buffers";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>c";
+                  desc = "+ Code";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>cs";
+                  desc = "+ Code spell";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>d";
+                  desc = "+ Debugger";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>f";
+                  desc = "+ Find";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>g";
+                  desc = "+ Git";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>l";
+                  desc = "+ Lsp";
+                }
+                {
+                  mode = [
+                    "n"
+                    "x"
+                    "i"
+                  ];
+                  keys = "<leader>o";
+                  desc = "+ MiniOperators";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>n";
+                  desc = "+ Notify";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>s";
+                  desc = "+ Sessions";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>p";
+                  desc = "+ Package";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>t";
+                  desc = "+ Terminal";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>w";
+                  desc = "+ Window";
+                }
+                {
+                  mode = "n";
+                  keys = "<leader>y";
+                  desc = "+ Yank";
+                }
+                (lib.generators.mkLuaInline "require('mini.clue').gen_clues.builtin_completion()")
+                (lib.generators.mkLuaInline "require('mini.clue').gen_clues.g()")
+                (lib.generators.mkLuaInline "require('mini.clue').gen_clues.marks()")
+                (lib.generators.mkLuaInline "require('mini.clue').gen_clues.registers()")
+                (lib.generators.mkLuaInline "require('mini.clue').gen_clues.windows({ submode_resize = true })")
+                (lib.generators.mkLuaInline "require('mini.clue').gen_clues.z()")
+              ];
+              triggers = [
+                {
+                  mode = "n";
+                  keys = "<Leader>";
+                }
+                {
+                  mode = "x";
+                  keys = "<Leader>";
+                }
+                {
+                  mode = "n";
+                  keys = "\\";
+                }
+                {
+                  mode = "n";
+                  keys = "[";
+                }
+                {
+                  mode = "n";
+                  keys = "]";
+                }
+                {
+                  mode = "x";
+                  keys = "[";
+                }
+                {
+                  mode = "x";
+                  keys = "]";
+                }
+                {
+                  mode = "i";
+                  keys = "<C-x>";
+                }
+                {
+                  mode = "n";
+                  keys = "g";
+                }
+                {
+                  mode = "x";
+                  keys = "g";
+                }
+                {
+                  mode = "n";
+                  keys = "'";
+                }
+                {
+                  mode = "n";
+                  keys = "`";
+                }
+                {
+                  mode = "x";
+                  keys = "'";
+                }
+                {
+                  mode = "x";
+                  keys = "`";
+                }
+                {
+                  mode = "n";
+                  keys = "\\";
+                }
+                {
+                  mode = "x";
+                  keys = "\\";
+                }
+                {
+                  mode = "i";
+                  keys = "<C-r>";
+                }
+                {
+                  mode = "c";
+                  keys = "<C-r>";
+                }
+                {
+                  mode = "n";
+                  keys = "<C-w>";
+                }
+                {
+                  mode = "n";
+                  keys = "z";
+                }
+                {
+                  mode = "x";
+                  keys = "z";
+                }
+              ];
             };
           };
-
           # Lazy plugins modules
           lazy = {
             enable = true;
@@ -606,11 +855,85 @@
             }
             {
               key = L "j";
-              mode = ["n" "x" "o"];
+              mode = [
+                "n"
+                "x"
+                "o"
+              ];
               desc = " Start jumping around";
               lua = true;
               action = ''
-                MiniJump2d.start(MiniJump2d.builtin_opts.query)
+                function()
+                  MiniJump2d.start(MiniJump2d.builtin_opts.query)
+                end
+              '';
+            }
+            {
+              key = L "e";
+              mode = "n";
+              desc = "Open explore";
+              lua = true;
+              action = ''
+                function()
+                  MiniFiles.open(vim.api.nvim_buf_get_name(0), false)
+                end
+              '';
+            }
+            {
+              key = L "E";
+              mode = "n";
+              desc = "Open explore (dir)";
+              lua = true;
+              action = ''
+                function()
+                  MiniFiles.open(nil, false)
+                end
+              '';
+            }
+            {
+              key = "<s-h>";
+              mode = "n";
+              desc = "Prev buffer";
+              lua = true;
+              action = ''
+                function()
+                  MiniBracketed.buffer('backward')
+                end
+              '';
+            }
+            {
+              key = "<s-l>";
+              mode = "n";
+              desc = "Next buffer";
+              lua = true;
+              action = ''
+                function()
+                  MiniBracketed.buffer('forward')
+                end
+              '';
+            }
+            {
+              key = L "bd";
+              mode = "n";
+              desc = "Delete buffer";
+              lua = true;
+              action = ''
+                MiniBufremove.wipeout
+              '';
+            }
+            {
+              key = L "ba";
+              mode = "n";
+              desc = "Delete buffer";
+              lua = true;
+              action = ''
+                function()
+                	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                		if vim.bo[buf].buflisted then
+                			MiniBufremove.delete(buf, true)
+                		end
+                	end
+                end
               '';
             }
           ];
