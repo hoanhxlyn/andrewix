@@ -63,7 +63,7 @@
         Service = {
           Type = "simple";
           # Kill lingering gnome-keyring-daemon so KeePassXC can own Secret Service
-          ExecStartPre = "${pkgs.procps}/bin/pkill -9 gnome-keyring-daemon 2>/dev/null || true";
+          ExecStartPre = "-${pkgs.procps}/bin/pkill -9 gnome-keyring-daemon";
           ExecStart = "${pkgs.keepassxc}/bin/keepassxc";
           Restart = "on-failure";
           RestartSec = "10s";
