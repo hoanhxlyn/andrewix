@@ -45,6 +45,8 @@
             formatoptions = "jcroqlnt";
             grepformat = "%f:%l:%c:%m";
             grepprg = "rg; --vimgrep";
+            updatetime = 500;
+            winborder = "rounded";
           };
           globals = {
             maplocalleader = "\\";
@@ -78,6 +80,23 @@
                   end
                 end
               '';
+            }
+            {
+              event = ["CursorMoved"];
+              callback = lib.generators.mkLuaInline ''
+                function()
+                  local curword = vim.fn.expand("<cword>")
+                  local filetype = vim.bo.filetype
+                  local blocklist = {}
+                  if filetype == "lua" then
+                    blocklist = { "local", "require" }
+                  elseif filetype == "javascript" then
+                    blocklist = { "import" }
+                  end
+                  vim.b.minicursorword_disable = vim.tbl_contains(blocklist, curword)
+                end
+              '';
+              desc = "MiniCursorword blocklist";
             }
             {
               event = ["BufWritePost"];
@@ -162,12 +181,32 @@
             lspconfig.enable = true;
             mappings = {
               codeAction = L "ca";
-              hover = L "lh";
               nextDiagnostic = "]d";
               previousDiagnostic = "[d";
               openDiagnosticFloat = L "cd";
               renameSymbol = L "cr";
               signatureHelp = "<c-/>";
+            };
+            presets = {
+              tailwindcss-language-server.enable = true;
+              typescript-go.enable = true;
+            };
+            servers = {
+              typescript-go = {
+                filetypes = [
+                  "typescript"
+                  "javascript"
+                  "typescriptreact"
+                  "javascriptreact"
+                ];
+              };
+              tailwindcss-languages-server = {
+                settings.tailwindCSS.classFunctions = [
+                  "cva"
+                  "cx"
+                  "tv"
+                ];
+              };
             };
           };
           # Treeesitter modules
@@ -297,17 +336,19 @@
             };
             nix.enable = true;
             toml.enable = true;
-            typescript.enable = true;
-            typescript.extensions.ts-error-translator.enable = true;
-            typescript.extraDiagnostics.types = [
-              "biomejs"
-              "eslint_d"
-            ];
-            typescript.format.type = [
-              "biome"
-              "prettierd"
-            ];
-            typescript.lsp.servers = ["typescript-go"];
+            typescript = {
+              enable = true;
+              extensions.ts-error-translator.enable = true;
+              extraDiagnostics.types = [
+                "biomejs"
+                "eslint_d"
+              ];
+              format.type = [
+                "biome"
+                "prettierd"
+              ];
+              lsp.servers = ["typescript-go"];
+            };
             yaml.enable = true;
           };
           # UI modules
@@ -322,7 +363,10 @@
                 };
               };
             };
-            borders.enable = true;
+            borders = {
+              enable = true;
+              globalStyle = "rounded";
+            };
             nvim-ufo.enable = true;
           };
           # Utility modules
@@ -405,6 +449,185 @@
             end
             _G.get_terms = get_terms
           '';
+          pluginRC.mini-git-blame = inputs.nvf.lib.nvim.dag.entryAnywhere ''
+            local blame_enabled = true
+            local au_group = vim.api.nvim_create_augroup("MiniGitBlameGroup", { clear = true })
+            local ns_id = vim.api.nvim_create_namespace("MiniGitBlame")
+
+            local function clear_blame()
+              vim.api.nvim_buf_clear_namespace(0, ns_id, 0, -1)
+            end
+
+            local function diff_this()
+              local buf_data = require("mini.git").get_buf_data(0)
+              if not buf_data or not buf_data.root then
+                vim.notify("Not in a git repository.", vim.log.levels.WARN, { title = "Git" })
+                return
+              end
+              local root = buf_data.root
+              local file_path_from_root = buf_data.file
+              if not file_path_from_root then
+                local abs_file_path = vim.api.nvim_buf_get_name(0)
+                if not abs_file_path or abs_file_path == "" then
+                  vim.notify("Buffer has no file path.", vim.log.levels.WARN, { title = "Git" })
+                  return
+                end
+                local normalized_root = root:gsub("[\\/]", "/")
+                local normalized_abs_path = abs_file_path:gsub("[\\/]", "/")
+                if normalized_abs_path:find(normalized_root, 1, true) == 1 then
+                  file_path_from_root = normalized_abs_path:sub(#normalized_root + 2)
+                else
+                  vim.notify("File is not inside the git repository: " .. root, vim.log.levels.WARN, { title = "Git" })
+                  return
+                end
+              end
+              if not file_path_from_root or file_path_from_root == "" then
+                vim.notify("Could not determine file path relative to git root.", vim.log.levels.WARN, { title = "Git" })
+                return
+              end
+              local function create_diff_view(old_content, hash)
+                local original_win = vim.api.nvim_get_current_win()
+                local original_buf = vim.api.nvim_get_current_buf()
+                vim.cmd("vnew")
+                local new_buf = vim.api.nvim_get_current_buf()
+                local ft = vim.api.nvim_get_option_value("filetype", { buf = original_buf })
+                vim.api.nvim_buf_set_lines(new_buf, 0, -1, false, vim.split(old_content, "\n", { plain = true }))
+                vim.api.nvim_set_option_value("filetype", ft, { buf = new_buf })
+                vim.api.nvim_set_option_value("readonly", true, { buf = new_buf })
+                vim.api.nvim_set_option_value("buftype", "nofile", { buf = new_buf })
+                local file_name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(original_buf), ":t")
+                vim.api.nvim_buf_set_name(new_buf, string.format("%s@%s", file_name, hash:sub(1, 7)))
+                vim.cmd("diffthis")
+                vim.api.nvim_set_current_win(original_win)
+                vim.cmd("diffthis")
+              end
+              local function on_commit_selected(selection)
+                if not selection then return end
+                local hash = selection:match("^(%S+)")
+                if not hash then return end
+                local get_content_cmd = { "git", "-C", root, "show", hash .. ":" .. file_path_from_root }
+                vim.system(get_content_cmd, { text = true }, function(content_obj)
+                  vim.schedule(function()
+                    local old_content = ""
+                    if content_obj.code == 0 then
+                      old_content = content_obj.stdout
+                    elseif not (content_obj.stderr and content_obj.stderr:match("exists on disk, but not in")) then
+                      vim.notify("Could not get file content from git: " .. (content_obj.stderr or ""), vim.log.levels.ERROR, { title = "Git" })
+                      return
+                    end
+                    create_diff_view(old_content, hash)
+                  end)
+                end)
+              end
+              local get_log_cmd = { "git", "-C", root, "log", "--pretty=format:%h\t%s\t%ar", "--", file_path_from_root }
+              vim.system(get_log_cmd, { text = true }, function(log_obj)
+                vim.schedule(function()
+                  if log_obj.code ~= 0 or log_obj.stdout == "" then
+                    vim.notify("Could not get commit history for this file.", vim.log.levels.WARN, { title = "Git" })
+                    return
+                  end
+                  local commits = vim.split(log_obj.stdout, "\n", { trimempty = true })
+                  if #commits == 0 then
+                    vim.notify("No commits found for this file.", vim.log.levels.INFO, { title = "Git" })
+                    return
+                  end
+                  table.insert(commits, 1, "HEAD\tCurrent HEAD")
+                  vim.ui.select(commits, { prompt = "Diff against commit:" }, on_commit_selected)
+                end)
+              end)
+            end
+
+            local function toggle_blame()
+              blame_enabled = not blame_enabled
+              if not blame_enabled then clear_blame() end
+              local msg = blame_enabled and "Blame annotations enabled" or "Blame annotations disabled"
+              vim.notify(msg, vim.log.levels.INFO, { title = "Git" })
+            end
+
+            local function toggle_diff_style()
+              local MiniDiff = require("mini.diff")
+              local config = MiniDiff.config
+              if config.view.style == "sign" then
+                config.view.style = "number"
+                vim.notify("Diff style set to: number", vim.log.levels.INFO, { title = "Git" })
+              else
+                config.view.style = "sign"
+                vim.notify("Diff style set to: sign", vim.log.levels.INFO, { title = "Git" })
+              end
+              MiniDiff.setup(config)
+            end
+
+            local function get_relative_time(timestamp)
+              local current_time = os.time()
+              local diff = os.difftime(current_time, timestamp)
+              local minutes = math.floor(diff / 60)
+              local hours = math.floor(minutes / 60)
+              local days = math.floor(hours / 24)
+              if minutes < 1 then return "just now"
+              elseif minutes < 60 then return string.format("%d mins ago", minutes)
+              elseif hours < 24 then return string.format("%d hours ago", hours)
+              elseif days <= 3 then return string.format("%d days ago", days)
+              else return os.date("%m/%d/%Y", timestamp) end
+            end
+
+            vim.api.nvim_create_autocmd("CursorHold", {
+              group = au_group,
+              callback = function()
+                if not blame_enabled then return end
+                clear_blame()
+                local MiniGit = require("mini.git")
+                local buf_data = MiniGit.get_buf_data(0)
+                if not buf_data or not buf_data.root then return end
+                local root = buf_data.root
+                local file = vim.fn.expand("%")
+                local line = vim.fn.line(".")
+                local cmd_list = { "git", "-C", root, "blame", "-L", string.format("%d,%d", line, line), "--porcelain", file }
+                vim.system(cmd_list, { text = true }, function(obj)
+                  vim.schedule(function()
+                    if vim.api.nvim_win_get_cursor(0)[1] ~= line then return end
+                    if obj.code ~= 0 or obj.stdout == "" then return end
+                    local output = obj.stdout
+                    local author = output:match("author (.-)\n")
+                    local date_ts = output:match("author%-time (.-)\n")
+                    local summary = output:match("summary (.-)\n")
+                    local hash = output:match("^(%S+)")
+                    if hash and hash:match("^0+$") then
+                      vim.api.nvim_buf_set_extmark(0, ns_id, line - 1, 0, {
+                        virt_text = { { "  Not committed yet", "Comment" } },
+                        hl_mode = "combine",
+                      })
+                      return
+                    end
+                    if author and date_ts and summary then
+                      local rel_time = get_relative_time(tonumber(date_ts) or 0)
+                      local text = string.format(" (%s) %s -> %s", rel_time, author, summary)
+                      vim.api.nvim_buf_set_extmark(0, ns_id, line - 1, 0, {
+                        virt_text = { { text, "Comment" } },
+                        hl_mode = "combine",
+                      })
+                    end
+                  end)
+                end)
+              end,
+            })
+
+            vim.api.nvim_create_autocmd({ "CursorMoved", "InsertEnter" }, {
+              group = au_group,
+              callback = clear_blame,
+            })
+
+            vim.api.nvim_create_autocmd("User", {
+              pattern = "MiniGitCommandSplit",
+              callback = function(au_data)
+                if au_data.data.git_subcommand ~= "blame" then return end
+                local win_src = au_data.data.win_source
+                vim.wo.wrap = false
+                vim.fn.winrestview({ topline = vim.fn.line("w0", win_src) })
+                vim.api.nvim_win_set_cursor(0, { vim.fn.line(".", win_src), 0 })
+                vim.wo[win_src].scrollbind, vim.wo.scrollbind = true, true
+              end,
+            })
+          '';
           utility.images.image-nvim.enable = true;
 
           # Autocomplete modules
@@ -461,6 +684,10 @@
                   };
                 };
               };
+              signature = {
+                enabled = true;
+                window.show_documentation = false;
+              };
             };
             sourcePlugins = {
               lazydev.enable = true;
@@ -491,7 +718,14 @@
           mini.diff = {
             enable = true;
             setupOpts = {
-              view.style = "number";
+              view = {
+                style = "number";
+                signs = {
+                  add = "▎";
+                  change = "▎";
+                  delete = "";
+                };
+              };
               mappings = {
                 reset = "<leader>gr";
                 textobject = "gh";
@@ -574,9 +808,11 @@
             setupOpts = {
               options.basic = false;
               options.extra_ui = false;
-              mappings.basic = true;
-              mappings.windows = true;
-              mappings.move_with_alt = true;
+              mappings = {
+                basic = true;
+                windows = true;
+                move_with_alt = true;
+              };
             };
           };
           mini.comment = {
@@ -638,7 +874,12 @@
               search_method = "cover_or_nearest";
             };
           };
-          mini.bracketed.enable = true;
+          mini.bracketed = {
+            enable = true;
+            setupOpts = {
+              treesitter.suffix = "s";
+            };
+          };
           mini.bufremove.enable = true;
           mini.operators = {
             enable = true;
@@ -651,9 +892,141 @@
             };
           };
           mini.cursorword.enable = true;
-          mini.hipatterns.enable = true;
-          mini.statusline.enable = true;
-          mini.tabline.enable = true;
+          mini.hipatterns = {
+            enable = true;
+            setupOpts = {
+              highlighters = {
+                fixme = lib.generators.mkLuaInline ''
+                  require("mini.extra").gen_highlighter.words({ "FIXME", "fixme" }, "MiniHiPatternsFixme")
+                '';
+                todo = lib.generators.mkLuaInline ''
+                  require("mini.extra").gen_highlighter.words({ "TODO", "todo" }, "MiniHiPatternsTodo")
+                '';
+                note = lib.generators.mkLuaInline ''
+                  require("mini.extra").gen_highlighter.words({ "NOTE", "note", "readme", "README" }, "MiniHiPatternsNote")
+                '';
+                bug = lib.generators.mkLuaInline ''
+                  require("mini.extra").gen_highlighter.words({ "BUG", "bug", "HACK", "hack", "hax" }, "MiniHiPatternsHack")
+                '';
+                hex_color = lib.generators.mkLuaInline ''
+                  require("mini.hipatterns").gen_highlighter.hex_color({ priority = 200 })
+                '';
+                hex_shorthand = {
+                  pattern = "()#%x%x%x()%f[^%x%w]";
+                  group = lib.generators.mkLuaInline ''
+                    function(_, _, data)
+                      local match = data.full_match
+                      local r, g, b = match:sub(2, 2), match:sub(3, 3), match:sub(4, 4)
+                      local hex_color = "#" .. r .. r .. g .. g .. b .. b
+                      return require("mini.hipatterns").compute_hex_color_group(hex_color, "bg")
+                    end
+                  '';
+                };
+              };
+            };
+          };
+          mini.statusline = {
+            enable = true;
+            setupOpts = {
+              content = {
+                active = lib.generators.mkLuaInline ''
+                  function()
+                    local MiniStatusline = require("mini.statusline")
+                    local MiniIcons = require("mini.icons")
+
+                    local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 75 })
+                    mode = mode:upper()
+
+                    local git = MiniStatusline.section_git({ icon = "󰘬", trunc_width = 40 })
+                    local diff = MiniStatusline.section_diff({ icon = "", trunc_width = 100 })
+                    local diagnostics = MiniStatusline.section_diagnostics({
+                      icon = "",
+                      signs = {
+                        ERROR = "󰅙 ",
+                        WARN = "󰀦 ",
+                        INFO = "󱈸 ",
+                        HINT = "󰌵 ",
+                      },
+                      trunc_width = 75,
+                    })
+                    local lsp = MiniStatusline.section_lsp({ icon = "󰆦", trunc_width = 75 })
+
+                    local copilot = ""
+                    if vim.fn.exists("*copilot#Enabled") == 1 and vim.fn["copilot#Enabled"]() == 1 then
+                      copilot = " "
+                    end
+
+                    local filetype = vim.bo.filetype
+                    local ft_icon = MiniIcons.get("filetype", filetype)
+                    filetype = ft_icon .. " " .. filetype
+
+                    local fileinfo = filetype
+                    if not MiniStatusline.is_truncated(150) and vim.bo.buftype == "" then
+                      local encoding = vim.bo.fileencoding or vim.bo.encoding
+                      local size = math.max(vim.fn.line2byte(vim.fn.line("$") + 1) - 1, 0)
+                      local size_str
+                      if size < 1024 then
+                        size_str = string.format("%dB", size)
+                      elseif size < 1048576 then
+                        size_str = string.format("%.2fKiB", size / 1024)
+                      else
+                        size_str = string.format("%.2fMiB", size / 1048576)
+                      end
+                      fileinfo = string.format("%s [%s] %s", filetype, encoding, size_str)
+                    end
+
+                    local current_line = vim.api.nvim_win_get_cursor(0)[1]
+                    local total_lines = vim.api.nvim_buf_line_count(0)
+                    local location
+                    if current_line == 1 then
+                      location = "TOP"
+                    elseif current_line == total_lines then
+                      location = "BOTTOM"
+                    else
+                      location = "%p%%"
+                    end
+
+                    local search = MiniStatusline.section_searchcount({ trunc_width = 75 })
+                    local filename = vim.fn.expand("%:h:t") .. "/" .. vim.fn.expand("%:t")
+                    local eol = vim.bo.fileformat == "unix" and " " or " "
+
+                    return MiniStatusline.combine_groups({
+                      { hl = mode_hl, strings = { mode } },
+                      { hl = "MiniStatuslineDevinfo", strings = { git, diff, diagnostics } },
+                      "%<",
+                      { hl = "MiniStatuslineFileName", strings = { filename } },
+                      "%=",
+                      { hl = "MiniStatuslineFileinfo", strings = { eol, copilot, lsp, fileinfo } },
+                      { hl = mode_hl, strings = { search, location } },
+                    })
+                  end
+                '';
+              };
+            };
+          };
+          mini.tabline = {
+            enable = true;
+            setupOpts = {
+              show_icons = true;
+              format = lib.generators.mkLuaInline ''
+                function(buf_id, label)
+                  local buf_name = vim.api.nvim_buf_get_name(buf_id)
+                  local icon = require("mini.icons").get("file", buf_name)
+                  local is_edited = vim.bo[buf_id].modified and "󰏫 " or ""
+                  local hasErrors = vim.diagnostic.get(buf_id, { severity = "ERROR" })
+                  if #hasErrors > 0 then
+                    icon = "󰅙 "
+                  else
+                    local hasWarnings = vim.diagnostic.get(buf_id, { severity = "WARN" })
+                    if #hasWarnings > 0 then
+                      icon = "󰀦 "
+                    end
+                  end
+                  return string.format(" %s %s %s", icon, label, is_edited)
+                end
+              '';
+            };
+          };
           mini.notify = {
             enable = mini.notify;
             setupOpts = {
@@ -1075,9 +1448,9 @@
               action = "nzzzv";
             }
             {
-              key = "n";
+              key = "<s-n>";
               mode = "n";
-              action = "<s-n>nzzzv";
+              action = "<s-n>zzzv";
             }
             {
               key = L "nd";
@@ -1617,6 +1990,41 @@
               desc = "LSP workspace symbols";
               lua = true;
               action = ''function() MiniExtra.pickers.lsp({ scope = "workspace_symbol_live" }) end'';
+            }
+            {
+              key = L "gb";
+              mode = "n";
+              desc = "Git: toggle blame";
+              lua = true;
+              action = ''toggle_blame'';
+            }
+            {
+              key = L "gd";
+              mode = "n";
+              desc = "Git: diff against commit";
+              lua = true;
+              action = ''diff_this'';
+            }
+            {
+              key = L "gh";
+              mode = "n";
+              desc = "Git: toggle overlay";
+              lua = true;
+              action = ''require("mini.diff").toggle_overlay'';
+            }
+            {
+              key = L "gt";
+              mode = "n";
+              desc = "Git: toggle diff style";
+              lua = true;
+              action = ''toggle_diff_style'';
+            }
+            {
+              key = L "gC";
+              mode = "n";
+              desc = "Git: commit current buffer";
+              lua = true;
+              action = ''function() require("mini.extra").pickers.git_commits({ path = vim.api.nvim_buf_get_name(0) }) end'';
             }
           ];
         };
