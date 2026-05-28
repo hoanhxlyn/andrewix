@@ -41,8 +41,15 @@
             foldlevelstart = 99;
             foldenable = true;
             scrolloff = 3;
+            showmode = false;
+            formatoptions = "jcroqlnt";
+            grepformat = "%f:%l:%c:%m";
+            grepprg = "rg; --vimgrep";
           };
-          globals.maplocalleader = "\\";
+          globals = {
+            maplocalleader = "\\";
+            mini_show_dotfiles = mini.show_dotfiles;
+          };
           clipboard = {
             enable = true;
             registers = "unnamedplus";
@@ -85,6 +92,60 @@
               '';
               desc = "MiniNotify Saved";
             }
+            {
+              event = ["User"];
+              pattern = ["MiniFilesBufferCreate"];
+              callback = lib.generators.mkLuaInline ''
+                function(args)
+                  local buf_id = args.buf
+                  local MiniFiles = require("mini.files")
+                  local function map_split(lhs, direction, close_on_file)
+                    local rhs = function()
+                      local new_target_window
+                      local cur_target_window = MiniFiles.get_explorer_state().target_window
+                      if cur_target_window ~= nil then
+                        vim.api.nvim_win_call(cur_target_window, function()
+                          vim.cmd("belowright " .. direction .. " split")
+                          new_target_window = vim.api.nvim_get_current_win()
+                        end)
+                        MiniFiles.set_target_window(new_target_window)
+                        MiniFiles.go_in({ close_on_file = close_on_file })
+                      end
+                    end
+                    local desc = "Open in " .. direction .. " split"
+                    if close_on_file then
+                      desc = desc .. " and close"
+                    end
+                    vim.keymap.set("n", lhs, rhs, { buffer = buf_id, desc = desc })
+                  end
+                  vim.keymap.set("n", ".", function()
+                    vim.g.mini_show_dotfiles = not vim.g.mini_show_dotfiles
+                    MiniFiles.refresh({
+                      content = {
+                        filter = function(fs_entry)
+                          if vim.g.mini_show_dotfiles then return true end
+                          return not vim.startswith(fs_entry.name, ".")
+                        end,
+                      },
+                    })
+                  end, { buffer = buf_id, desc = "Toggle hidden files" })
+                  map_split("<c-w>s", "horizontal", false)
+                  map_split("<c-w>v", "vertical", false)
+                end
+              '';
+            }
+            {
+              event = ["User"];
+              pattern = ["MiniFilesActionRename"];
+              callback = lib.generators.mkLuaInline ''
+                function(event)
+                  local Snacks = require("snacks.rename")
+                  if Snacks then
+                    Snacks.on_rename_file(event.data.from, event.data.to)
+                  end
+                end
+              '';
+            }
           ];
           augroups = [
             {
@@ -101,15 +162,7 @@
             lspconfig.enable = true;
             mappings = {
               codeAction = L "ca";
-              format = L "cf";
               hover = L "lh";
-              goToDefinition = L "ld";
-              goToDeclaration = L "lD";
-              goToType = L "lt";
-              listReferences = L "lr";
-              listDocumentSymbols = L "ls";
-              listImplementations = L "li";
-              listWorkspaceSymbols = L "lS";
               nextDiagnostic = "]d";
               previousDiagnostic = "[d";
               openDiagnosticFloat = L "cd";
@@ -122,10 +175,14 @@
             enable = true;
             highlight.enable = true;
             indent.enable = true;
-            context.enable = true;
-            context.setupOpts.max_lines = 3;
-            context.setupOpts.mode = "topline";
-            context.setupOpts.zindex = 30;
+            context = {
+              enable = true;
+              setupOpts = {
+                max_lines = 3;
+                mode = "topline";
+                zindex = 30;
+              };
+            };
             textobjects.enable = true;
             textobjects.setupOpts = {
               move = {
@@ -134,6 +191,79 @@
               };
             };
             autotagHtml.enable = true;
+          };
+          # Conform modules
+          formatter.conform-nvim = {
+            enable = true;
+            setupOpts = {
+              notify_on_error = true;
+              default_format_opts = {
+                timeout_ms = 1000;
+                lsp_format = "fallback";
+                stop_after_first = true;
+              };
+              formatters_by_ft = {
+                just = ["just"];
+              };
+              formatters = {
+                biome = {require_cwd = true;};
+                oxfmt = {
+                  command = lib.getExe pkgs.oxfmt;
+                  require_cwd = true;
+                };
+                stylua = {};
+                markdown-toc = {
+                  condition = lib.generators.mkLuaInline ''
+                    function(_, ctx)
+                      for _, line in ipairs(vim.api.nvim_buf_get_lines(ctx.buf, 0, -1, false)) do
+                        if line:find("<!%-%- toc %-%->") then
+                          return true
+                        end
+                      end
+                      return false
+                    end
+                  '';
+                };
+                markdownlint-cli2 = {
+                  condition = lib.generators.mkLuaInline ''
+                    function(_, ctx)
+                      local diag = vim.tbl_filter(function(d)
+                        return d.source == "markdownlint"
+                      end, vim.diagnostic.get(ctx.buf))
+                      return #diag > 0
+                    end
+                  '';
+                };
+              };
+            };
+          };
+          # Diagnostic modules
+          diagnostics = {
+            enable = true;
+            config = {
+              severity_sort = true;
+              float = {
+                borders = "rounded";
+                source = "if_many";
+              };
+              underline = lib.generators.mkLuaInline "{severity = vim.diagnostic.severity.ERROR }";
+              signs.text = lib.generators.mkLuaInline ''
+                           {
+                	[vim.diagnostic.severity.ERROR] = "󰅙 " ,
+                	[vim.diagnostic.severity.WARN] = "󰀦 ",
+                	[vim.diagnostic.severity.INFO] = "󱈸 ",
+                	[vim.diagnostic.severity.HINT] = "󰌵 ",
+                } '';
+              virtual_text = {
+                source = "if_many";
+                spacing = 2;
+                format = lib.generators.mkLuaInline ''
+                  function(diagnostic)
+                  return diagnostic.message
+                  end
+                '';
+              };
+            };
           };
           # Languague Modules (LSP + TS + etc)
           languages = {
@@ -154,13 +284,17 @@
             jq.enable = true;
             json.enable = true;
             just.enable = true;
-            lua.enable = true;
-            lua.extraDiagnostics.types = ["selene"];
-            lua.lsp.lazydev.enable = true;
-            markdown.enable = true;
-            markdown.extensions.markview-nvim.enable = true;
-            markdown.lsp.servers = ["markdown-oxide"];
-            markdown.format.type = ["mdformat"];
+            lua = {
+              enable = true;
+              extraDiagnostics.types = ["selene"];
+              lsp.lazydev.enable = true;
+            };
+            markdown = {
+              enable = true;
+              extensions.markview-nvim.enable = true;
+              lsp.servers = ["markdown-oxide"];
+              format.type = ["mdformat"];
+            };
             nix.enable = true;
             toml.enable = true;
             typescript.enable = true;
@@ -178,7 +312,16 @@
           };
           # UI modules
           ui = {
-            ui2.enable = true;
+            ui2 = {
+              enable = true;
+              setupOpts = {
+                msg = {
+                  cmd.height = 1;
+                  dialog.height = 1;
+                  msg.height = 1;
+                };
+              };
+            };
             borders.enable = true;
             nvim-ufo.enable = true;
           };
@@ -230,6 +373,38 @@
               styles.notification.wo.wrap = true;
             };
           };
+          pluginRC.snacks-terminal-helpers = inputs.nvf.lib.nvim.dag.entryAfter ["snacks-nvim"] ''
+            local function get_terms()
+              local terms = {}
+              for i = 1, 20 do
+                local term = Snacks.terminal.get(nil, { count = i, create = false })
+                if term and term.buf and vim.api.nvim_buf_is_valid(term.buf) then
+                  table.insert(terms, { id = i, term = term })
+                end
+              end
+              return terms
+            end
+            _G.get_next_id = function()
+              local terms = get_terms()
+              local map = {}
+              for _, t in ipairs(terms) do map[t.id] = true end
+              for i = 1, 20 do
+                if not map[i] then return i end
+              end
+              return #terms + 1
+            end
+            _G.kill_term = function(term)
+              if term.destroy then
+                term:destroy()
+              else
+                term:close()
+                if term.buf and vim.api.nvim_buf_is_valid(term.buf) then
+                  vim.api.nvim_buf_delete(term.buf, { force = true })
+                end
+              end
+            end
+            _G.get_terms = get_terms
+          '';
           utility.images.image-nvim.enable = true;
 
           # Autocomplete modules
@@ -238,14 +413,61 @@
             friendly-snippets.enable = true;
             setupOpts = {
               keymap.preset = "enter";
-              cmdline.keymap.preset = "cmdline";
+              cmdline = {
+                keymap.preset = "cmdline";
+                completion.list.selection.preselect = false;
+                completion.menu.auto_show = lib.mkLuaInline ''
+                  function()
+                    return vim.fn.getcmdtype() == ":"
+                  end
+                '';
+              };
+              appearance.nerd_font_variant = "normal";
+              completion = {
+                accept.auto_brackets.enabled = false;
+                documentation.auto_show = false;
+                ghost_text.enabled = true;
+                menu.draw = {
+                  columns = lib.mkLuaInline ''
+                    {
+                      { "label", gap = 1 },
+                      { "kind_icon", "kind", "label_description", gap = 1 },
+                    }
+                  '';
+                  treesitter = ["lsp"];
+                  components = {
+                    kind_icon = {
+                      text = lib.mkLuaInline ''
+                        function(ctx)
+                          local kind_icon, _, _ = require('mini.icons').get("lsp", ctx.kind)
+                          return kind_icon
+                        end
+                      '';
+                      highlight = lib.mkLuaInline ''
+                        function(ctx)
+                          local _, hl, _ = require('mini.icons').get("lsp", ctx.kind)
+                          return hl
+                        end
+                      '';
+                    };
+                    kind = {
+                      highlight = lib.mkLuaInline ''
+                         function(ctx)
+                          local _, hl, _ = require('mini.icons').get("lsp", ctx.kind)
+                          return hl
+                        end
+                      '';
+                    };
+                  };
+                };
+              };
             };
             sourcePlugins = {
               lazydev.enable = true;
               lazydev.package = "lazydev-nvim";
               lazydev.module = "lazydev.integrations.blink";
               emoji.enable = false;
-              ripgrep.enable = true;
+              ripgrep.enable = false;
               spell.enable = true;
             };
           };
@@ -314,9 +536,17 @@
           mini.files = {
             enable = mini.explorer;
             setupOpts = {
-              windows.preview = true;
-              windows.width_focus = 30;
-              windows.width_preview = 30;
+              content.filter = lib.generators.mkLuaInline ''
+                function(fs_entry)
+                  if vim.g.mini_show_dotfiles then return true end
+                  return not vim.startswith(fs_entry.name, ".")
+                end
+              '';
+              windows = {
+                preview = true;
+                width_focus = 30;
+                width_preview = 30;
+              };
               mappings = {
                 go_out_plus = "h";
                 synchronize = "<c-s>";
@@ -342,8 +572,8 @@
           mini.basics = {
             enable = true;
             setupOpts = {
-              options.basic = true;
-              options.extra_ui = true;
+              options.basic = false;
+              options.extra_ui = false;
               mappings.basic = true;
               mappings.windows = true;
               mappings.move_with_alt = true;
@@ -741,11 +971,11 @@
                 package = pkgs.vimPlugins.nvim-navic;
                 setupModule = "nvim-navic";
                 lazy = true;
+                event = ["LspAttach"];
                 setupOpts = {
                   highlight = true;
                   depth_limit = 4;
                   lsp.auto_attach = true;
-                  lazy_update_context = true;
                 };
                 after = ''
                   vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}";
@@ -809,6 +1039,20 @@
           };
           # Keymap sections
           keymaps = [
+            {
+              key = L "cf";
+              mode = [
+                "n"
+                "v"
+              ];
+              desc = "Format buffer (Conform)";
+              lua = true;
+              action = ''
+                function()
+                  require("conform").format({ async = true, lsp_format = "fallback" })
+                end
+              '';
+            }
             {
               key = "<Esc>";
               mode = "n";
@@ -875,7 +1119,10 @@
               lua = true;
               action = ''
                 function()
-                  MiniFiles.open(vim.api.nvim_buf_get_name(0), false)
+                  local ok = pcall(MiniFiles.open, vim.api.nvim_buf_get_name(0), false)
+                  if not ok then
+                    MiniFiles.open(nil, false)
+                  end
                 end
               '';
             }
@@ -886,7 +1133,10 @@
               lua = true;
               action = ''
                 function()
-                  MiniFiles.open(nil, false)
+                  local ok = pcall(MiniFiles.open, nil, false)
+                  if not ok then
+                    MiniFiles.open(nil, false)
+                  end
                 end
               '';
             }
@@ -935,6 +1185,438 @@
                 	end
                 end
               '';
+            }
+            {
+              mode = "n";
+              key = L "tn";
+              desc = "Terminal: New";
+              lua = true;
+              action = ''
+                function()
+                  Snacks.terminal.open(nil, {
+                    count = get_next_id(),
+                  })
+                end
+              '';
+            }
+            {
+              mode = "n";
+              key = L "tf";
+              desc = "Terminal: Float";
+              lua = true;
+              action = ''
+                function()
+                  Snacks.terminal.open(nil, {
+                    count = get_next_id(),
+                    win = {
+                      style = "float",
+                      enter = true,
+                      width = 0.7,
+                      border = "rounded",
+                      title = "Float Terminal",
+                      title_pos = "center",
+                    },
+                  })
+                end
+              '';
+            }
+            {
+              mode = "n";
+              key = L "tb";
+              desc = "Terminal: Btop";
+              lua = true;
+              action = ''
+                function()
+                  Snacks.terminal.open("btop", { win = { style = "float", enter = true } })
+                end
+              '';
+            }
+            {
+              mode = "n";
+              key = L "td";
+              desc = "Terminal: Destroy";
+              lua = true;
+              action = ''
+                function()
+                  local terms = get_terms()
+                  if #terms == 0 then
+                    vim.notify("No terminals to destroy", vim.log.levels.WARN)
+                    return
+                  end
+                  if #terms == 1 then
+                    kill_term(terms[1].term)
+                  else
+                    vim.ui.select(terms, {
+                      prompt = "Select terminal to destroy:",
+                      format_item = function(item)
+                        return "Terminal " .. item.id
+                      end,
+                    }, function(choice)
+                      if choice then kill_term(choice.term) end
+                    end)
+                  end
+                end
+              '';
+            }
+            {
+              mode = "n";
+              key = L "tt";
+              desc = "Terminal: Toggle";
+              lua = true;
+              action = ''
+                function()
+                  for _, item in ipairs(get_terms()) do
+                    item.term:toggle()
+                  end
+                end
+              '';
+            }
+            {
+              mode = "n";
+              key = L "tx";
+              desc = "Terminal: Kill All";
+              lua = true;
+              action = ''
+                function()
+                  for _, item in ipairs(get_terms()) do
+                    kill_term(item.term)
+                  end
+                end
+              '';
+            }
+            {
+              mode = "n";
+              key = L "tl";
+              desc = "Terminal: List";
+              lua = true;
+              action = ''
+                function()
+                  local terms = get_terms()
+                  if #terms == 0 then
+                    vim.notify("No terminals found", vim.log.levels.WARN)
+                    return
+                  end
+                  vim.ui.select(terms, {
+                    prompt = "Select terminal:",
+                    format_item = function(item)
+                      return "Terminal " .. item.id
+                    end,
+                  }, function(choice)
+                    if choice then choice.term:toggle() end
+                  end)
+                end
+              '';
+            }
+            {
+              mode = "n";
+              key = L "gg";
+              desc = "Open Lazygit";
+              lua = true;
+              action = ''
+                function()
+                  Snacks.lazygit.open({ win = { enter = true } })
+                end
+              '';
+            }
+            {
+              key = L "yf";
+              mode = "n";
+              desc = "Yank full path";
+              lua = true;
+              action = ''
+                function()
+                  local path = vim.fn.expand("%:p")
+                  if path == "" then
+                    vim.notify("No file path to yank", vim.log.levels.WARN)
+                    return
+                  end
+                  vim.fn.setreg("+", path)
+                  vim.notify("Yanked: " .. path, vim.log.levels.INFO)
+                end
+              '';
+            }
+            {
+              key = L "yr";
+              mode = "n";
+              desc = "Yank relative path";
+              lua = true;
+              action = ''
+                function()
+                  local path = vim.fn.expand("%")
+                  if path == "" then
+                    vim.notify("No file path to yank", vim.log.levels.WARN)
+                    return
+                  end
+                  vim.fn.setreg("+", path)
+                  vim.notify("Yanked: " .. path, vim.log.levels.INFO)
+                end
+              '';
+            }
+            {
+              key = L "yd";
+              mode = "n";
+              desc = "Yank directory";
+              lua = true;
+              action = ''
+                function()
+                  local path = vim.fn.expand("%:p:h")
+                  if path == "" then
+                    vim.notify("No file path to yank", vim.log.levels.WARN)
+                    return
+                  end
+                  vim.fn.setreg("+", path)
+                  vim.notify("Yanked: " .. path, vim.log.levels.INFO)
+                end
+              '';
+            }
+            {
+              key = L "yn";
+              mode = "n";
+              desc = "Yank filename";
+              lua = true;
+              action = ''
+                function()
+                  local path = vim.fn.expand("%:t")
+                  if path == "" then
+                    vim.notify("No file path to yank", vim.log.levels.WARN)
+                    return
+                  end
+                  vim.fn.setreg("+", path)
+                  vim.notify("Yanked: " .. path, vim.log.levels.INFO)
+                end
+              '';
+            }
+            {
+              key = L "ff";
+              mode = "n";
+              desc = "Find files";
+              lua = true;
+              action = "MiniPick.builtin.files";
+            }
+            {
+              key = L "fw";
+              mode = [
+                "n"
+                "v"
+              ];
+              desc = "Find word (Grep)";
+              lua = true;
+              action = ''
+                function()
+                  local getMode = vim.api.nvim_get_mode().mode
+                  if getMode == "v" then
+                    MiniPick.builtin.grep({ pattern = vim.fn.expand("<cword>") })
+                  elseif getMode == "n" then
+                    MiniPick.builtin.grep_live()
+                  end
+                end
+              '';
+            }
+            {
+              key = L "fb";
+              mode = "n";
+              desc = "Find buffers";
+              lua = true;
+              action = "MiniPick.builtin.buffers";
+            }
+            {
+              key = L "fh";
+              mode = "n";
+              desc = "Find help";
+              lua = true;
+              action = "MiniPick.builtin.help";
+            }
+            {
+              key = L "fR";
+              mode = "n";
+              desc = "Find resume";
+              lua = true;
+              action = "MiniPick.builtin.resume";
+            }
+            {
+              key = L "fr";
+              mode = "n";
+              desc = "Find registers";
+              lua = true;
+              action = "MiniExtra.pickers.registers";
+            }
+            {
+              key = L "fc";
+              mode = "n";
+              desc = "Find commands";
+              lua = true;
+              action = "MiniExtra.pickers.commands";
+            }
+            {
+              key = L "fk";
+              mode = "n";
+              desc = "Find keymaps";
+              lua = true;
+              action = "MiniExtra.pickers.keymaps";
+            }
+            {
+              key = L "fm";
+              mode = "n";
+              desc = "Find marks";
+              lua = true;
+              action = "MiniExtra.pickers.marks";
+            }
+            {
+              key = L "fH";
+              mode = "n";
+              desc = "Find history";
+              lua = true;
+              action = "MiniExtra.pickers.history";
+            }
+            {
+              key = L "fv";
+              mode = "n";
+              desc = "Find visit paths";
+              lua = true;
+              action = "MiniExtra.pickers.visit_paths";
+            }
+            {
+              key = L "fV";
+              mode = "n";
+              desc = "Find visit labels";
+              lua = true;
+              action = "MiniExtra.pickers.visit_labels";
+            }
+            {
+              key = L "fq";
+              mode = "n";
+              desc = "Find quickfix";
+              lua = true;
+              action = ''function() MiniExtra.pickers.list({ scope = "quickfix" }) end'';
+            }
+            {
+              key = L "fl";
+              mode = "n";
+              desc = "Find buffer lines";
+              lua = true;
+              action = ''function() MiniExtra.pickers.buf_lines({ scope = "current" }) end'';
+            }
+            {
+              key = L "fd";
+              mode = "n";
+              desc = "Find diagnostics (buffer)";
+              lua = true;
+              action = ''function() MiniExtra.pickers.diagnostic(nil, { scope = "current" }) end'';
+            }
+            {
+              key = L "fD";
+              mode = "n";
+              desc = "Find diagnostics (all)";
+              lua = true;
+              action = ''function() MiniExtra.pickers.diagnostic(nil, { scope = "all" }) end'';
+            }
+            {
+              key = L "ft";
+              mode = "n";
+              desc = "Find colorschemes";
+              lua = true;
+              action = "function() MiniExtra.pickers.colorschemes() end";
+            }
+            {
+              key = L "fT";
+              mode = "n";
+              desc = "Find task comments";
+              lua = true;
+              action = ''
+                function()
+                  MiniExtra.pickers.hipatterns({
+                    scope = "all",
+                    highlighters = { "todo", "fixme", "note", "bug" },
+                  })
+                end
+              '';
+            }
+            {
+              key = L "fC";
+              mode = "n";
+              desc = "Find config files";
+              lua = true;
+              action = ''
+                function()
+                  MiniPick.builtin.files({ tool = "fd" }, { source = { cwd = vim.fn.stdpath("config") } })
+                end
+              '';
+            }
+            {
+              key = L "fp";
+              mode = "n";
+              desc = "Find projects";
+              lua = true;
+              action = ''
+                function()
+                  local project_dir = vim.fs.joinpath(vim.fn.expand("~"), "projects")
+                  if vim.fn.isdirectory(project_dir) == 0 then return end
+                  local projects = {}
+                  for file in vim.fs.dir(project_dir) do
+                    local path = vim.fs.joinpath(project_dir, file)
+                    if vim.fn.isdirectory(path) == 1 then table.insert(projects, path) end
+                  end
+                  if #projects == 0 then return end
+                  MiniPick.start({
+                    source = {
+                      items = projects,
+                      name = "Projects",
+                      show = function(buf_id, items, query)
+                        MiniPick.default_show(buf_id, items, query, { show_icons = true })
+                      end,
+                    },
+                  })
+                end
+              '';
+            }
+            {
+              key = L "lr";
+              mode = "n";
+              desc = "LSP references";
+              lua = true;
+              action = ''function() MiniExtra.pickers.lsp({ scope = "references" }) end'';
+            }
+            {
+              key = L "ld";
+              mode = "n";
+              desc = "LSP definitions";
+              lua = true;
+              action = ''function() MiniExtra.pickers.lsp({ scope = "definition" }) end'';
+            }
+            {
+              key = L "lt";
+              mode = "n";
+              desc = "LSP type definitions";
+              lua = true;
+              action = ''function() MiniExtra.pickers.lsp({ scope = "type_definition" }) end'';
+            }
+            {
+              key = L "li";
+              mode = "n";
+              desc = "LSP implementations";
+              lua = true;
+              action = ''function() MiniExtra.pickers.lsp({ scope = "implementation" }) end'';
+            }
+            {
+              key = L "lD";
+              mode = "n";
+              desc = "LSP declarations";
+              lua = true;
+              action = ''function() MiniExtra.pickers.lsp({ scope = "declaration" }) end'';
+            }
+            {
+              key = L "ls";
+              mode = "n";
+              desc = "LSP symbols";
+              lua = true;
+              action = ''function() MiniExtra.pickers.lsp({ scope = "document_symbol" }) end'';
+            }
+            {
+              key = L "lS";
+              mode = "n";
+              desc = "LSP workspace symbols";
+              lua = true;
+              action = ''function() MiniExtra.pickers.lsp({ scope = "workspace_symbol_live" }) end'';
             }
           ];
         };
