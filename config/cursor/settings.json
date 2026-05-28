@@ -5,6 +5,9 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "biome.requireConfiguration": true,
   "biome.suggestInstallingGlobally": false,
   "chat.viewSessions.orientation": "stacked",
@@ -60,7 +63,7 @@
   "window.menuBarVisibility": "hidden",
   "workbench.activityBar.location": "top",
   "workbench.browser.enableChatTools": true,
-  "workbench.colorTheme": "Stylix",
+  "workbench.colorTheme": "Gruvbox Dark Medium",
   "workbench.editor.customLabels.enabled": true,
   "workbench.editor.customLabels.patterns": {
     "**/src/**/index.{js,jsx,ts,tsx}": "${dirname(1)}/${dirname}"
@@ -69,8 +72,5 @@
   "workbench.layoutControl.enabled": false,
   "workbench.navigationControl.enabled": false,
   "workbench.productIconTheme": "Tabler",
-  "workbench.welcomePage.walkthroughs.openOnInstall": false,
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  "workbench.welcomePage.walkthroughs.openOnInstall": false
 }
