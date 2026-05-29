@@ -3,7 +3,7 @@
     wsl.includes = [
       <core.git>
       <core.agents>
-      <my/editor/neovix>
+      <my/editor/nvf>
       <my/shell>
       <my/cli/essentials>
     ];
