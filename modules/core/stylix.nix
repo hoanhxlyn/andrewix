@@ -31,7 +31,7 @@
       stylix = {
         enable = true;
         autoEnable = true;
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-medium.yaml";
         polarity = "dark";
         cursor = {
           package = pkgs.bibata-cursors;
@@ -56,7 +56,10 @@
           popups = terminal.opacity;
           applications = terminal.opacity;
         };
-        targets.plymouth.enable = true;
+        targets = {
+          plymouth.enable = true;
+          nvf.transparentBackground = true;
+        };
       };
     };
   };

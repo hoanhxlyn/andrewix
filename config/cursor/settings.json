@@ -72,5 +72,6 @@
   "workbench.layoutControl.enabled": false,
   "workbench.navigationControl.enabled": false,
   "workbench.productIconTheme": "Tabler",
-  "workbench.welcomePage.walkthroughs.openOnInstall": false
+  "workbench.welcomePage.walkthroughs.openOnInstall": false,
+  "terminal.integrated.allowChords": false
 }
