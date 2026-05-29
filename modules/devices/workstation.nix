@@ -36,7 +36,8 @@
       <workstation>
       # <my/wm/niri>
       <my/de/gnome>
-      <my/editor/neovix>
+      # <my/editor/neovix>
+      <my/editor/nvf>
       <core.power-manager>
     ];
     andrew-pc.provides.to-users.includes = [
