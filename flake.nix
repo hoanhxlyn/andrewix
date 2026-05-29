@@ -1,7 +1,7 @@
 # DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
 # Use `nix run .#write-flake` to regenerate it.
 {
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
+  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
 
   inputs = {
     aic8800 = {
@@ -26,15 +26,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    import-size-nvim = {
-      url = "github:stuckinsnow/import-size.nvim";
-      flake = false;
-    };
     import-tree.url = "github:vic/import-tree";
-    neovim-nightly = {
-      url = "github:nix-community/neovim-nightly-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -52,14 +44,6 @@
     stylix = {
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    vim-rzip = {
-      url = "github:lbrayner/vim-rzip";
-      flake = false;
-    };
-    wezterm-types = {
-      url = "github:justinsgithub/wezterm-types";
-      flake = false;
     };
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";

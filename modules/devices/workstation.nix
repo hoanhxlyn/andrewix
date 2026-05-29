@@ -30,21 +30,19 @@
       <my/terminals/alacritty>
       <my/vm/podman>
       <my/office/markdown>
+      <my/editor/nvf>
     ];
 
     andrew-laptop.provides.to-users.includes = [
       <workstation>
       # <my/wm/niri>
       <my/de/gnome>
-      # <my/editor/neovix>
-      <my/editor/nvf>
       <core.power-manager>
     ];
     andrew-pc.provides.to-users.includes = [
       <workstation>
       <my/de/gnome>
       <core.nvidia>
-      <my/editor/nvf>
     ];
   };
 }
