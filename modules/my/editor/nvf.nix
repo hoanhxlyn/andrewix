@@ -1583,7 +1583,7 @@
                       "i"
                     ];
                     keys = "<leader>o";
-                    desc = "+ MiniOperators";
+                    desc = "+ Operators";
                   }
                   {
                     mode = "n";
@@ -2608,6 +2608,38 @@
               mode = "n";
               desc = "Previous tab";
               action = "tabprevious";
+            }
+            {
+              key = L "ob";
+              mode = "n";
+              desc = "Open in browser";
+              lua = true;
+              action = ''
+                function()
+                  local path = vim.fn.expand("%:p")
+                  if path == "" then
+                    vim.notify("No file to open", vim.log.levels.WARN)
+                    return
+                  end
+                  vim.fn.jobstart({"xdg-open", path})
+                end
+              '';
+            }
+            {
+              key = L "on";
+              mode = "n";
+              desc = "Open in Nautilus";
+              lua = true;
+              action = ''
+                function()
+                  local path = vim.fn.expand("%:p")
+                  if path == "" then
+                    vim.notify("No file path", vim.log.levels.WARN)
+                    return
+                  end
+                  vim.fn.jobstart({"nautilus", "-s", path})
+                end
+              '';
             }
           ];
         };

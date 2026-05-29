@@ -1,6 +1,6 @@
 {__findFile, ...}: {
   den.aspects = {
-    workstation.includes = [
+    workstation.    includes = [
       (<den/batteries/import-tree/host> ../../hosts)
       <core.bootable>
       <core.disko>
