@@ -192,20 +192,20 @@
               typescript-go.enable = true;
             };
             servers = {
-              typescript-go = {
-                filetypes = [
-                  "typescript"
-                  "javascript"
-                  "typescriptreact"
-                  "javascriptreact"
-                ];
-              };
-              tailwindcss-languages-server = {
-                settings.tailwindCSS.classFunctions = [
-                  "cva"
-                  "cx"
-                  "tv"
-                ];
+              typescript-go.filetypes = [
+                "typescript"
+                "javascript"
+                "typescriptreact"
+                "javascriptreact"
+              ];
+
+              tailwindcss-languages-server.settings.tailwindCSS.classFunctions = [
+                "cva"
+                "cx"
+                "tv"
+              ];
+              nil.settings = {
+                nil.nix.flake.autoArchive = true;
               };
             };
           };
