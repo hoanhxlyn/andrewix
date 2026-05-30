@@ -834,75 +834,75 @@
                     hl = "MiniIconsYellow";
                   };
                   ".chezmoiignore" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".chezmoiremove" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".chezmoiroot" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".chezmoiversion" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".zshrc" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".zprofile" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".zshenv" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".zlogin" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".zlogout" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   "zsh.tmpl" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".bashrc" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".bash_profile" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".bash_aliases" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".bash_logout" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   "bash.tmpl" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   ".json" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   ".jsonc" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   ".bak" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   ".eslintrc.js" = {
@@ -966,119 +966,119 @@
                     hl = "MiniIconsPurple";
                   };
                   ".prettierrc" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   ".prettierrc.json" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   ".prettierrc.yaml" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   ".prettierrc.yml" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   ".prettierrc.json5" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   ".prettierrc.js" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   ".prettierrc.cjs" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   ".prettierrc.mjs" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   ".prettierrc.ts" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   "prettier.config.js" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   "prettier.config.cjs" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   "prettier.config.mjs" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   "prettier.config.ts" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   "yarn.lock" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsBlue";
                   };
                   ".yarnrc.yml" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsBlue";
                   };
                   ".yarnrc.yaml" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsBlue";
                   };
                   "tsconfig.json" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsAzure";
                   };
                   "tsconfig.build.json" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsAzure";
                   };
                   "tsconfig.app.json" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsAzure";
                   };
                   "tsconfig.server.json" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsAzure";
                   };
                   "tsconfig.web.json" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsAzure";
                   };
                   "tsconfig.client.json" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsAzure";
                   };
                   ".node-version" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGreen";
                   };
                   "package.json" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGreen";
                   };
                   ".npmrc" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGreen";
                   };
                   "vite.config.ts" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   "vite.config.js" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   "pnpm-lock.yaml" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   "pnpm-workspace.yaml" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsYellow";
                   };
                   ".dockerignore" = {
@@ -1086,19 +1086,19 @@
                     hl = "MiniIconsBlue";
                   };
                   "react-router.config.ts" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsRed";
                   };
                   "react-router.config.js" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsRed";
                   };
                   "bun.lockb" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   "bun.lock" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   "agents.md" = {
@@ -1112,7 +1112,7 @@
                 };
                 directory = {
                   ".vscode" = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsBlue";
                   };
                   cspell = {
@@ -1120,11 +1120,11 @@
                     hl = "MiniIconsPurple";
                   };
                   config = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   configs = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsGrey";
                   };
                   app = {
@@ -1190,7 +1190,7 @@
                 };
                 lsp = {
                   copilot = {
-                    glyph = "";
+                    glyph = "";
                     hl = "MiniIconsBlue";
                   };
                 };
