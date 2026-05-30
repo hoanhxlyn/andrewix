@@ -11,13 +11,9 @@
 
   den.aspects.my.wm.niri = {
     includes = [
-      (<core.login-manager> "niri")
-      <my/de/noctalia>
+      # <my/de/noctalia>
     ];
     nixos = {pkgs, ...}: {
-      imports = [
-        inputs.niri.nixosModules.niri
-      ];
       environment.systemPackages = with pkgs; [
         brightnessctl
         slurp
@@ -25,23 +21,39 @@
         playerctl
         xwayland-satellite
         nautilus
+        (pkgs.catppuccin-sddm.override {
+          flavor = "mocha";
+          accent = "mauve";
+        })
       ];
       programs.niri.enable = true;
+      security.polkit.enable = true;
+      services.displayManager = {
+        sddm = {
+          enable = true;
+          wayland.enable = true;
+          theme = "catppuccin-mocha-mauve";
+        };
+        defaultSession = "niri";
+      };
     };
 
     homeManager = {config, ...}: let
       noctalia = cmd: ["noctalia-shell" "ipc" "call"] ++ (lib.splitString " " cmd);
     in {
+      imports = [
+        inputs.niri.homeModules.niri
+      ];
       programs.niri.settings = {
         input = {
           keyboard = {
             repeat-rate = 25;
-            repeat-delay = 300;
-            xkb = {
-              layout = "us";
-              options = "compose:ralt,ctrl:nocaps";
-              model = "";
-            };
+            repeat-delay = 200;
+            # xkb = {
+            #   layout = "us";
+            #   options = "compose:ralt,ctrl:nocaps";
+            #   model = "";
+            # };
           };
           touchpad = {
             tap = true;
