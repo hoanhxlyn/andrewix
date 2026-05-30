@@ -40,8 +40,8 @@
     ];
     andrew-pc.provides.to-users.includes = [
       <workstation>
-      # <my/de/gnome>
-      <my/wm/niri>
+      <my/de/gnome>
+      # <my/wm/niri>
       <core.nvidia>
     ];
   };
