@@ -1,6 +1,6 @@
 {__findFile, ...}: {
   den.aspects = {
-    workstation.    includes = [
+    workstation.includes = [
       (<den/batteries/import-tree/host> ../../hosts)
       <core.bootable>
       <core.disko>
@@ -35,13 +35,13 @@
 
     andrew-laptop.provides.to-users.includes = [
       <workstation>
-      # <my/wm/niri>
       <my/de/gnome>
       <core.power-manager>
     ];
     andrew-pc.provides.to-users.includes = [
       <workstation>
-      <my/de/gnome>
+      # <my/de/gnome>
+      <my/wm/niri>
       <core.nvidia>
     ];
   };
