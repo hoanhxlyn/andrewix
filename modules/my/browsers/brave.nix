@@ -8,7 +8,6 @@
         {id = "oboonakemofpalcgghocfoadofidjkkk";}
         {id = "fmkadmapgofadopljbjfkapdkoienihi";}
       ];
-      nativeMessagingHosts = [pkgs.keepassxc];
     };
   };
 }
