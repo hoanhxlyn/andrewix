@@ -27,7 +27,7 @@
       <my/sync/keepassxc>
       <my/editor/vscode>
       <my/editor/cursor>
-      <my/terminals/alacritty>
+      <my/terminals/ghostty>
       <my/vm/podman>
       <my/office/markdown>
       <my/editor/nvf>
