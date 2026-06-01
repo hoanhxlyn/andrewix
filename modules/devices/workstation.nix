@@ -22,7 +22,7 @@
       <my/vpn/proton>
       <my/office/teams>
       <my/browsers/zen>
-      <my/browsers/brave> # Need a chromium for web dev
+      <my/browsers/helium>
       <my/sync/rclone>
       <my/sync/keepassxc>
       <my/editor/vscode>
