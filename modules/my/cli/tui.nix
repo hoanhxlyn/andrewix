@@ -1,5 +1,8 @@
 {__findFile, ...}: {
   den.aspects.my.cli.tui = {
+    nixos = {pkgs, ...}: {
+      environment.systemPackages = [pkgs.ueberzugpp];
+    };
     homeManager = {pkgs, ...}: let
       plug = pkgs.yaziPlugins;
     in {

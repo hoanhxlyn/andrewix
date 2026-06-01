@@ -23,6 +23,15 @@
       };
     in {
       imports = [inputs.nvf.nixosModules.default];
+      environment.systemPackages = with pkgs; [
+        ueberzugpp
+        graphicsmagick
+        graphicsmagick-imagemagick-compat
+        tectonic
+        mermaid-cli
+        sqlite
+        ghostscript
+      ];
       programs.nvf = {
         enable = true;
         settings.vim = {
