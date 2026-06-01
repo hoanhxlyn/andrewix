@@ -11,7 +11,7 @@
       programs.helium = {
         enable = true;
         flags = [
-          "--enable-features=TouchpadOverscrollHistoryNavigation"
+          "--enable-features=TouchpadOverscrollHistoryNavigation,VerticalTabs"
           "--start-maximized"
         ];
         policies = {
