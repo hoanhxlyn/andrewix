@@ -1,6 +1,7 @@
 {
   den.aspects.my.statusbar.waybar = {
-    homeManager = {
+    homeManager = {pkgs, ...}: {
+      home.packages = with pkgs; [gsimplecal];
       programs.waybar = {
         enable = true;
         settings = {
@@ -25,6 +26,7 @@
             clock = {
               format = "{:%a %d %b  %H:%M}";
               tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+              on-click = "gsimplecal";
             };
 
             pulseaudio = {
@@ -35,10 +37,11 @@
             };
 
             network = {
-              format-wifi = "  {essid}";
-              format-ethernet = " {ifname}";
-              format-disconnected = "  Disconnected";
+              format-wifi = "{icon} {essid}";
+              format-ethernet = "";
+              format-disconnected = "󰤭  Disconnected";
               tooltip-format = "{ifname} via {gwaddr}";
+              format-icon = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
             };
 
             battery = {
@@ -47,13 +50,15 @@
                 critical = 15;
               };
               format = "{icon} {capacity}%";
-              format-charging = "  {capacity}%";
+              format-charging = " {capacity}%";
               format-icons = ["" "" "" "" ""];
             };
 
             backlight = {
               device = "intel_backlight";
-              format = "󰖨  {percent}%";
+              format = "{icon} {percent}%";
+              format-icons = ["󰃚" "󰃛" "󰃜" "󰃝" "󰃞" "󰃟" "󰃠"];
+              on-click = "brightnessctl set 0%";
               on-scroll-up = "brightnessctl set +5%";
               on-scroll-down = "brightnessctl set 5%-";
             };
@@ -62,25 +67,6 @@
           };
         };
       };
-      programs.waybar.style = ''
-        #workspaces button {
-          min-width: 8px;
-          min-height: 8px;
-          max-width: 8px;
-          max-height: 8px;
-          padding: 0;
-          margin: 0 3px;
-          border-radius: 50%;
-          border: none;
-        }
-
-        #workspaces button.active {
-          min-width: 10px;
-          min-height: 10px;
-          max-width: 10px;
-          max-height: 10px;
-        }
-      '';
 
       stylix.targets.waybar = {
         enable = true;

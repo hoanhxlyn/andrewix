@@ -58,7 +58,7 @@
       programs.niri.settings = {
         input = {
           keyboard = {
-            repeat-rate = 10;
+            repeat-rate = 20;
             repeat-delay = 160;
           };
           touchpad = {
@@ -146,7 +146,7 @@
               "-m"
               "fill"
               "-i"
-              "${homeConfig.config.home.homeDirectory}/Pictures/wallpapers/wallpaperflare.com_wallpaper (2).jpg"
+              "~/Pictures/wallpapers/wallpaperflare.com_wallpaper (2).jpg"
             ];
           }
         ];
