@@ -36,11 +36,13 @@ in {
           resolution = "1920x1080";
           refresh-rate = 74.973;
           primary = false;
+          scale = 1;
         };
         "HDMI-A-2" = {
           resolution = "1920x1080";
           refresh-rate = 74.973;
           primary = true;
+          scale = 1;
         };
       };
       users.andrew = {};
