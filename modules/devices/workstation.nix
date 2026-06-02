@@ -25,7 +25,7 @@
       <my/browsers/helium>
       <my/sync/rclone>
       <my/sync/keepassxc>
-      <my/sync/sops>
+      # <my/sync/sops>
       <my/editor/vscode>
       <my/editor/cursor>
       <my/terminals>
@@ -42,8 +42,8 @@
     ];
     andrew-pc.provides.to-users.includes = [
       <workstation>
-      <my/de/gnome>
-      # <my/wm/niri>
+      # <my/de/gnome>
+      <my/wm/niri>
       <core.nvidia>
     ];
   };
