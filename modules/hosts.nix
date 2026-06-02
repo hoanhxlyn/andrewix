@@ -4,7 +4,7 @@ _: let
     fontSize = 12;
     padding = 2;
     opacity = 0.8;
-    name = "ghostty";
+    name = "alacritty";
   };
   gdrive-path = "/mnt/gdrive";
 in {

@@ -11,7 +11,6 @@
             padding.y = builtins.sub terminal.padding terminal.padding;
             decorations = "None";
             blur = true;
-            startup_mode = "Maximized";
           };
           selection = {
             save_to_clipboard = true;
