@@ -1,9 +1,10 @@
-{__findFile, ...}: let
+_: let
   arch = "x86_64-linux";
   terminal = {
     fontSize = 12;
     padding = 2;
     opacity = 0.8;
+    name = "ghostty";
   };
   gdrive-path = "/mnt/gdrive";
 in {
@@ -12,6 +13,20 @@ in {
       inherit terminal;
       inherit gdrive-path;
       users.andrew = {};
+      monitors = {
+        "eDP-1" = {
+          resolution = "2880x1800";
+          refresh-rate = 90.0;
+          primary = false;
+          scale = 2;
+        };
+        "HDMI-A-1" = {
+          resolution = "1920x1080";
+          refresh-rate = 100.0;
+          primary = true;
+          scale = 1;
+        };
+      };
     };
     andrew-pc = {
       inherit terminal;

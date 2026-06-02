@@ -1,5 +1,6 @@
 {lib, ...}: {
-  den.aspects.my.terminals.wezterm = terminal: let
+  den.aspects.my.terminals.wezterm = {host, ...}: let
+    inherit (host) terminal;
     mods = {
       C = "CTRL";
       M = "ALT";
@@ -12,7 +13,7 @@
       stylix.targets.wezterm.enable = false;
       programs = {
         wezterm = {
-          enable = true;
+          enable = terminal.name == "wezterm";
           settings = {
             adjust_window_size_when_changing_font_size = false;
             freetype_load_target = "Light";

@@ -4,7 +4,7 @@
   in {
     homeManager = {
       programs.ghostty = {
-        enable = true;
+        enable = terminal.name == "ghostty";
         settings = {
           window-padding-x = terminal.padding;
           window-padding-y = builtins.sub terminal.padding terminal.padding;

@@ -4,7 +4,7 @@
   in {
     homeManager = {
       programs.alacritty = {
-        enable = true;
+        enable = terminal.name == "alacritty";
         settings = {
           window = {
             padding.x = terminal.padding;
