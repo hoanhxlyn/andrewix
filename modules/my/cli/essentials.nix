@@ -28,6 +28,8 @@
         pnpm
         ngrok
         mockoon
+        age
+        sops
         wget
         just
       ];

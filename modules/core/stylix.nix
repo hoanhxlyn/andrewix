@@ -59,6 +59,7 @@
         targets = {
           plymouth.enable = true;
           nvf.transparentBackground = true;
+          kmscon.enable = false;
         };
       };
     };
