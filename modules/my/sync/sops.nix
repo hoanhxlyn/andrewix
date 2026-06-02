@@ -9,6 +9,7 @@
   };
   den.aspects.my.sync.sops.homeManager = {config, ...}: let
     keyFile = "${config.home.homeDirectory}/.config/sops-nix/keys.txt";
+    secrets = name: "${config.home.homeDirectory}/.config/sops-nix/secrets/${name}";
   in {
     imports = [
       inputs.sops-nix.homeManagerModules.sops
@@ -18,8 +19,9 @@
       defaultSopsFormat = "yaml";
       age.keyFile = keyFile;
       secrets = {
-        CONTEXT7_API_KEY = {};
-        TAVILY_API_KEY = {};
+        CONTEXT7_API_KEY.path = secrets "CONTEXT7_API_KEY";
+        TAVILY_API_KEY.path = secrets "TAVILY_API_KEY";
+        BRAVE_API_KEY.path = secrets "BRAVE_API_KEY";
       };
     };
   };

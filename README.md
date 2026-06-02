@@ -34,7 +34,6 @@ alejandra . && statix check && deadnix --no-underscore --fail
 | `modules/devices/` | Per-device aspects (laptop, wsl) |
 | `modules/defaults.nix` | Default includes for all hosts |
 | `modules/hosts.nix` | Host definitions |
-| `modules/users/andrew.nix` | User identity + aspect composition |
 | `hosts/<host>/_nixos/` | Hardware configs |
 | `disko/<host>/` | Disk partitioning |
 | `secrets/` | sops-nix encrypted secrets |
@@ -53,11 +52,13 @@ just clean-up  # System-wide + delete old gens (sudo)
 ## Secrets
 
 Encrypted with [sops-nix](https://github.com/Mic92/sops-nix) using a shared age key.
+Only available on workstation hosts (`andrew-laptop`, `andrew-pc`) — not WSL.
 
 - **Encrypted file:** `secrets/secrets.yaml` (safe to commit)
 - **Age key location:** `~/.config/sops-nix/keys.txt` on each host
 - **Edit secrets:** `sops secrets/secrets.yaml`
 - **Setup new host:** copy the shared age private key to `~/.config/sops-nix/keys.txt`
+- **Add a new secret:** edit `secrets/secrets.yaml` (via `sops`) **and** declare it in `modules/my/sync/sops.nix` under `sops.secrets`
 
 ## More
 
