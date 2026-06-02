@@ -311,7 +311,7 @@
         window-rules = [
           {
             matches = [{app-id = terminalName;}];
-            default-column-width = {proportion = 0.5;};
+            open-fullscreen = false;
           }
           {
             matches = [
