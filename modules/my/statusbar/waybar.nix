@@ -1,19 +1,18 @@
 {
   den.aspects.my.statusbar.waybar = {
     homeManager = {pkgs, ...}: {
-      home.packages = with pkgs; [gsimplecal];
+      home.packages = with pkgs; [gsimplecal playerctl];
       programs.waybar = {
         enable = true;
         settings = {
           mainBar = {
             layer = "top";
             position = "top";
-            # height = 32;
             spacing = 4;
 
-            modules-left = ["tray"];
+            modules-left = ["custom/nixos" "tray" "mpris"];
             modules-center = ["niri/workspaces"];
-            modules-right = ["clock" "network" "pulseaudio" "battery" "backlight"];
+            modules-right = ["clock" "network" "wireplumber" "battery" "backlight"];
 
             "niri/workspaces" = {
               all-outputs = false;
@@ -23,17 +22,38 @@
 
             "custom/sep".format = "│";
 
-            clock = {
-              format = "{:%a %d %b  %H:%M}";
-              tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-              on-click = "gsimplecal";
+            "custom/nixos" = {
+              format = "";
+              tooltip = false;
             };
 
-            pulseaudio = {
+            mpris = {
+              format = "{player_icon} {dynamic}";
+              format-paused = " {dynamic}";
+              player-icons = {
+                default = "";
+                spotify = "";
+                firefox = "";
+                chromium = "";
+              };
+              dynamic-len = 30;
+              dynamic-order = ["title" "artist"];
+              on-click = "playerctl play-pause";
+            };
+
+            wireplumber = {
               format = "{icon} {volume}%";
               format-muted = "  Muted";
               format-icons = ["" "" ""];
               on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+              on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
+              on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+            };
+
+            clock = {
+              format = "{:%a %d %b  %H:%M}";
+              tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+              on-click = "gsimplecal";
             };
 
             network = {
