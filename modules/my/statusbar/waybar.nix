@@ -58,10 +58,10 @@
 
             network = {
               format-wifi = "{icon} {essid}";
-              format-ethernet = "";
+              format-ethernet = "󰈀 ";
               format-disconnected = "󰤭  Disconnected";
               tooltip-format = "{ifname} via {gwaddr}";
-              format-icon = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
+              format-icon = ["󰤯 " "󰤟 " "󰤢 " "󰤥 " "󰤨 "];
             };
 
             battery = {
@@ -71,13 +71,13 @@
               };
               format = "{icon} {capacity}%";
               format-charging = " {capacity}%";
-              format-icons = ["" "" "" "" ""];
+              format-icons = [" " " " " " " " " "];
             };
 
             backlight = {
               device = "intel_backlight";
               format = "{icon} {percent}%";
-              format-icons = ["󰃚" "󰃛" "󰃜" "󰃝" "󰃞" "󰃟" "󰃠"];
+              format-icons = ["󰃚 " "󰃛 " "󰃜 " "󰃝 " "󰃞 " "󰃟 " "󰃠 "];
               on-click = "brightnessctl set 0%";
               on-scroll-up = "brightnessctl set +5%";
               on-scroll-down = "brightnessctl set 5%-";
