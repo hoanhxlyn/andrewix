@@ -157,7 +157,6 @@
 
         environment = {
           QT_QPA_PLATFORM = "wayland";
-          DISPLAY = null;
         };
 
         binds = with action; {
@@ -213,10 +212,12 @@
           "Mod+Down".action = focus-window-or-workspace-down;
           "Mod+Up".action = focus-window-or-workspace-up;
           "Mod+Right".action = focus-column-right;
-          "Mod+Shift+H".action = focus-column-first;
-          "Mod+Shift+L".action = focus-column-last;
-          "Mod+Shift+Left".action = focus-column-first;
-          "Mod+Shift+Right".action = focus-column-last;
+          "Mod+Shift+H".action = focus-monitor-left;
+          "Mod+Shift+L".action = focus-monitor-right;
+          "Mod+Shift+Left".action = focus-monitor-left;
+          "Mod+Shift+Right".action = focus-monitor-right;
+          "Shift+Alt+Left".action = move-column-to-monitor-left;
+          "Shift+Alt+Right".action = move-column-to-monitor-right;
           "Mod+Ctrl+H".action = move-column-left;
           "Mod+Ctrl+J".action = move-window-down-or-to-workspace-down;
           "Mod+Ctrl+K".action = move-window-up-or-to-workspace-up;
