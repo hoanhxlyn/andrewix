@@ -28,7 +28,7 @@
       <my/sync/sops>
       <my/editor/vscode>
       <my/editor/cursor>
-      <my/terminals/ghostty>
+      <my/terminals>
       <my/vm/podman>
       <my/office/markdown>
       <my/editor/nvf>
@@ -36,7 +36,8 @@
 
     andrew-laptop.provides.to-users.includes = [
       <workstation>
-      <my/de/gnome>
+      <my/wm/niri>
+      # <my/de/gnome>
       <core.power-manager>
     ];
     andrew-pc.provides.to-users.includes = [

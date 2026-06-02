@@ -1,0 +1,79 @@
+{
+  den.aspects.my.statusbar.waybar = {
+    homeManager = {pkgs, ...}: {
+      home.packages = with pkgs; [gsimplecal];
+      programs.waybar = {
+        enable = true;
+        settings = {
+          mainBar = {
+            layer = "top";
+            position = "top";
+            # height = 32;
+            spacing = 4;
+
+            modules-left = ["tray"];
+            modules-center = ["niri/workspaces"];
+            modules-right = ["clock" "network" "pulseaudio" "battery" "backlight"];
+
+            "niri/workspaces" = {
+              all-outputs = false;
+              format = "";
+              on-click = "activate";
+            };
+
+            "custom/sep".format = "│";
+
+            clock = {
+              format = "{:%a %d %b  %H:%M}";
+              tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+              on-click = "gsimplecal";
+            };
+
+            pulseaudio = {
+              format = "{icon} {volume}%";
+              format-muted = "  Muted";
+              format-icons = ["" "" ""];
+              on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+            };
+
+            network = {
+              format-wifi = "{icon} {essid}";
+              format-ethernet = "";
+              format-disconnected = "󰤭  Disconnected";
+              tooltip-format = "{ifname} via {gwaddr}";
+              format-icon = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
+            };
+
+            battery = {
+              states = {
+                warning = 40;
+                critical = 15;
+              };
+              format = "{icon} {capacity}%";
+              format-charging = " {capacity}%";
+              format-icons = ["" "" "" "" ""];
+            };
+
+            backlight = {
+              device = "intel_backlight";
+              format = "{icon} {percent}%";
+              format-icons = ["󰃚" "󰃛" "󰃜" "󰃝" "󰃞" "󰃟" "󰃠"];
+              on-click = "brightnessctl set 0%";
+              on-scroll-up = "brightnessctl set +5%";
+              on-scroll-down = "brightnessctl set 5%-";
+            };
+
+            tray.spacing = 8;
+          };
+        };
+      };
+
+      stylix.targets.waybar = {
+        enable = true;
+        enableLeftBackColors = true;
+        enableRightBackColors = true;
+        enableCenterBackColors = true;
+      };
+    };
+  };
+}
