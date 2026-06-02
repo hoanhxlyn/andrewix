@@ -43,11 +43,11 @@ NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto
 | `modules/my/` | User-level aspects → Home Manager config |
 | `modules/hosts.nix` | Host definitions (4 hosts) |
 | `modules/devices/` | Per-device aspects (laptop.nix, wsl.nix) |
-| `modules/users/andrew.nix` | User identity + aspect includes |
 | `modules/defaults.nix` | Default includes for all hosts |
 | `modules/dendritic.nix` | Framework bootstrapping |
 | `hosts/<host>/_nixos/` | Hardware configs (filesystems, kernel modules) |
 | `disko/<host>/` | Disk partitioning configs |
+| `secrets/` | sops-nix encrypted secrets |
 | `config/` | Non-Nix app configs |
 | `flake.nix` | **Auto-generated. DO NOT EDIT.** |
 
