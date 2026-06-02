@@ -44,42 +44,50 @@
         '')
 
         (pkgs.writeShellScriptBin "fuzzel-audio" ''
-          sinks_json=$(pw-dump | jq -c '[.[] | select(.info.props["media.class"] == "Audio/Sink") | {id: .id, name: .info.props["node.name"], desc: .info.props["node.description"]}]')
-          if [ -z "$sinks_json" ] || [ "$sinks_json" = "[]" ]; then
+          mapfile -t sink_lines < <(pactl list sinks | awk '
+            /^Sink #/      { idx = substr($2, 2) }
+            /^\tName:/     { name = $2 }
+            /^\tDescription:/ { sub(/^\tDescription: /, ""); print idx "\t" name "\t" $0 }
+          ')
+          if [ "''${#sink_lines[@]}" -eq 0 ]; then
             notify-send "Audio" "No sinks found"
             exit 1
           fi
-          default_name=$(pw-metadata -n default | grep 'default.audio.sink' | sed -r "s/.*value:'(.*)'.*/\1/" | jq -r '.name' 2>/dev/null)
-          mapfile -t ids   < <(echo "$sinks_json" | jq -r '.[] | .id')
-          mapfile -t names < <(echo "$sinks_json" | jq -r '.[] | .name')
-          mapfile -t descs < <(echo "$sinks_json" | jq -r '.[] | .desc')
-          selection=$(for i in "''${!ids[@]}"; do
-            if [ "''${names[$i]}" = "$default_name" ]; then
+          default_sink=$(pactl get-default-sink)
+          mapfile -t names < <(printf '%s\n' "''${sink_lines[@]}" | cut -f2)
+          mapfile -t descs < <(printf '%s\n' "''${sink_lines[@]}" | cut -f3)
+          selection=$(for i in "''${!names[@]}"; do
+            if [ "''${names[$i]}" = "$default_sink" ]; then
               echo "󰄬 ''${descs[$i]}"
             else
               echo "  ''${descs[$i]}"
             fi
           done | fuzzel --dmenu --prompt="Audio: " --index)
           if [ -n "$selection" ]; then
-            wpctl set-default "''${ids[$selection]}"
+            pactl set-default-sink "''${names[$selection]}"
             notify-send "Audio" "Switched to ''${descs[$selection]}" 2>/dev/null || true
           fi
         '')
 
-        (pkgs.writeShellScriptBin "fuzzel-emoji" ''
-          EMOJI_FILE="$HOME/.cache/emoji_list.txt"
-          if [ ! -f "$EMOJI_FILE" ]; then
-            notify-send "Fuzzel" "Downloading emoji list..."
-            curl -s https://raw.githubusercontent.com/muan/emojilib/main/dist/emoji-en-US.json \
-              | jq -r 'to_entries | .[] | "\(.key) \(.value[0])"' > "$EMOJI_FILE"
-          fi
-          selection=$(fuzzel --dmenu --prompt="Emoji: " < "$EMOJI_FILE")
-          if [ -n "$selection" ]; then
-            emoji=$(echo "$selection" | awk '{print $1}')
-            echo -n "$emoji" | wl-copy
-            notify-send "Emoji" "Copied $emoji to clipboard"
-          fi
-        '')
+        (pkgs.writeShellApplication {
+          name = "fuzzel-emoji";
+          runtimeInputs = with pkgs; [curl jq wl-clipboard libnotify fuzzel];
+          text = ''
+            EMOJI_FILE="$HOME/.cache/emoji_list.txt"
+            if [ ! -f "$EMOJI_FILE" ] || [ ! -s "$EMOJI_FILE" ]; then
+              notify-send "Fuzzel" "Downloading emoji list..."
+              mkdir -p "$(dirname "$EMOJI_FILE")"
+              curl -sf https://raw.githubusercontent.com/muan/emojilib/main/dist/emoji-en-US.json \
+                | jq -r 'to_entries | .[] | "\(.key) \(.value[0])"' > "$EMOJI_FILE"
+            fi
+            selection=$(fuzzel --dmenu --prompt="Emoji: " < "$EMOJI_FILE")
+            if [ -n "$selection" ]; then
+              emoji=$(echo "$selection" | awk '{print $1}')
+              echo -n "$emoji" | wl-copy
+              notify-send "Emoji" "Copied $emoji to clipboard"
+            fi
+          '';
+        })
 
         (pkgs.writeShellScriptBin "fuzzel-power" ''
           SELECTIONS=" Shutdown\n󰜉 Reboot\n󰒲 Sleep\n󰗽 Logout\n󰌾 Lock"
