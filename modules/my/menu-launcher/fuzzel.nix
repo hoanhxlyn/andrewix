@@ -7,7 +7,7 @@
         enable = true;
         settings = {
           main = {
-            terminal = terminal.name;
+            terminal = "${terminal.name} -e";
             prompt = "❯  ";
             placeholder = "What are we doing ?";
             show-actions = false;
