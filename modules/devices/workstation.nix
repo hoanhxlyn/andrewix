@@ -42,6 +42,7 @@
     andrew-pc.provides.to-users.includes = [
       <workstation>
       <my/wm/niri>
+      <my/sync/sops>
       <core.nvidia>
     ];
   };

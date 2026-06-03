@@ -12,6 +12,7 @@ in {
     andrew-laptop = {
       inherit terminal;
       inherit gdrive-path;
+      isLaptop = true;
       users.andrew = {};
       monitors = {
         "eDP-1" = {
@@ -31,6 +32,7 @@ in {
     andrew-pc = {
       inherit terminal;
       inherit gdrive-path;
+      isLaptop = false;
       monitors = {
         "HDMI-A-1" = {
           resolution = "1920x1080";
