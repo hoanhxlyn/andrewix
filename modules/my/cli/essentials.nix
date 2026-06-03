@@ -32,6 +32,7 @@
         sops
         wget
         just
+        jq
       ];
       programs = {
         nix-ld.enable = true;
