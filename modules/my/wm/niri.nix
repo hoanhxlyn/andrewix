@@ -55,8 +55,9 @@
       programs.niri.settings = {
         input = {
           keyboard = {
-            repeat-rate = 20;
-            repeat-delay = 160;
+            repeat-rate = 50;
+            repeat-delay = 250;
+            track-layout = "global";
           };
           touchpad = {
             tap = true;
@@ -155,9 +156,7 @@
 
         screenshot-path = "~/Pictures/Screenshots/Screenshot_%Y-%m-%d_%H-%M-%S.png";
 
-        environment = {
-          QT_QPA_PLATFORM = "wayland";
-        };
+        environment.QT_QPA_PLATFORM = "wayland";
 
         binds = with action; {
           # "Mod+Space".action.spawn = noctalia "launcher toggle";
@@ -307,7 +306,16 @@
             action.spawn = ["brightnessctl" "set" "5%-"];
           };
         };
-
+        layer-rules = [
+          {
+            matches = [
+              {
+                namespace = "^launcher$";
+              }
+            ];
+            # background-effect.blur = true;
+          }
+        ];
         window-rules = [
           {
             matches = [
@@ -331,6 +339,10 @@
               bottom-right = 3.0;
             };
             clip-to-geometry = true;
+          }
+          {
+            matches = [{app-id = "^Alacritty$";}];
+            # background-effect.blur = true;
           }
         ];
       };

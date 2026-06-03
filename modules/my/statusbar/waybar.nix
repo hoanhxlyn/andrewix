@@ -10,9 +10,9 @@
             position = "top";
             spacing = 4;
 
-            modules-left = ["custom/nixos" "tray" "mpris"];
-            modules-center = ["niri/workspaces"];
-            modules-right = ["clock" "custom/sep" "network" "custom/sep" "wireplumber" "custom/sep" "battery" "custom/sep" "backlight"];
+            modules-left = ["custom/nixos" "tray" "mpris" "custom/sep" "niri/workspaces"];
+            modules-center = ["clock"];
+            modules-right = ["network" "custom/sep" "wireplumber" "custom/sep" "battery" "custom/sep" "backlight"];
 
             "niri/workspaces" = {
               all-outputs = false;
@@ -51,7 +51,7 @@
             };
 
             clock = {
-              format = "{:%a %d %b  %H:%M}";
+              format = "{:%A %m/%d/%y %H:%M}";
               tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
               on-click = "gsimplecal";
             };
@@ -61,7 +61,7 @@
               format-ethernet = "󰈀 {ifname}";
               format-disconnected = "󰤭  Disconnected";
               tooltip-format = "{ifname} via {gwaddr}";
-              format-icon = ["󰤯 " "󰤟 " "󰤢 " "󰤥 " "󰤨 "];
+              format-icon = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
             };
 
             battery = {
@@ -77,7 +77,7 @@
             backlight = {
               device = "intel_backlight";
               format = "{icon} {percent}%";
-              format-icons = ["󰃚 " "󰃛 " "󰃜 " "󰃝 " "󰃞 " "󰃟 " "󰃠 "];
+              format-icons = ["󰃚" "󰃛" "󰃜" "󰃝" "󰃞" "󰃟" "󰃠"];
               on-click = "brightnessctl set 0%";
               on-scroll-up = "brightnessctl set +5%";
               on-scroll-down = "brightnessctl set 5%-";
@@ -90,9 +90,9 @@
 
       stylix.targets.waybar = {
         enable = true;
-        enableLeftBackColors = false;
+        enableLeftBackColors = true;
         enableRightBackColors = false;
-        enableCenterBackColors = true;
+        enableCenterBackColors = false;
       };
     };
   };

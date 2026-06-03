@@ -63,7 +63,6 @@
   "window.menuBarVisibility": "hidden",
   "workbench.activityBar.location": "top",
   "workbench.browser.enableChatTools": true,
-  "workbench.colorTheme": "Gruvbox Dark Medium",
   "workbench.editor.customLabels.enabled": true,
   "workbench.editor.customLabels.patterns": {
     "**/src/**/index.{js,jsx,ts,tsx}": "${dirname(1)}/${dirname}"
