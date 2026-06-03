@@ -5,7 +5,6 @@
     ];
     homeManager = {
       programs = {
-        uv.enable = true;
         mcp = {
           enable = true;
           servers = {

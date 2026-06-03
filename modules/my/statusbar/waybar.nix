@@ -1,10 +1,14 @@
 {
   den.aspects.my.statusbar.waybar = {
-    homeManager = {pkgs, host, ...}:
-    let
-      withSeps = mods:
-        let present = builtins.filter (m: m != null) mods;
-        in builtins.tail (builtins.concatMap (m: ["custom/sep" m]) present);
+    homeManager = {
+      pkgs,
+      host,
+      ...
+    }: let
+      withSeps = mods: let
+        present = builtins.filter (m: m != null) mods;
+      in
+        builtins.tail (builtins.concatMap (m: ["custom/sep" m]) present);
     in {
       home.packages = with pkgs; [gsimplecal playerctl];
       programs.waybar = {
@@ -19,9 +23,18 @@
             modules-center = ["clock"];
             modules-right = withSeps [
               "network"
+              "bluetooth"
               "wireplumber"
-              (if host.isLaptop then "battery" else null)
-              (if host.isLaptop then "backlight" else null)
+              (
+                if host.isLaptop
+                then "battery"
+                else null
+              )
+              (
+                if host.isLaptop
+                then "backlight"
+                else null
+              )
             ];
 
             "niri/workspaces" = {
@@ -72,6 +85,16 @@
               format-disconnected = "󰤭  Disconnected";
               tooltip-format = "{ifname} via {gwaddr}";
               format-icon = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
+            };
+
+            bluetooth = {
+              format = "󰂯 {status}";
+              format-connected = "󰂱 {device_alias}";
+              format-connected-battery = "󰂱 {device_alias} {device_battery_percentage}%";
+              on-click = "blueman-manager";
+              tooltip-format = "{controller_alias}\t{controller_address}\n\n{num_connections} connected";
+              tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
+              tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
             };
 
             battery = {
