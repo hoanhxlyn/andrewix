@@ -26,6 +26,7 @@
         grim
         xwayland-satellite
         networkmanagerapplet
+        blueman
         (pkgs.catppuccin-sddm.override {
           flavor = "mocha";
           accent = "mauve";
@@ -57,8 +58,6 @@
       imports = [
         inputs.niri.homeModules.niri
       ];
-
-      services.blueman-applet.enable = true;
 
       programs.niri.settings = {
         input = {
@@ -146,6 +145,8 @@
         spawn-at-startup = [
           # {command = ["noctalia-shell"];}
           {argv = ["waybar"];}
+          {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];}
+          {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
           {
             command = [
               "swaybg"
@@ -336,6 +337,10 @@
                 title = "Picture-in-Picture";
               }
             ];
+            open-floating = true;
+          }
+          {
+            matches = [{app-id = "^.blueman-manager-wrapped$";}];
             open-floating = true;
           }
           {
