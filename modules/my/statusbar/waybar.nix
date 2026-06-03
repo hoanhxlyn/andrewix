@@ -1,6 +1,11 @@
 {
   den.aspects.my.statusbar.waybar = {
-    homeManager = {pkgs, ...}: {
+    homeManager = {pkgs, host, ...}:
+    let
+      withSeps = mods:
+        let present = builtins.filter (m: m != null) mods;
+        in builtins.tail (builtins.concatMap (m: ["custom/sep" m]) present);
+    in {
       home.packages = with pkgs; [gsimplecal playerctl];
       programs.waybar = {
         enable = true;
@@ -12,7 +17,12 @@
 
             modules-left = ["custom/nixos" "tray" "mpris" "custom/sep" "niri/workspaces"];
             modules-center = ["clock"];
-            modules-right = ["network" "custom/sep" "wireplumber" "custom/sep" "battery" "custom/sep" "backlight"];
+            modules-right = withSeps [
+              "network"
+              "wireplumber"
+              (if host.isLaptop then "battery" else null)
+              (if host.isLaptop then "backlight" else null)
+            ];
 
             "niri/workspaces" = {
               all-outputs = false;
@@ -28,7 +38,7 @@
             };
 
             mpris = {
-              format = "{player_icon} {dynamic}";
+              format = "{dynamic} {player_icon}";
               format-paused = " {dynamic}";
               player-icons = {
                 default = "󰝚 ";
