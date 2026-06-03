@@ -12,7 +12,7 @@
 
             modules-left = ["custom/nixos" "tray" "mpris"];
             modules-center = ["niri/workspaces"];
-            modules-right = ["clock" "network" "wireplumber" "battery" "backlight"];
+            modules-right = ["clock" "custom/sep" "network" "custom/sep" "wireplumber" "custom/sep" "battery" "custom/sep" "backlight"];
 
             "niri/workspaces" = {
               all-outputs = false;
@@ -20,7 +20,7 @@
               on-click = "activate";
             };
 
-            "custom/sep".format = "│";
+            "custom/sep".format = "▌";
 
             "custom/nixos" = {
               format = " ";
@@ -43,8 +43,8 @@
 
             wireplumber = {
               format = "{icon} {volume}%";
-              format-muted = "  Muted";
-              format-icons = ["" " " " "];
+              format-muted = " Muted";
+              format-icons = ["" "" ""];
               on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
               on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
               on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
@@ -58,7 +58,7 @@
 
             network = {
               format-wifi = "{icon} {essid}";
-              format-ethernet = "󰈀 ";
+              format-ethernet = "󰈀 {ifname}";
               format-disconnected = "󰤭  Disconnected";
               tooltip-format = "{ifname} via {gwaddr}";
               format-icon = ["󰤯 " "󰤟 " "󰤢 " "󰤥 " "󰤨 "];
@@ -71,7 +71,7 @@
               };
               format = "{icon} {capacity}%";
               format-charging = " {capacity}%";
-              format-icons = [" " " " " " " " " "];
+              format-icons = ["" "" "" "" ""];
             };
 
             backlight = {
@@ -90,8 +90,8 @@
 
       stylix.targets.waybar = {
         enable = true;
-        enableLeftBackColors = true;
-        enableRightBackColors = true;
+        enableLeftBackColors = false;
+        enableRightBackColors = false;
         enableCenterBackColors = true;
       };
     };

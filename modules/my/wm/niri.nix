@@ -310,10 +310,6 @@
 
         window-rules = [
           {
-            matches = [{app-id = terminalName;}];
-            open-fullscreen = false;
-          }
-          {
             matches = [
               {
                 app-id = "firefox";
