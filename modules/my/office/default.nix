@@ -1,7 +1,7 @@
 {__findFile, ...}: {
   den.aspects.my.office = {
-    teams.nixos = {pkgs, ...}: {
-      environment.systemPackages = [pkgs.teams-for-linux];
+    teams.homeManager = {pkgs, ...}: {
+      home.packages = [pkgs.teams-for-linux];
     };
     markdown = {
       includes = [
