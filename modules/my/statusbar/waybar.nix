@@ -88,12 +88,36 @@
         };
       };
 
-      stylix.targets.waybar = {
-        enable = true;
-        enableLeftBackColors = true;
-        enableRightBackColors = false;
-        enableCenterBackColors = false;
-      };
+      programs.waybar.style = ''
+        #workspaces {
+          background: transparent;
+          border: none;
+          padding: 0 4px;
+        }
+
+        .modules-left #workspaces button {
+          font-size: 0;
+          min-width: 13px;
+          padding: 0;
+          margin: 0 2px;
+          border: none;
+          background-color: transparent;
+          background-image: radial-gradient(circle at 50% 50%, @base03 3px, transparent 3px);
+          box-shadow: none;
+        }
+
+        .modules-left #workspaces button.active,
+        .modules-left #workspaces button.focused {
+          background-image: radial-gradient(circle at 50% 50%, @base0D 3px, transparent 3px);
+          border-bottom: none;
+        }
+
+        .modules-left #workspaces button:hover {
+          background-image: radial-gradient(circle at 50% 50%, @base04 3px, transparent 3px);
+        }
+      '';
+
+      stylix.targets.waybar.enable = true;
     };
   };
 }
