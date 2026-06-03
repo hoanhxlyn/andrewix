@@ -4,12 +4,7 @@
       pkgs,
       host,
       ...
-    }: let
-      withSeps = mods: let
-        present = builtins.filter (m: m != null) mods;
-      in
-        builtins.tail (builtins.concatMap (m: ["custom/sep" m]) present);
-    in {
+    }: {
       home.packages = with pkgs; [gsimplecal playerctl];
       programs.waybar = {
         enable = true;
@@ -19,9 +14,10 @@
             position = "top";
             spacing = 4;
 
-            modules-left = ["custom/nixos" "tray" "mpris" "custom/sep" "niri/workspaces"];
+            modules-left = ["niri/workspaces" "mpris"];
             modules-center = ["clock"];
-            modules-right = withSeps [
+            modules-right = builtins.filter (m: m != null) [
+              "tray"
               "network"
               "bluetooth"
               "wireplumber"
@@ -43,16 +39,14 @@
               on-click = "activate";
             };
 
-            "custom/sep".format = "▌";
-
-            "custom/nixos" = {
-              format = " ";
-              tooltip = false;
-            };
-
             mpris = {
-              format = "{dynamic} {player_icon}";
-              format-paused = " {dynamic}";
+              format = "{player_icon} {dynamic}: {status_icon}";
+              format-paused = "{player_icon} {dynamic}: {status_icon}";
+              status-icons = {
+                playing = "󰝚";
+                paused = "󰏤";
+                stopped = "󰓛";
+              };
               player-icons = {
                 default = "󰝚 ";
                 spotify = "󰓇 ";
@@ -74,7 +68,7 @@
             };
 
             clock = {
-              format = "{:%A %m/%d/%y %H:%M}";
+              format = "{:%a %m/%d/%y %H:%M}";
               tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
               on-click = "gsimplecal";
             };
@@ -122,10 +116,26 @@
       };
 
       programs.waybar.style = ''
+        #tray,
+        #mpris,
+        #network,
+        #bluetooth,
+        #wireplumber,
+        #battery,
+        #backlight,
+        #clock {
+          background-color: @base01;
+          border-radius: 8px;
+          padding: 0 10px;
+          margin: 2px 3px;
+        }
+
         #workspaces {
-          background: transparent;
+          background-color: @base01;
+          border-radius: 8px;
           border: none;
           padding: 0 4px;
+          margin: 2px 3px;
         }
 
         .modules-left #workspaces button {
@@ -134,6 +144,7 @@
           padding: 0;
           margin: 0 2px;
           border: none;
+          border-bottom: none;
           background-color: transparent;
           background-image: radial-gradient(circle at 50% 50%, @base03 3px, transparent 3px);
           box-shadow: none;
