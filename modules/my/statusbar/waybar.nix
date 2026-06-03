@@ -31,10 +31,10 @@
               format = "{player_icon} {dynamic}";
               format-paused = " {dynamic}";
               player-icons = {
-                default = "";
-                spotify = "";
-                firefox = "";
-                chromium = "";
+                default = "󰝚 ";
+                spotify = "󰓇 ";
+                firefox = "󰈹 ";
+                chromium = " ";
               };
               dynamic-len = 30;
               dynamic-order = ["title" "artist"];
