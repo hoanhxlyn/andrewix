@@ -8,7 +8,6 @@
         settings = {
           main = {
             terminal = "${terminal.name} -e";
-            icon-theme = "Papirus-Dark";
             show-actions = true;
             width = 50;
             lines = 10;
@@ -17,6 +16,8 @@
             vertical-pad = builtins.mul terminal.padding 2;
             line-height = 30;
             image-size-ratio = 1.0;
+            icon-theme = "Papirus-Dark";
+            scaling-filter = "lanczos3";
           };
           border = {
             width = 1;
@@ -25,9 +26,13 @@
         };
       };
 
+      home.file.".local/share/icons/hicolor/48x48/apps/yazi.png".source = "${pkgs.yazi}/share/pixmaps/yazi.png";
+      home.file.".local/share/icons/hicolor/48x48/apps/cursor.png".source = "${pkgs.code-cursor}/share/icons/hicolor/1024x1024/apps/cursor.png";
+
       # Utilities scripts
       home.packages = [
         pkgs.libnotify
+        pkgs.papirus-icon-theme
 
         (pkgs.writeShellScriptBin "fuzzel-clipboard" ''
           CACHE="$HOME/.cache/cliphist-previews"
