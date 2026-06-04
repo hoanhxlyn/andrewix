@@ -1,6 +1,6 @@
 {
   den.aspects.my.sync.rclone = {host, ...}: let
-    path = host.gdrive-path;
+    path = host.rclone.path;
   in {
     homeManager = {pkgs, ...}: {
       programs.rclone.enable = true;

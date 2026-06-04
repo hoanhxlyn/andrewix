@@ -72,5 +72,6 @@
   "workbench.navigationControl.enabled": false,
   "workbench.productIconTheme": "Tabler",
   "workbench.welcomePage.walkthroughs.openOnInstall": false,
-  "terminal.integrated.allowChords": false
+  "terminal.integrated.allowChords": false,
+  "workbench.colorTheme": "Cursor Light"
 }
