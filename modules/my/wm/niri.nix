@@ -142,6 +142,7 @@
           "Mod+B".action.spawn = ["zen-beta"];
           # "Mod+Shift+B".action.spawn = noctalia "bluetoothManager toggle";
           "Mod+Shift+B".action.spawn = ["blueman-manager"];
+          "Mod+G".action.spawn = ["fuzzel-battery"];
           "Mod+N".action.spawn = ["nm-connection-editor"];
           # "Mod+Y".action.spawn = noctalia "plugin:clipper toggle";
           "Mod+Y".action.spawn = ["fuzzel-clipboard"];
@@ -306,6 +307,15 @@
           }
           {
             matches = [{app-id = "^.blueman-manager-wrapped$";}];
+            open-floating = true;
+          }
+          {
+            matches = [
+              {
+                app-id = "^Alacritty$";
+                title = "^Power Panel$";
+              }
+            ];
             open-floating = true;
           }
           {
