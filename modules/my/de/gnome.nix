@@ -26,7 +26,6 @@
     }: {
       services = {
         desktopManager.gnome.enable = true;
-        xserver.excludePackages = with pkgs; [xterm];
         gnome.gnome-keyring.enable = lib.mkForce false;
         displayManager.gdm.enable = true;
       };

@@ -1,5 +1,3 @@
 {
-  core.timezone.nixos = {
-    time.timeZone = "Asia/Ho_Chi_Minh";
-  };
+  core.timezone.nixos.time.timeZone = "Asia/Ho_Chi_Minh";
 }
