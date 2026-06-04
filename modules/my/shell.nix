@@ -40,18 +40,22 @@
           cat = "bat";
           grep = "rg";
         };
-        plugins = [
+        plugins = with pkgs.fishPlugins; [
           {
             name = "fzf-fish";
-            inherit (pkgs.fishPlugins.fzf-fish) src;
+            inherit (fzf-fish) src;
           }
           {
             name = "done";
-            inherit (pkgs.fishPlugins.done) src;
+            inherit (done) src;
           }
           {
             name = "git";
-            inherit (pkgs.fishPlugins.plugin-git) src;
+            inherit (plugin-git) src;
+          }
+          {
+            name = "nvm";
+            inherit (nvm) src;
           }
         ];
       };

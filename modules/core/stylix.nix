@@ -24,8 +24,7 @@
         nerd-fonts.caskaydia-cove
         font-awesome
         inter
-        # noto-fonts-color-emoji
-        openmoji-color
+        noto-fonts-color-emoji
         noto-fonts-cjk-sans
         noto-fonts
       ];
@@ -43,7 +42,10 @@
           serif = config.stylix.fonts.sansSerif;
           sansSerif.name = "Noto Sans";
           monospace.name = "CaskaydiaCove Nerd Font";
-          emoji.package = pkgs.openmoji-color;
+          emoji = {
+            package = pkgs.noto-fonts-color-emoji;
+            name = "Noto Color Emoji";
+          };
           sizes = {
             applications = lib.add terminal.fontSize 1;
             terminal = lib.add terminal.fontSize 0;

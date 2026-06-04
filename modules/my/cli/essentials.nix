@@ -24,7 +24,6 @@
         statix
         deadnix
         nps
-        nodejs_latest
         pnpm
         ngrok
         mockoon
@@ -34,9 +33,8 @@
         just
         jq
       ];
-      programs = {
-        nix-ld.enable = true;
-      };
+
+      programs.nix-ld.enable = true;
     };
     homeManager.programs = {
       bun.enable = true;
