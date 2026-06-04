@@ -44,9 +44,13 @@
             CACHE="$HOME/.cache/cliphist-previews"
             mkdir -p "$CACHE"
 
+            dmenu_line() {
+              printf '%s\0icon\x1f%s\n' "$1" "$2"
+            }
+
             selection=$(
               {
-                printf 'Clear History\n'
+                dmenu_line "Clear History" "edit-clear"
                 cliphist list | head -n 20 | while IFS=$'\t' read -r id display; do
                   if [[ "$display" == "[[ binary data"* ]]; then
                     img="$CACHE/$id.png"
@@ -94,11 +98,14 @@
             mapfile -t ids   < <(printf '%s\n' "''${sink_lines[@]}" | cut -f1)
             mapfile -t descs < <(printf '%s\n' "''${sink_lines[@]}" | cut -f2)
             mapfile -t defs  < <(printf '%s\n' "''${sink_lines[@]}" | cut -f3)
+            dmenu_line() {
+              printf '%s\0icon\x1f%s\n' "$1" "$2"
+            }
             selection=$(for i in "''${!ids[@]}"; do
               if [ "''${defs[$i]}" = "1" ]; then
-                echo "󰄬 ''${descs[$i]}"
+                dmenu_line "''${descs[$i]}" "object-select"
               else
-                echo "  ''${descs[$i]}"
+                printf '%s\n' "''${descs[$i]}"
               fi
             done | fuzzel --dmenu --prompt="Audio: " --index)
             if [ -n "$selection" ]; then
@@ -128,8 +135,19 @@
           })
 
           (pkgs.writeShellScriptBin "fuzzel-power" ''
-            SELECTIONS=" Shutdown\n󰜉 Reboot\n󰒲 Sleep\n󰗽 Logout\n󰌾 Lock"
-            selection=$(echo -e "$SELECTIONS" | fuzzel --dmenu --prompt="System: ")
+            dmenu_line() {
+              printf '%s\0icon\x1f%s\n' "$1" "$2"
+            }
+
+            selection=$(
+              {
+                dmenu_line "Shutdown" "system-shutdown"
+                dmenu_line "Reboot" "system-reboot"
+                dmenu_line "Sleep" "system-suspend"
+                dmenu_line "Logout" "system-log-out"
+                dmenu_line "Lock" "system-lock-screen"
+              } | fuzzel --dmenu --prompt="System: "
+            )
             case "$selection" in
               *Shutdown) systemctl poweroff ;;
               *Reboot)   systemctl reboot ;;
@@ -139,32 +157,31 @@
             esac
           '')
 
-          (pkgs.writeShellScriptBin "fuzzel-hub" (
-            if isLaptop
-            then ''
-              MENU="󰅇 Clipboard\n󰍯 Audio\n󰱨 Emoji\n󰂯 Bluetooth\n󰁹 Battery\n󰐥 Power"
-              selection=$(echo -e "$MENU" | fuzzel --dmenu --prompt="Hub: ")
-              case "$selection" in
-                *Clipboard) fuzzel-clipboard ;;
-                *Audio)     fuzzel-audio ;;
-                *Emoji)     fuzzel-emoji ;;
-                *Bluetooth) blueman-manager ;;
-                *Battery)   fuzzel-battery ;;
-                *Power)     fuzzel-power ;;
-              esac
-            ''
-            else ''
-              MENU="󰅇 Clipboard\n󰍯 Audio\n󰱨 Emoji\n󰂯 Bluetooth\n󰐥 Power"
-              selection=$(echo -e "$MENU" | fuzzel --dmenu --prompt="Hub: ")
-              case "$selection" in
-                *Clipboard) fuzzel-clipboard ;;
-                *Audio)     fuzzel-audio ;;
-                *Emoji)     fuzzel-emoji ;;
-                *Bluetooth) blueman-manager ;;
-                *Power)     fuzzel-power ;;
-              esac
-            ''
-          ))
+          (pkgs.writeShellScriptBin "fuzzel-hub" ''
+            dmenu_line() {
+              printf '%s\0icon\x1f%s\n' "$1" "$2"
+            }
+
+            selection=$(
+              {
+                dmenu_line "Clipboard" "edit-copy"
+                dmenu_line "Audio" "audio-volume-high"
+                dmenu_line "Emoji" "insert-emoticon"
+                dmenu_line "Bluetooth" "bluetooth"
+                ${lib.optionalString isLaptop ''dmenu_line "Battery" "battery"''}
+                dmenu_line "Power" "system-shutdown"
+              } | fuzzel --dmenu --prompt="Hub: "
+            )
+
+            case "$selection" in
+              *Clipboard) fuzzel-clipboard ;;
+              *Audio)     fuzzel-audio ;;
+              *Emoji)     fuzzel-emoji ;;
+              *Bluetooth) blueman-manager ;;
+              ${lib.optionalString isLaptop ''*Battery) fuzzel-battery ;;''}
+              *Power)     fuzzel-power ;;
+            esac
+          '')
         ]
         ++ lib.optionals isLaptop [
           (pkgs.writeShellApplication {
@@ -194,7 +211,7 @@
                   /time to empty/ { gsub(/^[ \t]+/, "", $2); te = $2 }
                   END {
                     time = (state ~ /charging/) ? tf : te
-                    printf "󰁹 %s %s %s", pct, state, time
+                    printf "%s %s %s", pct, state, time
                   }'
               }
 
@@ -213,19 +230,25 @@
                 printf '%s | TLP: %s' "$prompt" "''${mode:-?}"
               }
 
+              dmenu_line() {
+                printf '%s\0icon\x1f%s\n' "$1" "$2"
+              }
+
               pick_power_profile() {
                 local current selection profile_cmd profile label
                 current=$(current_profile)
                 selection=$(
-                  for entry in "performance:Performance" "balanced:Balanced" "power-saver:Power saver"; do
-                    profile=''${entry%%:*}
-                    label=''${entry#*:}
-                    if [ "$profile" = "$current" ]; then
-                      echo "󰄬 $label"
-                    else
-                      echo "  $label"
-                    fi
-                  done | fuzzel --dmenu --prompt="Power profile: "
+                  {
+                    for entry in "performance:Performance" "balanced:Balanced" "power-saver:Power saver"; do
+                      profile=''${entry%%:*}
+                      label=''${entry#*:}
+                      if [ "$profile" = "$current" ]; then
+                        dmenu_line "$label" "object-select"
+                      else
+                        printf '%s\n' "$label"
+                      fi
+                    done
+                  } | fuzzel --dmenu --prompt="Power profile: "
                 )
                 [ -n "$selection" ] || return 0
                 case "$selection" in
@@ -268,9 +291,15 @@
               }
 
               while true; do
-                menu="󰕒 Power profile\n󰃠 Brightness +\n󰃟 Brightness -\n󰋊 Full report\n󰂪 Notify details\n Close"
                 selection=$(
-                  echo -e "$menu" | fuzzel --dmenu --prompt="$(menu_prompt): "
+                  {
+                    dmenu_line "Power profile" "cpu"
+                    dmenu_line "Brightness +" "list-add"
+                    dmenu_line "Brightness -" "list-remove"
+                    dmenu_line "Full report" "document-open"
+                    dmenu_line "Notify details" "preferences-desktop-notification"
+                    dmenu_line "Close" "window-close"
+                  } | fuzzel --dmenu --prompt="$(menu_prompt): "
                 )
                 case "$selection" in
                   *Power\ profile*) pick_power_profile ;;
