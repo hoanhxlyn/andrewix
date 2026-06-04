@@ -83,6 +83,7 @@
 
             bluetooth = {
               format = "󰂯 {status}";
+              format-no-controller = "";
               format-connected = "󰂱 {device_alias}";
               format-connected-battery = "󰂱 {device_alias} {device_battery_percentage}%";
               on-click = "blueman-manager";
@@ -96,14 +97,14 @@
                 warning = 40;
                 critical = 15;
               };
-              format = "{icon} {capacity}%";
-              format-charging = " {capacity}%";
+              format = "{icon}";
+              format-charging = " {icon}";
               format-icons = ["" "" "" "" ""];
             };
 
             backlight = {
               device = "intel_backlight";
-              format = "{icon} {percent}%";
+              format = "{icon}";
               format-icons = ["󰃚" "󰃛" "󰃜" "󰃝" "󰃞" "󰃟" "󰃠"];
               on-click = "brightnessctl set 0%";
               on-scroll-up = "brightnessctl set +5%";
