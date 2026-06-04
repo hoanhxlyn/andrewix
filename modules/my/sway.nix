@@ -1,9 +1,6 @@
 {
   den.aspects.my.sway = {
-    nixos = {...}: {
-      security.pam.services.swaylock = {};
-    };
-
+    nixos.security.pam.services.swaylock = {};
     homeManager = {pkgs, ...}: let
       blurScript = pkgs.writeShellScript "swaylock-blur" ''
         tmpfile=$(mktemp /tmp/swaylock-XXXXXX.png)
