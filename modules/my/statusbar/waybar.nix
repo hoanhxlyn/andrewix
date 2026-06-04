@@ -101,6 +101,7 @@
               format-charging = " {icon}";
               tooltip-format = "{capacity}% ({timeTo})";
               format-icons = ["" "" "" "" ""];
+              on-click = "fuzzel-battery";
             };
 
             backlight = {

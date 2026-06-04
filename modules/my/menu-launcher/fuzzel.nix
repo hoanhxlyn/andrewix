@@ -133,14 +133,140 @@
           esac
         '')
 
+        (pkgs.writeShellApplication {
+          name = "fuzzel-battery";
+          runtimeInputs = with pkgs; [
+            upower
+            tlp
+            libnotify
+            fuzzel
+            polkit
+            brightnessctl
+            gawk
+            less
+          ];
+          text = ''
+            terminal="${terminal.name}"
+            battery_dev=$(upower -e | grep -i battery | head -1)
+
+            battery_prompt() {
+              if [ -z "$battery_dev" ]; then
+                echo "No battery"
+                return
+              fi
+              upower -i "$battery_dev" | awk -F: '
+                /state/ { gsub(/^[ \t]+/, "", $2); state = $2 }
+                /percentage/ { gsub(/^[ \t]+/, "", $2); pct = $2 }
+                /time to full/ { gsub(/^[ \t]+/, "", $2); tf = $2 }
+                /time to empty/ { gsub(/^[ \t]+/, "", $2); te = $2 }
+                END {
+                  time = (state ~ /charging/) ? tf : te
+                  printf "󰁹 %s %s %s", pct, state, time
+                }'
+            }
+
+            platform_profile() {
+              if [ -r /sys/firmware/acpi/platform_profile ]; then
+                cat /sys/firmware/acpi/platform_profile
+              fi
+            }
+
+            tlp_mode() {
+              tlp-stat -s 2>/dev/null | awk '/^Mode[[:space:]]+=/ { print $3; exit }'
+            }
+
+            menu_prompt() {
+              local prompt plat tlp
+              prompt=$(battery_prompt)
+              plat=$(platform_profile)
+              tlp=$(tlp_mode)
+              if [ -n "$plat" ]; then
+                printf '%s | Platform: %s | TLP: %s' "$prompt" "$plat" "''${tlp:-?}"
+              else
+                printf '%s | TLP: %s' "$prompt" "''${tlp:-?}"
+              fi
+            }
+
+            pick_platform_profile() {
+              local choices current selection profile
+              choices=$(cat /sys/firmware/acpi/platform_profile_choices 2>/dev/null) || return 1
+              current=$(platform_profile)
+              selection=$(
+                for profile in $choices; do
+                  if [ "$profile" = "$current" ]; then
+                    echo "󰄬 $profile"
+                  else
+                    echo "  $profile"
+                  fi
+                done | fuzzel --dmenu --prompt="Platform profile: "
+              )
+              [ -n "$selection" ] || return 0
+              profile=''${selection#* }
+              if echo "$profile" | pkexec tee /sys/firmware/acpi/platform_profile >/dev/null; then
+                notify-send "Power" "Platform profile: $profile"
+              else
+                notify-send "Power" "Failed to set platform profile"
+              fi
+            }
+
+            show_full_report() {
+              tmp=$(mktemp)
+              {
+                echo "=== Battery ==="
+                upower -i "$battery_dev" 2>/dev/null || echo "No battery device"
+                echo
+                echo "=== TLP Battery ==="
+                tlp-stat -b 2>/dev/null || echo "TLP battery stats unavailable"
+                echo
+                echo "=== TLP System ==="
+                tlp-stat -s 2>/dev/null || echo "TLP system stats unavailable"
+              } > "$tmp"
+              "$terminal" --class power-panel -T "Power Panel" -e less -R "$tmp"
+              rm -f "$tmp"
+            }
+
+            notify_details() {
+              notify-send -t 15000 "Battery" "$(
+                {
+                  upower -i "$battery_dev" 2>/dev/null
+                  echo
+                  tlp-stat -b 2>/dev/null | sed -n '1,20p'
+                } | fold -s -w 60
+              )"
+            }
+
+            while true; do
+              menu="󰋊 Full report\n󰂪 Notify details\n Close"
+              if [ -r /sys/firmware/acpi/platform_profile_choices ]; then
+                menu="󰕒 Platform profile\n$menu"
+              fi
+              if [ -n "$battery_dev" ]; then
+                menu="󰃠 Brightness +\n󰃟 Brightness -\n$menu"
+              fi
+              selection=$(
+                echo -e "$menu" | fuzzel --dmenu --prompt="$(menu_prompt): "
+              )
+              case "$selection" in
+                *Platform*) pick_platform_profile ;;
+                *Brightness\ +*) brightnessctl set +5% ;;
+                *Brightness\ -*) brightnessctl set 5%- ;;
+                *Full*) show_full_report; break ;;
+                *Notify*) notify_details ;;
+                *Close*|"") break ;;
+              esac
+            done
+          '';
+        })
+
         (pkgs.writeShellScriptBin "fuzzel-hub" ''
-          MENU="󰅇 Clipboard\n󰍯 Audio\n󰱨 Emoji\n󰂯 Bluetooth\n󰐥 Power"
+          MENU="󰅇 Clipboard\n󰍯 Audio\n󰱨 Emoji\n󰂯 Bluetooth\n󰁹 Battery\n󰐥 Power"
           selection=$(echo -e "$MENU" | fuzzel --dmenu --prompt="Hub: ")
           case "$selection" in
             *Clipboard) fuzzel-clipboard ;;
             *Audio)     fuzzel-audio ;;
             *Emoji)     fuzzel-emoji ;;
             *Bluetooth) blueman-manager ;;
+            *Battery)   fuzzel-battery ;;
             *Power)     fuzzel-power ;;
           esac
         '')
