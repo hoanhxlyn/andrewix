@@ -1,6 +1,6 @@
 {
   den.aspects.my.sync.keepassxc = {host, ...}: let
-    path = host.gdrive-path;
+    path = host.rclone.path;
   in {
     nixos = {pkgs, ...}: {
       environment.etc."chromium/native-messaging-hosts/org.keepassxc.keepassxc_browser.json".text = builtins.toJSON {

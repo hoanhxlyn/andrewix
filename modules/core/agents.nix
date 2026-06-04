@@ -10,18 +10,14 @@
           servers = {
             context7 = {
               url = "https://mcp.context7.com/mcp";
-              headers = {
-                CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
-              };
+              headers.CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
             };
             tavily = {
               command = "bunx";
               args = [
                 "tavily-mcp@latest"
               ];
-              env = {
-                TAVILY_API_KEY = "{env:TAVILY_API_KEY}";
-              };
+              env.TAVILY_API_KEY = "{env:TAVILY_API_KEY}";
             };
             deepwiki = {
               command = "pnpm";
