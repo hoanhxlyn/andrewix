@@ -8,9 +8,8 @@
         settings = {
           main = {
             terminal = "${terminal.name} -e";
-            prompt = "❯  ";
-            placeholder = "What are we doing ?";
-            show-actions = false;
+            icon-theme = "Papirus-Dark";
+            show-actions = true;
             width = 50;
             lines = 10;
             horizontal-pad = builtins.mul terminal.padding 2;
