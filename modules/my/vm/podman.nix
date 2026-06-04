@@ -1,6 +1,6 @@
 {
   den.aspects.my.vm.podman = {
-    nixos = {pkgs, ...}: {
+    nixos = {
       # Enable common container config files in /etc/containers
       virtualisation.containers.enable = true;
       virtualisation = {
@@ -12,13 +12,6 @@
           defaultNetwork.settings.dns_enabled = true;
         };
       };
-      # Useful other development tools
-      environment.systemPackages = with pkgs; [
-        dive # look into docker image layers
-        podman-tui # status of containers in the terminal
-        docker-compose # start group of containers for dev
-        #podman-compose # start group of containers for dev
-      ];
       # Run podman as systemd services
       # virtualisation.oci-containers.backend = "podman";
       # virtualisation.oci-containers.containers = {
@@ -30,6 +23,13 @@
       # };
     };
     homeManager = {pkgs, ...}: {
+      # Useful other development tools
+      home.packages = with pkgs; [
+        dive # look into docker image layers
+        podman-tui # status of containers in the terminal
+        # docker-compose # start group of containers for dev
+        podman-compose # start group of containers for dev
+      ];
       programs.lazydocker.enable = true;
     };
   };
