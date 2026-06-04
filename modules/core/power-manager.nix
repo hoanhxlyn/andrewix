@@ -1,11 +1,31 @@
 {lib, ...}: {
-  core.power-manager.nixos = {config, ...}: {
+  core.power-manager.nixos = {
+    config,
+    pkgs,
+    ...
+  }: {
     boot = {
       extraModulePackages = with config.boot.kernelPackages; [
         acpi_call
       ];
       kernelModules = ["acpi_call"];
     };
+
+    security.polkit.extraConfig = ''
+      polkit.addRule(function(action, subject) {
+        var cmd = action.lookup("command_line");
+        if (
+          action.id == "org.freedesktop.policykit.exec" &&
+          subject.isInGroup("wheel") &&
+          action.lookup("program") == "${pkgs.tlp}/bin/tlp" &&
+          (cmd.indexOf(" performance") != -1 ||
+           cmd.indexOf(" balanced") != -1 ||
+           cmd.indexOf(" power-saver") != -1)
+        ) {
+          return polkit.Result.YES;
+        }
+      });
+    '';
 
     services = {
       power-profiles-daemon.enable = lib.mkForce false;
@@ -23,8 +43,8 @@
 
           # Platform Profiles
           PLATFORM_PROFILE_ON_AC = "performance";
-          PLATFORM_PROFILE_ON_BAT = "low-power";
-          PLATFORM_PROFILE_ON_SAV = "low-power";
+          PLATFORM_PROFILE_ON_BAT = "balanced";
+          PLATFORM_PROFILE_ON_SAV = "quiet";
 
           # Battery Charge Thresholds
           START_CHARGE_THRESH_BAT0 = 40;
