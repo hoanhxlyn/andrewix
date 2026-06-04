@@ -6,6 +6,7 @@
     homeManager = {pkgs, ...}: let
       plug = pkgs.yaziPlugins;
     in {
+      home.packages = with pkgs; [sqlit-tui];
       programs = {
         yazi = {
           enable = true;
