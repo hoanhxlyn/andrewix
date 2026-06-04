@@ -99,6 +99,7 @@
               };
               format = "{icon}";
               format-charging = " {icon}";
+              tooltip-format = "{capacity}% ({timeTo})";
               format-icons = ["" "" "" "" ""];
             };
 
@@ -106,6 +107,7 @@
               device = "intel_backlight";
               format = "{icon}";
               format-icons = ["󰃚" "󰃛" "󰃜" "󰃝" "󰃞" "󰃟" "󰃠"];
+              tooltip-format = "{percent}%";
               on-click = "brightnessctl set 0%";
               on-scroll-up = "brightnessctl set +5%";
               on-scroll-down = "brightnessctl set 5%-";
