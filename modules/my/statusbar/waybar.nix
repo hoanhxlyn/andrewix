@@ -4,8 +4,16 @@
       pkgs,
       host,
       ...
-    }: {
-      home.packages = with pkgs; [gsimplecal playerctl];
+    }: let
+      vpnStatusScript = pkgs.writeShellScriptBin "waybar-vpn-status" ''
+        if ${pkgs.iproute2}/bin/ip link show proton0 2>/dev/null | ${pkgs.gnugrep}/bin/grep -qE ',UP,'; then
+          echo '{"text":"󰖂","tooltip":"Proton VPN","class":"connected"}'
+        else
+          echo '{"text":""}'
+        fi
+      '';
+    in {
+      home.packages = with pkgs; [gsimplecal playerctl] ++ [vpnStatusScript];
       programs.waybar = {
         enable = true;
         settings = {
@@ -18,7 +26,13 @@
             modules-center = ["clock"];
             modules-right = builtins.filter (m: m != null) [
               "tray"
-              "network"
+              (
+                if host.isLaptop
+                then "network#wifi"
+                else null
+              )
+              "network#eth"
+              "custom/vpn"
               "bluetooth"
               "wireplumber"
               (
@@ -73,12 +87,26 @@
               on-click = "gsimplecal";
             };
 
-            network = {
+            "network#wifi" = {
+              interface = "wl*";
               format-wifi = "{icon} {essid}";
-              format-ethernet = "󰈀 {ifname}";
-              format-disconnected = "󰤭  Disconnected";
+              format-disconnected = "";
               tooltip-format = "{ifname} via {gwaddr}";
               format-icon = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
+            };
+
+            "network#eth" = {
+              interface = "enp*";
+              format-ethernet = "󰈀";
+              format-disconnected = "";
+              tooltip-format = "{ifname} via {gwaddr}";
+            };
+
+            "custom/vpn" = {
+              exec = "${vpnStatusScript}/bin/waybar-vpn-status";
+              return-type = "json";
+              interval = 3;
+              on-click = "protonvpn-app";
             };
 
             bluetooth = {
@@ -123,6 +151,7 @@
         #tray,
         #mpris,
         #network,
+        #custom-vpn,
         #bluetooth,
         #wireplumber,
         #battery,
@@ -132,6 +161,10 @@
           border-radius: 8px;
           padding: 0 10px;
           margin: 2px 3px;
+        }
+
+        #custom-vpn.connected {
+          color: @base0D;
         }
 
         #workspaces {
