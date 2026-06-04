@@ -11,7 +11,7 @@
           decorations = "None";
           blur = true;
         };
-        font.builtin_box_drawing = false;
+        font.builtin_box_drawing = true;
         selection.save_to_clipboard = true;
         terminal.osc52 = "CopyPaste";
         mouse.hide_when_typing = true;

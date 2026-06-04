@@ -75,6 +75,7 @@
           #   accel-profile = "flat";
           # };
           focus-follows-mouse.max-scroll-amount = "0%";
+          workspace-auto-back-and-forth = true;
         };
 
         cursor.hide-when-typing = true;
@@ -96,11 +97,11 @@
             {proportion = 0.7;}
           ];
           focus-ring = {
-            enable = true;
+            enable = false;
             width = 3;
           };
           border = {
-            enable = false;
+            enable = true;
             width = 3;
           };
         };
@@ -308,6 +309,10 @@
             open-floating = true;
           }
           {
+            matches = [{app-id = "^Alacritty$";}];
+            # background-effect.blur = true;
+          }
+          {
             matches = [{}];
             geometry-corner-radius = {
               top-left = 3.0;
@@ -316,10 +321,6 @@
               bottom-right = 3.0;
             };
             clip-to-geometry = true;
-          }
-          {
-            matches = [{app-id = "^Alacritty$";}];
-            # background-effect.blur = true;
           }
         ];
       };
