@@ -84,43 +84,7 @@
           slowdown = 1.5;
         };
 
-        outputs = let
-          monitors = host.monitors or {};
-          parseRes = res: let
-            m = builtins.match "([0-9]+)x([0-9]+)" res;
-          in {
-            width = builtins.fromJSON (builtins.head m);
-            height = builtins.fromJSON (builtins.elemAt m 1);
-          };
-          rightOffset =
-            homeConfig.lib.foldlAttrs (acc: _: m: let
-              res = parseRes m.resolution;
-              scale = m.scale or 1;
-            in
-              if !(m.primary or false)
-              then acc + (res.width / scale)
-              else acc)
-            0
-            monitors;
-        in
-          homeConfig.lib.mapAttrs (_: m: let
-            res = parseRes m.resolution;
-          in {
-            mode = {
-              inherit (res) width;
-              inherit (res) height;
-              refresh = m."refresh-rate" or null;
-            };
-            inherit (m) scale;
-            position = {
-              x =
-                if (m.primary or false)
-                then rightOffset
-                else 0;
-              y = 0;
-            };
-          })
-          monitors;
+        outputs = host.monitors or {};
 
         layout = {
           gaps = 10;
