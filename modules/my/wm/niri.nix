@@ -98,11 +98,11 @@
             {proportion = 0.7;}
           ];
           focus-ring = {
-            enable = false;
+            enable = true;
             width = 3;
           };
           border = {
-            enable = true;
+            enable = false;
             width = 3;
           };
         };
