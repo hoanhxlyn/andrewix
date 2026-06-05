@@ -27,6 +27,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     import-tree.url = "github:vic/import-tree";
+    ironbar = {
+      url = "github:JakeStanger/ironbar";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     niri.url = "github:epireyn/niri-flake";
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
