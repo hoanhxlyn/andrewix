@@ -13,6 +13,7 @@
       enable = terminal.name == "wezterm";
       settings = {
         enable_wayland = true;
+        enable_kitty_keyboard = true;
         adjust_window_size_when_changing_font_size = false;
         freetype_load_target = "Light";
         front_end = "OpenGL";

@@ -2,9 +2,7 @@
   core.git = {host, ...}: {
     homeManager = {lib, ...}: {
       programs = {
-        git-credential-keepassxc = lib.mkIf (!host.wsl.enable) {
-          enable = true;
-        };
+        git-credential-keepassxc.enable = !host.wsl.enable;
         difftastic = {
           enable = true;
           git.enable = true;
