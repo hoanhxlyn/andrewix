@@ -136,72 +136,85 @@
         binds = with action;
           lib.mkMerge [
             {
-              # "Mod+Space".action.spawn = noctalia "launcher toggle";
-              "Mod+Space".action.spawn = ["fuzzel"];
-              # "Mod+S".action.spawn = noctalia "controlCenter toggle";
-              # "Mod+Comma".action.spawn = noctalia "settings toggle";
-              "Mod+T".action.spawn = [terminalName];
-              "Mod+E".action.spawn = ["nautilus"];
-              "Mod+B".action.spawn = ["zen-beta"];
-              # "Mod+Shift+B".action.spawn = noctalia "bluetoothManager toggle";
-              "Mod+Shift+B".action.spawn = ["blueman-manager"];
-              "Mod+N".action.spawn = ["nm-connection-editor"];
-              # "Mod+Y".action.spawn = noctalia "plugin:clipper toggle";
-              "Mod+Y".action.spawn = ["fuzzel-clipboard"];
-              "Mod+Ctrl+Space".action.spawn = ["fuzzel-hub"];
-              "Mod+A".action.spawn = ["fuzzel-audio"];
-              "Mod+Ctrl+E".action.spawn = ["fuzzel-emoji"];
-              "Mod+Shift+X".action.spawn = ["fuzzel-power"];
-              "Mod+Q".action = close-window;
-              "Mod+F".action = maximize-column;
-              "Mod+W".action = toggle-column-tabbed-display;
+              # App launchers
+              "Mod+Space" = {
+                hotkey-overlay.title = "Launcher";
+                action.spawn = ["fuzzel"];
+              };
+              "Mod+T" = {
+                hotkey-overlay.title = "Terminal";
+                action.spawn = [terminalName];
+              };
+              "Mod+E" = {
+                hotkey-overlay.title = "Files";
+                action.spawn = ["nautilus"];
+              };
+              "Mod+B" = {
+                hotkey-overlay.title = "Browser";
+                action.spawn = ["zen-beta"];
+              };
+              "Mod+C" = {
+                hotkey-overlay.title = "Calendar";
+                action.spawn = ["gsimplecal"];
+              };
+              "Mod+N" = {
+                hotkey-overlay.title = "Network";
+                action.spawn = ["nm-connection-editor"];
+              };
+              "Mod+Shift+B" = {
+                hotkey-overlay.title = "Bluetooth";
+                action.spawn = ["blueman-manager"];
+              };
+              "Mod+Y" = {
+                hotkey-overlay.title = "Clipboard";
+                action.spawn = ["fuzzel-clipboard"];
+              };
+              "Mod+Ctrl+Space" = {
+                hotkey-overlay.title = "Hub";
+                action.spawn = ["fuzzel-hub"];
+              };
+              "Mod+A" = {
+                hotkey-overlay.title = "Audio";
+                action.spawn = ["fuzzel-audio"];
+              };
+              "Mod+Ctrl+E" = {
+                hotkey-overlay.title = "Emoji";
+                action.spawn = ["fuzzel-emoji"];
+              };
+              "Mod+Shift+X" = {
+                hotkey-overlay.title = "Power";
+                action.spawn = ["fuzzel-power"];
+              };
+              "Mod+semicolon" = {
+                hotkey-overlay.title = "Lock screen";
+                action.spawn = ["swaylock" "-f"];
+              };
+
+              # Window management
+              "Mod+Q" = {
+                hotkey-overlay.title = "Close window";
+                action = close-window;
+              };
+              "Mod+F" = {
+                hotkey-overlay.title = "Maximize column";
+                action = maximize-column;
+              };
+              "Mod+W" = {
+                hotkey-overlay.title = "Toggle column tabbed";
+                action = toggle-column-tabbed-display;
+              };
               "Mod+Slash".action = show-hotkey-overlay;
               "Mod+O" = {
                 repeat = false;
+                hotkey-overlay.title = "Overview";
                 action = toggle-overview;
               };
-              # "Mod+semicolon".action.spawn = noctalia "lockScreen lock";
-              "Mod+semicolon".action.spawn = ["swaylock" "-f"];
-              "Mod+1".action.focus-workspace = 1;
-              "Mod+2".action.focus-workspace = 2;
-              "Mod+3".action.focus-workspace = 3;
-              "Mod+4".action.focus-workspace = 4;
-              "Mod+5".action.focus-workspace = 5;
-              "Mod+6".action.focus-workspace = 6;
-              "Mod+7".action.focus-workspace = 7;
-              "Mod+8".action.focus-workspace = 8;
-              "Mod+9".action.focus-workspace = 9;
-              "Mod+Ctrl+1".action.move-column-to-workspace = 1;
-              "Mod+Ctrl+2".action.move-column-to-workspace = 2;
-              "Mod+Ctrl+3".action.move-column-to-workspace = 3;
-              "Mod+Ctrl+4".action.move-column-to-workspace = 4;
-              "Mod+Ctrl+5".action.move-column-to-workspace = 5;
-              "Mod+Ctrl+6".action.move-column-to-workspace = 6;
-              "Mod+Ctrl+7".action.move-column-to-workspace = 7;
-              "Mod+Ctrl+8".action.move-column-to-workspace = 8;
-              "Mod+Ctrl+9".action.move-column-to-workspace = 9;
               "Mod+H".action = focus-column-left;
               "Mod+J".action = focus-window-or-workspace-down;
               "Mod+K".action = focus-window-or-workspace-up;
               "Mod+L".action = focus-column-right;
-              "Mod+Left".action = focus-column-left;
-              "Mod+Down".action = focus-window-or-workspace-down;
-              "Mod+Up".action = focus-window-or-workspace-up;
-              "Mod+Right".action = focus-column-right;
               "Mod+Shift+H".action = focus-monitor-left;
               "Mod+Shift+L".action = focus-monitor-right;
-              "Mod+Shift+Left".action = focus-monitor-left;
-              "Mod+Shift+Right".action = focus-monitor-right;
-              "Shift+Alt+Left".action = move-column-to-monitor-left;
-              "Shift+Alt+Right".action = move-column-to-monitor-right;
-              "Mod+Ctrl+H".action = move-column-left;
-              "Mod+Ctrl+J".action = move-window-down-or-to-workspace-down;
-              "Mod+Ctrl+K".action = move-window-up-or-to-workspace-up;
-              "Mod+Ctrl+L".action = move-column-right;
-              "Mod+Ctrl+Left".action = move-column-left;
-              "Mod+Ctrl+Down".action = move-window-down-or-to-workspace-down;
-              "Mod+Ctrl+Up".action = move-window-up-or-to-workspace-up;
-              "Mod+Ctrl+Right".action = move-column-right;
               "Mod+Comma".action = consume-or-expel-window-left;
               "Mod+Period".action = consume-or-expel-window-right;
               "Mod+R".action = switch-preset-column-width;
@@ -209,41 +222,115 @@
               "Mod+Ctrl+R".action = reset-window-height;
               "Mod+Ctrl+F".action = expand-column-to-available-width;
               "Mod+Ctrl+C".action = center-visible-columns;
-              "Mod+V".action = toggle-window-floating;
+              "Mod+V" = {
+                hotkey-overlay.title = "Toggle floating";
+                action = toggle-window-floating;
+              };
               "Mod+Shift+V".action = switch-focus-between-floating-and-tiling;
-              "Mod+Minus".action.set-column-width = "-10%";
-              "Mod+Equal".action.set-column-width = "+10%";
-              "Mod+Shift+Minus".action.set-window-height = "-10%";
-              "Mod+Shift+Equal".action.set-window-height = "+10%";
+
+              # Arrow key variants (hidden — duplicate of hjkl)
+              "Mod+Left" = {hotkey-overlay.hidden = true; action = focus-column-left;};
+              "Mod+Down" = {hotkey-overlay.hidden = true; action = focus-window-or-workspace-down;};
+              "Mod+Up" = {hotkey-overlay.hidden = true; action = focus-window-or-workspace-up;};
+              "Mod+Right" = {hotkey-overlay.hidden = true; action = focus-column-right;};
+              "Mod+Shift+Left" = {hotkey-overlay.hidden = true; action = focus-monitor-left;};
+              "Mod+Shift+Right" = {hotkey-overlay.hidden = true; action = focus-monitor-right;};
+              "Shift+Alt+Left".action = move-column-to-monitor-left;
+              "Shift+Alt+Right".action = move-column-to-monitor-right;
+
+              # Workspace focus (hidden — pattern obvious)
+              "Mod+1" = {hotkey-overlay.hidden = true; action.focus-workspace = 1;};
+              "Mod+2" = {hotkey-overlay.hidden = true; action.focus-workspace = 2;};
+              "Mod+3" = {hotkey-overlay.hidden = true; action.focus-workspace = 3;};
+              "Mod+4" = {hotkey-overlay.hidden = true; action.focus-workspace = 4;};
+              "Mod+5" = {hotkey-overlay.hidden = true; action.focus-workspace = 5;};
+              "Mod+6" = {hotkey-overlay.hidden = true; action.focus-workspace = 6;};
+              "Mod+7" = {hotkey-overlay.hidden = true; action.focus-workspace = 7;};
+              "Mod+8" = {hotkey-overlay.hidden = true; action.focus-workspace = 8;};
+              "Mod+9" = {hotkey-overlay.hidden = true; action.focus-workspace = 9;};
+
+              # Move to workspace (hidden — too granular)
+              "Mod+Ctrl+1" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 1;};
+              "Mod+Ctrl+2" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 2;};
+              "Mod+Ctrl+3" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 3;};
+              "Mod+Ctrl+4" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 4;};
+              "Mod+Ctrl+5" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 5;};
+              "Mod+Ctrl+6" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 6;};
+              "Mod+Ctrl+7" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 7;};
+              "Mod+Ctrl+8" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 8;};
+              "Mod+Ctrl+9" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 9;};
+
+              # Move column (Ctrl + hjkl)
+              "Mod+Ctrl+H".action = move-column-left;
+              "Mod+Ctrl+J".action = move-window-down-or-to-workspace-down;
+              "Mod+Ctrl+K".action = move-window-up-or-to-workspace-up;
+              "Mod+Ctrl+L".action = move-column-right;
+
+              # Arrow key variants for move (hidden — duplicate of Ctrl+hjkl)
+              "Mod+Ctrl+Left" = {hotkey-overlay.hidden = true; action = move-column-left;};
+              "Mod+Ctrl+Down" = {hotkey-overlay.hidden = true; action = move-window-down-or-to-workspace-down;};
+              "Mod+Ctrl+Up" = {hotkey-overlay.hidden = true; action = move-window-up-or-to-workspace-up;};
+              "Mod+Ctrl+Right" = {hotkey-overlay.hidden = true; action = move-column-right;};
+
+              # Column resize (hidden — fine tuning)
+              "Mod+Minus" = {hotkey-overlay.hidden = true; action.set-column-width = "-10%";};
+              "Mod+Equal" = {hotkey-overlay.hidden = true; action.set-column-width = "+10%";};
+              "Mod+Shift+Minus" = {hotkey-overlay.hidden = true; action.set-window-height = "-10%";};
+              "Mod+Shift+Equal" = {hotkey-overlay.hidden = true; action.set-window-height = "+10%";};
+
+              # Screenshots
               "Print".action.spawn = ["niri" "msg" "action" "screenshot"];
-              "Mod+S".action.spawn = ["niri" "msg" "action" "screenshot"];
-              "Mod+Shift+S".action.spawn = ["niri" "msg" "action" "screenshot-screen"];
+              "Mod+S" = {
+                hotkey-overlay.title = "Screenshot";
+                action.spawn = ["niri" "msg" "action" "screenshot"];
+              };
+              "Mod+Shift+S" = {
+                hotkey-overlay.title = "Screenshot screen";
+                action.spawn = ["niri" "msg" "action" "screenshot-screen"];
+              };
+
+              # System
               "Mod+Escape" = {
                 allow-inhibiting = false;
                 action = toggle-keyboard-shortcuts-inhibit;
               };
               "Mod+Shift+E".action = quit;
               "Mod+Shift+P".action = power-off-monitors;
+
+              # Audio
               "XF86AudioRaiseVolume" = {
                 allow-when-locked = true;
-                # action.spawn = noctalia "volume increase";
                 action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
               };
               "XF86AudioLowerVolume" = {
                 allow-when-locked = true;
-                # action.spawn = noctalia "volume decrease";
                 action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
               };
               "XF86AudioMute" = {
                 allow-when-locked = true;
-                # action.spawn = noctalia "volume muteOutput";
                 action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
               };
               "XF86AudioMicMute" = {
                 allow-when-locked = true;
-                # action.spawn = noctalia "volume muteInput";
                 action.spawn = ["wpctl" "set-mute" "@DEFAULT_SOURCE@" "toggle"];
               };
+              "Mod+M" = {
+                hotkey-overlay.title = "Mute";
+                allow-when-locked = true;
+                action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
+              };
+              "Mod+Page_Up" = {
+                hotkey-overlay.title = "Volume up";
+                allow-when-locked = true;
+                action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
+              };
+              "Mod+Page_Down" = {
+                hotkey-overlay.title = "Volume down";
+                allow-when-locked = true;
+                action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
+              };
+
+              # Media
               "XF86AudioPlay" = {
                 allow-when-locked = true;
                 action.spawn = ["playerctl" "play-pause"];
@@ -260,31 +347,22 @@
                 allow-when-locked = true;
                 action.spawn = ["playerctl" "next"];
               };
-              "Mod+M" = {
-                allow-when-locked = true;
-                action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
-              };
-              "Mod+Page_Up" = {
-                allow-when-locked = true;
-                action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
-              };
-              "Mod+Page_Down" = {
-                allow-when-locked = true;
-                action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
-              };
+
+              # Brightness
               "XF86MonBrightnessUp" = {
                 allow-when-locked = true;
-                # action.spawn = noctalia "brightness increase";
                 action.spawn = ["brightnessctl" "set" "+5%"];
               };
               "XF86MonBrightnessDown" = {
                 allow-when-locked = true;
-                # action.spawn = noctalia "brightness decrease";
                 action.spawn = ["brightnessctl" "set" "5%-"];
               };
             }
             (lib.mkIf (host.isLaptop or false) {
-              "Mod+G".action.spawn = ["fuzzel-battery"];
+              "Mod+G" = {
+                hotkey-overlay.title = "Battery";
+                action.spawn = ["fuzzel-battery"];
+              };
             })
           ];
         layer-rules = [
