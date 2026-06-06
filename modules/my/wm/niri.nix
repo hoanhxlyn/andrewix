@@ -215,6 +215,8 @@
               "Mod+L".action = focus-column-right;
               "Mod+Shift+H".action = focus-monitor-left;
               "Mod+Shift+L".action = focus-monitor-right;
+              "Shift+Alt+H".action = move-column-to-monitor-left;
+              "Shift+Alt+L".action = move-column-to-monitor-right;
               "Mod+Comma".action = consume-or-expel-window-left;
               "Mod+Period".action = consume-or-expel-window-right;
               "Mod+R".action = switch-preset-column-width;
@@ -229,54 +231,152 @@
               "Mod+Shift+V".action = switch-focus-between-floating-and-tiling;
 
               # Arrow key variants (hidden — duplicate of hjkl)
-              "Mod+Left" = {hotkey-overlay.hidden = true; action = focus-column-left;};
-              "Mod+Down" = {hotkey-overlay.hidden = true; action = focus-window-or-workspace-down;};
-              "Mod+Up" = {hotkey-overlay.hidden = true; action = focus-window-or-workspace-up;};
-              "Mod+Right" = {hotkey-overlay.hidden = true; action = focus-column-right;};
-              "Mod+Shift+Left" = {hotkey-overlay.hidden = true; action = focus-monitor-left;};
-              "Mod+Shift+Right" = {hotkey-overlay.hidden = true; action = focus-monitor-right;};
+              "Mod+Left" = {
+                hotkey-overlay.hidden = true;
+                action = focus-column-left;
+              };
+              "Mod+Down" = {
+                hotkey-overlay.hidden = true;
+                action = focus-window-or-workspace-down;
+              };
+              "Mod+Up" = {
+                hotkey-overlay.hidden = true;
+                action = focus-window-or-workspace-up;
+              };
+              "Mod+Right" = {
+                hotkey-overlay.hidden = true;
+                action = focus-column-right;
+              };
+              "Mod+Shift+Left" = {
+                hotkey-overlay.hidden = true;
+                action = focus-monitor-left;
+              };
+              "Mod+Shift+Right" = {
+                hotkey-overlay.hidden = true;
+                action = focus-monitor-right;
+              };
               "Shift+Alt+Left".action = move-column-to-monitor-left;
               "Shift+Alt+Right".action = move-column-to-monitor-right;
 
               # Workspace focus (hidden — pattern obvious)
-              "Mod+1" = {hotkey-overlay.hidden = true; action.focus-workspace = 1;};
-              "Mod+2" = {hotkey-overlay.hidden = true; action.focus-workspace = 2;};
-              "Mod+3" = {hotkey-overlay.hidden = true; action.focus-workspace = 3;};
-              "Mod+4" = {hotkey-overlay.hidden = true; action.focus-workspace = 4;};
-              "Mod+5" = {hotkey-overlay.hidden = true; action.focus-workspace = 5;};
-              "Mod+6" = {hotkey-overlay.hidden = true; action.focus-workspace = 6;};
-              "Mod+7" = {hotkey-overlay.hidden = true; action.focus-workspace = 7;};
-              "Mod+8" = {hotkey-overlay.hidden = true; action.focus-workspace = 8;};
-              "Mod+9" = {hotkey-overlay.hidden = true; action.focus-workspace = 9;};
+              "Mod+1" = {
+                hotkey-overlay.hidden = true;
+                action.focus-workspace = 1;
+              };
+              "Mod+2" = {
+                hotkey-overlay.hidden = true;
+                action.focus-workspace = 2;
+              };
+              "Mod+3" = {
+                hotkey-overlay.hidden = true;
+                action.focus-workspace = 3;
+              };
+              "Mod+4" = {
+                hotkey-overlay.hidden = true;
+                action.focus-workspace = 4;
+              };
+              "Mod+5" = {
+                hotkey-overlay.hidden = true;
+                action.focus-workspace = 5;
+              };
+              "Mod+6" = {
+                hotkey-overlay.hidden = true;
+                action.focus-workspace = 6;
+              };
+              "Mod+7" = {
+                hotkey-overlay.hidden = true;
+                action.focus-workspace = 7;
+              };
+              "Mod+8" = {
+                hotkey-overlay.hidden = true;
+                action.focus-workspace = 8;
+              };
+              "Mod+9" = {
+                hotkey-overlay.hidden = true;
+                action.focus-workspace = 9;
+              };
 
               # Move to workspace (hidden — too granular)
-              "Mod+Ctrl+1" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 1;};
-              "Mod+Ctrl+2" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 2;};
-              "Mod+Ctrl+3" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 3;};
-              "Mod+Ctrl+4" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 4;};
-              "Mod+Ctrl+5" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 5;};
-              "Mod+Ctrl+6" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 6;};
-              "Mod+Ctrl+7" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 7;};
-              "Mod+Ctrl+8" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 8;};
-              "Mod+Ctrl+9" = {hotkey-overlay.hidden = true; action.move-column-to-workspace = 9;};
+              "Mod+Ctrl+1" = {
+                hotkey-overlay.hidden = true;
+                action.move-column-to-workspace = 1;
+              };
+              "Mod+Ctrl+2" = {
+                hotkey-overlay.hidden = true;
+                action.move-column-to-workspace = 2;
+              };
+              "Mod+Ctrl+3" = {
+                hotkey-overlay.hidden = true;
+                action.move-column-to-workspace = 3;
+              };
+              "Mod+Ctrl+4" = {
+                hotkey-overlay.hidden = true;
+                action.move-column-to-workspace = 4;
+              };
+              "Mod+Ctrl+5" = {
+                hotkey-overlay.hidden = true;
+                action.move-column-to-workspace = 5;
+              };
+              "Mod+Ctrl+6" = {
+                hotkey-overlay.hidden = true;
+                action.move-column-to-workspace = 6;
+              };
+              "Mod+Ctrl+7" = {
+                hotkey-overlay.hidden = true;
+                action.move-column-to-workspace = 7;
+              };
+              "Mod+Ctrl+8" = {
+                hotkey-overlay.hidden = true;
+                action.move-column-to-workspace = 8;
+              };
+              "Mod+Ctrl+9" = {
+                hotkey-overlay.hidden = true;
+                action.move-column-to-workspace = 9;
+              };
 
               # Move column (Ctrl + hjkl)
               "Mod+Ctrl+H".action = move-column-left;
+              "Mod+Alt+H".action = move-column-to-monitor-left;
               "Mod+Ctrl+J".action = move-window-down-or-to-workspace-down;
               "Mod+Ctrl+K".action = move-window-up-or-to-workspace-up;
               "Mod+Ctrl+L".action = move-column-right;
+              "Mod+Alt+L".action = move-column-to-monitor-left;
 
               # Arrow key variants for move (hidden — duplicate of Ctrl+hjkl)
-              "Mod+Ctrl+Left" = {hotkey-overlay.hidden = true; action = move-column-left;};
-              "Mod+Ctrl+Down" = {hotkey-overlay.hidden = true; action = move-window-down-or-to-workspace-down;};
-              "Mod+Ctrl+Up" = {hotkey-overlay.hidden = true; action = move-window-up-or-to-workspace-up;};
-              "Mod+Ctrl+Right" = {hotkey-overlay.hidden = true; action = move-column-right;};
+              "Mod+Ctrl+Left" = {
+                hotkey-overlay.hidden = true;
+                action = move-column-left;
+              };
+              "Mod+Ctrl+Down" = {
+                hotkey-overlay.hidden = true;
+                action = move-window-down-or-to-workspace-down;
+              };
+              "Mod+Ctrl+Up" = {
+                hotkey-overlay.hidden = true;
+                action = move-window-up-or-to-workspace-up;
+              };
+              "Mod+Ctrl+Right" = {
+                hotkey-overlay.hidden = true;
+                action = move-column-right;
+              };
 
               # Column resize (hidden — fine tuning)
-              "Mod+Minus" = {hotkey-overlay.hidden = true; action.set-column-width = "-10%";};
-              "Mod+Equal" = {hotkey-overlay.hidden = true; action.set-column-width = "+10%";};
-              "Mod+Shift+Minus" = {hotkey-overlay.hidden = true; action.set-window-height = "-10%";};
-              "Mod+Shift+Equal" = {hotkey-overlay.hidden = true; action.set-window-height = "+10%";};
+              "Mod+Minus" = {
+                hotkey-overlay.hidden = true;
+                action.set-column-width = "-10%";
+              };
+              "Mod+Equal" = {
+                hotkey-overlay.hidden = true;
+                action.set-column-width = "+10%";
+              };
+              "Mod+Shift+Minus" = {
+                hotkey-overlay.hidden = true;
+                action.set-window-height = "-10%";
+              };
+              "Mod+Shift+Equal" = {
+                hotkey-overlay.hidden = true;
+                action.set-window-height = "+10%";
+              };
 
               # Screenshots
               "Print".action.spawn = ["niri" "msg" "action" "screenshot"];
