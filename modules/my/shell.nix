@@ -32,6 +32,7 @@
           set -gx BRAVE_API_KEY (cat ~/.config/sops-nix/secrets/BRAVE_API_KEY 2>/dev/null; or echo "")
           set -u EDITOR nvim
           set -gx DOCKER_HOST unix://$XDG_RUNTIME_DIR/podman/podman.sock
+          nvm use lts --silent
         '';
         shellAliases = {
           ll = "eza --long --icons";
