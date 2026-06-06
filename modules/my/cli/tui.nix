@@ -10,7 +10,6 @@
       programs = {
         yazi = {
           enable = true;
-          shellWrapperName = "y";
           settings.mgr.show_hidden = true;
           plugins = {
             "full-border" = plug.full-border;
