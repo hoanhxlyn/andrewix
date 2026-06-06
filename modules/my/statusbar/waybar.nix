@@ -36,11 +36,11 @@
           mainBar = {
             layer = "top";
             position = "top";
-            spacing = 4;
+            spacing = 5;
 
             modules-left = [
               "niri/workspaces"
-              "mpris"
+              "group/mpris"
             ];
             modules-center = ["niri/window"];
             modules-right = builtins.filter (m: m != null) [
@@ -88,23 +88,40 @@
               };
             };
 
-            mpris = {
-              format = "{dynamic}: {status_icon}";
-              format-paused = "{dynamic}: {status_icon}";
+            "group/mpris" = {
+              orientation = "inherit";
+              drawer = {
+                transition-duration = 300;
+                transition-left-to-right = true;
+                click-to-reveal = false;
+              };
+              modules = ["mpris#icon" "mpris#info"];
+            };
+
+            "mpris#icon" = {
+              format = "{status_icon}";
+              format-paused = "{status_icon}";
               status-icons = {
                 playing = "󰝚 ";
                 paused = "󰏤";
                 stopped = "󰓛";
               };
+              on-click = "playerctl play-pause";
+              tooltip = false;
+            };
+
+            "mpris#info" = {
+              format = "{player_icon} {dynamic}";
+              format-paused = "{player_icon} {dynamic}";
               player-icons = {
                 default = "󰝚 ";
                 spotify = "󰓇 ";
                 firefox = "󰈹 ";
                 chromium = " ";
               };
-              dynamic-len = 30;
+              dynamic-len = 25;
               dynamic-order = ["title" "artist"];
-              on-click = "playerctl play-pause";
+              tooltip = false;
             };
 
             wireplumber = {
