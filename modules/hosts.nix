@@ -11,7 +11,7 @@
         fontSize = 12;
         padding = 2;
         opacity = 0.8;
-        name = "alacritty";
+        name = "wezterm";
       };
       inherit users;
     };
