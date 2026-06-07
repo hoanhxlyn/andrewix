@@ -507,6 +507,10 @@
             # background-effect.blur = true;
           }
           {
+            matches = [{app-id = "^org\\.wezfurlong\\.wezterm$";}];
+            default-column-width = {};
+          }
+          {
             matches = [{}];
             geometry-corner-radius = {
               top-left = 3.0;

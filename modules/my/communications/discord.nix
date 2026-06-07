@@ -5,11 +5,6 @@
         "discord"
       ])
     ];
-    nixos = {pkgs, ...}: {
-      environment.systemPackages = with pkgs; [
-        discordo
-      ];
-    };
     homeManager = {
       programs.discord = {
         enable = true;
