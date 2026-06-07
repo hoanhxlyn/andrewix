@@ -11,15 +11,15 @@
               fuse
               usbutils
               pciutils
-              wl-clipboard
-              wl-clip-persist
-              cliphist
             ];
           };
         })
     ];
-    nixos = {pkgs, ...}: {
-      environment.systemPackages = with pkgs; [
+    nixos = {
+      programs.nix-ld.enable = true;
+    };
+    homeManager = {pkgs, ...}: {
+      home.packages = with pkgs; [
         alejandra
         statix
         deadnix
@@ -31,13 +31,15 @@
         sops
         wget
         just
-        jq
       ];
-
-      programs.nix-ld.enable = true;
-    };
-    homeManager.programs = {
-      bun.enable = true;
+      programs = {
+        bun.enable = true;
+        jq.enable = true;
+      };
+      services = {
+        wl-clip-persist.enable = true;
+        cliphist.enable = true;
+      };
     };
   };
 }

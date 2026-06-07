@@ -1,13 +1,9 @@
-{
+{lib, ...}: {
   den.aspects.my.menu-launcher.fuzzel = hostConf: let
     terminal = hostConf.host.terminal;
     isLaptop = hostConf.host.isLaptop or false;
   in {
-    homeManager = {
-      pkgs,
-      lib,
-      ...
-    }: {
+    homeManager = {pkgs, ...}: {
       programs.fuzzel = {
         enable = true;
         settings = {

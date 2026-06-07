@@ -19,13 +19,7 @@
               ];
               env.TAVILY_API_KEY = "{env:TAVILY_API_KEY}";
             };
-            deepwiki = {
-              command = "pnpm";
-              args = [
-                "dlx"
-                "mcp-deepwiki@latest"
-              ];
-            };
+            deepwiki.url = "https://mcp.deepwiki.com/mcp";
           };
         };
         opencode = {
