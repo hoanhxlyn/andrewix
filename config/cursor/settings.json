@@ -8,9 +8,6 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "biome.requireConfiguration": true,
-  "biome.suggestInstallingGlobally": false,
-  "chat.viewSessions.orientation": "stacked",
   "css.validate": false,
   "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
   "editor.codeActionsOnSave": {
@@ -43,7 +40,6 @@
   "git.autofetch": true,
   "git.confirmSync": false,
   "gitlens.graph.layout": "editor",
-  "js/ts.updateImportsOnFileMove.enabled": "always",
   "less.validate": false,
   "nix.formatterPath": "alejandra",
   "prettier.requireConfig": true,
@@ -58,11 +54,12 @@
     "tw"
   ],
   "tailwindCSS.lint.cssConflict": "error",
+  "terminal.integrated.allowChords": false,
   "update.mode": "none",
   "window.commandCenter": false,
   "window.menuBarVisibility": "hidden",
   "workbench.activityBar.location": "top",
-  "workbench.browser.enableChatTools": true,
+  "workbench.colorTheme": "Cursor Light",
   "workbench.editor.customLabels.enabled": true,
   "workbench.editor.customLabels.patterns": {
     "**/src/**/index.{js,jsx,ts,tsx}": "${dirname(1)}/${dirname}"
@@ -72,6 +69,5 @@
   "workbench.navigationControl.enabled": false,
   "workbench.productIconTheme": "Tabler",
   "workbench.welcomePage.walkthroughs.openOnInstall": false,
-  "terminal.integrated.allowChords": false,
-  "workbench.colorTheme": "Cursor Light"
+  "json.schemaDownload.enable": true
 }

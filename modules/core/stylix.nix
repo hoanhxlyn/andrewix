@@ -19,14 +19,9 @@
         inputs.stylix.nixosModules.stylix
       ];
       fonts.packages = with pkgs; [
-        nerd-fonts.jetbrains-mono
-        nerd-fonts.fira-code
-        nerd-fonts.caskaydia-cove
         font-awesome
         inter
-        noto-fonts-color-emoji
         noto-fonts-cjk-sans
-        noto-fonts
       ];
       stylix = {
         enable = true;
@@ -40,8 +35,14 @@
         };
         fonts = {
           serif = config.stylix.fonts.sansSerif;
-          sansSerif.name = "Noto Sans";
-          monospace.name = "CaskaydiaCove Nerd Font";
+          sansSerif = {
+            package = pkgs.noto-fonts;
+            name = "Noto Sans";
+          };
+          monospace = {
+            package = pkgs.nerd-fonts.jetbrains-mono;
+            name = "CaskaydiaCove Nerd Font";
+          };
           emoji = {
             package = pkgs.noto-fonts-color-emoji;
             name = "Noto Color Emoji";
