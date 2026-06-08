@@ -130,6 +130,14 @@
             '';
           })
 
+          (pkgs.writeShellScriptBin "fuzzel-font" ''
+            selection=$(fc-list -f '%{family}\n' | sort -u | fuzzel --dmenu --prompt="Font: ")
+            if [ -n "$selection" ]; then
+              printf '%s' "$selection" | wl-copy
+              notify-send "Font" "Copied $selection"
+            fi
+          '')
+
           (pkgs.writeShellScriptBin "fuzzel-power" ''
             dmenu_line() {
               printf '%s\0icon\x1f%s\n' "$1" "$2"
@@ -163,6 +171,7 @@
                 dmenu_line "Clipboard" "edit-copy"
                 dmenu_line "Audio" "audio-volume-high"
                 dmenu_line "Emoji" "insert-emoticon"
+                dmenu_line "Font" "preferences-desktop-font"
                 dmenu_line "Bluetooth" "bluetooth"
                 ${lib.optionalString isLaptop ''dmenu_line "Battery" "battery"''}
                 dmenu_line "Power" "system-shutdown"
@@ -173,6 +182,7 @@
               *Clipboard) fuzzel-clipboard ;;
               *Audio)     fuzzel-audio ;;
               *Emoji)     fuzzel-emoji ;;
+              *Font)      fuzzel-font ;;
               *Bluetooth) blueman-manager ;;
               ${lib.optionalString isLaptop ''*Battery) fuzzel-battery ;;''}
               *Power)     fuzzel-power ;;
