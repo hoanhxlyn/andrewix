@@ -40,13 +40,10 @@
             name = "Noto Sans";
           };
           monospace = {
-            package = pkgs.nerd-fonts.jetbrains-mono;
-            name = "CaskaydiaCove Nerd Font";
+            package = pkgs.nerd-fonts.geist-mono;
+            name = "GeistMono Nerd Font";
           };
-          emoji = {
-            package = pkgs.noto-fonts-color-emoji;
-            name = "Noto Color Emoji";
-          };
+          emoji.package = pkgs.noto-fonts-color-emoji;
           sizes = {
             applications = lib.add terminal.fontSize 1;
             terminal = lib.add terminal.fontSize 0;
@@ -64,6 +61,10 @@
           plymouth.enable = true;
           nvf.transparentBackground = true;
           kmscon.enable = true;
+        };
+        image = pkgs.fetchurl {
+          url = "https://drive.google.com/u/0/drive-viewer/AKGpiha-yv9vannCkZIH1w3mqd4yzdrTMrlIyQykEjtUGaGZcErwA7pSxDQ6g4H8xc06QG-UCGG8KZ8g9PfEX7-bPLxT_oZb_GCq6VE=s1600-rw-v1?auditContext=forDisplay";
+          hash = "sha256-0k6QNfbNiRfXm1LiCKRZ0S4YU2WPMQ3Ywe6k7lI7Buk=";
         };
       };
     };
