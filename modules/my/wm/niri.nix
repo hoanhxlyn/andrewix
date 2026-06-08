@@ -113,15 +113,6 @@
           {argv = ["waybar"];}
           {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];}
           {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
-          {
-            command = [
-              "swaybg"
-              "-m"
-              "fill"
-              "-i"
-              "${homeConfig.config.home.homeDirectory}/Pictures/wallpapers/wallpaperflare.com_wallpaper(2).jpg"
-            ];
-          }
         ];
 
         hotkey-overlay = {
