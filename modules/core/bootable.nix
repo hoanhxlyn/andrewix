@@ -17,6 +17,7 @@
         kernelPackages = pkgs.linuxPackages_latest;
         plymouth.enable = true;
       };
+      stylix.targets.grub.useWallpaper = true;
     };
   };
 }
