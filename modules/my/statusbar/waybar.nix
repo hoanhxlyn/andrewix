@@ -14,6 +14,16 @@
       '';
     in {
       home.packages = with pkgs; [gsimplecal playerctl] ++ [vpnStatusScript];
+      xdg.configFile."gsimplecal/config".text = ''
+        mainwindow_position = mouse
+        mainwindow_yoffset = 5
+        mainwindow_keep_above = 1
+        mainwindow_decorated = 0
+        mainwindow_resizable = 0
+        mainwindow_skip_taskbar = 1
+        mainwindow_sticky = 1
+        close_on_unfocus = 1
+      '';
       stylix.targets.waybar = {
         enable = true;
         enableLeftBackColors = true;
@@ -135,9 +145,8 @@
 
             clock = {
               format = "󰥔 {:%H:%M}";
-              "format-alt" = "{:%a %m/%d/%y }";
-              tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-              on-click-middle = "gsimplecal";
+              tooltip-format = "{:%a %m/%d/%y}";
+              on-click = "gsimplecal";
             };
 
             "network#wifi" = {
