@@ -31,6 +31,7 @@
         sops
         wget
         just
+        wl-clipboard
       ];
       programs = {
         bun.enable = true;
