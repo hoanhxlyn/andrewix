@@ -328,8 +328,8 @@
               };
 
               # Move column (Ctrl + hjkl)
-              "Mod+Shift+H".action = focus-monitor-right;
-              "Mod+Shift+L".action = focus-monitor-left;
+              "Mod+Shift+H".action = focus-monitor-left;
+              "Mod+Shift+L".action = focus-monitor-right;
               "Mod+Alt+H".action = move-column-to-monitor-left;
               "Mod+Ctrl+H".action = move-column-left;
               "Mod+Ctrl+J".action = move-window-down-or-to-workspace-down;
