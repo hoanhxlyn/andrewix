@@ -174,6 +174,7 @@
                 dmenu_line "Font" "preferences-desktop-font"
                 dmenu_line "Bluetooth" "bluetooth"
                 ${lib.optionalString isLaptop ''dmenu_line "Battery" "battery"''}
+                dmenu_line "Notification" "preferences-desktop-notification"
                 dmenu_line "Power" "system-shutdown"
               } | fuzzel --dmenu --prompt="Hub: "
             )
@@ -185,6 +186,7 @@
               *Font)      fuzzel-font ;;
               *Bluetooth) blueman-manager ;;
               ${lib.optionalString isLaptop ''*Battery) fuzzel-battery ;;''}
+              *Notification) dunstctl history-pop ;;
               *Power)     fuzzel-power ;;
             esac
           '')

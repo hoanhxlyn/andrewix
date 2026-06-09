@@ -9,7 +9,7 @@
     includes = [
       <my/statusbar/waybar>
       <my/menu-launcher/fuzzel>
-      <my/notification/mako>
+      <my/notification/dunst>
       <my/sway>
     ];
 
@@ -176,6 +176,14 @@
                 hotkey-overlay.title = "Power";
                 action.spawn = ["fuzzel-power"];
               };
+              "Mod+Ctrl+H" = {
+                hotkey-overlay.title = "Notification History";
+                action.spawn = ["dunstctl" "history-pop"];
+              };
+              "Mod+Ctrl+D" = {
+                hotkey-overlay.title = "Dismiss Notification";
+                action.spawn = ["dunstctl" "close"];
+              };
               "Mod+semicolon" = {
                 hotkey-overlay.title = "Lock screen";
                 action.spawn = ["swaylock" "-f"];
@@ -204,7 +212,6 @@
               "Mod+J".action = focus-window-or-workspace-down;
               "Mod+K".action = focus-window-or-workspace-up;
               "Mod+L".action = focus-column-right;
-              "Mod+Shift+H".action = focus-monitor-left;
               "Mod+Shift+L".action = focus-monitor-right;
               "Shift+Alt+H".action = move-column-to-monitor-left;
               "Shift+Alt+L".action = move-column-to-monitor-right;
@@ -326,7 +333,7 @@
               };
 
               # Move column (Ctrl + hjkl)
-              "Mod+Ctrl+H".action = move-column-left;
+              "Mod+Shift+H".action = move-column-left;
               "Mod+Alt+H".action = move-column-to-monitor-left;
               "Mod+Ctrl+J".action = move-window-down-or-to-workspace-down;
               "Mod+Ctrl+K".action = move-window-up-or-to-workspace-up;
