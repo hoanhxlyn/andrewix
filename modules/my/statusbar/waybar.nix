@@ -26,7 +26,7 @@
       '';
       stylix.targets.waybar = {
         enable = true;
-        enableLeftBackColors = true;
+        enableLeftBackColors = false;
       };
 
       programs.waybar = {
@@ -36,11 +36,26 @@
           css
           */
           ''
-            #workspaces button {
-              padding: 0 5px;
-              margin: 0 2px;
-              border-radius: 999px;
+            .modules-left #workspaces button {
+              border-radius: 0;
             }
+            .modules-left #workspaces button.active,
+            .modules-left #workspaces button.focused {
+              color: @base0E;
+              border-radius: 0;
+              border-bottom-color: @base0E;
+            }
+
+            #upower, #battery  { border-bottom: 3px solid @base0B; }
+            #network { border-bottom: 3px solid @base08; }
+            #wireplumber, #pulseaudio, #sndio {
+               border-bottom: 3px solid @base07;
+            }
+            #clock { border-bottom: 3px solid @base06; }
+            #backlight {border-bottom: 3px solid @base05;}
+            #bluetooth {border-bottom: 3px solid @base0D;}
+            #tray {border-bottom: 3px solid @base0C;}
+
           '';
         settings = {
           mainBar = {
@@ -82,6 +97,14 @@
               all-outputs = false;
               hide-empty = true;
               on-click = "activate";
+              format = "{icon}";
+              format-icons = {
+                "1" = "";
+                "2" = "󰈹";
+                "3" = "󰍡";
+                "4" = "";
+                "5" = "󰝰";
+              };
             };
 
             "niri/window" = {

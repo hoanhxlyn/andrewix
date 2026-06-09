@@ -138,8 +138,8 @@
                 action.spawn = [terminalName];
               };
               "Mod+E" = {
-                hotkey-overlay.title = "Files";
-                action.spawn = ["nautilus"];
+                hotkey-overlay.title = "Yazi Files";
+                action.spawn = [terminalName "-e" "yazi"];
               };
               "Mod+B" = {
                 hotkey-overlay.title = "Browser";
@@ -273,22 +273,6 @@
                 hotkey-overlay.hidden = true;
                 action.focus-workspace = 5;
               };
-              "Mod+6" = {
-                hotkey-overlay.hidden = true;
-                action.focus-workspace = 6;
-              };
-              "Mod+7" = {
-                hotkey-overlay.hidden = true;
-                action.focus-workspace = 7;
-              };
-              "Mod+8" = {
-                hotkey-overlay.hidden = true;
-                action.focus-workspace = 8;
-              };
-              "Mod+9" = {
-                hotkey-overlay.hidden = true;
-                action.focus-workspace = 9;
-              };
 
               # Move to workspace (hidden — too granular)
               "Mod+Ctrl+1" = {
@@ -310,22 +294,6 @@
               "Mod+Ctrl+5" = {
                 hotkey-overlay.hidden = true;
                 action.move-column-to-workspace = 5;
-              };
-              "Mod+Ctrl+6" = {
-                hotkey-overlay.hidden = true;
-                action.move-column-to-workspace = 6;
-              };
-              "Mod+Ctrl+7" = {
-                hotkey-overlay.hidden = true;
-                action.move-column-to-workspace = 7;
-              };
-              "Mod+Ctrl+8" = {
-                hotkey-overlay.hidden = true;
-                action.move-column-to-workspace = 8;
-              };
-              "Mod+Ctrl+9" = {
-                hotkey-overlay.hidden = true;
-                action.move-column-to-workspace = 9;
               };
 
               # Move column (Ctrl + hjkl)
