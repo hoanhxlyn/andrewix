@@ -25,6 +25,7 @@
           default-timeout = 3000;
           sort = "-time";
           margin = rootConfig.host.terminal.padding;
+          max-history = 10;
         };
       };
     };
