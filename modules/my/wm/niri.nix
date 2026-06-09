@@ -152,7 +152,7 @@
                 hotkey-overlay.title = "Network";
                 action.spawn = ["nm-connection-editor"];
               };
-              "Mod+Shift+B" = {
+              "Mod+Ctrl+B" = {
                 hotkey-overlay.title = "Bluetooth";
                 action.spawn = ["blueman-manager"];
               };
@@ -172,13 +172,9 @@
                 hotkey-overlay.title = "Emoji";
                 action.spawn = ["fuzzel-emoji"];
               };
-              "Mod+Shift+X" = {
+              "Mod+Ctrl+X" = {
                 hotkey-overlay.title = "Power";
                 action.spawn = ["fuzzel-power"];
-              };
-              "Mod+Ctrl+H" = {
-                hotkey-overlay.title = "Notification History";
-                action.spawn = ["dunstctl" "history-pop"];
               };
               "Mod+Ctrl+D" = {
                 hotkey-overlay.title = "Dismiss Notification";
@@ -212,7 +208,6 @@
               "Mod+J".action = focus-window-or-workspace-down;
               "Mod+K".action = focus-window-or-workspace-up;
               "Mod+L".action = focus-column-right;
-              "Mod+Shift+L".action = focus-monitor-right;
               "Shift+Alt+H".action = move-column-to-monitor-left;
               "Shift+Alt+L".action = move-column-to-monitor-right;
               "Mod+Comma".action = consume-or-expel-window-left;
@@ -333,8 +328,10 @@
               };
 
               # Move column (Ctrl + hjkl)
-              "Mod+Shift+H".action = move-column-left;
+              "Mod+Shift+H".action = focus-monitor-right;
+              "Mod+Shift+L".action = focus-monitor-left;
               "Mod+Alt+H".action = move-column-to-monitor-left;
+              "Mod+Ctrl+H".action = move-column-left;
               "Mod+Ctrl+J".action = move-window-down-or-to-workspace-down;
               "Mod+Ctrl+K".action = move-window-up-or-to-workspace-up;
               "Mod+Ctrl+L".action = move-column-right;
@@ -382,18 +379,10 @@
                 hotkey-overlay.title = "Screenshot";
                 action.spawn = ["niri" "msg" "action" "screenshot"];
               };
-              "Mod+Shift+S" = {
+              "Mod+Ctrl+S" = {
                 hotkey-overlay.title = "Screenshot screen";
                 action.spawn = ["niri" "msg" "action" "screenshot-screen"];
               };
-
-              # System
-              "Mod+Escape" = {
-                allow-inhibiting = false;
-                action = toggle-keyboard-shortcuts-inhibit;
-              };
-              "Mod+Shift+E".action = quit;
-              "Mod+Shift+P".action = power-off-monitors;
 
               # Audio
               "XF86AudioRaiseVolume" = {
