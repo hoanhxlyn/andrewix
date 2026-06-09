@@ -111,6 +111,7 @@
         spawn-at-startup = [
           # {command = ["noctalia-shell"];}
           {argv = ["waybar"];}
+          {command = ["swaybg" "-i" homeConfig.config.stylix.image];}
           {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];}
           {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
         ];

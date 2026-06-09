@@ -63,9 +63,10 @@
           kmscon.enable = true;
         };
         image = pkgs.fetchurl {
-          url = "https://drive.google.com/u/0/drive-viewer/AKGpiha-yv9vannCkZIH1w3mqd4yzdrTMrlIyQykEjtUGaGZcErwA7pSxDQ6g4H8xc06QG-UCGG8KZ8g9PfEX7-bPLxT_oZb_GCq6VE=s1600-rw-v1?auditContext=forDisplay";
-          hash = "sha256-0k6QNfbNiRfXm1LiCKRZ0S4YU2WPMQ3Ywe6k7lI7Buk=";
+          url = "https://images.unsplash.com/photo-1644333192141-1135d690734f?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+          hash = "sha256-RYrDcpvT6CTpwmYZmhxsCU5uzAB6coKW4gZhBgN+X7Y=";
         };
+        imageScalingMode = "fill"; # fill | center | stretch | fit
       };
     };
   };

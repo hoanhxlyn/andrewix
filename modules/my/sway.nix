@@ -4,13 +4,9 @@
     homeManager = {
       pkgs,
       config,
-      lib,
       ...
     }: let
-      blurScript = pkgs.writeShellScript "swaylock-blur" ''
-        ${pkgs.swaylock}/bin/swaylock -f
-      '';
-      lockCmd = "${blurScript}";
+      lockCmd = "${pkgs.swaylock}/bin/swaylock -f";
       unitToSeconds = unit:
         if unit == "second" || unit == "seconds"
         then 1
@@ -30,7 +26,6 @@
     in {
       home.packages = with pkgs; [swaybg imagemagick];
       programs.swaylock.enable = true;
-      programs.swaylock.settings.image = lib.mkForce "/tmp/swaylock-blurred.png";
       services.swayidle = {
         enable = true;
         events.before-sleep = lockCmd;
@@ -47,29 +42,18 @@
           }
         ];
       };
-      systemd.user.services.swaybg = {
-        Unit = {
-          Description = "Wallpaper daemon";
-          PartOf = ["graphical-session.target"];
-          After = ["graphical-session.target"];
-        };
-        Service = {
-          ExecStart = "${pkgs.swaybg}/bin/swaybg -i ${config.stylix.image}";
-          Restart = "on-failure";
-        };
-        Install.WantedBy = ["graphical-session.target"];
-      };
-      systemd.user.services.swaylock-blur = {
-        Unit = {
-          Description = "Blur stylix image for swaylock";
-          After = ["graphical-session.target"];
-        };
-        Service = {
-          Type = "oneshot";
-          ExecStart = "${pkgs.imagemagick}/bin/magick ${config.stylix.image} -blur 0x10 /tmp/swaylock-blurred.png";
-        };
-        Install.WantedBy = ["graphical-session.target"];
-      };
+      # systemd.user.services.swaybg = {
+      #   Unit = {
+      #     Description = "Wallpaper daemon";
+      #     PartOf = ["graphical-session.target"];
+      #     After = ["graphical-session.target"];
+      #   };
+      #   Service = {
+      #     ExecStart = "${pkgs.swaybg}/bin/swaybg -i ${config.stylix.image}";
+      #     Restart = "on-failure";
+      #   };
+      #   Install.WantedBy = ["graphical-session.target"];
+      # };
     };
   };
 }
