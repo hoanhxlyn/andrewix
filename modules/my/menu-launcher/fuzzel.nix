@@ -65,7 +65,8 @@
               if [ "$selection" = "Clear History" ]; then
                 cliphist wipe
                 rm -f "$CACHE"/*.png
-                notify-send "Clipboard history cleared!"
+                rm -f "$HOME/.cache/cliphist/db"
+                notify-send "Clipboard history cleared! (history + cache purged)"
               else
                 printf '%s' "$selection" | cliphist decode | wl-copy
                 notify-send "Copied to clipboard!"
