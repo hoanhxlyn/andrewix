@@ -1,11 +1,7 @@
 {
   den.aspects.my.sway = {
     nixos.security.pam.services.swaylock = {};
-    homeManager = {
-      pkgs,
-      config,
-      ...
-    }: let
+    homeManager = {pkgs, ...}: let
       lockCmd = "${pkgs.swaylock}/bin/swaylock -f";
       unitToSeconds = unit:
         if unit == "second" || unit == "seconds"
