@@ -153,7 +153,7 @@
               interface = "wl*";
               format-wifi = "{icon} {essid}";
               format-disconnected = "";
-              tooltip-format = "{ifname} - {gwaddr}";
+              tooltip-format = "{ifname}";
               format-icon = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
             };
 
@@ -189,7 +189,7 @@
                 critical = 15;
               };
               format = "{icon} {capacity}%";
-              format-charging = " {icon} ";
+              format-charging = " {icon}";
               tooltip-format = "{capacity}% ({timeTo})";
               format-icons = ["" "" "" "" ""];
               on-click = "fuzzel-battery";
