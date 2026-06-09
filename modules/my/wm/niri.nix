@@ -9,7 +9,7 @@
     includes = [
       <my/statusbar/waybar>
       <my/menu-launcher/fuzzel>
-      <my/notification/dunst>
+      <my/notification/mako>
       <my/sway>
     ];
 
@@ -179,7 +179,7 @@
               };
               "Mod+Ctrl+D" = {
                 hotkey-overlay.title = "Dismiss Notification";
-                action.spawn = ["dunstctl" "close"];
+                action.spawn = ["makoctl" "dismiss"];
               };
               "Mod+semicolon" = {
                 hotkey-overlay.title = "Lock screen";
