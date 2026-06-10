@@ -29,7 +29,14 @@
           else {}
         ));
     in {
-      home.packages = with pkgs; [swaybg imagemagick brightnessctl wayland-pipewire-idle-inhibit niri];
+      home.packages = with pkgs; [
+        swaybg
+        imagemagick
+        brightnessctl
+        wayland-pipewire-idle-inhibit
+        niri
+        wlopm
+      ];
       programs.swaylock = {
         enable = true;
         package = pkgs.swaylock-effects;
@@ -55,8 +62,8 @@
             {
               unit = "minutes";
               timeout = 5; # TODO [Experimental] change this
-              command = "${pkgs.niri}/bin/niri msg action power-off-monitors";
-              resumeCommand = "${pkgs.niri}/bin/niri msg action power-on-monitors";
+              command = "${pkgs.wlopm}/bin/wlopm --off '*'";
+              resumeCommand = "${pkgs.wlopm}/bin/wlopm --on '*'";
             }
             {
               unit = "hours";

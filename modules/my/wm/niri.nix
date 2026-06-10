@@ -181,11 +181,6 @@
                 hotkey-overlay.title = "Dismiss Notification";
                 action.spawn = ["makoctl" "dismiss"];
               };
-              "Mod+semicolon" = {
-                hotkey-overlay.title = "Lock screen";
-                action.spawn = ["swaylock" "-f"];
-              };
-
               # Window management
               "Mod+Q" = {
                 hotkey-overlay.title = "Close window";
