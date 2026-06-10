@@ -30,6 +30,13 @@
     services = {
       power-profiles-daemon.enable = lib.mkForce false;
       upower.enable = true;
+      logind.settings.Login = {
+        HandleLidSwitch = "ignore";
+        HandleLidSwitchDocked = "ignore";
+        IdleAction = "ignore";
+        IdleActionSec = "30min";
+      };
+
       tlp = {
         enable = true;
         settings = {
