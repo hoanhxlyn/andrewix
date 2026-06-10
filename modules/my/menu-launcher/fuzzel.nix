@@ -206,7 +206,7 @@
               *Reboot)   systemctl reboot ;;
               *Sleep)    systemctl hibernate ;;
               *Logout)   niri msg action quit ;;
-              *Lock)     loginctl lock-session ;;
+              *Lock)     ${pkgs.swaylock-effects}/bin/swaylock -f ;;
             esac
           '')
 

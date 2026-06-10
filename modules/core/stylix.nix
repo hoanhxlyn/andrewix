@@ -63,8 +63,8 @@
           kmscon.enable = true;
         };
         image = pkgs.fetchurl {
-          url = "https://images.unsplash.com/photo-1644333192141-1135d690734f?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-          hash = "sha256-RYrDcpvT6CTpwmYZmhxsCU5uzAB6coKW4gZhBgN+X7Y=";
+          url = "https://wallpaperaccess.com/full/12259305.png";
+          hash = "sha256-2MBdh7wdB+o+K8hHBgCEhUwHHQmw1cKEnFY7HIiIj9k=";
         };
         imageScalingMode = "fill"; # fill | center | stretch | fit
       };
