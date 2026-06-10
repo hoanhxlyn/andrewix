@@ -4,7 +4,7 @@
   in {
     nixos.security.pam.services.swaylock = {};
     homeManager = {pkgs, ...}: let
-      lockCmd = "swaylock -f --grace 5 --fade-in 0.5 --clock";
+      lockCmd = "${pkgs.swaylock-effects}/bin/swaylock -f --grace 5 --fade-in 0.5 --clock";
       unitToSeconds = unit:
         if unit == "second" || unit == "seconds"
         then 1
