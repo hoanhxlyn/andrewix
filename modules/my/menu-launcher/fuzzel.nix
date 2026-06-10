@@ -206,7 +206,7 @@
               *Reboot)   systemctl reboot ;;
               *Sleep)    systemctl hibernate ;;
               *Logout)   niri msg action quit ;;
-              *Lock)     ${pkgs.swaylock-effects}/bin/swaylock -f --grace 5 --fade-in 0.5 --clock ;;
+              *Lock)     ${pkgs.swaylock-effects}/bin/swaylock -f ;;
             esac
           '')
 

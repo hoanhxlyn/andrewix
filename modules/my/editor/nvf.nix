@@ -691,7 +691,7 @@
               completion = {
                 accept.auto_brackets.enabled = false;
                 documentation.auto_show = false;
-                ghost_text.enabled = true;
+                ghost_text.enabled = false;
                 menu.draw = {
                   columns = lib.mkLuaInline ''
                     {
