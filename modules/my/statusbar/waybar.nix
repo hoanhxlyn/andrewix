@@ -42,8 +42,16 @@
 
         printf '{"text":"%s","tooltip":"%s"}' "$TEXT" "$TOOLTIP"
       '';
+      dndScript = pkgs.writeShellScriptBin "waybar-dnd" ''
+        STATE_FILE="$XDG_RUNTIME_DIR/dnd-state"
+        if [ -f "$STATE_FILE" ] && [ "$(cat "$STATE_FILE")" = "1" ]; then
+          echo '{"text": "󰂛", "tooltip": "DND: On"}'
+        else
+          echo '{"text": "󰂟", "tooltip": "DND: Off"}'
+        fi
+      '';
     in {
-      home.packages = with pkgs; [gsimplecal playerctl] ++ [networkScript];
+      home.packages = with pkgs; [gsimplecal playerctl] ++ [networkScript dndScript];
       xdg.configFile."gsimplecal/config".text = ''
         mainwindow_position = mouse
         mainwindow_yoffset = 5
@@ -86,6 +94,7 @@
             #backlight {border-bottom: 3px solid @base05;}
             #bluetooth {border-bottom: 3px solid @base0D;}
             #custom-logitech-battery {border-bottom: 3px solid @base0A;}
+            #custom-dnd {min-width: 18px; border-bottom: 3px solid @base08;}
             #tray {border-bottom: 3px solid @base0C;}
 
           '';
@@ -118,6 +127,7 @@
               )
               "wireplumber"
               "clock"
+              "custom/dnd"
             ];
 
             "niri/workspaces" = {
@@ -199,6 +209,13 @@
               format = "󰥔 {:%H:%M}";
               tooltip-format = "{:%a %m/%d/%y}";
               on-click = "gsimplecal";
+            };
+
+            "custom/dnd" = {
+              exec = "${dndScript}/bin/waybar-dnd";
+              return-type = "json";
+              signal = 10;
+              on-click = "dnd-toggle";
             };
 
             "custom/network" = {
