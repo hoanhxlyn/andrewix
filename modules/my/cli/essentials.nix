@@ -36,6 +36,7 @@
       programs = {
         bun.enable = true;
         jq.enable = true;
+        uv.enable = true;
       };
       services = {
         wl-clip-persist.enable = true;
