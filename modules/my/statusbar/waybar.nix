@@ -5,15 +5,45 @@
       host,
       ...
     }: let
-      vpnStatusScript = pkgs.writeShellScriptBin "waybar-vpn-status" ''
-        if ${pkgs.iproute2}/bin/ip link show proton0 2>/dev/null | ${pkgs.gnugrep}/bin/grep -qE ',UP,'; then
-          echo '{"text":"󰖂 ","tooltip":"Proton VPN","class":"connected"}'
+      networkScript = pkgs.writeShellScriptBin "waybar-network" ''
+        ICONS="󰤯 󰤟 󰤢 󰤥 󰤨 "
+        TEXT=""
+        TOOLTIP=""
+        CLASS=""
+
+        # WiFi
+        WIFI_INFO=$(${pkgs.networkmanager}/bin/nmcli -t -f IN-USE,SIGNAL,SSID dev wifi 2>/dev/null | ${pkgs.coreutils}/bin/head -n1)
+        if [ -n "$WIFI_INFO" ]; then
+          SIGNAL=$(echo "$WIFI_INFO" | ${pkgs.coreutils}/bin/cut -d: -f2)
+          SSID=$(echo "$WIFI_INFO" | ${pkgs.coreutils}/bin/cut -d: -f3)
+          IDX=$((SIGNAL / 25))
+          [ "$IDX" -gt 4 ] && IDX=4
+          ICON=$(echo "$ICONS" | ${pkgs.coreutils}/bin/tr ' ' '\n' | ${pkgs.coreutils}/bin/sed -n "$((IDX+1))p")
+          TEXT="$ICON $SSID"
+          TOOLTIP="WiFi: $SIGNAL%"
         else
-          echo '{"text":""}'
+          # Ethernet
+          ETH_INFO=$(${pkgs.networkmanager}/bin/nmcli -t -f DEVICE,STATE,TYPE dev 2>/dev/null | ${pkgs.gnugrep}/bin/grep ':connected:ethernet$' | ${pkgs.coreutils}/bin/head -n1)
+          if [ -n "$ETH_INFO" ]; then
+            DEV=$(echo "$ETH_INFO" | ${pkgs.coreutils}/bin/cut -d: -f1)
+            IP=$(${pkgs.iproute2}/bin/ip -4 addr show "$DEV" 2>/dev/null | ${pkgs.gnugrep}/bin/grep -oP 'inet \K[\d.]+')
+            TEXT="󰈀 $IP"
+            TOOLTIP="$DEV"
+          fi
         fi
+
+        # VPN
+        if ${pkgs.iproute2}/bin/ip link show proton0 2>/dev/null | ${pkgs.gnugrep}/bin/grep -qE ',UP,'; then
+          TEXT="$TEXT 󰖂 "
+          TOOLTIP="$TOOLTIP\nVPN: Connected"
+        fi
+
+        [ -z "$TEXT" ] && exit 0
+
+        printf '{"text":"%s","tooltip":"%s"}' "$TEXT" "$TOOLTIP"
       '';
     in {
-      home.packages = with pkgs; [gsimplecal playerctl] ++ [vpnStatusScript];
+      home.packages = with pkgs; [gsimplecal playerctl] ++ [networkScript];
       xdg.configFile."gsimplecal/config".text = ''
         mainwindow_position = mouse
         mainwindow_yoffset = 5
@@ -47,7 +77,8 @@
             }
 
             #upower, #battery  { border-bottom: 3px solid @base0B; }
-            #network { border-bottom: 3px solid @base08; }
+            #custom-network { border-bottom: 3px solid @base08; }
+            #custom-vpn {border-bottom: 3px solid @base0C;}
             #wireplumber, #pulseaudio, #sndio {
                border-bottom: 3px solid @base07;
             }
@@ -70,14 +101,8 @@
             modules-center = ["niri/window"];
             modules-right = builtins.filter (m: m != null) [
               "group/tray"
-              (
-                if host.isLaptop
-                then "network#wifi"
-                else null
-              )
               "privacy"
-              "network#eth"
-              "custom/vpn"
+              "custom/network"
               "bluetooth"
               (
                 if host.isLaptop
@@ -174,27 +199,11 @@
               on-click = "gsimplecal";
             };
 
-            "network#wifi" = {
-              interface = "wl*";
-              format-wifi = "{icon} {essid}";
-              format-disconnected = "";
-              tooltip-format = "{ifname}";
-              format-icon = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
-            };
-
-            "custom/vpn" = {
-              exec = "${vpnStatusScript}/bin/waybar-vpn-status";
+            "custom/network" = {
+              exec = "${networkScript}/bin/waybar-network";
               return-type = "json";
               interval = 3;
-              on-click = "protonvpn-app";
-            };
-
-            "network#eth" = {
-              interface = "enp*";
-              format-ethernet = "{icon} {ipaddr}";
-              format-disconnected = "";
-              tooltip-format = "{ifname} - {gwaddr}";
-              format-icons = ["󰈀"];
+              on-click = "nm-connection-editor";
             };
 
             bluetooth = {
