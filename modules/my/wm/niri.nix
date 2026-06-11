@@ -181,6 +181,10 @@
                 hotkey-overlay.title = "Dismiss Notification";
                 action.spawn = ["makoctl" "dismiss"];
               };
+              "Mod+Ctrl+N" = {
+                hotkey-overlay.title = "Toggle DND";
+                action.spawn = ["dnd-toggle"];
+              };
               # Window management
               "Mod+Q" = {
                 hotkey-overlay.title = "Close window";
