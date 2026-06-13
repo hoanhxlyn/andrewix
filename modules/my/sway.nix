@@ -27,7 +27,7 @@
         }
       );
     in {
-      home.packages = with pkgs; [brightnessctl wlopm];
+      home.packages = with pkgs; [swaybg brightnessctl wlopm];
       programs.swaylock = {
         enable = true;
         package = pkgs.swaylock-effects;
