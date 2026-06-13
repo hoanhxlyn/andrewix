@@ -85,6 +85,7 @@
             #clock { border-bottom: 3px solid @base06; }
             #backlight {border-bottom: 3px solid @base05;}
             #bluetooth {border-bottom: 3px solid @base0D;}
+            #custom-logitech-battery {border-bottom: 3px solid @base0A;}
             #tray {border-bottom: 3px solid @base0C;}
 
           '';
@@ -104,6 +105,7 @@
               "privacy"
               "custom/network"
               "bluetooth"
+              "custom/logitech-battery"
               (
                 if host.isLaptop
                 then "battery"
