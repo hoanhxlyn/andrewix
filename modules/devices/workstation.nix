@@ -31,6 +31,7 @@
       <my/vm/podman>
       <my/office/markdown>
       <my/editor/nvf>
+      <my/hardware/logitech>
     ];
 
     andrew-laptop.provides.to-users.includes = [
