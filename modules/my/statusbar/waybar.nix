@@ -269,7 +269,7 @@
             };
 
             "custom/tray-icon" = {
-              format = " 󰁂";
+              format = "󰁂";
               tooltip = false;
             };
 

@@ -6,7 +6,7 @@
         if [ -f "$STATE_FILE" ] && [ "$(cat "$STATE_FILE")" = "1" ]; then
           echo "0" > "$STATE_FILE"
           makoctl mode -s default
-          notify-send "DND" "Notifications enabled" -i notification-new-message
+          notify-send "DND" "Notifications enabled" -i stock_bell
         else
           echo "1" > "$STATE_FILE"
           makoctl mode -s do-not-disturb
