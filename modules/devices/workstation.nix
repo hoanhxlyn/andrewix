@@ -14,8 +14,6 @@
       <core.stylix>
       <core.devices-monitors>
       <my/shell>
-      <my/cli/essentials>
-      <my/cli/tui>
       <my/browsers/firefox>
       <my/communications/caprine>
       <my/communications/discord>
