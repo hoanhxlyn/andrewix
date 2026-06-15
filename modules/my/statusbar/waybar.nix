@@ -93,9 +93,9 @@
             #clock { border-bottom: 3px solid @base06; }
             #backlight {border-bottom: 3px solid @base05;}
             #bluetooth {border-bottom: 3px solid @base0D;}
-            #custom-logitech-battery {border-bottom: 3px solid @base0A;}
-            #custom-dnd {min-width: 18px; border-bottom: 3px solid @base08;}
+            #custom-dnd {padding: 0 5px; min-width: 18px; border-bottom: 3px solid @base04;}
             #tray {border-bottom: 3px solid @base0C;}
+            #window { margin:0 5px; border-bottom: 3px solid @base03 }
 
           '';
         settings = {
@@ -106,15 +106,15 @@
 
             modules-left = [
               "niri/workspaces"
-              "group/mpris"
+              "niri/window"
             ];
-            modules-center = ["niri/window"];
+            modules-center = ["group/mpris"];
             modules-right = builtins.filter (m: m != null) [
-              "group/tray"
+              "tray"
               "privacy"
               "custom/network"
               "bluetooth"
-              "custom/logitech-battery"
+              "custom/dnd"
               (
                 if host.isLaptop
                 then "battery"
@@ -127,7 +127,6 @@
               )
               "wireplumber"
               "clock"
-              "custom/dnd"
             ];
 
             "niri/workspaces" = {
@@ -242,9 +241,11 @@
                 critical = 15;
               };
               format = "{icon} {capacity}%";
-              format-charging = " {icon}";
               tooltip-format = "{capacity}% ({timeTo})";
-              format-icons = ["" "" "" "" ""];
+              format-icons = {
+                default = ["󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹"];
+                charging = ["󰢟" "󰢜" "󰂆" "󰂇" "󰂈" "󰢝" "󰂉" "󰢞" "󰂊" "󰂋" "󰂅"];
+              };
               on-click = "fuzzel-battery";
             };
 
@@ -255,22 +256,6 @@
               tooltip-format = "{percent}%";
               on-scroll-up = "brightnessctl set +5%";
               on-scroll-down = "brightnessctl set 5%-";
-            };
-
-            "group/tray" = {
-              orientation = "inherit";
-              drawer = {
-                transition-duration = 500;
-                children-class = "tray-child";
-                transition-left-to-right = false;
-                click-to-reveal = true;
-              };
-              modules = ["custom/tray-icon" "tray"];
-            };
-
-            "custom/tray-icon" = {
-              format = "󰁂";
-              tooltip = false;
             };
 
             tray.spacing = 8;

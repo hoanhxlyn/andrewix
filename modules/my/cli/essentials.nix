@@ -37,7 +37,23 @@
         bun.enable = true;
         jq.enable = true;
         uv.enable = true;
+        eza.enable = true;
+        fd.enable = true;
+        fzf.enable = true;
+        zoxide.enable = true;
+        bat.enable = true;
+        ripgrep.enable = true;
+        tealdeer = {
+          enable = true;
+          enableAutoUpdates = true;
+          settings.display = {
+            compact = false;
+            use_pager = true;
+            show_title = true;
+          };
+        };
       };
+
       services = {
         wl-clip-persist.enable = true;
         cliphist.enable = true;

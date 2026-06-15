@@ -1,31 +1,17 @@
-{self, ...}: {
-  den.aspects.my.shell.homeManager = {pkgs, ...}: {
-    programs = {
-      oh-my-posh = {
-        enable = true;
-        configFile = "${self}/andrew.omp.json";
-      };
-      fastfetch.enable = true;
-      eza.enable = true;
-      fd.enable = true;
-      fzf.enable = true;
-      zoxide.enable = true;
-      bat.enable = true;
-      ripgrep.enable = true;
-      tealdeer = {
-        enable = true;
-        enableAutoUpdates = true;
-        settings.display = {
-          compact = false;
-          use_pager = true;
-          show_title = true;
-        };
-      };
-      fish = {
+{__findFile, ...}: {
+  den.aspects.my.shell = {
+    includes = [
+      <my/cli/fastfetch>
+      <my/cli/essentials>
+      <my/cli/tui>
+      <my/cli/omp>
+    ];
+    homeManager = {pkgs, ...}: {
+      programs.fish = {
         enable = true;
         interactiveShellInit = ''
           set fish_greeting
-          ${pkgs.fastfetch}/bin/fastfetch -c examples/13.jsonc
+          fastfetch
           set -gx SOPS_AGE_KEY_FILE "$HOME/.config/sops-nix/keys.txt"
           set -gx CONTEXT7_API_KEY (cat ~/.config/sops-nix/secrets/CONTEXT7_API_KEY 2>/dev/null; or echo "")
           set -gx TAVILY_API_KEY (cat ~/.config/sops-nix/secrets/TAVILY_API_KEY 2>/dev/null; or echo "")
@@ -60,9 +46,10 @@
           }
         ];
       };
-    };
-    home.sessionVariables = {
-      EDITOR = "nvim";
+
+      home.sessionVariables = {
+        EDITOR = "nvim";
+      };
     };
   };
 }

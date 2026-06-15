@@ -5,7 +5,6 @@
       <core.agents>
       <my/editor/nvf>
       <my/shell>
-      <my/cli/essentials>
     ];
 
     andrew-home-wsl.provides.to-users.includes = [<wsl>];
