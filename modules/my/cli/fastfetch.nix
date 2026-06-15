@@ -18,7 +18,7 @@
             {
               "key" = "│ {#31} user    {#keys}│";
               "type" = "title";
-              "format" = "{username}";
+              "format" = "{user-name}";
             }
             {
               "key" = "│ {#32}󰇅 hname   {#keys}│";
@@ -62,11 +62,6 @@
             {
               "key" = "│ {#35} memory  {#keys}│";
               "type" = "memory";
-            }
-            {
-              "key" = "│ {#36}󰩟 network {#keys}│";
-              "type" = "localip";
-              "format" = "{ipv4} ({ifname})";
             }
             {
               "key" = "├───────────┤";
