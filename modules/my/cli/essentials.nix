@@ -2,6 +2,7 @@
   den.aspects.my.cli.essentials = {
     includes = [
       (<den.batteries.unfree> ["ngrok"])
+      <my/cli/node>
       ({host, ...}:
         if host.wsl.enable
         then {}
@@ -24,7 +25,6 @@
         statix
         deadnix
         nps
-        pnpm
         ngrok
         mockoon
         age
@@ -34,7 +34,6 @@
         wl-clipboard
       ];
       programs = {
-        bun.enable = true;
         jq.enable = true;
         uv.enable = true;
         eza.enable = true;
