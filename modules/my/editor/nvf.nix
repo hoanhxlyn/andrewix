@@ -219,6 +219,37 @@
                 nil.nix.flake.autoArchive = true;
               };
               vscode-css-language-server.settings.css.lint.unknownAtRules = "ignore";
+              jsonls = {
+                filetypes = ["json" "jsonc" "bak"];
+                settings.json = {
+                  format.enable = false;
+                  schemas = lib.generators.mkLuaInline ''
+                    require("schemastore").json.schemas({
+                      extra = {
+                        {
+                          description = "Shadcn JSON schema",
+                          fileMatch = { "components.json" },
+                          name = "components.json",
+                          url = "https://ui.shadcn.com/schema.json",
+                        },
+                        {
+                          description = "Lua_ls JSON schema",
+                          fileMatch = { ".luarc.json" },
+                          name = ".luarc.json",
+                          url = "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+                        },
+                      },
+                    })
+                  '';
+                };
+              };
+              yamlls.settings.yaml = {
+                schemaStore = {
+                  enable = false;
+                  url = "";
+                };
+                schemas = lib.generators.mkLuaInline ''require("schemastore").yaml.schemas()'';
+              };
             };
           };
           # Treeesitter modules
@@ -386,6 +417,25 @@
               globalStyle = "rounded";
             };
             nvim-ufo.enable = true;
+            colorizer = {
+              enable = true;
+              setupOpts = {
+                filetypes = {
+                  css = {tailwind = true;};
+                  scss = {tailwind = true;};
+                  html = {tailwind = true;};
+                  javascript = {tailwind = true;};
+                  typescript = {tailwind = true;};
+                  javascriptreact = {tailwind = true;};
+                  typescriptreact = {tailwind = true;};
+                };
+                user_default_options = {
+                  RRGGBB = true;
+                  rgb_fn = true;
+                  hsl_fn = true;
+                };
+              };
+            };
           };
           # Utility modules
           utility.snacks-nvim = {
@@ -1858,6 +1908,9 @@
                     action = "<cmd>DiffviewClose<cr>";
                   }
                 ];
+              };
+              ${pkgs.vimPlugins.SchemaStore-nvim.pname} = {
+                package = pkgs.vimPlugins.SchemaStore-nvim;
               };
             };
           };
