@@ -466,6 +466,10 @@
             default-column-width = {};
           }
           {
+            matches = [{app-id = "^cursor$";}];
+            default-column-width = {};
+          }
+          {
             matches = [{}];
             geometry-corner-radius = {
               top-left = 3.0;
