@@ -3,6 +3,7 @@
     homeManager = {
       pkgs,
       host,
+      config,
       ...
     }: let
       networkScript = pkgs.writeShellScriptBin "waybar-network" ''
@@ -96,6 +97,7 @@
             #custom-dnd {padding: 0 5px; min-width: 18px; border-bottom: 3px solid @base04;}
             #tray {border-bottom: 3px solid @base0C;}
             #window { margin:0 5px; border-bottom: 3px solid @base03 }
+            #mpris { margin:0 5px }
 
           '';
         settings = {
@@ -184,12 +186,6 @@
             "mpris#info" = {
               format = "{player_icon} {dynamic}";
               format-paused = "{player_icon} {dynamic}";
-              player-icons = {
-                default = "󰝚 ";
-                spotify = "󰓇 ";
-                firefox = "󰈹 ";
-                chromium = " ";
-              };
               dynamic-len = 25;
               dynamic-order = ["title" "artist"];
               tooltip = false;
