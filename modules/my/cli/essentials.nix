@@ -3,6 +3,7 @@
     includes = [
       (<den.batteries.unfree> ["ngrok"])
       <my/cli/node>
+      <my/cli/tunneling>
       ({host, ...}:
         if host.wsl.enable
         then {}
@@ -25,7 +26,6 @@
         statix
         deadnix
         nps
-        ngrok
         mockoon
         age
         sops
