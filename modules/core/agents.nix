@@ -26,7 +26,6 @@
           enable = true;
           enableMcpIntegration = true;
           settings = {
-            username = "😺 Andrew Nguyen";
             autoupdate = false;
             lsp = {
               nix = {
@@ -46,9 +45,6 @@
                 extensions = [".nix"];
               };
             };
-            plugin = [
-              "opencode-agent-skills"
-            ];
             command = {
               commit = {
                 description = "Auto generate commit message";
