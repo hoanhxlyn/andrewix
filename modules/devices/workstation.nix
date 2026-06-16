@@ -23,7 +23,7 @@
       <my/browsers/helium>
       <my/sync/rclone>
       <my/sync/keepassxc>
-      <my/editor/vscode>
+      # <my/editor/vscode>
       <my/editor/cursor>
       <my/terminals>
       <my/vm/podman>
