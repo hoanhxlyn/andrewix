@@ -3,7 +3,6 @@
     homeManager = {
       pkgs,
       host,
-      config,
       ...
     }: let
       networkScript = pkgs.writeShellScriptBin "waybar-network" ''
@@ -97,6 +96,7 @@
             #custom-dnd {padding: 0 5px; min-width: 18px; border-bottom: 3px solid @base04;}
             #tray {border-bottom: 3px solid @base0C;}
             #window { margin:0 5px; border-bottom: 3px solid @base03 }
+            window#waybar.empty #window { border-bottom: none; margin: 0; padding: 0; }
             #mpris { margin:0 5px }
 
           '';
