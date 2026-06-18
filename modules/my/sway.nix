@@ -6,7 +6,8 @@
     homeManager = {pkgs, ...}: let
       lockCmd = "${pkgs.swaylock-effects}/bin/swaylock -f";
       display = status: "${pkgs.wlopm}/bin/wlopm --${status} '*'";
-      restoreBrightness = "test -f $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set $(cat $XDG_RUNTIME_DIR/swayidle-brightness) || true";
+      cat = "${pkgs.coreutils}/bin/cat";
+      restoreBrightness = "test -f $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness) || true";
       unitToSeconds = unit:
         if unit == "second" || unit == "seconds"
         then 1
@@ -53,7 +54,7 @@
               unit = "minutes";
               timeout = 1;
               command = "${pkgs.brightnessctl}/bin/brightnessctl get > $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set 10%";
-              resumeCommand = "${pkgs.brightnessctl}/bin/brightnessctl set $(cat $XDG_RUNTIME_DIR/swayidle-brightness)";
+              resumeCommand = "${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness)";
             }
           ]
           ++ [
