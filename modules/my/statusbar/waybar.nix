@@ -95,6 +95,8 @@
             #bluetooth {border-bottom: 3px solid @base0D;}
             #custom-dnd {padding: 0 5px; min-width: 18px; border-bottom: 3px solid @base04;}
             #tray {border-bottom: 3px solid @base0C;}
+            #cpu { border-bottom: 3px solid @base09; }
+            #memory { border-bottom: 3px solid @base0A; }
             #window { margin:0 5px; border-bottom: 3px solid @base03 }
             window#waybar.empty #window { border-bottom: none; margin: 0; padding: 0; }
             #mpris { margin:0 5px }
@@ -128,6 +130,8 @@
                 else null
               )
               "wireplumber"
+              "cpu"
+              "memory"
               "clock"
             ];
 
@@ -189,6 +193,18 @@
               dynamic-len = 25;
               dynamic-order = ["title" "artist"];
               tooltip = false;
+            };
+
+            cpu = {
+              format = "󰻠 {usage}%";
+              tooltip-format = "CPU: {usage}% | {avg_frequency}GHz";
+              interval = 3;
+            };
+
+            memory = {
+              format = "󰍛 {percentage}%";
+              tooltip-format = "{used:0.1f}G / {total:0.1f}G";
+              interval = 3;
             };
 
             wireplumber = {
