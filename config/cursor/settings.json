@@ -1,8 +1,8 @@
 {
-  "[jsonc]": {
+  "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
-  "[json]": {
+  "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[typescript]": {
@@ -43,6 +43,7 @@
   "git.autofetch": true,
   "git.confirmSync": false,
   "gitlens.graph.layout": "editor",
+  "json.schemaDownload.enable": true,
   "less.validate": false,
   "nix.formatterPath": "alejandra",
   "prettier.requireConfig": true,
@@ -72,5 +73,6 @@
   "workbench.navigationControl.enabled": false,
   "workbench.productIconTheme": "Tabler",
   "workbench.welcomePage.walkthroughs.openOnInstall": false,
-  "json.schemaDownload.enable": true
+  "cursor.composer.editorConversationDensity": "compact-ungrouped",
+  "typescript.updateImportsOnFileMove.enabled": "always"
 }
