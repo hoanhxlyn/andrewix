@@ -40,8 +40,8 @@
             name = "Noto Sans";
           };
           monospace = {
-            package = pkgs.nerd-fonts.zed-mono;
-            name = "ZedMono Nerd Font";
+            package = pkgs.nerd-fonts.caskaydia-cove;
+            name = "CaskaydiaCove Nerd Font";
           };
           emoji.package = pkgs.noto-fonts-color-emoji;
           sizes = {
