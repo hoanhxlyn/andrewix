@@ -12,7 +12,7 @@
       inputs.aic8800.nixosModules.default
     ];
     nix.settings = {
-      trusted-substituters = [
+      substituters = [
         "https://aic8800-nix.cachix.org"
       ];
       trusted-public-keys = [
