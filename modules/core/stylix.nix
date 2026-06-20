@@ -22,6 +22,7 @@
         font-awesome
         inter
         noto-fonts-cjk-sans
+        noto-fonts-color-emoji
       ];
       stylix = {
         enable = true;
@@ -43,7 +44,10 @@
             package = pkgs.nerd-fonts.caskaydia-cove;
             name = "CaskaydiaCove Nerd Font";
           };
-          emoji.package = pkgs.noto-fonts-color-emoji;
+          emoji = {
+            package = pkgs.noto-fonts-color-emoji;
+            name = "Noto Color Emoji";
+          };
           sizes = {
             applications = lib.add terminal.fontSize 1;
             terminal = lib.add terminal.fontSize 0;
