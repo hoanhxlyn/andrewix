@@ -9,15 +9,12 @@
           enable = true;
           servers = {
             context7 = {
-              url = "https://mcp.context7.com/mcp";
-              headers.CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
+              command = "bunx";
+              args = ["@upstash/context7-mcp@latest"];
             };
             tavily = {
               command = "bunx";
-              args = [
-                "tavily-mcp@latest"
-              ];
-              env.TAVILY_API_KEY = "{env:TAVILY_API_KEY}";
+              args = ["tavily-mcp@latest"];
             };
             deepwiki.url = "https://mcp.deepwiki.com/mcp";
           };
