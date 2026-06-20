@@ -18,6 +18,7 @@
       imports = [
         inputs.stylix.nixosModules.stylix
       ];
+      fonts.fontconfig.defaultFonts.emoji = ["Noto Color Emoji"];
       fonts.packages = with pkgs; [
         font-awesome
         inter
