@@ -98,6 +98,9 @@
             model = "sonnet";
             effortLevel = "high";
             theme = "auto";
+            attribution = {
+              commit = "";
+            };
             statusLine = {
               type = "command";
               command = "${statuslineScript}";
