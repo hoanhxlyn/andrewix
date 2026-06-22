@@ -19,6 +19,7 @@
           set -gx CLAUDE_CODE_OAUTH_TOKEN (cat ~/.config/sops-nix/secrets/CLAUDE_TOKEN 2>/dev/null)
           set -gx EDITOR nvim
           set -gx DOCKER_HOST unix://$XDG_RUNTIME_DIR/podman/podman.sock
+          fish_add_path ~/.bun/bin
         '';
         shellAliases = {
           ll = "eza --long --icons";

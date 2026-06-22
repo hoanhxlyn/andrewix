@@ -40,9 +40,13 @@
               };
             };
             globalOptions = {
-              Hotkey = {
-                "TriggerKeys" = "Control+Shift_L";
-                "AltTriggerKeys" = "";
+              "Hotkey/TriggerKeys" = {
+                "0" = "Control+Shift_L";
+              };
+              "Hotkey/AltTriggerKeys" = {};
+              Behavior = {
+                ShareInputState = "All";
+                ResetStateWhenFocusIn = "No";
               };
             };
             inputMethod = {
