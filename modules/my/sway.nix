@@ -5,7 +5,10 @@
     nixos.security.pam.services.swaylock = {};
     homeManager = {pkgs, ...}: let
       lockCmd = "${pkgs.swaylock-effects}/bin/swaylock -f";
-      display = status: "${pkgs.wlopm}/bin/wlopm --${status} '*'";
+      display = status:
+        if status == "off"
+        then "${pkgs.niri}/bin/niri msg action power-off-monitors"
+        else ":";
       cat = "${pkgs.coreutils}/bin/cat";
       restoreBrightness = "test -f $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness) || true";
       unitToSeconds = unit:
@@ -29,7 +32,7 @@
         }
       );
     in {
-      home.packages = with pkgs; [swaybg brightnessctl wlopm];
+      home.packages = with pkgs; [swaybg brightnessctl];
       programs.swaylock = {
         enable = true;
         package = pkgs.swaylock-effects;
@@ -51,8 +54,8 @@
         timeouts = mkTimeout (
           lib.optionals isLaptop [
             {
-              unit = "minutes";
-              timeout = 1;
+              unit = "seconds";
+              timeout = 30;
               command = "${pkgs.brightnessctl}/bin/brightnessctl get > $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set 10%";
               resumeCommand = "${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness)";
             }
@@ -60,19 +63,19 @@
           ++ [
             {
               unit = "minutes";
-              timeout = 10;
+              timeout = 3;
               command = lockCmd;
             }
             {
               unit = "minutes";
-              timeout = 15;
+              timeout = 10;
               command = display "off";
               resumeCommand = display "on";
             }
             {
               unit = "hours";
-              timeout = 1;
-              command = "systemctl suspend";
+              timeout = 2;
+              command = "${pkgs.systemd}/bin/systemctl suspend";
             }
           ]
         );
