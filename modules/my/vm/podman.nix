@@ -1,13 +1,16 @@
 {
   den.aspects.my.vm.podman = {
-    nixos.virtualisation = {
-      containers.enable = true;
-      podman = {
-        enable = true;
-        dockerCompat = true;
-        defaultNetwork.settings.dns_enabled = true;
-        dockerSocket.enable = true;
+    nixos = {
+      virtualisation = {
+        containers.enable = true;
+        podman = {
+          enable = true;
+          dockerCompat = true;
+          defaultNetwork.settings.dns_enabled = true;
+          dockerSocket.enable = true;
+        };
       };
+      boot.kernel.sysctl."vm.max_map_count" = 524288;
     };
 
     homeManager = {pkgs, ...}: {
