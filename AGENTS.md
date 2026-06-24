@@ -103,6 +103,18 @@ Flake input:
 }
 ```
 
+## Adding New Aspects
+
+When creating a new `.nix` file in `modules/`, **always `git add` it before building**:
+
+```bash
+git add modules/core/new-aspect.nix
+just build <host>
+```
+
+Nix flakes only see git-tracked files. A new file that hasn't been staged yet will cause:
+`error: Namespace 'core' has no aspect 'new-aspect'`
+
 ## Hard Rules
 
 1. **NEVER edit `flake.nix`** — use `nix run .#write-flake`
