@@ -182,7 +182,7 @@
               clear = true;
             }
           ];
-          extraPackages = with pkgs; [ueberzugpp stylelint oxlint kdlfmt];
+          extraPackages = with pkgs; [ueberzugpp stylelint oxlint kdlfmt vscode-langservers-extracted];
           # LSP config
           lsp = {
             enable = true;
