@@ -63,8 +63,12 @@
         opencode = {
           enable = true;
           enableMcpIntegration = true;
+          web.enable = true;
           settings = {
             autoupdate = false;
+            plugin = [
+              "opencode-claude-auth@latest"
+            ];
             lsp = {
               nix = {
                 command = ["nil"];
