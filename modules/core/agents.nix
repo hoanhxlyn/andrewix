@@ -64,12 +64,45 @@
         claude-code = {
           enable = true;
           enableMcpIntegration = true;
+          commands = {
+            commit = "Generate a git convention message for changes. DO NOT commit them!";
+          };
           settings = {
+            hooks = {
+              PostToolUse = [
+                {
+                  matcher = "Edit|Write";
+                  hooks = [
+                    {
+                      type = "command";
+                      command = toString (pkgs.writeShellScript "claude-alejandra-hook" ''
+                        input=$(cat)
+                        file=$(echo "$input" | ${pkgs.jq}/bin/jq -r '.tool_input.file_path // empty')
+                        [[ "$file" == *.nix ]] && ${pkgs.alejandra}/bin/alejandra "$file" 2>/dev/null
+                        exit 0
+                      '');
+                    }
+                  ];
+                }
+              ];
+            };
             model = "sonnet";
             effortLevel = "high";
             theme = "auto";
             attribution = {
               commit = "";
+            };
+            permissions = {
+              allow = [
+                "Bash(~/Projects/**)"
+                "Read(~/Projects/**)"
+                "Edit(~/Projects/**)"
+                "Write(~/Projects/**)"
+                "Read(~/.config/**)"
+                "Edit(~/.config/**)"
+                "Write(~/.config/**)"
+                "Read(~/.cache/**)"
+              ];
             };
             statusLine = {
               type = "command";
