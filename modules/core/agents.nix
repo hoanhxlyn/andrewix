@@ -3,7 +3,11 @@
     includes = [
       (<den/batteries/unfree> ["claude-code"])
     ];
-    homeManager = {pkgs, ...}: {
+    homeManager = {
+      pkgs,
+      config,
+      ...
+    }: {
       programs = {
         mcp = {
           enable = true;
@@ -17,6 +21,13 @@
               args = ["tavily-mcp@latest"];
             };
             deepwiki.url = "https://mcp.deepwiki.com/mcp";
+            brave = {
+              command = "sh";
+              args = [
+                "-c"
+                "BRAVE_API_KEY=$(cat ${config.sops.secrets.BRAVE_API_KEY.path}) exec bunx @brave/brave-search-mcp-server"
+              ];
+            };
           };
         };
         opencode = {
