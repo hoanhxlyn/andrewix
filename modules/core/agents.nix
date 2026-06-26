@@ -28,6 +28,13 @@
                 "BRAVE_API_KEY=$(cat ${config.sops.secrets.BRAVE_API_KEY.path}) exec bunx @brave/brave-search-mcp-server"
               ];
             };
+            sonarq = {
+              command = "sh";
+              args = [
+                "-c"
+                "SONARQUBE_TOKEN=$(cat ${config.sops.secrets.SONARQ_TOKEN.path}) SONARQUBE_URL=http://host.containers.internal:9000 podman run -i --rm --init --pull=always -e SONARQUBE_TOKEN -e SONARQUBE_URL mcp/sonarqube"
+              ];
+            };
           };
         };
         opencode = {
