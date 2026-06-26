@@ -1,7 +1,7 @@
 {__findFile, ...}: {
   core.agents = {
     includes = [
-      (<den/batteries/unfree> ["claude-code"])
+      (<den/batteries/unfree> ["claude-code" "antigravity-cli"])
     ];
     homeManager = {
       pkgs,
@@ -166,6 +166,10 @@
               '';
             };
           };
+        };
+        antigravity-cli = {
+          enable = true;
+          enableMcpIntegration = true;
         };
       };
     };
