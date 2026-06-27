@@ -6,19 +6,19 @@
       ...
     }: let
       networkScript = pkgs.writeShellScriptBin "waybar-network" ''
-        ICONS="󰤯 󰤟 󰤢 󰤥 󰤨 "
+        ICONS=("󰤯" "󰤟" "󰤢" "󰤥" "󰤨")
         TEXT=""
         TOOLTIP=""
         CLASS=""
 
         # WiFi
-        WIFI_INFO=$(${pkgs.networkmanager}/bin/nmcli -t -f IN-USE,SIGNAL,SSID dev wifi 2>/dev/null | ${pkgs.coreutils}/bin/head -n1)
+        WIFI_INFO=$(${pkgs.networkmanager}/bin/nmcli -t -f IN-USE,SIGNAL,SSID dev wifi 2>/dev/null | ${pkgs.gnugrep}/bin/grep '^\*' | ${pkgs.coreutils}/bin/head -n1)
         if [ -n "$WIFI_INFO" ]; then
           SIGNAL=$(echo "$WIFI_INFO" | ${pkgs.coreutils}/bin/cut -d: -f2)
-          SSID=$(echo "$WIFI_INFO" | ${pkgs.coreutils}/bin/cut -d: -f3)
+          SSID=$(echo "$WIFI_INFO" | ${pkgs.coreutils}/bin/cut -d: -f3-)
           IDX=$((SIGNAL / 25))
           [ "$IDX" -gt 4 ] && IDX=4
-          ICON=$(echo "$ICONS" | ${pkgs.coreutils}/bin/tr ' ' '\n' | ${pkgs.coreutils}/bin/sed -n "$((IDX+1))p")
+          ICON="''${ICONS[$IDX]}"
           TEXT="$ICON $SSID"
           TOOLTIP="WiFi: $SIGNAL%"
         else
