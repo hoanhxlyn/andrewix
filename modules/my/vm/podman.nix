@@ -2,7 +2,11 @@
   den.aspects.my.vm.podman = {
     nixos = {
       virtualisation = {
-        containers.enable = true;
+        containers = {
+          enable = true;
+          containersConf.settings.engine.compose_warning_logs = false;
+          registries.search = ["docker.io"];
+        };
         podman = {
           enable = true;
           dockerCompat = true;
