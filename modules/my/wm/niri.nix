@@ -21,7 +21,7 @@
       };
       environment.systemPackages = with pkgs; [
         nautilus
-        brightnessctl
+        acpilight
         slurp
         grim
         xwayland-satellite
@@ -355,7 +355,7 @@
               # Audio
               "XF86AudioRaiseVolume" = {
                 allow-when-locked = true;
-                action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
+                action.spawn = ["wpctl" "set-volume" "--limit" "1.0" "@DEFAULT_AUDIO_SINK@" "5%+"];
               };
               "XF86AudioLowerVolume" = {
                 allow-when-locked = true;
@@ -377,7 +377,7 @@
               "Mod+Page_Up" = {
                 hotkey-overlay.title = "Volume up";
                 allow-when-locked = true;
-                action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
+                action.spawn = ["wpctl" "set-volume" "--limit" "1.0" "@DEFAULT_AUDIO_SINK@" "5%+"];
               };
               "Mod+Page_Down" = {
                 hotkey-overlay.title = "Volume down";
@@ -406,11 +406,11 @@
               # Brightness
               "XF86MonBrightnessUp" = {
                 allow-when-locked = true;
-                action.spawn = ["brightnessctl" "set" "+5%"];
+                action.spawn = ["xbacklight" "-inc" "5"];
               };
               "XF86MonBrightnessDown" = {
                 allow-when-locked = true;
-                action.spawn = ["brightnessctl" "set" "5%-"];
+                action.spawn = ["xbacklight" "-dec" "5"];
               };
             }
             (lib.mkIf (host.isLaptop or false) {
