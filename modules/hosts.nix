@@ -26,7 +26,7 @@
             s = m.scale or 1;
           in
             if !(m.is-primary or false)
-            then acc + (m.resolution.width / s)
+            then acc + (builtins.floor (m.resolution.width / s))
             else acc)
           0
           (builtins.attrNames monitors);
@@ -73,7 +73,7 @@ in {
         };
         refresh-rate = 90.0;
         is-primary = false;
-        scale = 2;
+        scale = 1.75;
       };
       monitors."HDMI-A-1" = {
         resolution = {
