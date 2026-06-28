@@ -13,10 +13,6 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    fcitx5-vmk-nix = {
-      url = "github:hoanhxlyn/fcitx5-vmk-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     flake-file.url = "github:denful/flake-file";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
