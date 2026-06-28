@@ -139,30 +139,14 @@
               all-outputs = false;
               hide-empty = true;
               on-click = "activate";
-              format = "{icon}";
-              format-icons = {
-                "1" = "";
-                "2" = "󰈹";
-                "3" = "󰍡";
-                "4" = "";
-                "5" = "󰝰";
-              };
+              format = "{index}";
             };
 
             "niri/window" = {
               max-length = 30;
-              rewrite = {
-                "(.*) - Mozilla Firefox" = "󰈹 $1";
-                "(.*) — Zen Browser" = "󰈹 $1";
-                "(.*) - Helium" = " $1";
-                "(.*) - KeePassXC" = "󰌆 $1";
-                "(.*) - Discord" = " $1";
-                "(.*) - Obsidian.*" = " $1";
-                "bunx? (.*)" = " $1";
-                "pnpm (.*)" = " $1";
-                "npm? (.*)" = "󰛷 $1";
-                "nvim (.*)" = " [$1]";
-              };
+              icon = true;
+              icon-size = 16;
+              format = "{title}";
             };
 
             "group/mpris" = {
