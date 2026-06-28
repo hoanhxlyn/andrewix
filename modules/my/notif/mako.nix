@@ -42,6 +42,8 @@
           sort = "-time";
           margin = rootConfig.host.terminal.padding;
           max-history = 10;
+          on-button-left = "invoke-default-action";
+          on-button-right = "dismiss";
         };
       };
     };
