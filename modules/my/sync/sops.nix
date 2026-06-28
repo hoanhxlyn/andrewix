@@ -17,7 +17,10 @@
     sops = {
       defaultSopsFile = "${self}/secrets/secrets.yaml";
       defaultSopsFormat = "yaml";
-      age.keyFile = keyFile;
+      age = {
+        inherit keyFile;
+        generateKey = true;
+      };
       secrets = {
         CONTEXT7_API_KEY.path = secrets "CONTEXT7_API_KEY";
         TAVILY_API_KEY.path = secrets "TAVILY_API_KEY";
