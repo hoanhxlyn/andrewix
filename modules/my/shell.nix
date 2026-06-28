@@ -18,9 +18,11 @@
           set -gx BRAVE_API_KEY (cat ~/.config/sops-nix/secrets/BRAVE_API_KEY 2>/dev/null; or echo "")
           set -gx CLAUDE_CODE_OAUTH_TOKEN (cat ~/.config/sops-nix/secrets/CLAUDE_TOKEN 2>/dev/null)
           set -gx EDITOR nvim
+          set -gx RIPGREP_CONFIG_PATH "$HOME/.config/ripgrep/ripgreprc"
           set -gx DOCKER_HOST unix://$XDG_RUNTIME_DIR/podman/podman.sock
           fish_add_path ~/.bun/bin
         '';
+        functions.fish_user_key_bindings.body = "fish_vi_key_bindings default";
         shellAliases = {
           ll = "eza --long --icons";
           ls = "eza --all";

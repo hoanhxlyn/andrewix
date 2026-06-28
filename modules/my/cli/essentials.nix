@@ -41,7 +41,13 @@
         fzf.enable = true;
         zoxide.enable = true;
         bat.enable = true;
-        ripgrep.enable = true;
+        ripgrep = {
+          enable = true;
+          arguments = [
+            "--hidden"
+            "--glob=!.git"
+          ];
+        };
         tealdeer = {
           enable = true;
           enableAutoUpdates = true;
