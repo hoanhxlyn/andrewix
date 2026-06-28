@@ -19,21 +19,33 @@
             tavily = {
               command = "bunx";
               args = ["tavily-mcp@latest"];
+              env.TAVILY_API_KEY.file = config.sops.secrets.TAVILY_API_KEY.path;
             };
             deepwiki.url = "https://mcp.deepwiki.com/mcp";
             brave = {
-              command = "sh";
-              args = [
-                "-c"
-                "BRAVE_API_KEY=$(cat ${config.sops.secrets.BRAVE_API_KEY.path}) exec bunx @brave/brave-search-mcp-server"
-              ];
+              command = "bunx";
+              args = ["@brave/brave-search-mcp-server"];
+
+              env.BRAVE_API_KEY.file = config.sops.secrets.BRAVE_API_KEY.path;
             };
             sonarq = {
-              command = "sh";
+              command = "podman";
               args = [
-                "-c"
-                "SONARQUBE_TOKEN=$(cat ${config.sops.secrets.SONARQ_TOKEN.path}) SONARQUBE_URL=http://host.containers.internal:9000 podman run -i --rm --init --pull=always -e SONARQUBE_TOKEN -e SONARQUBE_URL mcp/sonarqube"
+                "run"
+                "-i"
+                "--rm"
+                "--init"
+                "--pull=always"
+                "-e"
+                "SONARQUBE_TOKEN"
+                "-e"
+                "SONARQUBE_URL"
+                "mcp/sonarqube"
               ];
+              env = {
+                SONARQUBE_TOKEN.file = config.sops.secrets.SONARQ_TOKEN.path;
+                SONARQUBE_URL = "http://host.containers.internal:9000";
+              };
             };
           };
         };
@@ -168,7 +180,7 @@
           };
         };
         antigravity-cli = {
-          enable = true;
+          enable = false;
           enableMcpIntegration = true;
         };
       };
