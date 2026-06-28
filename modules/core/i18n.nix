@@ -1,44 +1,18 @@
 {
-  lib,
-  inputs,
-  ...
-}: {
-  flake-file.inputs.fcitx5-vmk-nix = {
-    url = lib.mkDefault "github:hoanhxlyn/fcitx5-vmk-nix";
-    inputs.nixpkgs.follows = lib.mkDefault "nixpkgs";
-  };
-
   core.i18n.nixos = {pkgs, ...}: {
-    nix.settings = {
-      trusted-substituters = [
-        "https://fcitx5-vmk.cachix.org"
-      ];
-      trusted-public-keys = [
-        "fcitx5-vmk.cachix.org-1:eLf62OecQ2PKZkI6MPP5/QCE0Yx/ETYYKSD0lCG/LYc="
-      ];
-    };
     i18n = {
       inputMethod = {
         enable = true;
         type = "fcitx5";
         fcitx5 = {
           addons = with pkgs; [
-            inputs.fcitx5-vmk-nix.packages.${pkgs.system}.fcitx5-vmk
+            fcitx5-bamboo
             fcitx5-gtk
             kdePackages.fcitx5-qt
           ];
           waylandFrontend = true;
           ignoreUserConfig = false;
           settings = {
-            addons = {
-              vmk.globalSection = {
-                Mode = "vmkpre";
-                InputMethod = "Telex";
-                OutputCharset = "Unicode";
-                Gemini = "True";
-                ChromeX11 = "True";
-              };
-            };
             globalOptions = {
               "Hotkey/TriggerKeys" = {
                 "0" = "Control+Shift_L";
@@ -56,7 +30,7 @@
                 DefaultIM = "keyboard-us";
               };
               "Groups/0/Items/0".Name = "keyboard-us";
-              "Groups/0/Items/1".Name = "vmk";
+              "Groups/0/Items/1".Name = "bamboo";
             };
           };
         };
