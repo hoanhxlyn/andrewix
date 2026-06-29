@@ -26,6 +26,7 @@ in {
             "root"
             "@wheel"
           ];
+          pure-eval = false;
         };
       };
     };
