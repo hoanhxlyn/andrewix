@@ -427,7 +427,7 @@
                 namespace = "^launcher$";
               }
             ];
-            # background-effect.blur = true;
+            background-effect.blur = true;
           }
         ];
         window-rules = [
@@ -459,7 +459,8 @@
           }
           {
             matches = [{app-id = "^Alacritty$";}];
-            # background-effect.blur = true;
+            background-effect.blur = true;
+            draw-border-with-background = false;
           }
           {
             matches = [{app-id = "^org\\.wezfurlong\\.wezterm$";}];
