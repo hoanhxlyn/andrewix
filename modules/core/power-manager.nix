@@ -27,6 +27,20 @@
       });
     '';
 
+    # asus_wmi registers charge_control_end_threshold but its WMI GET returns
+    # ENODATA on X1405VA, causing TLP's readable_sysf check to fail and skip
+    # threshold setting entirely. Write directly at boot as a workaround.
+    systemd.services.battery-charge-threshold = {
+      description = "Set battery charge stop threshold";
+      wantedBy = ["multi-user.target"];
+      after = ["systemd-modules-load.service"];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "/bin/sh -c 'echo 85 > /sys/class/power_supply/BAT0/charge_control_end_threshold'";
+        RemainAfterExit = true;
+      };
+    };
+
     services = {
       power-profiles-daemon.enable = lib.mkForce false;
       upower.enable = true;
