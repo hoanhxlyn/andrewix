@@ -24,22 +24,22 @@ check:
 # Build system config
 [group('nixos')]
 build h=host *args:
-    nix run .#{{ h }} -- build {{ args }}
+    nix run .#{{ h }} -- build {{ args }} -- --impure
 
 # Boot new build at next restart
 [group('nixos')]
 boot h=host *args:
-    nix run .#{{ h }} -- boot {{ args }}
+    nix run .#{{ h }} -- boot {{ args }} -- --impure
 
 # Test system config
 [group('nixos')]
 test h=host *args:
-    nix run .#{{ h }} -- test {{ args }}
+    nix run .#{{ h }} -- test {{ args }} -- --impure
 
 # Switch to system config
 [group('nixos')]
 switch h=host *args:
-    nix run .#{{ h }} -- switch {{ args }}
+    nix run .#{{ h }} -- switch {{ args }} -- --impure
 
 # Update flake inputs
 [group('nixos')]
