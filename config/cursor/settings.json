@@ -12,6 +12,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "css.validate": false,
+  "cursor.composer.editorConversationDensity": "compact-ungrouped",
   "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
   "editor.codeActionsOnSave": {
     "quickfix.biome": "explicit",
@@ -49,6 +50,16 @@
   "prettier.requireConfig": true,
   "scss.validate": false,
   "security.workspace.trust.enabled": false,
+  "sonarlint.connectedMode.connections.sonarqube": [
+    {
+      "connectionId": "unixons",
+      "serverUrl": "http://localhost:9000"
+    }
+  ],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "unixons",
+    "projectKey": "tbs-gd-backend"
+  },
   "tailwindCSS.classAttributes": [
     "className"
   ],
@@ -59,11 +70,12 @@
   ],
   "tailwindCSS.lint.cssConflict": "error",
   "terminal.integrated.allowChords": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
   "update.mode": "none",
   "window.commandCenter": false,
   "window.menuBarVisibility": "hidden",
   "workbench.activityBar.location": "top",
-  "workbench.colorTheme": "Catppuccin Mocha",
+  "workbench.colorTheme": "Catppuccin Latte",
   "workbench.editor.customLabels.enabled": true,
   "workbench.editor.customLabels.patterns": {
     "**/src/**/index.{js,jsx,ts,tsx}": "${dirname(1)}/${dirname}"
@@ -72,17 +84,5 @@
   "workbench.layoutControl.enabled": false,
   "workbench.navigationControl.enabled": false,
   "workbench.productIconTheme": "Tabler",
-  "workbench.welcomePage.walkthroughs.openOnInstall": false,
-  "cursor.composer.editorConversationDensity": "compact-ungrouped",
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "sonarlint.connectedMode.connections.sonarqube": [
-    {
-      "connectionId": "unixons",
-      "serverUrl": "http://localhost:9000"
-    }
-  ],
-  "sonarlint.connectedMode.project": {
-    "connectionId": "unixons",
-    "projectKey": "tbs-gd-backend"
-  }
+  "workbench.welcomePage.walkthroughs.openOnInstall": false
 }
