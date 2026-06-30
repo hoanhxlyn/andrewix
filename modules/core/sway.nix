@@ -75,7 +75,7 @@
             {
               unit = "hours";
               timeout = 2;
-              command = "${pkgs.systemd}/bin/systemctl suspend";
+              command = "${pkgs.systemd}/bin/systemctl suspend --ignore-inhibitors";
             }
           ]
         );
