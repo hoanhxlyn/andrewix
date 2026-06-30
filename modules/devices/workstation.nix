@@ -14,13 +14,11 @@
       <core.stylix>
       <core.devices-monitors>
       <core.shell>
-      <core.browsers.firefox>
+      <core.browsers>
       <core.communications.caprine>
       <core.communications.discord>
       <core.vpn.proton>
       <core.office.teams>
-      <core.browsers.zen>
-      <core.browsers.helium>
       <core.sync.rclone>
       <core.sync.keepassxc>
       # <core.editor.vscode>
