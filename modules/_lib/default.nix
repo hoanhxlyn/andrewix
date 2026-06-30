@@ -7,7 +7,7 @@
 in
   {
     is-workstation ? true,
-    users ? null,
+    profiles ? null,
     isLaptop ? false,
     monitors ? {},
     windowsName ? null,
@@ -25,12 +25,14 @@ in
         then {inherit windowsName;}
         else {}
       );
-    withUsers =
-      if users == null
-      then base
-      else lib.recursiveUpdate base {inherit users;};
+    effectiveProfiles =
+      if profiles == null
+      then base.profiles
+      else profiles;
+    baseWithUsers =
+      (builtins.removeAttrs base ["profiles"]) // {users = effectiveProfiles;};
   in
-    lib.recursiveUpdate withUsers (
+    lib.recursiveUpdate baseWithUsers (
       if is-workstation
       then workstation
       else wsl
