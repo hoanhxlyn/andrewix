@@ -7,5 +7,5 @@
     name = "alacritty";
   };
   defaultBrowser = "helium";
-  users.andrew = {};
+  profiles.andrew = {};
 }
