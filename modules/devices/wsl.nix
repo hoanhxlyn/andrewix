@@ -3,8 +3,8 @@
     wsl.includes = [
       <core.git>
       <core.agents>
-      <my/editor/nvf>
-      <my/shell>
+      <core/editor/nvf>
+      <core/shell>
     ];
 
     andrew-home-wsl.provides.to-users.includes = [<wsl>];
