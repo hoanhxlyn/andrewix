@@ -32,6 +32,7 @@
         wget
         just
         wl-clipboard
+        sonar-scanner-cli
       ];
       programs = {
         jq.enable = true;
