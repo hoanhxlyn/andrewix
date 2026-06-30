@@ -1,71 +1,8 @@
 {lib, ...}: let
-  gen_host = {
-    is-workstation ? true,
-    users,
-    isLaptop ? false,
-    monitors ? {},
-    windowsName ? null,
-  }: let
-    base = {
-      terminal = {
-        fontSize = 12;
-        padding = 2;
-        opacity = 0.8;
-        name = "alacritty";
-      };
-      inherit users;
-      defaultBrowser = "helium";
-    };
-    workstation = {
-      inherit isLaptop;
-      rclone.path = "/mnt/gdrive";
-      monitors = let
-        rightOffset =
-          builtins.foldl'
-          (acc: name: let
-            m = monitors.${name};
-            s = m.scale or 1;
-          in
-            if !(m.is-primary or false)
-            then acc + (builtins.floor (m.resolution.width / s))
-            else acc)
-          0
-          (builtins.attrNames monitors);
-      in
-        builtins.mapAttrs (_: m: {
-          mode = {
-            inherit (m.resolution) width height;
-            refresh = m.refresh-rate;
-          };
-          scale = m.scale or 1;
-          position = {
-            x =
-              if (m.is-primary or false)
-              then rightOffset
-              else 0;
-            y = 0;
-          };
-        })
-        monitors;
-    };
-    wsl =
-      lib.recursiveUpdate
-      {wsl.enable = true;}
-      (
-        if windowsName != null
-        then {inherit windowsName;}
-        else {}
-      );
-  in
-    lib.recursiveUpdate base (
-      if is-workstation
-      then workstation
-      else wsl
-    );
+  mkHost = import ./_lib {inherit lib;};
 in {
   den.hosts."x86_64-linux" = {
-    andrew-laptop = gen_host {
-      users.andrew = {};
+    andrew-laptop = mkHost {
       isLaptop = true;
       monitors."eDP-1" = {
         resolution = {
@@ -86,8 +23,7 @@ in {
         scale = 1;
       };
     };
-    andrew-pc = gen_host {
-      users.andrew = {};
+    andrew-pc = mkHost {
       monitors."HDMI-A-1" = {
         resolution = {
           width = 1920;
@@ -107,14 +43,12 @@ in {
         scale = 1;
       };
     };
-    andrew-home-wsl = gen_host {
+    andrew-home-wsl = mkHost {
       is-workstation = false;
-      users.andrew = {};
       windowsName = "hoanganh";
     };
-    andrew-work-wsl = gen_host {
+    andrew-work-wsl = mkHost {
       is-workstation = false;
-      users.andrew = {};
       windowsName = "andrew.nguyen1";
     };
   };
