@@ -13,35 +13,35 @@
       <core.wifi>
       <core.stylix>
       <core.devices-monitors>
-      <my/shell>
-      <my/browsers/firefox>
-      <my/communications/caprine>
-      <my/communications/discord>
-      <my/vpn/proton>
-      <my/office/teams>
-      <my/browsers/zen>
-      <my/browsers/helium>
-      <my/sync/rclone>
-      <my/sync/keepassxc>
-      # <my/editor/vscode>
-      <my/editor/cursor>
-      <my/terminals>
-      <my/vm/podman>
-      <my/office/markdown>
-      <my/editor/nvf>
-      <my/hardware/logitech>
+      <core.shell>
+      <core.browsers.firefox>
+      <core.communications.caprine>
+      <core.communications.discord>
+      <core.vpn.proton>
+      <core.office.teams>
+      <core.browsers.zen>
+      <core.browsers.helium>
+      <core.sync.rclone>
+      <core.sync.keepassxc>
+      # <core.editor.vscode>
+      <core.editor.cursor>
+      <core.terminals>
+      <core.vm.podman>
+      <core.office.markdown>
+      <core.editor.nvf>
+      <core.hardware.logitech>
     ];
 
     andrew-laptop.provides.to-users.includes = [
       <workstation>
-      <my/wm/niri>
-      <my/sync/sops>
+      <core.wm.niri>
+      <core.sync.sops>
       <core.power-manager>
     ];
     andrew-pc.provides.to-users.includes = [
       <workstation>
-      <my/wm/niri>
-      <my/sync/sops>
+      <core.wm.niri>
+      <core.sync.sops>
       <core.nvidia>
     ];
   };
