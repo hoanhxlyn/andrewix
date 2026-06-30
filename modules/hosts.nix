@@ -14,6 +14,7 @@
         name = "alacritty";
       };
       inherit users;
+      defaultBrowser = "helium";
     };
     workstation = {
       inherit isLaptop;

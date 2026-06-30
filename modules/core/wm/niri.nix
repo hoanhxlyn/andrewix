@@ -55,6 +55,14 @@
       action = homeConfig.config.lib.niri.actions;
       # noctalia = cmd: ["noctalia-shell" "ipc" "call"] ++ (lib.splitString " " cmd);
       terminalName = host.terminal.name;
+      browserBin =
+        {
+          zen = "zen-beta";
+          helium = "helium";
+          firefox = "firefox";
+        }.${
+          host.defaultBrowser
+        };
     in {
       imports = [
         inputs.niri.homeModules.niri
@@ -144,7 +152,7 @@
               };
               "Mod+B" = {
                 hotkey-overlay.title = "Browser";
-                action.spawn = ["zen-beta"];
+                action.spawn = [browserBin];
               };
               "Mod+C" = {
                 hotkey-overlay.title = "Calendar";
@@ -440,6 +448,10 @@
               }
               {
                 app-id = "zen*";
+                title = "Picture-in-Picture";
+              }
+              {
+                app-id = "helium";
                 title = "Picture-in-Picture";
               }
             ];
