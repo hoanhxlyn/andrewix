@@ -114,6 +114,7 @@
           {command = ["swaybg" "-i" homeConfig.config.stylix.image];}
           {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];}
           {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
+          {command = ["solaar" "--window=hide"];}
         ];
 
         hotkey-overlay = {
