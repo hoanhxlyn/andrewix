@@ -2,6 +2,9 @@
   core.sync.rclone = {host, ...}: let
     path = host.rclone.path;
   in {
+    nixos = {
+      programs.fuse.enable = true;
+    };
     homeManager = {pkgs, ...}: {
       programs.rclone.enable = true;
       systemd.user.services.rclone-gdrive = {
