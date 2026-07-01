@@ -484,6 +484,10 @@
             default-column-width = {};
           }
           {
+            matches = [{app-id = "^helium$";}];
+            default-column-width = {proportion = 1.0;};
+          }
+          {
             matches = [{}];
             geometry-corner-radius = {
               top-left = 3.0;
