@@ -12,7 +12,6 @@
         enable = true;
         flags = [
           "--enable-features=TouchpadOverscrollHistoryNavigation,VerticalTabs"
-          "--start-maximized"
         ];
         policies = {
           "BrowserSignin" = 0;
