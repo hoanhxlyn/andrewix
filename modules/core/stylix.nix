@@ -67,7 +67,10 @@
           nvf.transparentBackground = true;
           kmscon.enable = true;
         };
-        image = builtins.fetchurl "https://wallpaperaccess.com/full/12259367.png";
+        image = builtins.fetchurl {
+          url = "https://wallpaperaccess.com/full/12259305.png";
+          sha256 = "1ncgi241qfsnkj2c5mdh14fhfk45hh00ciy85czfl1qxpj3mvh6q";
+        };
         imageScalingMode = "fill"; # fill | center | stretch | fit
       };
     };

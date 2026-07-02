@@ -39,6 +39,10 @@
         PREFS="$HOME/.config/net.imput.helium/Default/Preferences"
         AVATAR_SRC="$HOME/Pictures/Camera/avatar.jpg"
         AVATAR_DST="$HOME/.config/net.imput.helium/Default/Custom Avatar Picture.png"
+        if [ ! -f "$PREFS" ]; then
+          mkdir -p "$(dirname "$PREFS")"
+          echo '{}' > "$PREFS"
+        fi
         if [ -f "$PREFS" ]; then
           TMP=$(mktemp)
           ${pkgs.jq}/bin/jq '. * {
@@ -57,6 +61,9 @@
             "browser": {
               "show_home_button": true,
               "theme": { "is_grayscale2": true }
+            },
+            "ntp": {
+              "shortcutstype": 1
             },
             "intl": {
               "selected_languages": "en-US,en,ja"
