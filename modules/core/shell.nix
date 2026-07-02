@@ -23,6 +23,15 @@
           fish_add_path ~/.bun/bin
         '';
         functions.fish_user_key_bindings.body = "fish_vi_key_bindings default";
+        functions.cc-work.body = ''
+          set -lx CLAUDE_CONFIG_DIR $HOME/.claude-work
+          env -u CLAUDE_CODE_OAUTH_TOKEN claude $argv
+        '';
+        functions.cc-personal.body = ''
+          set -lx CLAUDE_CONFIG_DIR $HOME/.claude-personal
+          set -lx CLAUDE_CODE_OAUTH_TOKEN (cat ~/.config/sops-nix/secrets/CLAUDE_TOKEN 2>/dev/null)
+          claude $argv
+        '';
         shellAliases = {
           ll = "eza --long --icons";
           ls = "eza --all";
