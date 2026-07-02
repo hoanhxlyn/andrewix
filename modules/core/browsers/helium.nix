@@ -38,6 +38,8 @@
     }: {
       home.activation.heliumPreferences = lib.hm.dag.entryAfter ["writeBoundary"] ''
         PREFS="$HOME/.config/net.imput.helium/Default/Preferences"
+        AVATAR_SRC="$HOME/Pictures/Camera/avatar.jpg"
+        AVATAR_DST="$HOME/.config/net.imput.helium/Default/Custom Avatar Picture.png"
         if [ -f "$PREFS" ]; then
           TMP=$(mktemp)
           ${pkgs.jq}/bin/jq '. * {
@@ -56,8 +58,22 @@
             "browser": {
               "show_home_button": true,
               "theme": { "is_grayscale2": true }
+            },
+            "intl": {
+              "selected_languages": "en-US,en,ja"
+            },
+            "profile": {
+              "name": "Andrew Nguyen",
+              "using_default_name": false,
+              "avatar_index": 26,
+              "using_custom_avatar": true,
+              "using_default_avatar": false,
+              "using_gaia_avatar": false
             }
           }' "$PREFS" > "$TMP" && mv "$TMP" "$PREFS"
+        fi
+        if [ -f "$AVATAR_SRC" ]; then
+          ${pkgs.imagemagick}/bin/convert "$AVATAR_SRC" "$AVATAR_DST"
         fi
       '';
     };
