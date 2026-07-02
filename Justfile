@@ -24,22 +24,22 @@ check:
 # Build system config
 [group('nixos')]
 build h=host *args:
-    nix run .#{{ h }} -- build {{ args }} -- --impure
+    nix run .#{{ h }} -- build {{ args }}  
 
 # Boot new build at next restart
 [group('nixos')]
 boot h=host *args:
-    nix run .#{{ h }} -- boot {{ args }} -- --impure
+    nix run .#{{ h }} -- boot {{ args }}  
 
 # Test system config
 [group('nixos')]
 test h=host *args:
-    nix run .#{{ h }} -- test {{ args }} -- --impure
+    nix run .#{{ h }} -- test {{ args }}  
 
 # Switch to system config
 [group('nixos')]
 switch h=host *args:
-    nix run .#{{ h }} -- switch {{ args }} -- --impure
+    nix run .#{{ h }} -- switch {{ args }}  
 
 # Update flake inputs
 [group('nixos')]
@@ -55,7 +55,7 @@ gc:
 # System-wide GC, delete old gens
 [group('nixos')]
 clean-up:
-    sudo nix-collect-garbage  --delete-old
+    sudo nix-collect-garbage --delete-old
 
 # Search nix packages
 [group('info')]
