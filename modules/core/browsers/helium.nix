@@ -8,6 +8,7 @@
       imports = [
         inputs.helium.nixosModules.default
       ];
+      stylix.targets.chromium.enable = false;
       programs.helium = {
         enable = true;
         flags = [
@@ -45,7 +46,7 @@
         fi
         if [ -f "$PREFS" ]; then
           TMP=$(mktemp)
-          ${pkgs.jq}/bin/jq '. * {
+          ${pkgs.jq}/bin/jq 'del(.browser.theme) | . * {
             "helium": {
               "browser": {
                 "centered_location_bar": true,
@@ -59,8 +60,7 @@
               }
             },
             "browser": {
-              "show_home_button": true,
-              "theme": { "is_grayscale2": true }
+              "show_home_button": true
             },
             "ntp": {
               "shortcutstype": 1
