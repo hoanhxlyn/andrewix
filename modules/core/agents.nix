@@ -28,25 +28,6 @@
 
               env.BRAVE_API_KEY.file = config.sops.secrets.BRAVE_API_KEY.path;
             };
-            sonarq = {
-              command = "podman";
-              args = [
-                "run"
-                "-i"
-                "--rm"
-                "--init"
-                "--pull=always"
-                "-e"
-                "SONARQUBE_TOKEN"
-                "-e"
-                "SONARQUBE_URL"
-                "mcp/sonarqube"
-              ];
-              env = {
-                SONARQUBE_TOKEN.file = config.sops.secrets.SONARQ_TOKEN.path;
-                SONARQUBE_URL = "http://host.containers.internal:9000";
-              };
-            };
           };
         };
         opencode = {
