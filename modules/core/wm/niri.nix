@@ -13,7 +13,19 @@
       <core/sway>
     ];
 
-    nixos = {pkgs, ...}: {
+    nixos = {
+      pkgs,
+      lib,
+      config,
+      ...
+    }: let
+      blurredBackground =
+        pkgs.runCommand "sddm-blurred-background" {
+          buildInputs = [pkgs.imagemagick];
+        } ''
+          convert ${config.stylix.image} -blur 0x25 $out
+        '';
+    in {
       nixpkgs.overlays = [inputs.niri.overlays.niri];
       nix.settings = {
         substituters = ["https://niri-epireyn.cachix.org"];
@@ -27,27 +39,23 @@
         xwayland-satellite
         networkmanagerapplet
         blueman
-        (pkgs.catppuccin-sddm.override {
-          flavor = "mocha";
-          accent = "mauve";
-        })
       ];
       programs.niri = {
         enable = true;
         package = pkgs.niri-unstable;
       };
-      security.polkit.enable = true;
-      services = {
-        playerctld.enable = true;
-        displayManager = {
-          sddm = {
-            enable = true;
-            wayland.enable = true;
-            theme = "catppuccin-mocha-mauve";
+      programs.regreet = {
+        enable = true;
+        settings = {
+          background = {
+            path = lib.mkForce "${blurredBackground}";
+            fit = "Cover";
           };
-          defaultSession = "niri";
+          GTK.application_prefer_dark_theme = true;
         };
       };
+      security.polkit.enable = true;
+      services.playerctld.enable = true;
     };
 
     homeManager = homeConfig: let
