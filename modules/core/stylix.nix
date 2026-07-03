@@ -68,8 +68,8 @@
           kmscon.enable = true;
         };
         image = builtins.fetchurl {
-          url = "https://wallpaperaccess.com/full/12259305.png";
-          sha256 = "1ncgi241qfsnkj2c5mdh14fhfk45hh00ciy85czfl1qxpj3mvh6q";
+          url = "https://files.orangc.net/media/walls-catppuccin-mocha/oversized-cat.jpg";
+          sha256 = "0c9fkhixpzh6hvwbqvfrfsi7c5p1lwnaql6ri1kkdjahay1h0spl";
         };
         imageScalingMode = "fill"; # fill | center | stretch | fit
       };
