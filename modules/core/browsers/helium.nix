@@ -27,6 +27,7 @@
             # Pre-install extensions
             "oboonakemofpalcgghocfoadofidjkkk"
             "fmkadmapgofadopljbjfkapdkoienihi"
+            "ponfpcnoihfmfllpaingbgckeeldkhle" # Enhancer for YouTube
           ];
         };
       };
@@ -51,12 +52,12 @@
               "browser": {
                 "centered_location_bar": true,
                 "layout": 2,
-                "minimal_location_bar": true,
+                "minimal_location_bar": false,
                 "new_tab_next_to_active": true,
                 "vertical_right_aligned": false,
-                "zen_mode": true,
+                "zen_mode": false,
                 "zen_mode_sidebar_pinned": true,
-                "zen_mode_top_chrome_pinned": true
+                "zen_mode_top_chrome_pinned": true,
               }
             },
             "browser": {
