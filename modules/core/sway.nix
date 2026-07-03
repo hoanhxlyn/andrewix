@@ -55,7 +55,7 @@
           lib.optionals isLaptop [
             {
               unit = "seconds";
-              timeout = 30;
+              timeout = 50;
               command = "${pkgs.brightnessctl}/bin/brightnessctl get > $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set 10%";
               resumeCommand = "${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness)";
             }
@@ -74,7 +74,7 @@
             }
             {
               unit = "hours";
-              timeout = 2;
+              timeout = 1;
               command = "${pkgs.systemd}/bin/systemctl suspend --ignore-inhibitors";
             }
           ]
