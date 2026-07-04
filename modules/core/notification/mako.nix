@@ -1,5 +1,5 @@
 {
-  core.notification.mako = rootConfig: {
+  core.notification.mako = {host, ...}: {
     homeManager = {pkgs, ...}: let
       dndToggle = pkgs.writeShellScriptBin "dnd-toggle" ''
         STATE_FILE="$XDG_RUNTIME_DIR/dnd-state"
@@ -32,7 +32,7 @@
           border-size = 2;
           padding = "10,15";
           # icons
-          max-icon-size = builtins.mul rootConfig.host.terminal.fontSize 2;
+          max-icon-size = builtins.mul host.terminal.fontSize 2;
           icon-border-radius = 6;
           icons = true;
           icon-path = "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark";
@@ -40,7 +40,7 @@
           markup = true;
           default-timeout = 3000;
           sort = "-time";
-          margin = rootConfig.host.terminal.padding;
+          margin = host.terminal.padding;
           max-history = 10;
           on-button-left = "invoke-default-action";
           on-button-right = "dismiss";
