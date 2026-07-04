@@ -27,27 +27,13 @@
         xwayland-satellite
         networkmanagerapplet
         blueman
-        (pkgs.catppuccin-sddm.override {
-          flavor = "mocha";
-          accent = "mauve";
-        })
       ];
       programs.niri = {
         enable = true;
         package = pkgs.niri-unstable;
       };
       security.polkit.enable = true;
-      services = {
-        playerctld.enable = true;
-        displayManager = {
-          sddm = {
-            enable = true;
-            wayland.enable = true;
-            theme = "catppuccin-mocha-mauve";
-          };
-          defaultSession = "niri";
-        };
-      };
+      services.playerctld.enable = true;
     };
 
     homeManager = homeConfig: let
