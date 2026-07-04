@@ -10,7 +10,7 @@
       <core/statusbar/waybar>
       <core/menu-launcher/fuzzel>
       <core/notification/mako>
-      <core/sway>
+      <core/wm/sway>
     ];
 
     nixos = {pkgs, ...}: {

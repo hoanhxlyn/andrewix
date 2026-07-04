@@ -1,7 +1,7 @@
 {lib, ...}: {
-  core.menu-launcher.fuzzel = hostConf: let
-    terminal = hostConf.host.terminal;
-    isLaptop = hostConf.host.isLaptop or false;
+  core.menu-launcher.fuzzel = {host, ...}: let
+    inherit (host) terminal;
+    isLaptop = host.isLaptop or false;
   in {
     homeManager = {pkgs, ...}: {
       programs.fuzzel = {

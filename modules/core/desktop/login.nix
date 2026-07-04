@@ -7,7 +7,7 @@
       ...
     }:
       lib.mkIf (host.login == "regreet") (let
-        blurredBackground = import ../_lib/blurred-image.nix {
+        blurredBackground = import ../../_lib/blurred-image.nix {
           inherit pkgs;
           image = config.stylix.image;
         };

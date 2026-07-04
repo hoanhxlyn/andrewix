@@ -1,5 +1,5 @@
-{lib, ...}: {
-  core.sway = {host, ...}: let
+{
+  core.wm.sway = {host, ...}: let
     isLaptop = host.isLaptop or false;
   in {
     nixos.security.pam.services.swaylock = {};
@@ -9,7 +9,7 @@
       config,
       ...
     }: let
-      blurredBackground = import ../_lib/blurred-image.nix {
+      blurredBackground = import ../../../_lib/blurred-image.nix {
         inherit pkgs;
         image = config.stylix.image;
       };
