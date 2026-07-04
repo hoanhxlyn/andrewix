@@ -5,6 +5,7 @@
     nixos.security.pam.services.swaylock = {};
     homeManager = {
       pkgs,
+      lib,
       config,
       ...
     }: let
@@ -47,7 +48,7 @@
         settings = {
           indicator-idle-visible = true;
           show-failed-attempts = false;
-          image = "${blurredBackground}";
+          image = lib.mkForce "${blurredBackground}";
           fade-in = 0.5;
           clock = true;
           grace = 10;
