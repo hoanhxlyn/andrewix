@@ -13,19 +13,7 @@
       <core/sway>
     ];
 
-    nixos = {
-      pkgs,
-      lib,
-      config,
-      ...
-    }: let
-      blurredBackground =
-        pkgs.runCommand "sddm-blurred-background" {
-          buildInputs = [pkgs.imagemagick];
-        } ''
-          convert ${config.stylix.image} -blur 0x25 $out
-        '';
-    in {
+    nixos = {pkgs, ...}: {
       nixpkgs.overlays = [inputs.niri.overlays.niri];
       nix.settings = {
         substituters = ["https://niri-epireyn.cachix.org"];
@@ -43,16 +31,6 @@
       programs.niri = {
         enable = true;
         package = pkgs.niri-unstable;
-      };
-      programs.regreet = {
-        enable = true;
-        settings = {
-          background = {
-            path = lib.mkForce "${blurredBackground}";
-            fit = "Cover";
-          };
-          GTK.application_prefer_dark_theme = true;
-        };
       };
       security.polkit.enable = true;
       services.playerctld.enable = true;

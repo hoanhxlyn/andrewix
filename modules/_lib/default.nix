@@ -11,6 +11,7 @@ in
     isLaptop ? false,
     monitors ? {},
     windowsName ? null,
+    login ? "regreet",
   }: let
     workstation = {
       inherit isLaptop;
@@ -30,7 +31,11 @@ in
       then base.profiles
       else profiles;
     baseWithUsers =
-      (builtins.removeAttrs base ["profiles"]) // {users = effectiveProfiles;};
+      (builtins.removeAttrs base ["profiles"])
+      // {
+        users = effectiveProfiles;
+        inherit login;
+      };
   in
     lib.recursiveUpdate baseWithUsers (
       if is-workstation
