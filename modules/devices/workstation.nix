@@ -33,12 +33,14 @@
     andrew-laptop.provides.to-users.includes = [
       <workstation>
       <core.wm.niri>
+      <core.login>
       <core.sync.sops>
       <core.power-manager>
     ];
     andrew-pc.provides.to-users.includes = [
       <workstation>
       <core.wm.niri>
+      <core.login>
       <core.sync.sops>
       <core.nvidia>
     ];
