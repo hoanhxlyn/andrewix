@@ -3,7 +3,15 @@
     isLaptop = host.isLaptop or false;
   in {
     nixos.security.pam.services.swaylock = {};
-    homeManager = {pkgs, ...}: let
+    homeManager = {
+      pkgs,
+      config,
+      ...
+    }: let
+      blurredBackground = import ../_lib/blurred-image.nix {
+        inherit pkgs;
+        image = config.stylix.image;
+      };
       lockCmd = "${pkgs.swaylock-effects}/bin/swaylock -f";
       display = status:
         if status == "off"
@@ -39,8 +47,8 @@
         settings = {
           indicator-idle-visible = true;
           show-failed-attempts = false;
+          image = "${blurredBackground}";
           fade-in = 0.5;
-          effect-blur = "7x5";
           clock = true;
           grace = 10;
         };
