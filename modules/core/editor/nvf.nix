@@ -361,10 +361,10 @@
             css.enable = true;
             css.format.type = [
               "biome"
-              "prettierd"
+              "prettier"
             ];
             scss.enable = true;
-            scss.format.type = ["prettierd"];
+            scss.format.type = ["prettier"];
             html.enable = true;
             html.lsp.servers = ["superhtml"];
             jq.enable = true;
@@ -392,7 +392,7 @@
               ];
               format.type = [
                 "biome"
-                "prettierd"
+                "prettier"
               ];
               lsp.servers = ["typescript-go"];
             };
