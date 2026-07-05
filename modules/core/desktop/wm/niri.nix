@@ -30,7 +30,9 @@
       ];
       programs.niri = {
         enable = true;
-        package = pkgs.niri-unstable;
+        package = pkgs.niri-unstable.overrideAttrs (old: {
+          patches = (old.patches or []) ++ [./niri-session-import-env.patch];
+        });
       };
       security.polkit.enable = true;
       services.playerctld.enable = true;
