@@ -21,6 +21,7 @@
               Behavior = {
                 ShareInputState = "All";
                 ResetStateWhenFocusIn = "No";
+                ShowInputMethodInformation = "False";
               };
             };
             inputMethod = {
