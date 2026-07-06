@@ -1,5 +1,5 @@
 {
-  core.xserver.nixos = {pkgs, ...}: {
+  core.desktop.xserver.nixos = {pkgs, ...}: {
     services.xserver = {
       enable = true;
       autoRepeatDelay = 200;

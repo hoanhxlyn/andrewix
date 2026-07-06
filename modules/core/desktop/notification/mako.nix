@@ -1,5 +1,5 @@
 {
-  core.notification.mako = {host, ...}: {
+  core.desktop.notification.mako = {host, ...}: {
     homeManager = {pkgs, ...}: let
       dndToggle = pkgs.writeShellScriptBin "dnd-toggle" ''
         STATE_FILE="$XDG_RUNTIME_DIR/dnd-state"

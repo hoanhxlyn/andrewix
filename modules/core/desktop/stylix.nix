@@ -7,7 +7,7 @@
     url = "github:nix-community/stylix";
     inputs.nixpkgs.follows = "nixpkgs";
   };
-  core.stylix = {host, ...}: let
+  core.desktop.stylix = {host, ...}: let
     inherit (host) terminal;
   in {
     nixos = {

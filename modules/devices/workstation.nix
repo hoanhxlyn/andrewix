@@ -4,14 +4,14 @@
       (<den/batteries/import-tree/host> ../../hosts)
       <core.bootable>
       <core.disko>
-      <core.xserver>
+      <core.desktop.xserver>
       <core.network>
       <core.i18n>
       <core.timezone>
       <core.git>
       <core.agents>
       <core.wifi>
-      <core.stylix>
+      <core.desktop.stylix>
       <core.devices-monitors>
       <core.shell>
       <core.browsers>
@@ -32,15 +32,15 @@
 
     andrew-laptop.provides.to-users.includes = [
       <workstation>
-      <core.wm.niri>
-      <core.login>
+      <core.desktop.wm.niri>
+      <core.desktop.login>
       <core.sync.sops>
       <core.power-manager>
     ];
     andrew-pc.provides.to-users.includes = [
       <workstation>
-      <core.wm.niri>
-      <core.login>
+      <core.desktop.wm.niri>
+      <core.desktop.login>
       <core.sync.sops>
       <core.nvidia>
     ];

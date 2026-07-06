@@ -1,5 +1,5 @@
-{
-  core.login = {host, ...}: {
+{self, ...}: {
+  core.desktop.login.regreet = {host, ...}: {
     nixos = {
       pkgs,
       lib,
@@ -7,7 +7,7 @@
       ...
     }:
       lib.mkIf (host.login == "regreet") (let
-        blurredBackground = import ../../_lib/blurred-image.nix {
+        blurredBackground = import "${self}/modules/_lib/blurred-image.nix" {
           inherit pkgs;
           image = config.stylix.image;
         };

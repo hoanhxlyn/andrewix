@@ -1,5 +1,5 @@
 {lib, ...}: {
-  core.menu-launcher.fuzzel = {host, ...}: let
+  core.desktop.menu-launcher.fuzzel = {host, ...}: let
     inherit (host) terminal;
     isLaptop = host.isLaptop or false;
   in {

@@ -5,12 +5,12 @@
 }: {
   flake-file.inputs.niri.url = "github:epireyn/niri-flake";
 
-  core.wm.niri = {host, ...}: {
+  core.desktop.wm.niri = {host, ...}: {
     includes = [
-      <core/statusbar/waybar>
-      <core/menu-launcher/fuzzel>
-      <core/notification/mako>
-      <core/wm/sway>
+      <core/desktop/statusbar/waybar>
+      <core/desktop/menu-launcher/fuzzel>
+      <core/desktop/notification/mako>
+      <core/desktop/wm/sway>
     ];
 
     nixos = {pkgs, ...}: {

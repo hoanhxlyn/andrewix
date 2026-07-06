@@ -1,5 +1,5 @@
 {
-  core.notification.dunst = {
+  core.desktop.notification.dunst = {
     homeManager = {pkgs, ...}: {
       gtk.iconTheme = {
         package = pkgs.papirus-icon-theme;
