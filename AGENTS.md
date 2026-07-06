@@ -59,6 +59,7 @@ NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto
 - **Compose aspects with `includes`** not `imports` within this repo
 - **No dead top-level args:** if a module file needs nothing from the module system, write a bare attrset (`{ core.x = ...; }`) — do **not** wrap it in `_:` or `{...}:`. Only take args you use (e.g. `{__findFile, ...}:`, `{lib, inputs, ...}:`). Same for an aspect's `nixos`/`homeManager` fn — omit the fn wrapper when no args are used.
 - **Files:** `kebab-case.nix`, **Options:** `camelCase`
+- **No relative-path imports** (`../../../_lib/foo.nix`) — take `{self, ...}` and use `import "${self}/modules/_lib/foo.nix"`
 - **Booleans:** prefix with `enable`/`disable`
 - **Override defaults:** `lib.mkDefault`
 - **Formatter:** `alejandra`, 2-space indent, ≤100 chars hard limit
