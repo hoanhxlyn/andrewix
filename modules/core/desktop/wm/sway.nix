@@ -1,4 +1,4 @@
-{
+{self, ...}: {
   core.desktop.wm.sway = {host, ...}: let
     isLaptop = host.isLaptop or false;
   in {
@@ -9,10 +9,11 @@
       config,
       ...
     }: let
-      blurredBackground = import ../../../_lib/blurred-image.nix {
+      blurredBackground = import "${self}/modules/_lib/blurred-image.nix" {
         inherit pkgs;
         image = config.stylix.image;
       };
+      tlpLib = import "${self}/modules/_lib/tlp.nix" {inherit pkgs;};
       lockCmd = "${pkgs.swaylock-effects}/bin/swaylock -f";
       display = status:
         if status == "off"
@@ -65,7 +66,7 @@
             {
               unit = "seconds";
               timeout = 50;
-              command = "${pkgs.brightnessctl}/bin/brightnessctl get > $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set 10%";
+              command = "${tlpLib.isPerformanceOnAc} || { ${pkgs.brightnessctl}/bin/brightnessctl get > $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set 10%; }";
               resumeCommand = "${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness)";
             }
           ]

@@ -1,9 +1,15 @@
-{lib, ...}: {
+{
+  lib,
+  self,
+  ...
+}: {
   core.desktop.menu-launcher.fuzzel = {host, ...}: let
     inherit (host) terminal;
     isLaptop = host.isLaptop or false;
   in {
-    homeManager = {pkgs, ...}: {
+    homeManager = {pkgs, ...}: let
+      tlpLib = import "${self}/modules/_lib/tlp.nix" {inherit pkgs;};
+    in {
       programs.fuzzel = {
         enable = true;
         settings = {
@@ -273,11 +279,11 @@
               }
 
               current_profile() {
-                tlp-stat -m 2>/dev/null | awk -F/ '{ print $1; exit }'
+                ${tlpLib.profileCmd}
               }
 
               tlp_mode() {
-                tlp-stat -m 2>/dev/null | awk '{ print $1; exit }'
+                ${tlpLib.statusCmd}
               }
 
               menu_prompt() {
