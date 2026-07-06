@@ -1,6 +1,6 @@
 {
   core.vm.podman = {
-    nixos = {
+    nixos = {pkgs, ...}: {
       virtualisation = {
         containers = {
           enable = true;
@@ -15,16 +15,23 @@
         };
       };
       boot.kernel.sysctl."vm.max_map_count" = 524288;
+
+      users.users.andrew.extraGroups = ["podman"];
+
+      services.cockpit = {
+        enable = true;
+        plugins = [pkgs.cockpit-podman];
+        openFirewall = false;
+      };
     };
 
     homeManager = {pkgs, ...}: {
       # Useful other development tools
       home.packages = with pkgs; [
         dive
-        # docker-compose # start group of containers for dev
         podman-compose # start group of containers for dev
+        podman-tui
       ];
-      programs.lazydocker.enable = true;
     };
   };
 }
