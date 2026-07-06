@@ -1,5 +1,5 @@
 {
-  core.statusbar.waybar = {
+  core.desktop.statusbar.waybar = {
     homeManager = {
       pkgs,
       host,

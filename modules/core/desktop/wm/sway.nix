@@ -1,5 +1,5 @@
 {
-  core.wm.sway = {host, ...}: let
+  core.desktop.wm.sway = {host, ...}: let
     isLaptop = host.isLaptop or false;
   in {
     nixos.security.pam.services.swaylock = {};

@@ -1,5 +1,5 @@
 {
-  core.de.gnome = {
+  core.desktop.de.gnome = {
     homeManager = {
       dconf.settings = {
         "org/gnome/desktop/peripherals/touchpad" = {
