@@ -17,6 +17,10 @@
           # Blur the stylix wallpaper (stylix sets the unblurred image by default).
           settings.background.path = lib.mkForce "${blurredBackground}";
         };
+
+        systemd.services.greetd.environment.XCURSOR_SIZE =
+          lib.mkIf (!(host.isLaptop or false))
+          (toString config.stylix.cursor.size);
       });
   };
 }
