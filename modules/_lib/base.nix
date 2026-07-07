@@ -4,7 +4,7 @@
     fontSize = 12;
     padding = 2;
     opacity = 0.8;
-    name = "alacritty";
+    name = "ghostty";
   };
   defaultBrowser = "zen";
   profiles.andrew = {};

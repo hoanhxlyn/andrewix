@@ -1,9 +1,6 @@
 {lib, ...}: {
   core.power-manager = {
-    nixos = {
-      config,
-      ...
-    }: {
+    nixos = {config, ...}: {
       boot = {
         extraModulePackages = with config.boot.kernelPackages; [
           acpi_call
@@ -17,11 +14,10 @@
       security.sudo.extraRules = [
         {
           groups = ["wheel"];
-          commands =
-            map (p: {
-              command = "/run/current-system/sw/bin/tlp ${p}";
-              options = ["NOPASSWD"];
-            }) ["performance" "balanced" "power-saver"];
+          commands = map (p: {
+            command = "/run/current-system/sw/bin/tlp ${p}";
+            options = ["NOPASSWD"];
+          }) ["performance" "balanced" "power-saver"];
         }
       ];
 
