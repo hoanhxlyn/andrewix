@@ -446,35 +446,36 @@
             open-floating = true;
           }
           {
-            matches = [{app-id = "^.blueman-manager-wrapped$";}];
-            open-floating = true;
-          }
-          {
             matches = [
               {
                 app-id = "^Alacritty$";
                 title = "^Power Panel$";
               }
+              {app-id = "^.blueman-manager-wrapped$";}
             ];
             open-floating = true;
           }
           {
-            matches = [{app-id = "^Alacritty$";}];
+            matches = [
+              {app-id = "^Alacritty$";}
+              {app-id = "^com\\.mitchellh\\.ghostty$";}
+            ];
             background-effect.blur = true;
             draw-border-with-background = false;
           }
           {
-            matches = [{app-id = "^org\\.wezfurlong\\.wezterm$";}];
-            default-column-width = {};
-          }
-          {
-            matches = [{app-id = "^cursor$";}];
-            default-column-width = {};
-          }
-          {
-            matches = [{app-id = "^helium$";}];
+            matches = [
+              {app-id = "^cursor$";}
+              {app-id = "^org\\.wezfurlong\\.wezterm$";}
+              {app-id = "^helium$";}
+              {app-id = "^zen$";}
+            ];
             default-column-width = {proportion = 1.0;};
           }
+          # {
+          #   matches = [{app-id = "^helium$";}];
+          #   default-column-width = {proportion = 1.0;};
+          # }
           {
             matches = [{}];
             geometry-corner-radius = {
