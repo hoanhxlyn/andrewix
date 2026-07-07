@@ -18,12 +18,9 @@
       imports = [
         inputs.stylix.nixosModules.stylix
       ];
-      fonts.fontconfig.defaultFonts.emoji = ["Noto Color Emoji"];
       fonts.packages = with pkgs; [
         font-awesome
         inter
-        noto-fonts-cjk-sans
-        noto-fonts-color-emoji
       ];
       stylix = {
         enable = true;
@@ -46,12 +43,12 @@
             name = "CaskaydiaCove Nerd Font";
           };
           emoji = {
-            package = pkgs.noto-fonts-color-emoji;
-            name = "Noto Color Emoji";
+            package = pkgs.texlivePackages.noto-emoji;
+            name = "Noto Emoji";
           };
           sizes = {
             applications = lib.add terminal.fontSize 1;
-            terminal = lib.add terminal.fontSize 0;
+            terminal = lib.sub terminal.fontSize 1;
             desktop = lib.add terminal.fontSize 2;
             popups = lib.add terminal.fontSize 2;
           };
