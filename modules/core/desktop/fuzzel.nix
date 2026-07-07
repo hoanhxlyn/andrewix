@@ -1,15 +1,12 @@
 {
   lib,
-  self,
   ...
 }: {
   core.desktop.menu-launcher.fuzzel = {host, ...}: let
     inherit (host) terminal;
     isLaptop = host.isLaptop or false;
   in {
-    homeManager = {pkgs, ...}: let
-      tlpLib = import "${self}/modules/_lib/tlp.nix" {inherit pkgs;};
-    in {
+    homeManager = {pkgs, ...}: {
       programs.fuzzel = {
         enable = true;
         settings = {
@@ -251,7 +248,6 @@
             name = "fuzzel-battery";
             runtimeInputs = with pkgs; [
               upower
-              tlp
               libnotify
               fuzzel
               brightnessctl
@@ -261,6 +257,11 @@
             text = ''
               terminal="${terminal.name}"
               battery_dev=$(upower -e | grep -i battery | head -1)
+              # Reference the system tlp (single NixOS build) rather than the
+              # home-manager pkgs.tlp; the sudo NOPASSWD rule in
+              # power-manager.nix is scoped to exactly this path.
+              tlp_bin=/run/current-system/sw/bin/tlp
+              tlp_stat=/run/current-system/sw/bin/tlp-stat
 
               battery_prompt() {
                 if [ -z "$battery_dev" ]; then
@@ -279,11 +280,11 @@
               }
 
               current_profile() {
-                ${tlpLib.profileCmd}
+                "$tlp_stat" -m 2>/dev/null | awk -F/ '{ print $1; exit }'
               }
 
               tlp_mode() {
-                ${tlpLib.statusCmd}
+                "$tlp_stat" -m 2>/dev/null
               }
 
               menu_prompt() {
@@ -320,7 +321,7 @@
                   *Power\ saver*) profile_cmd="power-saver" ;;
                   *) return 0 ;;
                 esac
-                if pkexec ${pkgs.tlp}/bin/tlp "$profile_cmd"; then
+                if sudo -n "$tlp_bin" "$profile_cmd"; then
                   notify-send "Power" "Profile: $(tlp_mode)"
                 else
                   notify-send "Power" "Failed to set power profile"
@@ -334,10 +335,10 @@
                   upower -i "$battery_dev" 2>/dev/null || echo "No battery device"
                   echo
                   echo "=== TLP Battery ==="
-                  tlp-stat -b 2>/dev/null || echo "TLP battery stats unavailable"
+                  "$tlp_stat" -b 2>/dev/null || echo "TLP battery stats unavailable"
                   echo
                   echo "=== TLP System ==="
-                  tlp-stat -s 2>/dev/null || echo "TLP system stats unavailable"
+                  "$tlp_stat" -s 2>/dev/null || echo "TLP system stats unavailable"
                 } > "$tmp"
                 "$terminal" --class power-panel -T "Power Panel" -e less -R "$tmp"
                 rm -f "$tmp"
@@ -348,7 +349,7 @@
                   {
                     upower -i "$battery_dev" 2>/dev/null
                     echo
-                    tlp-stat -b 2>/dev/null | sed -n '1,20p'
+                    "$tlp_stat" -b 2>/dev/null | sed -n '1,20p'
                   } | fold -s -w 60
                 )"
               }
