@@ -15,6 +15,7 @@
       <core.devices-monitors>
       <core.shell>
       <core.browsers>
+      <core.media>
       <core.communications.caprine>
       <core.communications.discord>
       <core.vpn.proton>
