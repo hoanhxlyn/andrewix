@@ -15,7 +15,6 @@
         confirm-close-surface = false;
         cursor-style = "block";
         shell-integration-features = false;
-        font-feature = "feat on";
         # gtk-wide-tabs = true;
         # gtk-titlebar-style = "tabs";
         # gtk-toolbar-style = "raised";
