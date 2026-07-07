@@ -6,6 +6,6 @@
     opacity = 0.8;
     name = "alacritty";
   };
-  defaultBrowser = "helium";
+  defaultBrowser = "zen";
   profiles.andrew = {};
 }
