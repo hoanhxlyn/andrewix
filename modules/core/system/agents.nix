@@ -37,7 +37,7 @@
           settings = {
             autoupdate = false;
             plugin = [
-              "opencode-claude-auth@latest"
+              "@dietrichgebert/ponytail"
             ];
             lsp = {
               nix = {
