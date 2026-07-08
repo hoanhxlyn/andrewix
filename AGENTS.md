@@ -39,22 +39,19 @@ NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto
 
 | Dir | Purpose |
 |-----|---------|
-| `modules/core/` | System-level aspects → NixOS config |
-| `modules/my/` | User-level aspects → Home Manager config |
+| `modules/core/` | All aspects (NixOS + Home Manager) |
 | `modules/hosts.nix` | Host definitions (4 hosts) |
 | `modules/devices/` | Per-device aspects (laptop.nix, wsl.nix) |
 | `modules/defaults.nix` | Default includes for all hosts |
 | `modules/dendritic.nix` | Framework bootstrapping |
 | `hosts/<host>/_nixos/` | Hardware configs (filesystems, kernel modules) |
-| `disko/<host>/` | Disk partitioning configs |
 | `secrets/` | sops-nix encrypted secrets |
 | `config/` | Non-Nix app configs |
 | `flake.nix` | **Auto-generated. DO NOT EDIT.** |
 
 ## Conventions
 
-- **Namespace:** `core.<name>` = NixOS, `my/<cat>` = Home Manager
-- **Factory aspects:** `my/<cat>.provides.<name>` = parameterized
+- **Namespace:** `core.<name>` = all aspects (NixOS + Home Manager)
 - **Composition:** `den.aspects.<name>.includes` using angle-bracket imports
 - **Compose aspects with `includes`** not `imports` within this repo
 - **No dead top-level args:** if a module file needs nothing from the module system, write a bare attrset (`{ core.x = ...; }`) — do **not** wrap it in `_:` or `{...}:`. Only take args you use (e.g. `{__findFile, ...}:`, `{lib, inputs, ...}:`). Same for an aspect's `nixos`/`homeManager` fn — omit the fn wrapper when no args are used.
@@ -82,15 +79,6 @@ With includes + nixos + homeManager:
     includes = [ (<den/dep> ["pkg-name"]) ];
     nixos = {config, pkgs, ...}: { /* NixOS */ };
     homeManager = {pkgs, ...}: { /* Home Manager */ };
-  };
-}
-```
-
-Factory:
-```nix
-{
-  my.category.provides.name = param: {
-    homeManager = { /* use param */ };
   };
 }
 ```
@@ -124,7 +112,7 @@ Nix flakes only see git-tracked files. A new file that hasn't been staged yet wi
 3. **NEVER commit without** `just fmt && just lint && just build`
 4. User: `andrew`, System: `x86_64-linux`
 5. No unit tests — validate via `just build` + `just test <host>`
-6. Tools installed via Nix (`modules/my/cli.nix`) — no pre-commit hooks
+6. Tools installed via Nix (`modules/core/`) — no pre-commit hooks
 7. Research unfamiliar NixOS/HM options with context7 + websearch
 8. Activate caveman skill **always**
 

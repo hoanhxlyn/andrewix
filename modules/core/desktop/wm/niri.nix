@@ -470,12 +470,8 @@
               {app-id = "^helium$";}
               {app-id = "^zen$";}
             ];
-            default-column-width = {proportion = 1.0;};
+            default-column-width = {};
           }
-          # {
-          #   matches = [{app-id = "^helium$";}];
-          #   default-column-width = {proportion = 1.0;};
-          # }
           {
             matches = [{}];
             geometry-corner-radius = {
