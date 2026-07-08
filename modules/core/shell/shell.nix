@@ -14,7 +14,6 @@
           fastfetch
           set -gx SOPS_AGE_KEY_FILE "$HOME/.config/sops-nix/keys.txt"
           set -gx CONTEXT7_API_KEY (cat ~/.config/sops-nix/secrets/CONTEXT7_API_KEY 2>/dev/null; or echo "")
-          set -gx TAVILY_API_KEY (cat ~/.config/sops-nix/secrets/TAVILY_API_KEY 2>/dev/null; or echo "")
           set -gx BRAVE_API_KEY (cat ~/.config/sops-nix/secrets/BRAVE_API_KEY 2>/dev/null; or echo "")
           set -gx CLAUDE_CODE_OAUTH_TOKEN (cat ~/.config/sops-nix/secrets/CLAUDE_TOKEN 2>/dev/null)
           set -gx CLAUDE_CONFIG_DIR "$HOME/.claude-personal"

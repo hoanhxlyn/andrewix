@@ -23,7 +23,6 @@
       };
       secrets = {
         CONTEXT7_API_KEY.path = secrets "CONTEXT7_API_KEY";
-        TAVILY_API_KEY.path = secrets "TAVILY_API_KEY";
         BRAVE_API_KEY.path = secrets "BRAVE_API_KEY";
         CLAUDE_CODE_OAUTH_TOKEN.path = secrets "CLAUDE_CODE_OAUTH_TOKEN";
       };
