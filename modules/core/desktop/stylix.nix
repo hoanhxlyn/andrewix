@@ -25,7 +25,7 @@
       stylix = {
         enable = true;
         autoEnable = true;
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/kanagawa.yaml";
         polarity = "dark";
         cursor = {
           package = pkgs.bibata-cursors;
@@ -39,12 +39,12 @@
             name = "Noto Sans";
           };
           monospace = {
-            package = pkgs.nerd-fonts.caskaydia-cove;
-            name = "CaskaydiaCove Nerd Font";
+            package = pkgs.nerd-fonts.geist-mono;
+            name = "GeistMono Nerd Font";
           };
           emoji = {
-            package = pkgs.texlivePackages.noto-emoji;
-            name = "Noto Emoji";
+            package = pkgs.noto-fonts-color-emoji;
+            name = "Noto Color Emoji";
           };
           sizes = {
             applications = lib.add terminal.fontSize 1;
