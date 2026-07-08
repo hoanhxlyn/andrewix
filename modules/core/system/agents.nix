@@ -1,4 +1,14 @@
-{__findFile, ...}: {
+{
+  __findFile,
+  inputs,
+  lib,
+  ...
+}: {
+  flake-file.inputs.opencode = {
+    url = lib.mkDefault "github:anomalyco/opencode";
+    inputs.nixpkgs.follows = lib.mkDefault "nixpkgs";
+  };
+
   core.agents = {
     includes = [
       (<den/batteries/unfree> ["claude-code" "antigravity-cli"])
@@ -16,10 +26,9 @@
               command = "bunx";
               args = ["@upstash/context7-mcp@latest"];
             };
-            tavily = {
+            exa = {
               command = "bunx";
-              args = ["tavily-mcp@latest"];
-              env.TAVILY_API_KEY.file = config.sops.secrets.TAVILY_API_KEY.path;
+              args = ["exa-mcp-server"];
             };
             deepwiki.url = "https://mcp.deepwiki.com/mcp";
             brave = {
@@ -32,6 +41,7 @@
         };
         opencode = {
           enable = true;
+          package = inputs.opencode.packages.${pkgs.system}.opencode;
           enableMcpIntegration = true;
           web.enable = true;
           settings = {
