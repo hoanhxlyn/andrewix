@@ -29,18 +29,16 @@ alejandra . && statix check && deadnix --no-underscore --fail
 
 | Path | Purpose |
 |------|---------|
-| `modules/core/` | System-level aspects → NixOS |
-| `modules/my/` | User-level aspects → Home Manager |
+| `modules/core/` | All aspects (NixOS + Home Manager) |
 | `modules/devices/` | Per-device aspects (laptop, wsl) |
 | `modules/defaults.nix` | Default includes for all hosts |
 | `modules/hosts.nix` | Host definitions |
 | `hosts/<host>/_nixos/` | Hardware configs |
-| `disko/<host>/` | Disk partitioning |
 | `secrets/` | sops-nix encrypted secrets |
 | `config/` | Non-Nix app configs |
 | `flake.nix` | **Auto-generated. DO NOT EDIT.** |
 
-Aspects auto-discovered. Compose via `den.aspects.<name>.includes` with angle-bracket imports (`<core/sound>`, `<my/shell>`).
+Aspects auto-discovered. Compose via `den.aspects.<name>.includes` with angle-bracket imports (`<core/sound>`, `<core/shell>`).
 
 ## Garbage Collection
 
@@ -58,7 +56,7 @@ Only available on workstation hosts (`andrew-laptop`, `andrew-pc`) — not WSL.
 - **Age key location:** `~/.config/sops-nix/keys.txt` on each host
 - **Edit secrets:** `sops secrets/secrets.yaml`
 - **Setup new host:** copy the shared age private key to `~/.config/sops-nix/keys.txt`
-- **Add a new secret:** edit `secrets/secrets.yaml` (via `sops`) **and** declare it in `modules/my/sync/sops.nix` under `sops.secrets`
+- **Add a new secret:** edit `secrets/secrets.yaml` (via `sops`) **and** declare it in `modules/core/services/sync/sops.nix` under `sops.secrets`
 
 ## More
 
