@@ -71,5 +71,8 @@
         imageScalingMode = "fill"; # fill | center | stretch | fit
       };
     };
+    homeManager = {
+      home.pointerCursor.enable = true;
+    };
   };
 }
