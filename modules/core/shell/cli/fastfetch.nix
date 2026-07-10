@@ -51,8 +51,8 @@
             }
             {
               "key" = "│ {#33}󰍛 cpu     {#keys}│";
-              "type" = "cpu";
-              "showPeCoreCount" = true;
+              "type" = "command";
+              "text" = ''fastfetch -s cpu --format json | jq -r '.[0].result | (.cpu | split(" ") | last) + " @ " + (.frequency.max/1000|tostring) + "GHz"' '';
             }
             {
               "key" = "│ {#34}󰉉 disk    {#keys}│";
