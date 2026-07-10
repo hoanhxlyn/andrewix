@@ -214,13 +214,27 @@
                 };
               }
             ])
-            # Matches waybar's section order.
-            [{type = "volume";}]
+            [
+              {
+                type = "volume";
+                name = "mic";
+                show_sinks = false;
+                show_sources = true;
+                popup_orientation = "vertical";
+              }
+              {
+                type = "volume";
+                name = "volume";
+                show_sinks = true;
+                show_sources = false;
+                popup_orientation = "vertical";
+              }
+            ]
             [
               {
                 type = "sys_info";
                 name = "cpu";
-                format = ["󰻠 {cpu_percent}%"];
+                format = ["󰻠 {cpu_percent:1.0}%"];
                 interval = {cpu = 3;};
               }
             ]
@@ -314,7 +328,38 @@
             #cpu { padding: 0 6px; border-bottom: 3px solid ${colors.base09}; }
             #memory { padding: 0 6px; border-bottom: 3px solid ${colors.base0A}; }
             .music { padding: 0 6px; }
-            .focused { padding: 0 6px; border-bottom: 3px solid ${colors.base03}; }
+            .focused .icon { padding-left: 6px; }
+            .focused .label { padding-right: 6px; border-bottom: 3px solid ${colors.base03}; }
+
+            .popup {
+              background-color: ${colors.base00};
+              border: 1px solid alpha(${colors.base04}, 0.4);
+              padding: 10px;
+            }
+
+            .popup button {
+              background-color: alpha(${colors.base03}, 0.3);
+              padding: 4px 8px;
+            }
+
+            .popup button:hover {
+              background-color: alpha(${colors.base03}, 0.5);
+            }
+
+            .popup scale trough {
+              min-height: 4px;
+              background-color: alpha(${colors.base04}, 0.4);
+            }
+
+            .popup scale trough highlight {
+              background-color: ${colors.base0D};
+            }
+
+            .popup scale trough slider {
+              background-color: ${colors.base05};
+              min-width: 12px;
+              min-height: 12px;
+            }
           '';
       };
     };
