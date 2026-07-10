@@ -51,17 +51,7 @@
         fi
       '';
     in {
-      home.packages = with pkgs; [gsimplecal playerctl] ++ [networkScript dndScript];
-      xdg.configFile."gsimplecal/config".text = ''
-        mainwindow_position = mouse
-        mainwindow_yoffset = 5
-        mainwindow_keep_above = 1
-        mainwindow_decorated = 0
-        mainwindow_resizable = 0
-        mainwindow_skip_taskbar = 1
-        mainwindow_sticky = 1
-        close_on_unfocus = 1
-      '';
+      home.packages = with pkgs; [playerctl] ++ [networkScript dndScript];
       stylix.targets.waybar = {
         enable = true;
         enableLeftBackColors = false;
@@ -203,7 +193,7 @@
             clock = {
               format = "󰥔 {:%H:%M}";
               tooltip-format = "{:%a %m/%d/%y}";
-              on-click = "gsimplecal";
+              on-click = "waycal";
             };
 
             "custom/dnd" = {
