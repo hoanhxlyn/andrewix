@@ -7,7 +7,7 @@
 
   core.desktop.wm.niri = {host, ...}: {
     includes = [
-      <core/desktop/statusbar/waybar>
+      <core/desktop/statusbar/ironbar>
       <core/desktop/waycal>
       <core/desktop/menu-launcher/fuzzel>
       <core/desktop/notification/mako>
@@ -107,7 +107,7 @@
 
         spawn-at-startup = [
           # {command = ["noctalia-shell"];}
-          {argv = ["waybar"];}
+          {command = ["ironbar"];}
           {command = ["swaybg" "-i" homeConfig.config.stylix.image];}
           {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];}
           {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
@@ -423,6 +423,14 @@
             matches = [
               {
                 namespace = "^launcher$";
+              }
+            ];
+            background-effect.blur = true;
+          }
+          {
+            matches = [
+              {
+                namespace = "^ironbar$";
               }
             ];
             background-effect.blur = true;
