@@ -8,6 +8,7 @@
   core.desktop.wm.niri = {host, ...}: {
     includes = [
       <core/desktop/statusbar/waybar>
+      <core/desktop/waycal>
       <core/desktop/menu-launcher/fuzzel>
       <core/desktop/notification/mako>
       <core/desktop/wm/sway>
@@ -144,7 +145,7 @@
               };
               "Mod+C" = {
                 hotkey-overlay.title = "Calendar";
-                action.spawn = ["gsimplecal"];
+                action.spawn = ["waycal"];
               };
               "Mod+N" = {
                 hotkey-overlay.title = "Network";
