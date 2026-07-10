@@ -429,6 +429,14 @@
             ];
             background-effect.blur = true;
           }
+          {
+            matches = [
+              {
+                namespace = "^ironbar$";
+              }
+            ];
+            background-effect.blur = true;
+          }
         ];
         window-rules = [
           {
