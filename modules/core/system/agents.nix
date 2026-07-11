@@ -41,10 +41,13 @@
           };
         };
         opencode = {
-          enable = !(osConfig.wsl.enable or false);
-          package = inputs.opencode.packages.${pkgs.system}.opencode;
+          enable = true;
+          package =
+            if (osConfig.wsl.enable or false)
+            then null
+            else inputs.opencode.packages.${pkgs.system}.opencode;
           enableMcpIntegration = true;
-          web.enable = true;
+          web.enable = !(osConfig.wsl.enable or false);
           settings = {
             autoupdate = false;
             plugin = [
@@ -176,6 +179,11 @@
           enableMcpIntegration = true;
         };
       };
+      home.activation.installOpencode = lib.mkIf (osConfig.wsl.enable or false) ''
+        if ! command -v opencode &>/dev/null; then
+          ${pkgs.bun}/bin/bun add -g opencode-ai
+        fi
+      '';
     };
   };
 }
