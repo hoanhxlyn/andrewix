@@ -16,6 +16,7 @@
     homeManager = {
       pkgs,
       config,
+      osConfig,
       ...
     }: {
       programs = {
@@ -40,7 +41,7 @@
           };
         };
         opencode = {
-          enable = true;
+          enable = !(osConfig.wsl.enable or false);
           package = inputs.opencode.packages.${pkgs.system}.opencode;
           enableMcpIntegration = true;
           web.enable = true;
