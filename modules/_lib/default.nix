@@ -15,7 +15,7 @@ in
   }: let
     workstation = {
       inherit isLaptop;
-      rclone.path = "/mnt/gdrive";
+      rclone.path = "gdrive";
       monitors = layoutMonitors monitors;
     };
     wsl =
