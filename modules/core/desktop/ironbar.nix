@@ -87,7 +87,7 @@
 
       programs.ironbar = {
         enable = true;
-        systemd = false;
+        systemd = true;
         config = {
           position = "top";
           height = 32;
@@ -107,7 +107,7 @@
               show_title = true;
               truncate = {
                 mode = "end";
-                max_length = 30;
+                max_length = 20;
               };
             }
           ];
@@ -116,10 +116,10 @@
               type = "music";
               player_type = "mpris";
               show_status_icon = true;
-              format = "{title} - {artist}";
+              format = "{artist} - {title}";
               truncate = {
                 mode = "end";
-                max_length = 25;
+                max_length = 20;
               };
               icons = {
                 play = "󰝚";
@@ -340,6 +340,23 @@
               background-color: ${colors.base00};
               border: 1px solid alpha(${colors.base04}, 0.4);
               padding: 10px;
+            }
+
+            /* Tray menu is a native GtkPopoverMenu with no .popup class, so it
+               inherits the transparent reset and blurs. Force opaque bg. */
+            popover contents {
+              background-color: ${colors.base00};
+              border: 1px solid alpha(${colors.base04}, 0.4);
+              padding: 4px;
+            }
+
+            popover button.model {
+              background-color: ${colors.base00};
+              padding: 4px 8px;
+            }
+
+            popover button.model:hover {
+              background-color: alpha(${colors.base03}, 0.5);
             }
 
             .popup button {
