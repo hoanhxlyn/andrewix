@@ -3,6 +3,7 @@
     workstation.includes = [
       (<den/batteries/import-tree/host> ../../hosts)
       <core.bootable>
+      <core.sound>
       <core.disko>
       <core.desktop.xserver>
       <core.network>
