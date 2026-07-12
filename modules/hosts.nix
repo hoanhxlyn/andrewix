@@ -25,7 +25,7 @@ in {
       };
     };
     andrew-pc = mkHost {
-      login = "regreet";
+      login = "ly";
       monitors."HDMI-A-1" = {
         resolution = {
           width = 1920;
