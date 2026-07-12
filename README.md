@@ -27,16 +27,16 @@ alejandra . && statix check && deadnix --no-underscore --fail
 
 ## Architecture
 
-| Path | Purpose |
-|------|---------|
-| `modules/core/` | All aspects (NixOS + Home Manager) |
-| `modules/devices/` | Per-device aspects (laptop, wsl) |
-| `modules/defaults.nix` | Default includes for all hosts |
-| `modules/hosts.nix` | Host definitions |
-| `hosts/<host>/_nixos/` | Hardware configs |
-| `secrets/` | sops-nix encrypted secrets |
-| `config/` | Non-Nix app configs |
-| `flake.nix` | **Auto-generated. DO NOT EDIT.** |
+| Path                   | Purpose                            |
+| ---------------------- | ---------------------------------- |
+| `modules/core/`        | All aspects (NixOS + Home Manager) |
+| `modules/devices/`     | Per-device aspects (laptop, wsl)   |
+| `modules/defaults.nix` | Default includes for all hosts     |
+| `modules/hosts.nix`    | Host definitions                   |
+| `hosts/<host>/_nixos/` | Hardware configs                   |
+| `secrets/`             | sops-nix encrypted secrets         |
+| `config/`              | Non-Nix app configs                |
+| `flake.nix`            | **Auto-generated. DO NOT EDIT.**   |
 
 Aspects auto-discovered. Compose via `den.aspects.<name>.includes` with angle-bracket imports (`<core/sound>`, `<core/shell>`).
 
@@ -61,3 +61,7 @@ Only available on workstation hosts (`andrew-laptop`, `andrew-pc`) — not WSL.
 ## More
 
 See `AGENTS.md` for conventions, module patterns, and rules.
+
+## Galerry
+
+\[![Linux PC](./config/background/workstation-pc.png) \]
