@@ -93,6 +93,7 @@
           height = 32;
           layer = "top";
           anchor_to_edges = true;
+          popup_autohide = true;
           start = [
             {
               type = "workspaces";
