@@ -106,8 +106,6 @@
         prefer-no-csd = true;
 
         spawn-at-startup = [
-          # {command = ["noctalia-shell"];}
-          {command = ["ironbar"];}
           {command = ["swaybg" "-i" homeConfig.config.stylix.image];}
           {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];}
           {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
