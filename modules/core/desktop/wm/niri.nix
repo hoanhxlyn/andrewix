@@ -88,7 +88,7 @@
         layout = {
           gaps = 10;
           center-focused-column = "never";
-          default-column-width = {proportion = 0.5;};
+          default-column-width = {proportion = 0.7;};
           preset-column-widths = [
             {proportion = 0.3;}
             {proportion = 0.5;}
@@ -479,7 +479,7 @@
               {app-id = "^helium$";}
               {app-id = "^zen$";}
             ];
-            default-column-width = {};
+            default-column-width = {proportion = 1.0;};
           }
           {
             matches = [{}];

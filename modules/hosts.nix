@@ -4,7 +4,6 @@ in {
   den.hosts."x86_64-linux" = {
     andrew-laptop = mkHost {
       isLaptop = true;
-      login = "ly";
       monitors."eDP-1" = {
         resolution = {
           width = 2880;
@@ -25,7 +24,6 @@ in {
       };
     };
     andrew-pc = mkHost {
-      login = "ly";
       monitors."HDMI-A-1" = {
         resolution = {
           width = 1920;
