@@ -65,8 +65,8 @@
           kmscon.enable = true;
         };
         image = builtins.fetchurl {
-          url = "https://files.orangc.net/media/walls-catppuccin-mocha/oversized-cat.jpg";
-          sha256 = "0c9fkhixpzh6hvwbqvfrfsi7c5p1lwnaql6ri1kkdjahay1h0spl";
+          url = "https://images7.alphacoders.com/131/1311446.png";
+          sha256 = "0yp5b2ida97kc04bvws8dcbaccamm5sh0q3qp72y4lgricjfpcrg";
         };
         imageScalingMode = "fill"; # fill | center | stretch | fit
       };
