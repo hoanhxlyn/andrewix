@@ -22,6 +22,7 @@
             ${pkgs.rclone}/bin/rclone mount gdrive: /home/andrew/${path} \
             --vfs-cache-max-age 24h \
             --dir-cache-time 1h \
+            --poll-interval 1m \
             --vfs-cache-mode full \
             --config %h/.config/rclone/rclone.conf
           '';
