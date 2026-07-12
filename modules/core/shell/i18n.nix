@@ -1,41 +1,49 @@
 {
-  core.i18n.nixos = {pkgs, ...}: {
+  core.i18n.nixos = {
+    pkgs,
+    host,
+    ...
+  }: {
     i18n = {
-      inputMethod = {
-        enable = true;
-        type = "fcitx5";
-        fcitx5 = {
-          addons = with pkgs; [
-            fcitx5-bamboo
-            fcitx5-gtk
-            kdePackages.fcitx5-qt
-          ];
-          waylandFrontend = true;
-          ignoreUserConfig = false;
-          settings = {
-            globalOptions = {
-              "Hotkey/TriggerKeys" = {
-                "0" = "Control+Shift_L";
+      # fcitx5 needs a Wayland compositor, which WSL doesn't run.
+      inputMethod =
+        if host.wsl.enable
+        then {}
+        else {
+          enable = true;
+          type = "fcitx5";
+          fcitx5 = {
+            addons = with pkgs; [
+              fcitx5-bamboo
+              fcitx5-gtk
+              kdePackages.fcitx5-qt
+            ];
+            waylandFrontend = true;
+            ignoreUserConfig = false;
+            settings = {
+              globalOptions = {
+                "Hotkey/TriggerKeys" = {
+                  "0" = "Control+Shift_L";
+                };
+                "Hotkey/AltTriggerKeys" = {};
+                Behavior = {
+                  ShareInputState = "All";
+                  ResetStateWhenFocusIn = "No";
+                  ShowInputMethodInformation = "False";
+                };
               };
-              "Hotkey/AltTriggerKeys" = {};
-              Behavior = {
-                ShareInputState = "All";
-                ResetStateWhenFocusIn = "No";
-                ShowInputMethodInformation = "False";
+              inputMethod = {
+                "Groups/0" = {
+                  Name = "Default";
+                  "Default Layout" = "us";
+                  DefaultIM = "keyboard-us";
+                };
+                "Groups/0/Items/0".Name = "keyboard-us";
+                "Groups/0/Items/1".Name = "bamboo";
               };
-            };
-            inputMethod = {
-              "Groups/0" = {
-                Name = "Default";
-                "Default Layout" = "us";
-                DefaultIM = "keyboard-us";
-              };
-              "Groups/0/Items/0".Name = "keyboard-us";
-              "Groups/0/Items/1".Name = "bamboo";
             };
           };
         };
-      };
       defaultLocale = "en_US.UTF-8";
       extraLocaleSettings = {
         LC_ADDRESS = "vi_VN";
