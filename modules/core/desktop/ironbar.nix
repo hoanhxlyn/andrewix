@@ -221,6 +221,8 @@
                 show_sinks = false;
                 show_sources = true;
                 popup_orientation = "vertical";
+                on_scroll_up = "wpctl set-volume --limit 1.0 @DEFAULT_SOURCE@ 5%+";
+                on_scroll_down = "wpctl set-volume @DEFAULT_SOURCE@ 5%-";
               }
               {
                 type = "volume";
@@ -228,6 +230,8 @@
                 show_sinks = true;
                 show_sources = false;
                 popup_orientation = "vertical";
+                on_scroll_up = "wpctl set-volume --limit 1.0 @DEFAULT_AUDIO_SINK@ 5%+";
+                on_scroll_down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
               }
             ]
             [
