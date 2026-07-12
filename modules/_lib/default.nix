@@ -11,7 +11,7 @@ in
     isLaptop ? false,
     monitors ? {},
     windowsName ? null,
-    login ? "regreet",
+    login ? base.login,
   }: let
     workstation = {
       inherit isLaptop;

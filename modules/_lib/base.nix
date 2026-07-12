@@ -8,4 +8,5 @@
   };
   defaultBrowser = "zen";
   profiles.andrew = {};
+  login = "ly";
 }
