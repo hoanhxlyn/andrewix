@@ -11,7 +11,11 @@
       (<den/unfree> ["copilot-language-server"])
     ];
 
-    nixos = {pkgs, ...}: let
+    nixos = {
+      pkgs,
+      host,
+      ...
+    }: let
       L = key: "<leader>${key}";
       mini = {
         explorer = true;
@@ -21,6 +25,10 @@
         indent_scope = true;
         show_dotfiles = true;
       };
+      # wl-copy needs a Wayland compositor, which WSL doesn't run; bridge
+      # nvim's clipboard to the Windows clipboard via win32yank instead
+      # (`scoop install win32yank` on the Windows side).
+      win32yank = "/mnt/c/Users/${host.windowsName}/scoop/root/apps/win32yank/current/win32yank.exe";
     in {
       imports = [inputs.nvf.nixosModules.default];
       environment.systemPackages = with pkgs; [
@@ -65,8 +73,25 @@
           clipboard = {
             enable = true;
             registers = "unnamedplus";
-            providers.wl-copy.enable = true;
+            providers.wl-copy.enable = !host.wsl.enable;
           };
+          luaConfigRC.wsl-clipboard =
+            if host.wsl.enable
+            then ''
+              vim.g.clipboard = {
+                name = "win32yank-wsl",
+                copy = {
+                  ["+"] = "${win32yank} -i --crlf",
+                  ["*"] = "${win32yank} -i --crlf",
+                },
+                paste = {
+                  ["+"] = "${win32yank} -o --lf",
+                  ["*"] = "${win32yank} -o --lf",
+                },
+                cache_enabled = 0,
+              }
+            ''
+            else "";
           autocmds = [
             {
               event = ["FileType"];
