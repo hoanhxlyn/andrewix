@@ -9,4 +9,8 @@
   defaultBrowser = "zen";
   profiles.andrew = {};
   login = "ly";
+  backgroundImage = {
+    url = "https://images7.alphacoders.com/131/1311446.png";
+    sha256 = "0yp5b2ida97kc04bvws8dcbaccamm5sh0q3qp72y4lgricjfpcrg";
+  };
 }

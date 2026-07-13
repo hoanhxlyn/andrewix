@@ -8,7 +8,7 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
   core.desktop.stylix = {host, ...}: let
-    inherit (host) terminal;
+    inherit (host) terminal backgroundImage;
   in {
     nixos = {
       pkgs,
@@ -17,10 +17,6 @@
     }: {
       imports = [
         inputs.stylix.nixosModules.stylix
-      ];
-      fonts.packages = with pkgs; [
-        font-awesome
-        inter
       ];
       stylix = {
         enable = true;
@@ -63,12 +59,22 @@
           plymouth.enable = true;
           nvf.transparentBackground = true;
           kmscon.enable = true;
+          fontconfig.enable = false;
         };
-        image = builtins.fetchurl {
-          url = "https://images7.alphacoders.com/131/1311446.png";
-          sha256 = "0yp5b2ida97kc04bvws8dcbaccamm5sh0q3qp72y4lgricjfpcrg";
+        image = builtins.fetchurl backgroundImage;
+        imageScalingMode = "center"; # fill | center | stretch | fit
+      };
+      fonts = {
+        packages = with pkgs; [
+          font-awesome
+          inter
+        ];
+        fontconfig.defaultFonts = {
+          serif = [config.stylix.fonts.serif.name];
+          sansSerif = [config.stylix.fonts.sansSerif.name];
+          monospace = [config.stylix.fonts.monospace.name];
+          emoji = [config.stylix.fonts.emoji.name];
         };
-        imageScalingMode = "fill"; # fill | center | stretch | fit
       };
     };
     homeManager = {
