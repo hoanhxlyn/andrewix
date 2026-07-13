@@ -31,7 +31,7 @@ in {
           height = 1080;
         };
         refresh-rate = 74.973;
-        is-primary = false;
+        is-primary = true;
         scale = 1;
       };
       monitors."HDMI-A-2" = {
@@ -40,7 +40,7 @@ in {
           height = 1080;
         };
         refresh-rate = 74.973;
-        is-primary = true;
+        is-primary = false;
         scale = 1;
       };
     };

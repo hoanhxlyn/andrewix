@@ -16,7 +16,7 @@ builtins.mapAttrs (_: m: let
     if m.is-primary or false
     then {
       position = {
-        x = 1;
+        x = 0;
         y = 0;
       };
     }
