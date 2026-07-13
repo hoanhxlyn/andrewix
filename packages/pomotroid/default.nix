@@ -33,12 +33,16 @@
     };
   };
 
+  extracted = appimageTools.extractType2 {
+    inherit pname version src;
+  };
+
   desktopItem = makeDesktopItem {
     name = pname;
     desktopName = "Pomotroid";
     comment = "Simple and configurable Pomodoro timer";
-    exec = "${pname}";
-    icon = "clock";
+    exec = "pomotroid-launch";
+    icon = "pomotroid";
     categories = ["Office"];
   };
 in
@@ -47,8 +51,14 @@ in
     paths = [unwrapped desktopItem];
     buildInputs = [makeWrapper];
     postBuild = ''
-      wrapProgram $out/bin/${pname} \
-        --set LD_PRELOAD "${wayland}/lib/libwayland-client.so.0"
+        wrapProgram $out/bin/${pname} \
+          --set LD_PRELOAD "${wayland}/lib/libwayland-client.so.0"
+
+      printf '#!/bin/sh\npgrep -x pomotroid >/dev/null 2>&1 && exit 0\nexec pomotroid "$@"\n' > "$out/bin/pomotroid-launch"
+      chmod +x "$out/bin/pomotroid-launch"
+
+        mkdir -p $out/share/icons
+        cp -r ${extracted}/usr/share/icons/hicolor $out/share/icons/
     '';
     inherit (unwrapped) meta;
   }
