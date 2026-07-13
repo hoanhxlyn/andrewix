@@ -20,6 +20,7 @@
       <core.communications.discord>
       <core.vpn.proton>
       <core.office.teams>
+      <core.office.pomotroid>
       <core.sync.rclone>
       <core.sync.keepassxc>
       # <core.editor.vscode>
