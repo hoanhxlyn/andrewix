@@ -10,7 +10,7 @@ in {
           height = 1800;
         };
         refresh-rate = 90.0;
-        is-primary = false;
+        is-primary = true;
         scale = 1.75;
       };
       monitors."HDMI-A-1" = {
@@ -19,8 +19,9 @@ in {
           height = 1080;
         };
         refresh-rate = 100.0;
-        is-primary = true;
+        is-primary = false;
         scale = 1;
+        focus-at-startup = true;
       };
     };
     andrew-pc = mkHost {
