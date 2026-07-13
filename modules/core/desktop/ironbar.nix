@@ -145,8 +145,12 @@
             [
               {
                 type = "bluetooth";
+                # not_found only trims the label; the button itself still occupies
+                # bar space and opens an empty popup, so hide the widget entirely
+                # via show_if instead when there's no adapter.
+                show_if = "${pkgs.coreutils}/bin/ls /sys/class/bluetooth 2>/dev/null | ${pkgs.gnugrep}/bin/grep -q .";
+                transition_type = "none";
                 format = {
-                  not_found = "";
                   disabled = "󰂯 off";
                   enabled = "󰂯 on";
                   connected = "󰂱 {device_alias}";
