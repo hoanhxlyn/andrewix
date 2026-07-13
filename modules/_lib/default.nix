@@ -12,6 +12,7 @@ in
     monitors ? {},
     windowsName ? null,
     login ? base.login,
+    backgroundImage ? base.backgroundImage,
   }: let
     workstation = {
       inherit isLaptop;
@@ -34,7 +35,7 @@ in
       (builtins.removeAttrs base ["profiles"])
       // {
         users = effectiveProfiles;
-        inherit login;
+        inherit login backgroundImage;
       };
   in
     lib.recursiveUpdate baseWithUsers (
