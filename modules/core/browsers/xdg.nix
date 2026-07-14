@@ -1,15 +1,7 @@
-{
+{self, ...}: let
+  browsers = import "${self}/modules/_lib/browsers.nix";
+in {
   core.browsers.xdg = {host, ...}: let
-    desktopIds = {
-      zen = "zen-beta.desktop";
-      helium = "helium.desktop";
-      firefox = "firefox.desktop";
-    };
-    executables = {
-      zen = "zen-beta";
-      helium = "helium";
-      firefox = "firefox";
-    };
     mimeTypes = [
       "text/html"
       "text/xml"
@@ -26,12 +18,12 @@
         defaultApplications = builtins.listToAttrs (
           map (mime: {
             name = mime;
-            value = desktopIds.${host.defaultBrowser};
+            value = browsers.desktopIds.${host.defaultBrowser};
           })
           mimeTypes
         );
       };
-      home.sessionVariables.BROWSER = executables.${host.defaultBrowser};
+      home.sessionVariables.BROWSER = browsers.executables.${host.defaultBrowser};
     };
   };
 }
