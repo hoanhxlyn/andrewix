@@ -1,8 +1,11 @@
 {
+  self,
   inputs,
   __findFile,
   ...
-}: {
+}: let
+  browsers = import "${self}/modules/_lib/browsers.nix";
+in {
   flake-file.inputs.niri.url = "github:epireyn/niri-flake";
 
   core.desktop.wm.niri = {host, ...}: {
@@ -44,14 +47,7 @@
       action = homeConfig.config.lib.niri.actions;
       # noctalia = cmd: ["noctalia-shell" "ipc" "call"] ++ (lib.splitString " " cmd);
       terminalName = host.terminal.name;
-      browserBin =
-        {
-          zen = "zen-beta";
-          helium = "helium";
-          firefox = "firefox";
-        }.${
-          host.defaultBrowser
-        };
+      browserBin = browsers.executables.${host.defaultBrowser};
     in {
       imports = [
         inputs.niri.homeModules.niri
