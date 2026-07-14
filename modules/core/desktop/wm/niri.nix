@@ -115,7 +115,7 @@ in {
 
         screenshot-path = "~/Pictures/Screenshots/Screenshot_%Y-%m-%d_%H-%M-%S.png";
 
-        environment.QT_QPA_PLATFORM = "wayland";
+        environment.QT_QPA_PLATFORM = "wayland;xcb";
 
         binds = with action;
           lib.mkMerge [
