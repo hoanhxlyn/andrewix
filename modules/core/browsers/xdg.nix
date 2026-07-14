@@ -5,6 +5,11 @@
       helium = "helium.desktop";
       firefox = "firefox.desktop";
     };
+    executables = {
+      zen = "zen-beta";
+      helium = "helium";
+      firefox = "firefox";
+    };
     mimeTypes = [
       "text/html"
       "text/xml"
@@ -26,7 +31,7 @@
           mimeTypes
         );
       };
-      home.sessionVariables.BROWSER = host.defaultBrowser;
+      home.sessionVariables.BROWSER = executables.${host.defaultBrowser};
     };
   };
 }

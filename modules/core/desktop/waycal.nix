@@ -1,4 +1,6 @@
 {inputs, ...}: {
+  flake-file.inputs.waycalix.url = "github:hoanhxlyn/waycalix";
+
   core.desktop.waycal = {
     nixos.nix.settings = {
       extra-substituters = ["https://waycalix.cachix.org"];
