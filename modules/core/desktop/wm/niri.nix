@@ -90,9 +90,9 @@
           center-focused-column = "never";
           default-column-width = {proportion = 0.7;};
           preset-column-widths = [
-            {proportion = 0.3;}
-            {proportion = 0.5;}
             {proportion = 0.7;}
+            {proportion = 0.5;}
+            {proportion = 0.3;}
           ];
           focus-ring = {
             enable = true;

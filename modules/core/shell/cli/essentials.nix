@@ -26,13 +26,13 @@
         statix
         deadnix
         nps
-        mockoon
         age
         sops
         wget
         just
         wl-clipboard
         sonar-scanner-cli
+        python3
       ];
       programs = {
         jq.enable = true;

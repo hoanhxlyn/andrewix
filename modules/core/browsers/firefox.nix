@@ -8,7 +8,7 @@
   in {
     stylix.targets.firefox.profileNames = ["default"];
     programs.firefox = {
-      enable = true;
+      enable = false;
       nativeMessagingHosts = [keepass];
       configPath = "${config.xdg.configHome}/mozilla/firefox";
       profiles.default = {

@@ -19,6 +19,7 @@
       osConfig,
       ...
     }: {
+      home.packages = with pkgs; [claude-code];
       programs = {
         mcp = {
           enable = true;
@@ -87,7 +88,7 @@
           };
         };
         claude-code = {
-          enable = true;
+          enable = false;
           enableMcpIntegration = true;
           commands = {
             commit = "Generate a git convention message for changes. DO NOT commit them!";
