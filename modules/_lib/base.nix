@@ -10,7 +10,7 @@
   profiles.andrew = {};
   login = "ly";
   backgroundImage = {
-    url = "https://images7.alphacoders.com/131/1311446.png";
-    sha256 = "0yp5b2ida97kc04bvws8dcbaccamm5sh0q3qp72y4lgricjfpcrg";
+    url = "https://images6.alphacoders.com/114/1140278.png";
+    sha256 = "1vh4yw3wrhkc8y9fjvhrmydpy4fqyv2wzyyzr3qfby92if6drasi";
   };
 }
