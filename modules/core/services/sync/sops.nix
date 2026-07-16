@@ -25,6 +25,7 @@
         CONTEXT7_API_KEY.path = secrets "CONTEXT7_API_KEY";
         BRAVE_API_KEY.path = secrets "BRAVE_API_KEY";
         CLAUDE_CODE_OAUTH_TOKEN.path = secrets "CLAUDE_CODE_OAUTH_TOKEN";
+        EXA_API_KEY.path = secrets "EXA_API_KEY";
       };
     };
   };
