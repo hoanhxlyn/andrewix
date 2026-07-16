@@ -462,6 +462,7 @@ in {
             matches = [
               {app-id = "^Alacritty$";}
               {app-id = "^com\\.mitchellh\\.ghostty$";}
+              {app-id = "kitty";}
             ];
             background-effect.blur = true;
             draw-border-with-background = false;
