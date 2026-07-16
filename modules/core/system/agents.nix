@@ -31,12 +31,13 @@
             exa = {
               command = "bunx";
               args = ["exa-mcp-server"];
+              env.EXA_API_KEY.file = config.sops.secrets.EXA_API_KEY.path;
             };
             deepwiki.url = "https://mcp.deepwiki.com/mcp";
             brave = {
+              enable = false;
               command = "bunx";
               args = ["@brave/brave-search-mcp-server"];
-
               env.BRAVE_API_KEY.file = config.sops.secrets.BRAVE_API_KEY.path;
             };
           };
