@@ -62,7 +62,7 @@
           fontconfig.enable = false;
         };
         image = builtins.fetchurl backgroundImage;
-        imageScalingMode = "center"; # fill | center | stretch | fit
+        imageScalingMode = "fill"; # fill | center | stretch | fit
       };
       fonts = {
         packages = with pkgs; [

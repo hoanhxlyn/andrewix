@@ -11,7 +11,7 @@ in {
         };
         refresh-rate = 90.0;
         is-primary = true;
-        scale = 1.75;
+        scale = 1.85;
       };
       monitors."HDMI-A-1" = {
         resolution = {
