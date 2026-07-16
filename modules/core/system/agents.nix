@@ -73,10 +73,22 @@
               };
             };
             permission = {
+              edit = "ask";
+              bask = {
+                "*" = "ask";
+                "git *" = "allow";
+                "bun *" = "allow";
+                "bunx *" = "allow";
+                "npm *" = "allow";
+                "grep *" = "allow";
+                "rg *" = "allow";
+              };
+              write = "ask";
               external_directory = {
                 "~/Projects/**" = "allow";
                 "~/.config/**" = "allow";
                 "~/.cache/**" = "allow";
+                "~/.local/**" = "allow";
               };
             };
             command = {
