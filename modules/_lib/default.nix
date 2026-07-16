@@ -13,6 +13,7 @@ in
     windowsName ? null,
     login ? base.login,
     backgroundImage ? base.backgroundImage,
+    terminal ? base.terminal,
   }: let
     workstation = {
       inherit isLaptop;
@@ -36,6 +37,7 @@ in
       // {
         users = effectiveProfiles;
         inherit login backgroundImage;
+        terminal = base.terminal // terminal;
       };
   in
     lib.recursiveUpdate baseWithUsers (

@@ -89,6 +89,7 @@
                 "~/.config/**" = "allow";
                 "~/.cache/**" = "allow";
                 "~/.local/**" = "allow";
+                "/nix/store/**" = "allow";
               };
             };
             command = {
