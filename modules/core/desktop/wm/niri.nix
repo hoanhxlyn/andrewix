@@ -416,14 +416,6 @@ in {
           {
             matches = [
               {
-                namespace = "^launcher$";
-              }
-            ];
-            background-effect.blur = true;
-          }
-          {
-            matches = [
-              {
                 namespace = "^ironbar$";
               }
             ];
@@ -431,6 +423,7 @@ in {
           }
         ];
         window-rules = [
+          # Floatting windows
           {
             matches = [
               {
@@ -445,28 +438,23 @@ in {
                 app-id = "helium";
                 title = "Picture-in-Picture";
               }
-            ];
-            open-floating = true;
-          }
-          {
-            matches = [
-              {
-                app-id = "^Alacritty$";
-                title = "^Power Panel$";
-              }
               {app-id = "^.blueman-manager-wrapped$";}
             ];
             open-floating = true;
           }
+          # Terminals
           {
             matches = [
               {app-id = "^Alacritty$";}
               {app-id = "^com\\.mitchellh\\.ghostty$";}
-              {app-id = "kitty";}
+              {app-id = "kitty*";}
+              {app-id = "rio*";}
             ];
             background-effect.blur = true;
             draw-border-with-background = false;
+            default-column-width = {proportion = 0.7;};
           }
+          # Applications
           {
             matches = [
               {app-id = "^cursor$";}
