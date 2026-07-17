@@ -57,7 +57,6 @@
         };
         targets = {
           plymouth.enable = true;
-          nvf.transparentBackground = true;
           kmscon.enable = true;
           fontconfig.enable = false;
         };

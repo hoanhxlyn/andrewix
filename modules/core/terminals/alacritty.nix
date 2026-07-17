@@ -6,10 +6,12 @@
       enable = terminal.name == "alacritty";
       settings = {
         window = {
-          padding.x = terminal.padding;
-          padding.y = builtins.sub terminal.padding terminal.padding;
+          padding = {
+            x = terminal.padding;
+            y = terminal.padding;
+          };
           decorations = "None";
-          blur = true;
+          blur = host.terminal.opacity < 1;
         };
         font.builtin_box_drawing = true;
         selection.save_to_clipboard = true;

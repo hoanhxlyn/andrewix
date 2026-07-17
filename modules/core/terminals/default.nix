@@ -5,6 +5,7 @@
       <core/terminals/wezterm>
       <core/terminals/alacritty>
       <core/terminals/kitty>
+      <core/terminals/rio>
     ];
   };
 }
