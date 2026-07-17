@@ -21,6 +21,7 @@
           set -gx RIPGREP_CONFIG_PATH "$HOME/.config/ripgrep/ripgreprc"
           # set -gx DOCKER_HOST unix://$XDG_RUNTIME_DIR/podman/podman.sock
           fish_add_path ~/.bun/bin
+          fish_add_path ~/.local/bin
         '';
         functions.fish_user_key_bindings.body = "fish_vi_key_bindings default";
         shellAliases = {
