@@ -24,9 +24,6 @@
             opacity-cells = terminal.opacity < 1;
             decorations = "Disabled";
           };
-          renderer = {
-            use-cpu = true; # ponytail: experimental
-          };
           # ponytail: Make rio works like Alacritty
           bindings.keys = [
             {
