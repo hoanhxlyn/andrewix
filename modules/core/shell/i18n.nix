@@ -1,9 +1,23 @@
-{
+{inputs, ...}: {
+  flake-file.inputs.fcitx5-lotus = {
+    url = "github:LotusInputMethod/fcitx5-lotus";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
   core.i18n.nixos = {
     pkgs,
     host,
     ...
   }: {
+    imports = [
+      inputs.fcitx5-lotus.nixosModules.fcitx5-lotus
+    ];
+    # lotus (not bamboo): sends real backspace+retype keystrokes via its uinput
+    # server instead of relying on the terminal's IME preedit protocol, so it
+    # types correctly in Rio, which doesn't render fcitx5 preedit text inline.
+    services.fcitx5-lotus = {
+      enable = !host.wsl.enable;
+      users = ["andrew"];
+    };
     i18n = {
       # fcitx5 needs a Wayland compositor, which WSL doesn't run.
       inputMethod =
@@ -14,7 +28,6 @@
           type = "fcitx5";
           fcitx5 = {
             addons = with pkgs; [
-              fcitx5-bamboo
               fcitx5-gtk
               kdePackages.fcitx5-qt
             ];
@@ -39,7 +52,7 @@
                   DefaultIM = "keyboard-us";
                 };
                 "Groups/0/Items/0".Name = "keyboard-us";
-                "Groups/0/Items/1".Name = "bamboo";
+                "Groups/0/Items/1".Name = "lotus";
               };
             };
           };
