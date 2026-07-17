@@ -1,10 +1,15 @@
-{
+{inputs, ...}: {
+  flake-file.inputs.rio = {
+    url = "github:raphamorim/rio/main";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
   core.terminals.rio = {host, ...}: let
     inherit (host) terminal;
   in {
-    homeManager = {
+    homeManager = {pkgs, ...}: {
       programs.rio = {
         enable = terminal.name == "rio";
+        package = inputs.rio.packages.${pkgs.system}.rio;
         settings = {
           padding-x = terminal.padding;
           padding-y = terminal.padding;
