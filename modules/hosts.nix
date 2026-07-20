@@ -26,6 +26,7 @@ in {
       };
     };
     andrew-pc = mkHost {
+      terminal.name = "rio";
       monitors."HDMI-A-1" = {
         resolution = {
           width = 1920;
