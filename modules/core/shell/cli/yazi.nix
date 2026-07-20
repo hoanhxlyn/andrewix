@@ -1,4 +1,8 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake-file.inputs = {
     yamb-yazi = {
       url = "github:h-hg/yamb.yazi";
@@ -9,38 +13,78 @@
       flake = false;
     };
   };
-  core.cli.yazi = {
+  core.cli.yazi = {host, ...}: {
+    nixos = {
+      pkgs,
+      lib,
+      ...
+    }: {
+      xdg.portal = {
+        extraPortals = [pkgs.xdg-desktop-portal-termfilechooser];
+        config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
+      };
+    };
+
     homeManager = {pkgs, ...}: let
       plug = pkgs.yaziPlugins;
       yamb = plug.mkYaziPlugin {
         pname = "yamb.yazi";
         version = "0-unstable-2026-07-18";
         src = inputs.yamb-yazi;
+        postPatch = ''
+          substituteInPlace main.lua --replace-fail 'ya.hide()' 'ui.hide()'
+        '';
       };
       omp = plug.mkYaziPlugin {
         pname = "omp.yazi";
         version = "0-unstable-2026-02-17";
         src = inputs.omp-yazi;
       };
+      yambPreview = pkgs.writeShellScript "yamb-preview" ''
+        if [ -d "$1" ]; then
+          ${pkgs.eza}/bin/eza -T -L 1 --color=always --icons=always "$1"
+        else
+          ${pkgs.bat}/bin/bat --color=always --style=numbers --line-range=:100 "$1"
+        fi
+      '';
     in {
       home.packages = [pkgs.ueberzugpp];
+      xdg.desktopEntries.yazi = {
+        name = "Yazi File Manager";
+        comment = "Blazing fast terminal file manager written in Rust, based on async I/O";
+        icon = "yazi";
+        exec = "${host.terminal.name} -e yazi %f";
+        terminal = false;
+        categories = ["System" "FileManager" "FileTools" "ConsoleOnly"];
+        mimeType = ["inode/directory"];
+      };
+      xdg.mimeApps.defaultApplications."inode/directory" = "yazi.desktop";
+      xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
+        [filechooser]
+        cmd=yazi-wrapper.sh
+        env=TERMCMD='${host.terminal.name} -e'
+        open_mode=suggested
+        save_mode=suggested
+      '';
       programs.yazi = {
         enable = true;
         settings.mgr.show_hidden = true;
         plugins = {
-          "full-border" = plug.full-border;
-          "smart-enter" = plug.smart-enter;
-          "lazygit" = plug.lazygit;
-          "git" = plug.git;
-          "compress" = plug.compress;
-          "yamb" = yamb;
-          "omp" = omp;
+          inherit (plug) full-border;
+          inherit (plug) smart-enter;
+          inherit (plug) lazygit;
+          inherit (plug) git;
+          inherit (plug) compress;
+          inherit yamb;
+          inherit omp;
         };
         initLua = ''
           require("full-border"):setup()
           require("git"):setup()
-          require("yamb"):setup({})
-          require("omp"):setup()
+          require("yamb"):setup({
+            cli = "fzf --delimiter='\t' --with-nth='{3} │ {1} {2}' --preview='${yambPreview} {2}' --preview-window=right:50%:wrap --height=40% --layout=reverse --border=rounded",
+          })
+          require("omp"):setup({ config = "${self}/config/omp/andrew.omp.json" })
         '';
         keymap.mgr.prepend_keymap = [
           {
@@ -94,12 +138,12 @@
             desc = "Rename bookmark by key";
           }
           {
-            on = ["<C-f>"];
+            on = ["<c-f>"];
             run = "seek 5";
             desc = "Scroll preview down";
           }
           {
-            on = ["<C-b>"];
+            on = ["<c-b>"];
             run = "seek -5";
             desc = "Scroll preview up";
           }

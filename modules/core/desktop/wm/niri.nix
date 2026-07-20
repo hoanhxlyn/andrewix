@@ -24,7 +24,6 @@ in {
         trusted-public-keys = ["niri-epireyn.cachix.org-1:tlVyFN7CtsDT+ZcLPS+ekFWeT1X6X4OqvWqbBMyIzFA="];
       };
       environment.systemPackages = with pkgs; [
-        nautilus
         acpilight
         slurp
         grim
@@ -34,6 +33,7 @@ in {
       ];
       programs.niri = {
         enable = true;
+        useNautilus = false;
         package = pkgs.niri-unstable.overrideAttrs (old: {
           patches = (old.patches or []) ++ [./niri-session-import-env.patch];
         });
@@ -116,6 +116,7 @@ in {
         screenshot-path = "~/Pictures/Screenshots/Screenshot_%Y-%m-%d_%H-%M-%S.png";
 
         environment.QT_QPA_PLATFORM = "wayland;xcb";
+        environment.GTK_USE_PORTAL = "1";
 
         binds = with action;
           lib.mkMerge [
