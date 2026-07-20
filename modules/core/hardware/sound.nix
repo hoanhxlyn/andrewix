@@ -1,6 +1,16 @@
 {
-  core.sound.nixos = {
+  core.sound.nixos = {pkgs, ...}: {
     services = {
+      # ACP normally flips each HDMI PCM's "IEC958 Playback Switch" on when
+      # its sink activates, but that logic is disabled along with ACP below,
+      # so the switch stays off and no audio reaches the HDMI output even
+      # though the sink opens fine. Unmute it ourselves when the card shows up.
+      udev.extraRules = ''
+        ACTION=="add", SUBSYSTEM=="sound", KERNEL=="controlC*", ATTR{id}=="NVidia", \
+          RUN+="${pkgs.alsa-utils}/bin/amixer -c NVidia cset name='IEC958 Playback Switch',index=0 on", \
+          RUN+="${pkgs.alsa-utils}/bin/amixer -c NVidia cset name='IEC958 Playback Switch',index=1 on"
+      '';
+
       pulseaudio.enable = false;
       pipewire = {
         enable = true;
@@ -30,11 +40,19 @@
             }
             {
               matches = [{"node.name" = "alsa_output.pci-0000_01_00.1.playback.3.0";}];
-              actions.update-props."node.description" = "Monitor 1 (HDMI)";
+              actions.update-props = {
+                "node.description" = "Monitor 1 (HDMI)";
+                "audio.channels" = 2;
+                "audio.position" = "FL,FR";
+              };
             }
             {
               matches = [{"node.name" = "alsa_output.pci-0000_01_00.1.playback.7.0";}];
-              actions.update-props."node.description" = "Monitor 2 (HDMI)";
+              actions.update-props = {
+                "node.description" = "Monitor 2 (HDMI)";
+                "audio.channels" = 2;
+                "audio.position" = "FL,FR";
+              };
             }
           ];
         };
