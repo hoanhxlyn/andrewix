@@ -5,6 +5,7 @@
       <core/cli/essentials>
       <core/cli/tui>
       <core/cli/omp>
+      <core/cli/yazi>
     ];
     homeManager = {pkgs, ...}: {
       programs.fish = {

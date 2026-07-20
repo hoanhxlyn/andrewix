@@ -32,7 +32,6 @@
         just
         wl-clipboard
         sonar-scanner-cli
-        python3
       ];
       programs = {
         jq.enable = true;
