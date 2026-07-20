@@ -737,6 +737,22 @@
         "type": "github"
       }
     },
+    "omp-yazi": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1771299864,
+        "narHash": "sha256-jawTDIMHIu6YYWcKy9TOuk37yiRcHZ+IhZcdNLE/2VU=",
+        "owner": "saumyajyoti",
+        "repo": "omp.yazi",
+        "rev": "32ae96c8da930641ee81c32f76b2d7452ba6c8d9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "saumyajyoti",
+        "repo": "omp.yazi",
+        "type": "github"
+      }
+    },
     "opencode": {
       "inputs": {
         "nixpkgs": [
@@ -798,11 +814,13 @@
         "nixpkgs": "nixpkgs_2",
         "noctalia": "noctalia",
         "nvf": "nvf",
+        "omp-yazi": "omp-yazi",
         "opencode": "opencode",
         "rio": "rio",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "waycalix": "waycalix",
+        "yamb-yazi": "yamb-yazi",
         "zen-browser": "zen-browser"
       }
     },
@@ -1098,6 +1116,22 @@
       "original": {
         "owner": "Supreeeme",
         "repo": "xwayland-satellite",
+        "type": "github"
+      }
+    },
+    "yamb-yazi": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784373818,
+        "narHash": "sha256-oq9zyVduKbOPuJVzFHiNIxe/JvNcqujS5edEjZJstpQ=",
+        "owner": "h-hg",
+        "repo": "yamb.yazi",
+        "rev": "5576bd790e6868019d3ce7e958873cee3c94d783",
+        "type": "github"
+      },
+      "original": {
+        "owner": "h-hg",
+        "repo": "yamb.yazi",
         "type": "github"
       }
     },
