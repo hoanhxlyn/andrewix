@@ -2715,7 +2715,7 @@
             {
               key = L "on";
               mode = "n";
-              desc = "Open in Nautilus";
+              desc = "Reveal in Yazi";
               lua = true;
               action = ''
                 function()
@@ -2724,7 +2724,7 @@
                     vim.notify("No file path", vim.log.levels.WARN)
                     return
                   end
-                  vim.fn.jobstart({"nautilus", "-s", path})
+                  vim.fn.jobstart({"${host.terminal.name}", "-e", "yazi", path})
                 end
               '';
             }
