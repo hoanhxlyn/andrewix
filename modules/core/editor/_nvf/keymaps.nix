@@ -283,7 +283,7 @@
   }
   {
     mode = "n";
-    key = L "om";
+    key = L "op";
     desc = "Markdown: Preview (glow)";
     lua = true;
     action = ''
@@ -294,7 +294,7 @@
   }
   {
     mode = "n";
-    key = L "oM";
+    key = L "oP";
     desc = "Markdown: Browse (glow TUI)";
     lua = true;
     action = ''
