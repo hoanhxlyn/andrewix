@@ -58,10 +58,20 @@
         categories = ["System" "FileManager" "FileTools" "ConsoleOnly"];
         mimeType = ["inode/directory"];
       };
-      xdg.mimeApps.defaultApplications."inode/directory" = "yazi.desktop";
+      xdg.mimeApps.defaultApplications = let
+        yazi = "yazi.desktop";
+      in {
+        "inode/directory" = yazi;
+        # Types with no default handler → open in yazi (file's folder)
+        "text/csv" = yazi;
+        "application/zip" = yazi;
+        "application/x-tar" = yazi;
+        "application/gzip" = yazi;
+        "application/x-7z-compressed" = yazi;
+      };
       xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
         [filechooser]
-        cmd=yazi-wrapper.sh
+        cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
         env=TERMCMD='${host.terminal.name} -e'
         open_mode=suggested
         save_mode=suggested
