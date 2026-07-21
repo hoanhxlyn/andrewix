@@ -6,7 +6,6 @@
       programs.ghostty = {
         enable = terminal.name == "ghostty";
         settings = {
-          # font-family = lib.mkForce [config.stylix.fonts.monospace.name];
           window-padding-x = terminal.padding;
           window-padding-y = builtins.sub terminal.padding terminal.padding;
           window-decoration = "none";
@@ -17,10 +16,6 @@
           confirm-close-surface = false;
           cursor-style = "block";
           shell-integration-features = false;
-          # gtk-wide-tabs = true;
-          # gtk-titlebar-style = "tabs";
-          # gtk-toolbar-style = "raised";
-          # gtk-tabs-location = "top";
           keybind = [
             # Leader: Alt+q
             "alt+q>n=new_tab"
