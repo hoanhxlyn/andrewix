@@ -2,6 +2,7 @@
   __findFile,
   inputs,
   lib,
+  self,
   ...
 }: {
   flake-file.inputs.nvf.url = "github:notashelf/nvf";
@@ -10,6 +11,8 @@
     includes = [
       (<den/unfree> ["copilot-language-server"])
     ];
+
+    homeManager.xdg.configFile."glow/glow.yml".source = "${self}/config/glow/glow.yml";
 
     nixos = {
       pkgs,
@@ -207,7 +210,7 @@
               clear = true;
             }
           ];
-          extraPackages = with pkgs; [ueberzugpp stylelint oxlint kdlfmt vscode-langservers-extracted yaml-language-server];
+          extraPackages = with pkgs; [ueberzugpp stylelint oxlint kdlfmt vscode-langservers-extracted yaml-language-server glow];
           # LSP config
           lsp = {
             enable = true;
@@ -218,7 +221,7 @@
               codeAction = L "ca";
               nextDiagnostic = "]d";
               previousDiagnostic = "[d";
-              openDiagnosticFloat = L "cd";
+              listDocumentSymbols = null; # use global <leader>lS mini picker instead of native
               renameSymbol = L "cr";
               signatureHelp = "<c-/>";
             };
@@ -356,6 +359,7 @@
               float = {
                 borders = "rounded";
                 source = "if_many";
+                max_width = 80;
               };
               underline = lib.generators.mkLuaInline "{severity = vim.diagnostic.severity.ERROR }";
               signs.text = lib.generators.mkLuaInline ''
@@ -2222,6 +2226,28 @@
             }
             {
               mode = "n";
+              key = L "om";
+              desc = "Markdown: Preview (glow)";
+              lua = true;
+              action = ''
+                function()
+                  Snacks.terminal.open("glow -p " .. vim.fn.shellescape(vim.fn.expand("%:p")), { win = { style = "float", enter = true } })
+                end
+              '';
+            }
+            {
+              mode = "n";
+              key = L "oM";
+              desc = "Markdown: Browse (glow TUI)";
+              lua = true;
+              action = ''
+                function()
+                  Snacks.terminal.open("glow .", { win = { style = "float", enter = true } })
+                end
+              '';
+            }
+            {
+              mode = "n";
               key = L "td";
               desc = "Terminal: Destroy";
               lua = true;
@@ -2486,6 +2512,13 @@
               action = ''function() MiniExtra.pickers.buf_lines({ scope = "current" }) end'';
             }
             {
+              key = L "cd";
+              mode = "n";
+              desc = "Diagnostic float";
+              lua = true;
+              action = ''function() vim.diagnostic.open_float() end'';
+            }
+            {
               key = L "fd";
               mode = "n";
               desc = "Find diagnostics (buffer)";
@@ -2605,7 +2638,7 @@
               mode = "n";
               desc = "LSP workspace symbols";
               lua = true;
-              action = ''function() MiniExtra.pickers.lsp({ scope = "workspace_symbol_live" }) end'';
+              action = ''function() MiniExtra.pickers.lsp({ scope = "workspace_symbol" }) end'';
             }
             {
               key = L "gb";
