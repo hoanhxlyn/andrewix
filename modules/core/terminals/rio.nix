@@ -14,6 +14,7 @@
           padding-x = terminal.padding;
           padding-y = terminal.padding;
           confirm-before-quit = false;
+          copy-on-select = true;
           cursor = {
             shape = "block";
             blinking = true;
