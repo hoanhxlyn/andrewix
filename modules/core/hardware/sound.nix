@@ -5,8 +5,10 @@
       # its sink activates, but that logic is disabled along with ACP below,
       # so the switch stays off and no audio reaches the HDMI output even
       # though the sink opens fine. Unmute it ourselves when the card shows up.
+      # The `id` attribute lives on the parent card device, not the controlC*
+      # node, so match with ATTRS (parent walk), not ATTR (this device only).
       udev.extraRules = ''
-        ACTION=="add", SUBSYSTEM=="sound", KERNEL=="controlC*", ATTR{id}=="NVidia", \
+        ACTION=="add", SUBSYSTEM=="sound", KERNEL=="controlC*", ATTRS{id}=="NVidia", \
           RUN+="${pkgs.alsa-utils}/bin/amixer -c NVidia cset name='IEC958 Playback Switch',index=0 on", \
           RUN+="${pkgs.alsa-utils}/bin/amixer -c NVidia cset name='IEC958 Playback Switch',index=1 on"
       '';
