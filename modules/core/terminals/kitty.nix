@@ -12,7 +12,7 @@
           confirm_os_window_close = 0;
           shell_integration = "no-cursor";
           cursor_shape = "block";
-          cursor_blink_interval = 0;
+          cursor_blink_interval = 500;
           mouse_hide_while_typing = true;
           copy_on_select = "clipboard";
           text_composition_strategy = "platform";
