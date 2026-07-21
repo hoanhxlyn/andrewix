@@ -10,7 +10,6 @@
         <den.batteries.define-user>
         <den.batteries.primary-user>
         <den.batteries.hostname>
-        <den.batteries.define-user>
         (<den.batteries.user-shell> "fish")
         <den.batteries.mutual-provider>
         den.batteries.self'

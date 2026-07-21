@@ -41,6 +41,7 @@
           "zen.view.compact.enable-at-startup" = false;
           "zen.view.use-single-toolbar" = false;
           "zen.urlbar.behavior" = "floating-on-type";
+          "zen.urlbar.replace-newtab" = false;
           "sidebar.visibility" = "hide-sidebar";
           "browser.search.separatePrivateDefault" = false;
           "browser.tabs.fadeOutUnloadedTabs" = true;
