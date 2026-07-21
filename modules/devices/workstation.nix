@@ -19,6 +19,7 @@
       <core.media>
       <core.communications.discord>
       <core.vpn.proton>
+      <core.office.libreoffice>
       <core.office.teams>
       <core.office.timr-tui>
       <core.sync.rclone>
