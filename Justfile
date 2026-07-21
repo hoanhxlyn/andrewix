@@ -52,10 +52,12 @@ update:
 gc:
     nix store gc --debug
 
-# System-wide GC, delete old gens
+# System-wide GC, delete old gens (user profile + system, keep 7d)
 [group('nixos')]
 clean-up:
-    sudo nix-collect-garbage --delete-old
+    nix profile wipe-history --older-than 7d
+    sudo nix-collect-garbage --delete-older-than 7d
+    nix-collect-garbage -d
 
 # Search nix packages
 [group('info')]
