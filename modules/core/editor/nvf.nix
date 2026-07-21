@@ -42,7 +42,7 @@
       programs.nvf = {
         enable = true;
         settings.vim = {
-          extraPackages = with pkgs; [ueberzugpp stylelint oxlint kdlfmt vscode-langservers-extracted yaml-language-server glow sqlite];
+          extraPackages = with pkgs; [ueberzugpp stylelint oxlint kdlfmt vscode-langservers-extracted yaml-language-server glow sqlite tree-sitter];
           viAlias = false;
           vimAlias = true;
           syntaxHighlighting = true;
