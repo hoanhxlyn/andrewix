@@ -462,7 +462,9 @@ in {
               {app-id = "^org\\.wezfurlong\\.wezterm$";}
               {app-id = "^helium$";}
               {app-id = "^zen$";}
+              {app-id = "^libreoffice";} # tile normally, don't self-maximize
             ];
+            open-maximized = false;
             default-column-width = {proportion = 1.0;};
           }
           {
