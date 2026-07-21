@@ -79,6 +79,20 @@
       programs.yazi = {
         enable = true;
         settings.mgr.show_hidden = true;
+        # csv is text/* → yazi defaults to $EDITOR; open in calc instead
+        settings.opener.calc = [
+          {
+            run = ''libreoffice --calc "$@"'';
+            orphan = true;
+            desc = "LibreOffice Calc";
+          }
+        ];
+        settings.open.prepend_rules = [
+          {
+            url = "*.csv";
+            use = ["calc" "reveal"];
+          }
+        ];
         plugins = {
           inherit (plug) full-border;
           inherit (plug) smart-enter;
