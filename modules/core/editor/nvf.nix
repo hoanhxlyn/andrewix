@@ -30,19 +30,25 @@
       };
     in {
       imports = [inputs.nvf.nixosModules.default];
-      environment.systemPackages = with pkgs; [
-        ueberzugpp
-        graphicsmagick
-        graphicsmagick-imagemagick-compat
-        tectonic
-        mermaid-cli
-        sqlite
-        ghostscript
-      ];
       programs.nvf = {
         enable = true;
         settings.vim = {
-          extraPackages = with pkgs; [ueberzugpp stylelint oxlint kdlfmt vscode-langservers-extracted yaml-language-server glow sqlite tree-sitter];
+          extraPackages = with pkgs; [
+            ueberzugpp
+            graphicsmagick
+            graphicsmagick-imagemagick-compat
+            tectonic
+            mermaid-cli
+            ghostscript
+            stylelint
+            oxlint
+            kdlfmt
+            vscode-langservers-extracted
+            yaml-language-server
+            glow
+            sqlite
+            tree-sitter
+          ];
           viAlias = false;
           vimAlias = true;
           syntaxHighlighting = true;
