@@ -73,6 +73,18 @@ else
   ctx_display="?%"
 fi
 
+# --- caveman mode badge (reads plugin's flag file; absent/symlink = off) ---
+ORANGE=$'\033[38;2;217;140;40m'
+cave_segment=""
+cave_flag="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.caveman-active"
+if [ -f "$cave_flag" ] && [ ! -L "$cave_flag" ]; then
+  cave_mode=$(head -c 64 "$cave_flag" 2>/dev/null | tr -cd 'a-z0-9-')
+  case "$cave_mode" in
+    lite|full|ultra|wenyan-lite|wenyan|wenyan-full|wenyan-ultra)
+      cave_segment=$(printf ' %s[CAVE:%s]%s' "$ORANGE" "$cave_mode" "$RESET") ;;
+  esac
+fi
+
 # --- assemble the line ---
 printf '%s@%s %s' "$RED" "$(whoami)" "$RESET"
 printf '%s%s %s' "$GREEN" "$ICON_LIGHTNING" "$RESET"
@@ -80,4 +92,5 @@ printf '%s%s %s' "$CYAN" "$short_path" "$RESET"
 printf '%s' "$git_segment"
 printf '%svia%s %s%s %s' "$WHITE" "$RESET" "$NODEGREEN" "$model_name" "$RESET"
 printf '%s(%s)%s' "$YELLOW" "$ctx_display" "$RESET"
+printf '%s' "$cave_segment"
 printf '\n'
