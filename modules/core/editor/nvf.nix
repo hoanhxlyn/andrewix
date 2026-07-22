@@ -22,7 +22,7 @@
       L = key: "<leader>${key}";
       mini = {
         explorer = true;
-        picks = true;
+        picks = false;
         animate = true;
         notify = true;
         indent_scope = true;
@@ -73,7 +73,8 @@
           autocomplete.blink-cmp = import "${self}/modules/core/editor/_nvf/cmp.nix" {inherit lib;};
           mini = import "${self}/modules/core/editor/_nvf/mini.nix" {inherit lib mini self;};
           lazy = import "${self}/modules/core/editor/_nvf/lazy.nix" {inherit pkgs L;};
-          keymaps = import "${self}/modules/core/editor/_nvf/keymaps.nix" {inherit L host;};
+          keymaps = import "${self}/modules/core/editor/_nvf/keymaps.nix" {inherit L host mini;};
+          notes.todo-comments.enable = !mini.picks; # Snacks todo_comments picker needs folke plugin; highlights via mini when picks=true
         };
       };
     };

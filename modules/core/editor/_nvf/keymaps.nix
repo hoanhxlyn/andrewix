@@ -1,7 +1,15 @@
 {
   L,
   host,
-}: [
+  mini,
+}: let
+  inherit (mini) picks;
+  # P: mini action when picks=true, else Snacks.picker equivalent
+  P = m: s:
+    if picks
+    then m
+    else s;
+in [
   {
     key = L "h";
     mode = "n";
@@ -463,7 +471,7 @@
     mode = "n";
     desc = "Find files";
     lua = true;
-    action = "MiniPick.builtin.files";
+    action = P "MiniPick.builtin.files" "Snacks.picker.files";
   }
   {
     key = L "fw";
@@ -473,100 +481,105 @@
     ];
     desc = "Find word (Grep)";
     lua = true;
-    action = ''
-      function()
-        local getMode = vim.api.nvim_get_mode().mode
-        if getMode == "v" then
-          MiniPick.builtin.grep({ pattern = vim.fn.expand("<cword>") })
-        elseif getMode == "n" then
-          MiniPick.builtin.grep_live()
+    action =
+      if picks
+      then ''
+        function()
+          local getMode = vim.api.nvim_get_mode().mode
+          if getMode == "v" then
+            MiniPick.builtin.grep({ pattern = vim.fn.expand("<cword>") })
+          elseif getMode == "n" then
+            MiniPick.builtin.grep_live()
+          end
         end
-      end
-    '';
+      ''
+      else ''
+        function()
+          local getMode = vim.api.nvim_get_mode().mode
+          if getMode == "v" then
+            Snacks.picker.grep_word()
+          else
+            Snacks.picker.grep()
+          end
+        end
+      '';
   }
   {
     key = L "fb";
     mode = "n";
     desc = "Find buffers";
     lua = true;
-    action = "MiniPick.builtin.buffers";
+    action = P "MiniPick.builtin.buffers" "Snacks.picker.buffers";
   }
   {
     key = L "fh";
     mode = "n";
     desc = "Find help";
     lua = true;
-    action = "MiniPick.builtin.help";
+    action = P "MiniPick.builtin.help" "Snacks.picker.help";
   }
   {
     key = L "fR";
     mode = "n";
     desc = "Find resume";
     lua = true;
-    action = "MiniPick.builtin.resume";
+    action = P "MiniPick.builtin.resume" "Snacks.picker.resume";
   }
   {
     key = L "fr";
     mode = "n";
     desc = "Find registers";
     lua = true;
-    action = "MiniExtra.pickers.registers";
+    action = P "MiniExtra.pickers.registers" "Snacks.picker.registers";
   }
   {
     key = L "fc";
     mode = "n";
     desc = "Find commands";
     lua = true;
-    action = "MiniExtra.pickers.commands";
+    action = P "MiniExtra.pickers.commands" "Snacks.picker.commands";
   }
   {
     key = L "fk";
     mode = "n";
     desc = "Find keymaps";
     lua = true;
-    action = "MiniExtra.pickers.keymaps";
+    action = P "MiniExtra.pickers.keymaps" "Snacks.picker.keymaps";
   }
   {
     key = L "fm";
     mode = "n";
     desc = "Find marks";
     lua = true;
-    action = "MiniExtra.pickers.marks";
+    action = P "MiniExtra.pickers.marks" "Snacks.picker.marks";
   }
   {
     key = L "fH";
     mode = "n";
     desc = "Find history";
     lua = true;
-    action = "MiniExtra.pickers.history";
+    action = P "MiniExtra.pickers.history" "Snacks.picker.command_history";
   }
   {
     key = L "fv";
     mode = "n";
     desc = "Find visit paths";
     lua = true;
-    action = "MiniExtra.pickers.visit_paths";
-  }
-  {
-    key = L "fV";
-    mode = "n";
-    desc = "Find visit labels";
-    lua = true;
-    action = "MiniExtra.pickers.visit_labels";
+    action = P "MiniExtra.pickers.visit_paths" "Snacks.picker.recent";
   }
   {
     key = L "fq";
     mode = "n";
     desc = "Find quickfix";
     lua = true;
-    action = ''function() MiniExtra.pickers.list({ scope = "quickfix" }) end'';
+    action = P ''function() MiniExtra.pickers.list({ scope = "quickfix" }) end'' "Snacks.picker.qflist";
   }
   {
     key = L "fl";
     mode = "n";
     desc = "Find buffer lines";
     lua = true;
-    action = ''function() MiniExtra.pickers.buf_lines({ scope = "current" }) end'';
+    action = P ''function() MiniExtra.pickers.buf_lines({ scope = "current" }) end'' "Snacks.picker.lines";
   }
   {
     key = L "cd";
@@ -580,122 +593,131 @@
     mode = "n";
     desc = "Find diagnostics (buffer)";
     lua = true;
-    action = ''function() MiniExtra.pickers.diagnostic(nil, { scope = "current" }) end'';
+    action = P ''function() MiniExtra.pickers.diagnostic(nil, { scope = "current" }) end'' "Snacks.picker.diagnostics_buffer";
   }
   {
     key = L "fD";
     mode = "n";
     desc = "Find diagnostics (all)";
     lua = true;
-    action = ''function() MiniExtra.pickers.diagnostic(nil, { scope = "all" }) end'';
+    action = P ''function() MiniExtra.pickers.diagnostic(nil, { scope = "all" }) end'' "Snacks.picker.diagnostics";
   }
   {
     key = L "ft";
     mode = "n";
     desc = "Find colorschemes";
     lua = true;
-    action = "function() MiniExtra.pickers.colorschemes() end";
+    action = P "function() MiniExtra.pickers.colorschemes() end" "Snacks.picker.colorschemes";
   }
   {
     key = L "fT";
     mode = "n";
     desc = "Find task comments";
     lua = true;
-    action = ''
-      function()
-        MiniExtra.pickers.hipatterns({
-          scope = "all",
-          highlighters = { "todo", "fixme", "note", "bug" },
-        })
-      end
-    '';
+    action =
+      if picks
+      then ''
+        function()
+          MiniExtra.pickers.hipatterns({
+            scope = "all",
+            highlighters = { "todo", "fixme", "note", "bug" },
+          })
+        end
+      ''
+      else ''function() Snacks.picker.todo_comments() end'';
   }
   {
     key = L "fC";
     mode = "n";
     desc = "Find config files";
     lua = true;
-    action = ''
-      function()
-        MiniPick.builtin.files({ tool = "fd" }, { source = { cwd = vim.fn.stdpath("config") } })
-      end
-    '';
+    action =
+      if picks
+      then ''
+        function()
+          MiniPick.builtin.files({ tool = "fd" }, { source = { cwd = vim.fn.stdpath("config") } })
+        end
+      ''
+      else ''function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end'';
   }
   {
     key = L "fp";
     mode = "n";
     desc = "Find projects";
     lua = true;
-    action = ''
-      function()
-        local project_dir = vim.fs.joinpath(vim.fn.expand("~"), "projects")
-        if vim.fn.isdirectory(project_dir) == 0 then return end
-        local projects = {}
-        for file in vim.fs.dir(project_dir) do
-          local path = vim.fs.joinpath(project_dir, file)
-          if vim.fn.isdirectory(path) == 1 then table.insert(projects, path) end
+    action =
+      if picks
+      then ''
+        function()
+          local project_dir = vim.fs.joinpath(vim.fn.expand("~"), "projects")
+          if vim.fn.isdirectory(project_dir) == 0 then return end
+          local projects = {}
+          for file in vim.fs.dir(project_dir) do
+            local path = vim.fs.joinpath(project_dir, file)
+            if vim.fn.isdirectory(path) == 1 then table.insert(projects, path) end
+          end
+          if #projects == 0 then return end
+          MiniPick.start({
+            source = {
+              items = projects,
+              name = "Projects",
+              show = function(buf_id, items, query)
+                MiniPick.default_show(buf_id, items, query, { show_icons = true })
+              end,
+            },
+          })
         end
-        if #projects == 0 then return end
-        MiniPick.start({
-          source = {
-            items = projects,
-            name = "Projects",
-            show = function(buf_id, items, query)
-              MiniPick.default_show(buf_id, items, query, { show_icons = true })
-            end,
-          },
-        })
-      end
-    '';
+      ''
+      else ''function() Snacks.picker.projects({ dev = { vim.fs.joinpath(vim.fn.expand("~"), "projects") } }) end'';
   }
   {
     key = L "lr";
     mode = "n";
     desc = "LSP references";
     lua = true;
-    action = ''function() MiniExtra.pickers.lsp({ scope = "references" }) end'';
+    action = P ''function() MiniExtra.pickers.lsp({ scope = "references" }) end'' "Snacks.picker.lsp_references";
   }
   {
     key = L "ld";
     mode = "n";
     desc = "LSP definitions";
     lua = true;
-    action = ''function() MiniExtra.pickers.lsp({ scope = "definition" }) end'';
+    action = P ''function() MiniExtra.pickers.lsp({ scope = "definition" }) end'' "Snacks.picker.lsp_definitions";
   }
   {
     key = L "lt";
     mode = "n";
     desc = "LSP type definitions";
     lua = true;
-    action = ''function() MiniExtra.pickers.lsp({ scope = "type_definition" }) end'';
+    action = P ''function() MiniExtra.pickers.lsp({ scope = "type_definition" }) end'' "Snacks.picker.lsp_type_definitions";
   }
   {
     key = L "li";
     mode = "n";
     desc = "LSP implementations";
     lua = true;
-    action = ''function() MiniExtra.pickers.lsp({ scope = "implementation" }) end'';
+    action = P ''function() MiniExtra.pickers.lsp({ scope = "implementation" }) end'' "Snacks.picker.lsp_implementations";
   }
   {
     key = L "lD";
     mode = "n";
     desc = "LSP declarations";
     lua = true;
-    action = ''function() MiniExtra.pickers.lsp({ scope = "declaration" }) end'';
+    action = P ''function() MiniExtra.pickers.lsp({ scope = "declaration" }) end'' "Snacks.picker.lsp_declarations";
   }
   {
     key = L "ls";
     mode = "n";
     desc = "LSP symbols";
     lua = true;
-    action = ''function() MiniExtra.pickers.lsp({ scope = "document_symbol" }) end'';
+    action = P ''function() MiniExtra.pickers.lsp({ scope = "document_symbol" }) end'' "Snacks.picker.lsp_symbols";
   }
   {
     key = L "lS";
     mode = "n";
     desc = "LSP workspace symbols";
     lua = true;
-    action = ''function() MiniExtra.pickers.lsp({ scope = "workspace_symbol" }) end'';
+    action = P ''function() MiniExtra.pickers.lsp({ scope = "workspace_symbol" }) end'' "Snacks.picker.lsp_workspace_symbols";
   }
   {
     key = L "gb";
@@ -730,7 +752,7 @@
     mode = "n";
     desc = "Git: commit current buffer";
     lua = true;
-    action = ''function() require("mini.extra").pickers.git_commits({ path = vim.api.nvim_buf_get_name(0) }) end'';
+    action = P ''function() require("mini.extra").pickers.git_commits({ path = vim.api.nvim_buf_get_name(0) }) end'' ''function() Snacks.picker.git_log_file() end'';
   }
   {
     key = L "co";
