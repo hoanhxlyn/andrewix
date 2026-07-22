@@ -16,7 +16,7 @@
         enable_kitty_keyboard = true;
         adjust_window_size_when_changing_font_size = false;
         freetype_load_target = "Light";
-        front_end = "OpenGL";
+        # front_end = "OpenGL";
         # color_scheme = "Gruvbox Material (Gogh)";
         webgpu_power_preference = "HighPerformance";
         default_cursor_style = "BlinkingBlock";
@@ -26,6 +26,7 @@
         hide_tab_bar_if_only_one_tab = true;
         enable_scroll_bar = true;
         window_decorations = "NONE";
+        window_close_confirmation = "NeverPrompt";
         window_padding = {
           left = terminal.padding;
           right = terminal.padding;
