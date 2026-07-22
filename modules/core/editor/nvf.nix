@@ -27,6 +27,7 @@
         notify = true;
         indent_scope = true;
         show_dotfiles = true;
+        starter = true; # true -> mini.starter; false -> snacks dashboard
       };
     in {
       imports = [inputs.nvf.nixosModules.default];
@@ -63,7 +64,7 @@
             luaConfigRC
             ;
           inherit
-            (import "${self}/modules/core/editor/_nvf/autocmds.nix" {inherit lib;})
+            (import "${self}/modules/core/editor/_nvf/autocmds.nix" {inherit lib mini;})
             autocmds
             augroups
             ;
@@ -73,7 +74,7 @@
           diagnostics = import "${self}/modules/core/editor/_nvf/diagnostics.nix" {inherit lib;};
           languages = import "${self}/modules/core/editor/_nvf/languages.nix";
           ui = import "${self}/modules/core/editor/_nvf/ui.nix";
-          utility = import "${self}/modules/core/editor/_nvf/utility.nix" {inherit lib mini;};
+          utility = import "${self}/modules/core/editor/_nvf/utility.nix" {inherit lib mini self;};
           pluginRC = import "${self}/modules/core/editor/_nvf/plugin-rc.nix" {inherit inputs lib;};
 
           autocomplete.blink-cmp = import "${self}/modules/core/editor/_nvf/cmp.nix" {inherit lib;};

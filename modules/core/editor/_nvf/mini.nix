@@ -135,7 +135,7 @@
     };
   };
   starter = {
-    enable = true;
+    enable = mini.starter;
     setupOpts = {
       evaluate_single = true;
       header = lib.removeSuffix "\n" (builtins.readFile "${self}/config/arts/andrewix.txt");
