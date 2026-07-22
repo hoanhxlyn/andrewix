@@ -14,6 +14,8 @@
             user.email = "hoanhxlyn@gmail.com";
             user.name = "Andrew Nguyen";
             init.defaultBranch = "main";
+            fetch.prune = true;
+            fetch.pruneTags = true;
             core.editor = "nvim";
             credential.helper = lib.mkIf host.wsl.enable "/mnt/c/Users/${host.windowsName}/scoop/root/apps/git/current/mingw64/bin/git-credential-manager.exe";
           };
@@ -22,6 +24,7 @@
           enable = true;
           settings = {
             git = {
+              fetchAll = true;
               pagers = [
                 {externalDiffCommand = "difft --color=always --display=inline";}
               ];
