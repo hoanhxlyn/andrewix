@@ -44,6 +44,12 @@
           max-history = 10;
           on-button-left = "invoke-default-action";
           on-button-right = "dismiss";
+          # wezterm's OSC 777 notifications send expire_timeout=0 (never expire);
+          # ignore it so default-timeout applies instead of hanging forever
+          "app-name=wezterm" = {
+            ignore-timeout = true;
+            default-timeout = 3000;
+          };
         };
       };
     };
