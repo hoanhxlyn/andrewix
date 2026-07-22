@@ -15,7 +15,10 @@ in [
     mode = "n";
     desc = "Open Dashboard";
     lua = true;
-    action = "MiniStarter.open";
+    action =
+      if mini.starter
+      then "MiniStarter.open"
+      else "Snacks.dashboard.open";
   }
   {
     key = L "wq";
