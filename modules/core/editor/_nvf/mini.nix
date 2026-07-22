@@ -204,34 +204,38 @@
   hipatterns = {
     enable = true;
     setupOpts = {
-      highlighters = {
-        fixme = lib.generators.mkLuaInline ''
-          require("mini.extra").gen_highlighter.words({ "FIXME", "fixme" }, "MiniHiPatternsFixme")
-        '';
-        todo = lib.generators.mkLuaInline ''
-          require("mini.extra").gen_highlighter.words({ "TODO", "todo" }, "MiniHiPatternsTodo")
-        '';
-        note = lib.generators.mkLuaInline ''
-          require("mini.extra").gen_highlighter.words({ "NOTE", "note", "readme", "README" }, "MiniHiPatternsNote")
-        '';
-        bug = lib.generators.mkLuaInline ''
-          require("mini.extra").gen_highlighter.words({ "BUG", "bug", "HACK", "hack", "hax" }, "MiniHiPatternsHack")
-        '';
-        hex_color = lib.generators.mkLuaInline ''
-          require("mini.hipatterns").gen_highlighter.hex_color({ priority = 200 })
-        '';
-        hex_shorthand = {
-          pattern = "()#%x%x%x()%f[^%x%w]";
-          group = lib.generators.mkLuaInline ''
-            function(_, _, data)
-              local match = data.full_match
-              local r, g, b = match:sub(2, 2), match:sub(3, 3), match:sub(4, 4)
-              local hex_color = "#" .. r .. r .. g .. g .. b .. b
-              return require("mini.hipatterns").compute_hex_color_group(hex_color, "bg")
-            end
+      highlighters =
+        # words highlighted by folke/todo-comments when picks=false (see nvf.nix notes.todo-comments)
+        lib.optionalAttrs mini.picks {
+          fixme = lib.generators.mkLuaInline ''
+            require("mini.extra").gen_highlighter.words({ "FIXME", "fixme" }, "MiniHiPatternsFixme")
           '';
+          todo = lib.generators.mkLuaInline ''
+            require("mini.extra").gen_highlighter.words({ "TODO", "todo" }, "MiniHiPatternsTodo")
+          '';
+          note = lib.generators.mkLuaInline ''
+            require("mini.extra").gen_highlighter.words({ "NOTE", "note", "readme", "README" }, "MiniHiPatternsNote")
+          '';
+          bug = lib.generators.mkLuaInline ''
+            require("mini.extra").gen_highlighter.words({ "BUG", "bug", "HACK", "hack", "hax" }, "MiniHiPatternsHack")
+          '';
+        }
+        // {
+          hex_color = lib.generators.mkLuaInline ''
+            require("mini.hipatterns").gen_highlighter.hex_color({ priority = 200 })
+          '';
+          hex_shorthand = {
+            pattern = "()#%x%x%x()%f[^%x%w]";
+            group = lib.generators.mkLuaInline ''
+              function(_, _, data)
+                local match = data.full_match
+                local r, g, b = match:sub(2, 2), match:sub(3, 3), match:sub(4, 4)
+                local hex_color = "#" .. r .. r .. g .. g .. b .. b
+                return require("mini.hipatterns").compute_hex_color_group(hex_color, "bg")
+              end
+            '';
+          };
         };
-      };
     };
   };
   statusline = {
