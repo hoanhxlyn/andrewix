@@ -450,6 +450,7 @@ in {
               {app-id = "^com\\.mitchellh\\.ghostty$";}
               {app-id = "kitty*";}
               {app-id = "rio*";}
+              {app-id = "^org\\.wezfurlong\\.wezterm$";}
             ];
             background-effect.blur = true;
             draw-border-with-background = false;
@@ -459,7 +460,6 @@ in {
           {
             matches = [
               {app-id = "^cursor$";}
-              {app-id = "^org\\.wezfurlong\\.wezterm$";}
               {app-id = "^helium$";}
               {app-id = "^zen$";}
               {app-id = "^libreoffice";} # tile normally, don't self-maximize
