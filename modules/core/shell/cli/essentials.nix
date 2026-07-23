@@ -26,14 +26,10 @@
       ...
     }: {
       home.packages = with pkgs; [
-        alejandra
-        statix
-        deadnix
         nps
         age
         sops
         wget
-        just
         wl-clipboard
         sonar-scanner-cli
       ];

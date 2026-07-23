@@ -19,9 +19,23 @@
     };
     schema.user.classes = lib.mkDefault ["homeManager"];
   };
-  perSystem = {pkgs, ...}: {
+  perSystem = {pkgs, ...}: let
+    # Auto-loaded in-repo via .envrc (`use flake`); keeps these out of global closure.
+    devPackages = with pkgs; [
+      gh
+      alejandra
+      statix
+      deadnix
+      just
+    ];
+  in {
     packages = den.lib.nh.denPackages {fromFlake = true;} pkgs;
-    # Auto-loaded in-repo via .envrc (`use flake`); keeps gh out of global closure.
-    devShells.default = pkgs.mkShell {packages = [pkgs.gh];};
+    devShells.default = pkgs.mkShell {
+      packages = devPackages;
+      shellHook = ''
+        echo "Loaded dedicated plugins:"
+        ${lib.concatMapStrings (p: "echo \"- ${p.pname or p.name}\"\n") devPackages}
+      '';
+    };
   };
 }
