@@ -21,5 +21,7 @@
   };
   perSystem = {pkgs, ...}: {
     packages = den.lib.nh.denPackages {fromFlake = true;} pkgs;
+    # Auto-loaded in-repo via .envrc (`use flake`); keeps gh out of global closure.
+    devShells.default = pkgs.mkShell {packages = [pkgs.gh];};
   };
 }
