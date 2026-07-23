@@ -51,13 +51,14 @@ update:
 [group('nixos')]
 gc:
   nix store gc
+  nix store optimise
 
 # System-wide GC, delete old gens (user profile + system, keep 7d)
 [group('nixos')]
 clean-up:
   nix profile wipe-history --older-than 7d
-  sudo nix-collect-garbage --delete-older-than 7d
   nix-collect-garbage -d --delete-older-than 7d
+  nix store optimise
 
 # Search nix packages
 [group('info')]
