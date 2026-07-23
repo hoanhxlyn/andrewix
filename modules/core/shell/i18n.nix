@@ -95,8 +95,20 @@
         done
         echo "lotus config exported to ${repoDir}"
       '';
+      # Reverse of lotus-export: pull committed config onto a machine whose
+      # lotusSeed guard already ran (so a plain rebuild won't overwrite it).
+      lotus-import = pkgs.writeShellScriptBin "lotus-import" ''
+        set -eu
+        conf="$HOME/.config/fcitx5/conf"
+        mkdir -p "$conf"
+        for f in ${files}; do
+          cp "${repoDir}/$f" "$conf/$f"
+        done
+        ${lib.getExe' pkgs.fcitx5 "fcitx5-remote"} -r || true
+        echo "lotus config imported from ${repoDir} (fcitx5 reloaded)"
+      '';
     in {
-      home.packages = [lotus-export];
+      home.packages = [lotus-export lotus-import];
       home.activation.lotusSeed = lib.hm.dag.entryAfter ["writeBoundary"] ''
         conf="$HOME/.config/fcitx5/conf"
         if [ ! -f "$conf/lotus.conf" ]; then
