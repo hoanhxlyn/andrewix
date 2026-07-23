@@ -20,7 +20,11 @@
     nixos = {
       programs.nix-ld.enable = true;
     };
-    homeManager = {pkgs, ...}: {
+    homeManager = {
+      pkgs,
+      config,
+      ...
+    }: {
       home.packages = with pkgs; [
         alejandra
         statix
@@ -40,6 +44,11 @@
         fd.enable = true;
         fzf.enable = true;
         zoxide.enable = true;
+        direnv = {
+          enable = true;
+          nix-direnv.enable = true; # cache + GC-root the flake devShell
+          config.whitelist.prefix = ["${config.home.homeDirectory}/andrewix"]; # auto-trust, skip `direnv allow`
+        };
         bat.enable = true;
         ripgrep = {
           enable = true;
