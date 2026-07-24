@@ -1,5 +1,9 @@
 {
-  core.bootable = {host, ...}: {
+  core.bootable = {
+    host,
+    user,
+    ...
+  }: {
     nixos = {pkgs, ...}: {
       boot = {
         loader.systemd-boot.enable = host.isLaptop;
@@ -21,6 +25,8 @@
         plymouth.enable = true;
       };
       stylix.targets.grub.useWallpaper = true;
+
+      users.users.${user.userName}.initialPassword = host.initialPassword;
     };
   };
 }

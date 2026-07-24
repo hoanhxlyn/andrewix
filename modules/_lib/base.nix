@@ -8,6 +8,9 @@
   };
   defaultBrowser = "zen";
   profiles.andrew = {};
+  # First-boot password (fresh installs + `just vm`); existing machines keep
+  # their mutable /etc/shadow password. Change after install with: passwd
+  initialPassword = "admin123";
   login = "ly";
   backgroundImage = {
     url = "https://images6.alphacoders.com/114/1140278.png";

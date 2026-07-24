@@ -41,6 +41,11 @@ test h=host *args:
 switch h=host *args:
   nix run .#{{ h }} -- switch {{ args }}  
 
+# Build + run test VM (host store mounted, disk untouched)
+[group('nixos')]
+vm h=host *args:
+  nix run .#{{ h }} -- build-vm -r {{ args }}
+
 # Update flake inputs
 [group('nixos')]
 update:
