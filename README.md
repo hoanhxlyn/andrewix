@@ -31,6 +31,12 @@ Provisions disks declaratively via [disko](https://github.com/nix-community/disk
 no manual partitioning. Wipes the target disk (btrfs `@`/`@home`/`@nix` + swapfile,
 vfat ESP).
 
+> **Before installing**, hand disk ownership to disko: in
+> `modules/core/hardware/disko.nix` set `disko.enableConfig = true`, and delete the
+> `fileSystems`/`swapDevices` blocks from the target host's
+> `hosts/<host>/_nixos/hardware-configuration.nix`. (They are kept `false`/by-uuid so
+> `just switch` stays safe on the currently-running ext4 machines.)
+
 1. Boot the [NixOS minimal ISO](https://nixos.org/download) and connect to network.
 2. Find the target disk:
 
