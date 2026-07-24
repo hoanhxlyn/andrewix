@@ -15,7 +15,7 @@
     "editor.defaultFormatter": "ms-azuretools.vscode-containers"
   },
   "css.validate": false,
-  "cursor.composer.editorConversationDensity": "compact-ungrouped",
+  "cursor.composer.editorConversationDensity": "detailed",
   "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
   "editor.codeActionsOnSave": {
     "quickfix.biome": "explicit",
