@@ -36,7 +36,15 @@ else
   git clone "$REPO_URL" "$CLONE_DIR"
 fi
 
-echo -e "\n${YELLOW}Installing NixOS...${NC}"
-sudo nixos-install --flake "$CLONE_DIR#$HOST" --no-root-password
+echo -e "\n${YELLOW}Select target disk (WILL BE ERASED):${NC}"
+DISK=$(lsblk -dpno NAME,SIZE,MODEL | gum choose | awk '{print $1}')
+
+gum confirm --default=false \
+  "ERASE ${DISK} and install ${HOST}?" || exit 0
+
+echo -e "\n${YELLOW}Partitioning + installing NixOS...${NC}"
+sudo nix --experimental-features "nix-command flakes" \
+  run github:nix-community/disko/latest#disko-install -- \
+  --flake "$CLONE_DIR#$HOST" --disk main "$DISK"
 
 echo -e "\n${GREEN}Done. Reboot.${NC}"
