@@ -1,4 +1,8 @@
-{__findFile, ...}: {
+{
+  __findFile,
+  self,
+  ...
+}: {
   core.cli.essentials = {
     includes = [
       (<den.batteries.unfree> ["ngrok"])
@@ -32,7 +36,9 @@
         wget
         wl-clipboard
         sonar-scanner-cli
+        glow
       ];
+      xdg.configFile."glow/glow.yml".source = "${self}/config/glow/glow.yml";
       programs = {
         jq.enable = true;
         uv.enable = true;
