@@ -12,8 +12,6 @@
       (<den/unfree> ["copilot-language-server"])
     ];
 
-    homeManager.xdg.configFile."glow/glow.yml".source = "${self}/config/glow/glow.yml";
-
     nixos = {
       pkgs,
       host,
@@ -46,7 +44,6 @@
             kdlfmt
             vscode-langservers-extracted
             yaml-language-server
-            glow
             sqlite
             tree-sitter
           ];

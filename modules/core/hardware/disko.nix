@@ -9,6 +9,13 @@
       inputs.disko.nixosModules.default
     ];
 
+    # false: disko provides the format/install scripts but does NOT own the
+    # running system's fileSystems — so the live ext4 hosts keep booting via
+    # their by-uuid hardware-configuration.nix and `just switch` stays safe.
+    # At a real btrfs reinstall, flip to true AND drop the by-uuid fileSystems
+    # from hosts/<host>/_nixos/hardware-configuration.nix so disko owns fstab.
+    disko.enableConfig = false;
+
     # Shared layout for both physical hosts. Device is a placeholder — pick the
     # real disk at install time: disko-install --disk main /dev/nvme0n1
     disko.devices.disk.main = {
