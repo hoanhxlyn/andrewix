@@ -25,6 +25,39 @@ nix flake update --flake .
 alejandra . && statix check && deadnix --no-underscore --fail
 ```
 
+## Fresh Install
+
+Provisions disks declaratively via [disko](https://github.com/nix-community/disko) —
+no manual partitioning. Wipes the target disk (btrfs `@`/`@home`/`@nix` + swapfile,
+vfat ESP).
+
+1. Boot the [NixOS minimal ISO](https://nixos.org/download) and connect to network.
+2. Find the target disk:
+
+   ```bash
+   lsblk           # e.g. /dev/nvme0n1
+   ```
+
+3. Partition + format + install in one step (`--disk main <device>` picks the disk):
+
+   ```bash
+   sudo nix --experimental-features "nix-command flakes" run \
+     github:nix-community/disko/latest#disko-install -- \
+     --flake github:hoanhxlyn/andrewix#andrew-pc --disk main /dev/nvme0n1
+   ```
+
+   Guided alternative (disk picker + confirm): clone the repo and run `./install.sh`.
+
+4. Reboot. Log in as `andrew` / `admin123`, then:
+
+   ```bash
+   passwd                                    # change the bootstrap password
+   # copy the shared age key so secrets decrypt (see Secrets below):
+   #   ~/.config/sops-nix/keys.txt
+   ```
+
+Only `andrew-laptop` / `andrew-pc` are installable (WSL hosts have no disk layout).
+
 ## Architecture
 
 | Path                   | Purpose                            |
