@@ -57,6 +57,8 @@ NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto
 - **No dead top-level args:** if a module file needs nothing from the module system, write a bare attrset (`{ core.x = ...; }`) — do **not** wrap it in `_:` or `{...}:`. Only take args you use (e.g. `{__findFile, ...}:`, `{lib, inputs, ...}:`). Same for an aspect's `nixos`/`homeManager` fn — omit the fn wrapper when no args are used.
 - **Files:** `kebab-case.nix`, **Options:** `camelCase`
 - **No relative-path imports** (`../../../_lib/foo.nix`) — take `{self, ...}` and use `import "${self}/modules/_lib/foo.nix"`
+- **Underscore dirs = not aspects:** `_nvf/`, `_nixos/`, `_lib/` are path-imported, **not** auto-discovered. Split a big aspect into `_<name>/*.nix` sub-configs and `import "${self}/modules/.../_<name>/foo.nix"` them from the aspect file (see `modules/core/editor/nvf.nix`).
+- **`config/<tool>/`:** non-Nix app configs, one subfolder per tool (not per format). Symlink into place via `home.file."<dest>".source = "${self}/config/<tool>/<file>"` (see `modules/core/editor/cursor.nix`).
 - **Booleans:** prefix with `enable`/`disable`
 - **Override defaults:** `lib.mkDefault`
 - **Formatter:** `alejandra`, 2-space indent, ≤100 chars hard limit

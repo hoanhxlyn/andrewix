@@ -68,7 +68,7 @@
           lsp = import "${self}/modules/core/editor/_nvf/lsp.nix" {inherit lib L;};
           treesitter = import "${self}/modules/core/editor/_nvf/treesitter.nix" {inherit pkgs;};
           formatter.conform-nvim = import "${self}/modules/core/editor/_nvf/formatter.nix" {inherit lib pkgs;};
-          diagnostics = import "${self}/modules/core/editor/_nvf/diagnostics.nix" {inherit lib;};
+          diagnostics = import "${self}/modules/core/editor/_nvf/diagnostics.nix" {inherit lib self;};
           languages = import "${self}/modules/core/editor/_nvf/languages.nix";
           ui = import "${self}/modules/core/editor/_nvf/ui.nix";
           utility = import "${self}/modules/core/editor/_nvf/utility.nix" {inherit lib mini self;};

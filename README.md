@@ -38,13 +38,14 @@ vfat ESP).
 > `just switch` stays safe on the currently-running ext4 machines.)
 
 1. Boot the [NixOS minimal ISO](https://nixos.org/download) and connect to network.
-2. Find the target disk:
+
+1. Find the target disk:
 
    ```bash
    lsblk           # e.g. /dev/nvme0n1
    ```
 
-3. Partition + format + install in one step (`--disk main <device>` picks the disk):
+1. Partition + format + install in one step (`--disk main <device>` picks the disk):
 
    ```bash
    sudo nix --experimental-features "nix-command flakes" run \
@@ -54,7 +55,7 @@ vfat ESP).
 
    Guided alternative (disk picker + confirm): clone the repo and run `./install.sh`.
 
-4. Reboot. Log in as `andrew` / `admin123`, then:
+1. Reboot. Log in as `andrew` / `admin123`, then:
 
    ```bash
    passwd                                    # change the bootstrap password
@@ -95,7 +96,8 @@ Only available on workstation hosts (`andrew-laptop`, `andrew-pc`) — not WSL.
 - **Age key location:** `~/.config/sops-nix/keys.txt` on each host
 - **Edit secrets:** `sops secrets/secrets.yaml`
 - **Setup new host:** copy the shared age private key to `~/.config/sops-nix/keys.txt`
-- **Add a new secret:** edit `secrets/secrets.yaml` (via `sops`) **and** declare it in `modules/core/services/sync/sops.nix` under `sops.secrets`
+- **Add a new secret:** edit `secrets/secrets.yaml` (via `sops`) then
+  declare it in `modules/core/services/sync/sops.nix` under `sops.secrets`
 
 ## More
 
