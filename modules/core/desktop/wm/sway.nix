@@ -20,26 +20,21 @@
         else ":";
       cat = "${pkgs.coreutils}/bin/cat";
       restoreBrightness = "test -f $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness) || true";
-      unitToSeconds = unit:
-        if unit == "second" || unit == "seconds"
-        then 1
-        else if unit == "minute" || unit == "minutes"
-        then 60
-        else if unit == "hour" || unit == "hours"
-        then 3600
-        else 1;
-      mkTimeout = map (
-        {
-          unit ? "minute",
-          timeout,
-          command,
-          resumeCommand ? "",
-        }: {
-          timeout = timeout * unitToSeconds unit;
-          inherit command;
-          inherit resumeCommand;
-        }
-      );
+      inherit (host) idle;
+      # "3m"/"50s"/"1h" -> seconds.
+      toSecs = s: let
+        m = builtins.match "([0-9]+)([smh])" s;
+        n = lib.toInt (builtins.elemAt m 0);
+        unit = builtins.elemAt m 1;
+      in
+        n
+        * (
+          if unit == "s"
+          then 1
+          else if unit == "m"
+          then 60
+          else 3600
+        );
     in {
       home.packages = with pkgs; [swaybg brightnessctl];
       programs.swaylock = {
@@ -60,34 +55,29 @@
           before-sleep = lockCmd;
           after-resume = "${display "on"}; ${restoreBrightness}";
         };
-        timeouts = mkTimeout (
+        timeouts =
           lib.optionals isLaptop [
             {
-              unit = "seconds";
-              timeout = 50;
+              timeout = toSecs idle.dim;
               command = "[ \"$(/run/current-system/sw/bin/tlp-stat -m 2>/dev/null)\" = \"performance/AC\" ] || { ${pkgs.brightnessctl}/bin/brightnessctl get > $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set 10%; }";
               resumeCommand = "${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness)";
             }
           ]
           ++ [
             {
-              unit = "minutes";
-              timeout = 3;
+              timeout = toSecs idle.lock;
               command = lockCmd;
             }
             {
-              unit = "minutes";
-              timeout = 10;
+              timeout = toSecs idle.monitorOff;
               command = display "off";
               resumeCommand = display "on";
             }
             {
-              unit = "hours";
-              timeout = 1;
+              timeout = toSecs idle.suspend;
               command = "${pkgs.systemd}/bin/systemctl suspend --ignore-inhibitors";
             }
-          ]
-        );
+          ];
       };
     };
   };

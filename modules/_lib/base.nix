@@ -7,6 +7,13 @@
     name = "alacritty";
   };
   defaultBrowser = "zen";
+  # swayidle timeouts. Suffix: s/m/h.
+  idle = {
+    dim = "1m"; # laptop only, dim brightness
+    lock = "5m";
+    monitorOff = "10m";
+    suspend = "2h";
+  };
   profiles.andrew = {};
   # First-boot password (fresh installs + `just vm`); existing machines keep
   # their mutable /etc/shadow password. Change after install with: passwd
