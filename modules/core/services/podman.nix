@@ -5,7 +5,9 @@
         containers = {
           enable = true;
           containersConf.settings.engine.compose_warning_logs = false;
-          registries.search = ["docker.io"];
+          registries.settings = {
+            registry = [{location = "docker.io";}];
+          };
         };
         podman = {
           enable = true;

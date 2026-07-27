@@ -35,8 +35,8 @@
             name = "Noto Sans";
           };
           monospace = {
-            package = pkgs.nerd-fonts.caskaydia-mono;
-            name = "CaskaydiaMono Nerd Font Propo";
+            package = pkgs.nerd-fonts.adwaita-mono;
+            name = "AdwaitaMono Nerd Font";
           };
           emoji = {
             package = pkgs.noto-fonts-color-emoji;
@@ -44,7 +44,7 @@
           };
           sizes = {
             applications = terminal.fontSize + 1;
-            terminal = terminal.fontSize;
+            terminal = terminal.fontSize - 1;
             desktop = terminal.fontSize + 2;
             popups = terminal.fontSize + 2;
           };
