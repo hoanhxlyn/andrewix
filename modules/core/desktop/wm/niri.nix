@@ -5,7 +5,11 @@
 }: {
   flake-file.inputs.niri.url = "github:epireyn/niri-flake";
 
-  core.desktop.wm.niri = {host, ...}: {
+  core.desktop.wm.niri = {host, ...}: let
+    niriOverlay = _final: prev: {
+      niri-unstable = inputs.niri.packages.${prev.system}.niri-unstable;
+    };
+  in {
     includes = [
       <core/desktop/statusbar/ironbar>
       <core/desktop/waycal>
@@ -15,7 +19,7 @@
     ];
 
     nixos = {pkgs, ...}: {
-      nixpkgs.overlays = [inputs.niri.overlays.niri];
+      nixpkgs.overlays = [niriOverlay];
       nix.settings = {
         substituters = ["https://niri-epireyn.cachix.org"];
         trusted-public-keys = ["niri-epireyn.cachix.org-1:tlVyFN7CtsDT+ZcLPS+ekFWeT1X6X4OqvWqbBMyIzFA="];
@@ -39,7 +43,7 @@
       services.playerctld.enable = true;
     };
 
-    homeManager = homeConfig: let
+    homeManager = {pkgs, ...} @ homeConfig: let
       inherit (homeConfig) lib;
       action = homeConfig.config.lib.niri.actions;
       # noctalia = cmd: ["noctalia-shell" "ipc" "call"] ++ (lib.splitString " " cmd);
@@ -111,9 +115,14 @@
         };
       }) ["Left" "Down" "Up" "Right"]);
     in {
+      nixpkgs.overlays = [niriOverlay];
       imports = [
         inputs.niri.homeModules.niri
       ];
+
+      programs.niri.package = pkgs.niri-unstable.overrideAttrs (old: {
+        patches = (old.patches or []) ++ [./niri-session-import-env.patch];
+      });
 
       programs.niri.settings = {
         input = {
