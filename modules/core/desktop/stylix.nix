@@ -44,7 +44,7 @@
           };
           sizes = {
             applications = terminal.fontSize + 1;
-            terminal = terminal.fontSize - 1;
+            terminal = terminal.fontSize;
             desktop = terminal.fontSize + 2;
             popups = terminal.fontSize + 2;
           };
