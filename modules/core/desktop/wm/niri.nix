@@ -136,9 +136,9 @@
             natural-scroll = true;
             dwt = true;
           };
-          # mouse = {
-          #   accel-profile = "flat";
-          # };
+          mouse = {
+            accel-profile = "flat";
+          };
           focus-follows-mouse.max-scroll-amount = "0%";
           workspace-auto-back-and-forth = true;
         };
@@ -155,7 +155,7 @@
         layout = {
           gaps = 10;
           center-focused-column = "never";
-          default-column-width = {proportion = 0.7;};
+          default-column-width = {proportion = 0.5;};
           preset-column-widths = [
             {proportion = 0.7;}
             {proportion = 0.5;}
