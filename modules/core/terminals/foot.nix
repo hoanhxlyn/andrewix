@@ -12,7 +12,7 @@
           };
           cursor = {
             style = "block";
-            blink = "no";
+            blink = "yes";
           };
           mouse = {
             hide-when-typing = "yes";
