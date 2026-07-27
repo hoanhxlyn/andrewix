@@ -9,6 +9,24 @@
     if picks
     then m
     else s;
+  # Y: yank helper — key, desc, vim.fn.expand pattern
+  Y = key: desc: expand: {
+    key = L key;
+    mode = "n";
+    inherit desc;
+    lua = true;
+    action = ''
+      function()
+        local path = vim.fn.expand("${expand}")
+        if path == "" then
+          vim.notify("No file path to yank", vim.log.levels.WARN)
+          return
+        end
+        vim.fn.setreg("+", path)
+        vim.notify("Yanked: " .. path, vim.log.levels.INFO)
+      end
+    '';
+  };
 in [
   {
     key = L "h";
@@ -401,74 +419,10 @@ in [
       end
     '';
   }
-  {
-    key = L "yf";
-    mode = "n";
-    desc = "Yank full path";
-    lua = true;
-    action = ''
-      function()
-        local path = vim.fn.expand("%:p")
-        if path == "" then
-          vim.notify("No file path to yank", vim.log.levels.WARN)
-          return
-        end
-        vim.fn.setreg("+", path)
-        vim.notify("Yanked: " .. path, vim.log.levels.INFO)
-      end
-    '';
-  }
-  {
-    key = L "yr";
-    mode = "n";
-    desc = "Yank relative path";
-    lua = true;
-    action = ''
-      function()
-        local path = vim.fn.expand("%")
-        if path == "" then
-          vim.notify("No file path to yank", vim.log.levels.WARN)
-          return
-        end
-        vim.fn.setreg("+", path)
-        vim.notify("Yanked: " .. path, vim.log.levels.INFO)
-      end
-    '';
-  }
-  {
-    key = L "yd";
-    mode = "n";
-    desc = "Yank directory";
-    lua = true;
-    action = ''
-      function()
-        local path = vim.fn.expand("%:p:h")
-        if path == "" then
-          vim.notify("No file path to yank", vim.log.levels.WARN)
-          return
-        end
-        vim.fn.setreg("+", path)
-        vim.notify("Yanked: " .. path, vim.log.levels.INFO)
-      end
-    '';
-  }
-  {
-    key = L "yn";
-    mode = "n";
-    desc = "Yank filename";
-    lua = true;
-    action = ''
-      function()
-        local path = vim.fn.expand("%:t")
-        if path == "" then
-          vim.notify("No file path to yank", vim.log.levels.WARN)
-          return
-        end
-        vim.fn.setreg("+", path)
-        vim.notify("Yanked: " .. path, vim.log.levels.INFO)
-      end
-    '';
-  }
+  (Y "yf" "Yank full path" "%:p")
+  (Y "yr" "Yank relative path" "%")
+  (Y "yd" "Yank directory" "%:p:h")
+  (Y "yn" "Yank filename" "%:t")
   {
     key = L "ff";
     mode = "n";

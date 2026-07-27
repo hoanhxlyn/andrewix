@@ -3,7 +3,28 @@
 # modules/core/**.
 {lib}: let
   base = import ./base.nix;
-  layoutMonitors = import ./monitors.nix;
+  layoutMonitors = monitors:
+    builtins.mapAttrs (_: m: let
+      extraKeys = builtins.removeAttrs m ["resolution" "refresh-rate" "is-primary" "scale"];
+      baseOutput = {
+        mode = {
+          inherit (m.resolution) width height;
+          refresh = m.refresh-rate;
+        };
+        scale = m.scale or 1;
+      };
+      position =
+        if m.is-primary or false
+        then {
+          position = {
+            x = 0;
+            y = 0;
+          };
+        }
+        else {};
+    in
+      baseOutput // position // extraKeys)
+    monitors;
 in
   {
     is-workstation ? true,

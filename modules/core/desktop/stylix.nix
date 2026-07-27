@@ -43,10 +43,10 @@
             name = "Noto Color Emoji";
           };
           sizes = {
-            applications = lib.add terminal.fontSize 1;
-            terminal = lib.add terminal.fontSize 0;
-            desktop = lib.add terminal.fontSize 2;
-            popups = lib.add terminal.fontSize 2;
+            applications = terminal.fontSize + 1;
+            terminal = terminal.fontSize;
+            desktop = terminal.fontSize + 2;
+            popups = terminal.fontSize + 2;
           };
         };
         opacity = {

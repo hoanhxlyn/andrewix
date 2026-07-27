@@ -12,7 +12,6 @@
           makoctl mode -s do-not-disturb
           notify-send "DND" "Do Not Disturb enabled" -i notification-disabled
         fi
-        pkill -SIGRTMIN+10 waybar
       '';
     in {
       gtk.iconTheme = {

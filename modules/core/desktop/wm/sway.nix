@@ -21,20 +21,6 @@
       cat = "${pkgs.coreutils}/bin/cat";
       restoreBrightness = "test -f $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness) || true";
       inherit (host) idle;
-      # "3m"/"50s"/"1h" -> seconds.
-      toSecs = s: let
-        m = builtins.match "([0-9]+)([smh])" s;
-        n = lib.toInt (builtins.elemAt m 0);
-        unit = builtins.elemAt m 1;
-      in
-        n
-        * (
-          if unit == "s"
-          then 1
-          else if unit == "m"
-          then 60
-          else 3600
-        );
     in {
       home.packages = with pkgs; [swaybg brightnessctl];
       programs.swaylock = {
@@ -58,23 +44,23 @@
         timeouts =
           lib.optionals isLaptop [
             {
-              timeout = toSecs idle.dim;
+              timeout = idle.dim;
               command = "[ \"$(/run/current-system/sw/bin/tlp-stat -m 2>/dev/null)\" = \"performance/AC\" ] || { ${pkgs.brightnessctl}/bin/brightnessctl get > $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set 10%; }";
               resumeCommand = "${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness)";
             }
           ]
           ++ [
             {
-              timeout = toSecs idle.lock;
+              timeout = idle.lock;
               command = lockCmd;
             }
             {
-              timeout = toSecs idle.monitorOff;
+              timeout = idle.monitorOff;
               command = display "off";
               resumeCommand = display "on";
             }
             {
-              timeout = toSecs idle.suspend;
+              timeout = idle.suspend;
               command = "${pkgs.systemd}/bin/systemctl suspend --ignore-inhibitors";
             }
           ];
