@@ -433,179 +433,117 @@
         col = "auto";
       };
 
-      clues = [
-        {
+      clues =
+        (map ({
+            keys,
+            desc,
+          }: {
+            mode = "n";
+            inherit keys desc;
+          }) [
+            {
+              keys = "<leader>a";
+              desc = "+ Agents";
+            }
+            {
+              keys = "<leader>b";
+              desc = "+ Buffers";
+            }
+            {
+              keys = "<leader>c";
+              desc = "+ Code";
+            }
+            {
+              keys = "<leader>cs";
+              desc = "+ Code spell";
+            }
+            {
+              keys = "<leader>d";
+              desc = "+ Debugger";
+            }
+            {
+              keys = "<leader>f";
+              desc = "+ Find";
+            }
+            {
+              keys = "<leader>g";
+              desc = "+ Git";
+            }
+            {
+              keys = "<leader>l";
+              desc = "+ Lsp";
+            }
+            {
+              keys = "<leader>n";
+              desc = "+ Notify";
+            }
+            {
+              keys = "<leader>s";
+              desc = "+ Sessions";
+            }
+            {
+              keys = "<leader>p";
+              desc = "+ Package";
+            }
+            {
+              keys = "<leader>t";
+              desc = "+ Terminal";
+            }
+            {
+              keys = "<leader>w";
+              desc = "+ Window";
+            }
+            {
+              keys = "<leader>y";
+              desc = "+ Yank";
+            }
+          ])
+        ++ [
+          {
+            mode = ["n" "x" "i"];
+            keys = "<leader>o";
+            desc = "+ Operators";
+          }
+          (lib.generators.mkLuaInline "require('mini.clue').gen_clues.builtin_completion()")
+          (lib.generators.mkLuaInline "require('mini.clue').gen_clues.g()")
+          (lib.generators.mkLuaInline "require('mini.clue').gen_clues.marks()")
+          (lib.generators.mkLuaInline "require('mini.clue').gen_clues.registers()")
+          (lib.generators.mkLuaInline "require('mini.clue').gen_clues.windows({ submode_resize = true })")
+          (lib.generators.mkLuaInline "require('mini.clue').gen_clues.z()")
+        ];
+      triggers =
+        (lib.concatMap (m:
+          map (keys: {
+            mode = m;
+            inherit keys;
+          }) [
+            "<Leader>"
+            "\\"
+            "["
+            "]"
+            "g"
+            "'"
+            "`"
+            "z"
+          ]) ["n" "x"])
+        ++ (map (keys: {
           mode = "n";
-          keys = "<leader>a";
-          desc = "+ Agents";
-        }
-        {
-          mode = "n";
-          keys = "<leader>b";
-          desc = "+ Buffers";
-        }
-        {
-          mode = "n";
-          keys = "<leader>c";
-          desc = "+ Code";
-        }
-        {
-          mode = "n";
-          keys = "<leader>cs";
-          desc = "+ Code spell";
-        }
-        {
-          mode = "n";
-          keys = "<leader>d";
-          desc = "+ Debugger";
-        }
-        {
-          mode = "n";
-          keys = "<leader>f";
-          desc = "+ Find";
-        }
-        {
-          mode = "n";
-          keys = "<leader>g";
-          desc = "+ Git";
-        }
-        {
-          mode = "n";
-          keys = "<leader>l";
-          desc = "+ Lsp";
-        }
-        {
-          mode = [
-            "n"
-            "x"
-            "i"
-          ];
-          keys = "<leader>o";
-          desc = "+ Operators";
-        }
-        {
-          mode = "n";
-          keys = "<leader>n";
-          desc = "+ Notify";
-        }
-        {
-          mode = "n";
-          keys = "<leader>s";
-          desc = "+ Sessions";
-        }
-        {
-          mode = "n";
-          keys = "<leader>p";
-          desc = "+ Package";
-        }
-        {
-          mode = "n";
-          keys = "<leader>t";
-          desc = "+ Terminal";
-        }
-        {
-          mode = "n";
-          keys = "<leader>w";
-          desc = "+ Window";
-        }
-        {
-          mode = "n";
-          keys = "<leader>y";
-          desc = "+ Yank";
-        }
-        (lib.generators.mkLuaInline "require('mini.clue').gen_clues.builtin_completion()")
-        (lib.generators.mkLuaInline "require('mini.clue').gen_clues.g()")
-        (lib.generators.mkLuaInline "require('mini.clue').gen_clues.marks()")
-        (lib.generators.mkLuaInline "require('mini.clue').gen_clues.registers()")
-        (lib.generators.mkLuaInline "require('mini.clue').gen_clues.windows({ submode_resize = true })")
-        (lib.generators.mkLuaInline "require('mini.clue').gen_clues.z()")
-      ];
-      triggers = [
-        {
-          mode = "n";
-          keys = "<Leader>";
-        }
-        {
-          mode = "x";
-          keys = "<Leader>";
-        }
-        {
-          mode = "n";
-          keys = "\\";
-        }
-        {
-          mode = "n";
-          keys = "[";
-        }
-        {
-          mode = "n";
-          keys = "]";
-        }
-        {
-          mode = "x";
-          keys = "[";
-        }
-        {
-          mode = "x";
-          keys = "]";
-        }
-        {
+          inherit keys;
+        }) ["\\"])
+        ++ (map (keys: {
           mode = "i";
-          keys = "<C-x>";
-        }
-        {
-          mode = "n";
-          keys = "g";
-        }
-        {
-          mode = "x";
-          keys = "g";
-        }
-        {
-          mode = "n";
-          keys = "'";
-        }
-        {
-          mode = "n";
-          keys = "`";
-        }
-        {
-          mode = "x";
-          keys = "'";
-        }
-        {
-          mode = "x";
-          keys = "`";
-        }
-        {
-          mode = "n";
-          keys = "\\";
-        }
-        {
-          mode = "x";
-          keys = "\\";
-        }
-        {
-          mode = "i";
-          keys = "<C-r>";
-        }
-        {
-          mode = "c";
-          keys = "<C-r>";
-        }
-        {
-          mode = "n";
-          keys = "<C-w>";
-        }
-        {
-          mode = "n";
-          keys = "z";
-        }
-        {
-          mode = "x";
-          keys = "z";
-        }
-      ];
+          inherit keys;
+        }) ["<C-x>" "<C-r>"])
+        ++ [
+          {
+            mode = "c";
+            keys = "<C-r>";
+          }
+          {
+            mode = "n";
+            keys = "<C-w>";
+          }
+        ];
     };
   };
 }

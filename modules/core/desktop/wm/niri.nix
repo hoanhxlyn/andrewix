@@ -1,11 +1,8 @@
 {
-  self,
   inputs,
   __findFile,
   ...
-}: let
-  browsers = import "${self}/modules/_lib/browsers.nix";
-in {
+}: {
   flake-file.inputs.niri.url = "github:epireyn/niri-flake";
 
   core.desktop.wm.niri = {host, ...}: {
@@ -47,7 +44,72 @@ in {
       action = homeConfig.config.lib.niri.actions;
       # noctalia = cmd: ["noctalia-shell" "ipc" "call"] ++ (lib.splitString " " cmd);
       terminalName = host.terminal.name;
-      browserBin = browsers.executables.${host.defaultBrowser};
+      browserBin =
+        {
+          zen = "zen-beta";
+          helium = "helium";
+          firefox = "firefox";
+        }.${
+          host.defaultBrowser
+        };
+      # Generated binds (shrinks repetitive entries)
+      arrowFocus = builtins.listToAttrs (map (dir: {
+        name = "Mod+${dir}";
+        value = {
+          hotkey-overlay.hidden = true;
+          action =
+            {
+              Left = action.focus-column-left;
+              Down = action.focus-window-or-workspace-down;
+              Up = action.focus-window-or-workspace-up;
+              Right = action.focus-column-right;
+            }.${
+              dir
+            };
+        };
+      }) ["Left" "Down" "Up" "Right"]);
+      arrowMonitor = builtins.listToAttrs (map (dir: {
+        name = "Mod+Shift+${dir}";
+        value = {
+          hotkey-overlay.hidden = true;
+          action =
+            {
+              Left = action.focus-monitor-left;
+              Right = action.focus-monitor-right;
+            }.${
+              dir
+            };
+        };
+      }) ["Left" "Right"]);
+      wsFocus = builtins.listToAttrs (map (n: {
+        name = "Mod+${toString n}";
+        value = {
+          hotkey-overlay.hidden = true;
+          action.focus-workspace = n;
+        };
+      }) [1 2 3 4 5]);
+      wsMove = builtins.listToAttrs (map (n: {
+        name = "Mod+Ctrl+${toString n}";
+        value = {
+          hotkey-overlay.hidden = true;
+          action.move-column-to-workspace = n;
+        };
+      }) [1 2 3 4 5]);
+      arrowMove = builtins.listToAttrs (map (dir: {
+        name = "Mod+Ctrl+${dir}";
+        value = {
+          hotkey-overlay.hidden = true;
+          action =
+            {
+              Left = action.move-column-left;
+              Down = action.move-window-down-or-to-workspace-down;
+              Up = action.move-window-up-or-to-workspace-up;
+              Right = action.move-column-right;
+            }.${
+              dir
+            };
+        };
+      }) ["Left" "Down" "Up" "Right"]);
     in {
       imports = [
         inputs.niri.homeModules.niri
@@ -216,77 +278,8 @@ in {
               };
               "Mod+Shift+V".action = switch-focus-between-floating-and-tiling;
 
-              # Arrow key variants (hidden — duplicate of hjkl)
-              "Mod+Left" = {
-                hotkey-overlay.hidden = true;
-                action = focus-column-left;
-              };
-              "Mod+Down" = {
-                hotkey-overlay.hidden = true;
-                action = focus-window-or-workspace-down;
-              };
-              "Mod+Up" = {
-                hotkey-overlay.hidden = true;
-                action = focus-window-or-workspace-up;
-              };
-              "Mod+Right" = {
-                hotkey-overlay.hidden = true;
-                action = focus-column-right;
-              };
-              "Mod+Shift+Left" = {
-                hotkey-overlay.hidden = true;
-                action = focus-monitor-left;
-              };
-              "Mod+Shift+Right" = {
-                hotkey-overlay.hidden = true;
-                action = focus-monitor-right;
-              };
               "Shift+Alt+Left".action = move-column-to-monitor-left;
               "Shift+Alt+Right".action = move-column-to-monitor-right;
-
-              # Workspace focus (hidden — pattern obvious)
-              "Mod+1" = {
-                hotkey-overlay.hidden = true;
-                action.focus-workspace = 1;
-              };
-              "Mod+2" = {
-                hotkey-overlay.hidden = true;
-                action.focus-workspace = 2;
-              };
-              "Mod+3" = {
-                hotkey-overlay.hidden = true;
-                action.focus-workspace = 3;
-              };
-              "Mod+4" = {
-                hotkey-overlay.hidden = true;
-                action.focus-workspace = 4;
-              };
-              "Mod+5" = {
-                hotkey-overlay.hidden = true;
-                action.focus-workspace = 5;
-              };
-
-              # Move to workspace (hidden — too granular)
-              "Mod+Ctrl+1" = {
-                hotkey-overlay.hidden = true;
-                action.move-column-to-workspace = 1;
-              };
-              "Mod+Ctrl+2" = {
-                hotkey-overlay.hidden = true;
-                action.move-column-to-workspace = 2;
-              };
-              "Mod+Ctrl+3" = {
-                hotkey-overlay.hidden = true;
-                action.move-column-to-workspace = 3;
-              };
-              "Mod+Ctrl+4" = {
-                hotkey-overlay.hidden = true;
-                action.move-column-to-workspace = 4;
-              };
-              "Mod+Ctrl+5" = {
-                hotkey-overlay.hidden = true;
-                action.move-column-to-workspace = 5;
-              };
 
               # Move column (Ctrl + hjkl)
               "Mod+Shift+H".action = focus-monitor-left;
@@ -297,24 +290,6 @@ in {
               "Mod+Ctrl+K".action = move-window-up-or-to-workspace-up;
               "Mod+Ctrl+L".action = move-column-right;
               "Mod+Alt+L".action = move-column-to-monitor-left;
-
-              # Arrow key variants for move (hidden — duplicate of Ctrl+hjkl)
-              "Mod+Ctrl+Left" = {
-                hotkey-overlay.hidden = true;
-                action = move-column-left;
-              };
-              "Mod+Ctrl+Down" = {
-                hotkey-overlay.hidden = true;
-                action = move-window-down-or-to-workspace-down;
-              };
-              "Mod+Ctrl+Up" = {
-                hotkey-overlay.hidden = true;
-                action = move-window-up-or-to-workspace-up;
-              };
-              "Mod+Ctrl+Right" = {
-                hotkey-overlay.hidden = true;
-                action = move-column-right;
-              };
 
               # Column resize (hidden — fine tuning)
               "Mod+Minus" = {
@@ -406,6 +381,11 @@ in {
                 action.spawn = ["xbacklight" "-dec" "5"];
               };
             }
+            arrowFocus
+            arrowMonitor
+            wsFocus
+            wsMove
+            arrowMove
             (lib.mkIf (host.isLaptop or false) {
               "Mod+G" = {
                 hotkey-overlay.title = "Battery";

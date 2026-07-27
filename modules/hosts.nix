@@ -3,7 +3,7 @@
 in {
   den.hosts."x86_64-linux" = {
     andrew-laptop = mkHost {
-      terminal.name = "wezterm";
+      terminal.name = "foot";
       isLaptop = true;
       monitors."eDP-1" = {
         resolution = {

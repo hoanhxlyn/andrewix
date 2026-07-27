@@ -7,12 +7,12 @@
     name = "alacritty";
   };
   defaultBrowser = "zen";
-  # swayidle timeouts. Suffix: s/m/h.
+  # swayidle timeouts in seconds.
   idle = {
-    dim = "1m"; # laptop only, dim brightness
-    lock = "5m";
-    monitorOff = "10m";
-    suspend = "2h";
+    dim = 60; # laptop only, dim brightness
+    lock = 300;
+    monitorOff = 600;
+    suspend = 7200;
   };
   profiles.andrew = {};
   # First-boot password (fresh installs + `just vm`); existing machines keep
