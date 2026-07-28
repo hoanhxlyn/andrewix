@@ -159,7 +159,6 @@
           preset-column-widths = [
             {proportion = 0.7;}
             {proportion = 0.5;}
-            {proportion = 0.3;}
           ];
           focus-ring = {
             enable = true;
