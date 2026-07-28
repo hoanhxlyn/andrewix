@@ -17,10 +17,6 @@
           mouse = {
             hide-when-typing = "yes";
           };
-          selection = {
-            target = "both";
-            save-on-copy = "yes";
-          };
           "colors-dark" = {
             blur =
               if terminal.opacity < 1
