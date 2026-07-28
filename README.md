@@ -103,6 +103,6 @@ See `AGENTS.md` for conventions, module patterns, and rules.
 
 ## Galerry
 
-[![Linux PC](./config/background/workstation-pc.png)]
+![Linux PC](./config/background/workstation-pc.png)
 
-[![Linux Laptop](./config/background/Shell.png)]
+![Linux Laptop](./config/background/Shell.png)
