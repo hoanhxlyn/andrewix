@@ -23,10 +23,9 @@
   };
   markdown = {
     enable = true;
-    extensions.markview-nvim.enable = true;
+    extensions.markview-nvim.enable = false;
     lsp.servers = [
       "markdown-oxide"
-      "marksman"
     ];
     format.type = [
       "prettier"
