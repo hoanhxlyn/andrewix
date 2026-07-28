@@ -20,6 +20,16 @@
         require_cwd = true;
       };
       stylua = {};
+      prettier = {
+        prepend_args = lib.mkForce (lib.generators.mkLuaInline ''
+          function(self, ctx)
+            if vim.bo[ctx.buf].filetype == "markdown" then
+              return {"--print-width=120", "--prose-wrap=always"}
+            end
+            return {}
+          end
+        '');
+      };
       markdown-toc = {
         condition = lib.generators.mkLuaInline ''
           function(_, ctx)
@@ -33,6 +43,7 @@
         '';
       };
       markdownlint-cli2 = {
+        prepend_args = ["--fix"];
         condition = lib.generators.mkLuaInline ''
           function(_, ctx)
             local diag = vim.tbl_filter(function(d)

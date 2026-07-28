@@ -24,8 +24,13 @@
   markdown = {
     enable = true;
     extensions.markview-nvim.enable = true;
-    lsp.servers = ["markdown-oxide"];
-    format.type = ["mdformat"];
+    lsp.servers = [
+      "markdown-oxide"
+      "marksman"
+    ];
+    format.type = [
+      "prettier"
+    ];
   };
   nix.enable = true;
   toml.enable = true;

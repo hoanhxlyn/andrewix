@@ -46,6 +46,8 @@
             yaml-language-server
             sqlite
             tree-sitter
+            prettier
+            markdownlint-cli2
           ];
           viAlias = false;
           vimAlias = true;
