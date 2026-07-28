@@ -6,7 +6,7 @@
   setupOpts = {
     notify_on_error = true;
     default_format_opts = {
-      timeout_ms = 1000;
+      timeout_ms = 5000;
       lsp_format = "fallback";
       stop_after_first = true;
     };
