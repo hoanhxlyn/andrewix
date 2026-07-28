@@ -12,8 +12,7 @@ just update               # Update flake inputs (commits lock)
 just fmt && just lint     # Format + lint
 ```
 
-Hosts: `andrew-laptop`, `andrew-pc`, `andrew-home-wsl`, `andrew-work-wsl`.
-Default host auto-detected via `hostname -s`.
+Hosts: `andrew-laptop`, `andrew-pc`, `andrew-home-wsl`, `andrew-work-wsl`. Default host auto-detected via `hostname -s`.
 
 ### No Justfile?
 
@@ -27,15 +26,13 @@ alejandra . && statix check && deadnix --no-underscore --fail
 
 ## Fresh Install
 
-Provisions disks declaratively via [disko](https://github.com/nix-community/disko) —
-no manual partitioning. Wipes the target disk (btrfs `@`/`@home`/`@nix` + swapfile,
-vfat ESP).
+Provisions disks declaratively via [disko](https://github.com/nix-community/disko) — no manual partitioning. Wipes the
+target disk (btrfs `@`/`@home`/`@nix` + swapfile, vfat ESP).
 
-> **Before installing**, hand disk ownership to disko: in
-> `modules/core/hardware/disko.nix` set `disko.enableConfig = true`, and delete the
-> `fileSystems`/`swapDevices` blocks from the target host's
-> `hosts/<host>/_nixos/hardware-configuration.nix`. (They are kept `false`/by-uuid so
-> `just switch` stays safe on the currently-running ext4 machines.)
+> **Before installing**, hand disk ownership to disko: in `modules/core/hardware/disko.nix` set
+> `disko.enableConfig = true`, and delete the `fileSystems`/`swapDevices` blocks from the target host's
+> `hosts/<host>/_nixos/hardware-configuration.nix`. (They are kept `false`/by-uuid so `just switch` stays safe on the
+> currently-running ext4 machines.)
 
 1. Boot the [NixOS minimal ISO](https://nixos.org/download) and connect to network.
 
@@ -78,7 +75,8 @@ Only `andrew-laptop` / `andrew-pc` are installable (WSL hosts have no disk layou
 | `config/`              | Non-Nix app configs                |
 | `flake.nix`            | **Auto-generated. DO NOT EDIT.**   |
 
-Aspects auto-discovered. Compose via `den.aspects.<name>.includes` with angle-bracket imports (`<core/sound>`, `<core/shell>`).
+Aspects auto-discovered. Compose via `den.aspects.<name>.includes` with angle-bracket imports (`<core/sound>`,
+`<core/shell>`).
 
 ## Garbage Collection
 
@@ -89,15 +87,15 @@ just clean-up  # System-wide + delete old gens (sudo)
 
 ## Secrets
 
-Encrypted with [sops-nix](https://github.com/Mic92/sops-nix) using a shared age key.
-Only available on workstation hosts (`andrew-laptop`, `andrew-pc`) — not WSL.
+Encrypted with [sops-nix](https://github.com/Mic92/sops-nix) using a shared age key. Only available on workstation hosts
+(`andrew-laptop`, `andrew-pc`) — not WSL.
 
 - **Encrypted file:** `secrets/secrets.yaml` (safe to commit)
 - **Age key location:** `~/.config/sops-nix/keys.txt` on each host
 - **Edit secrets:** `sops secrets/secrets.yaml`
 - **Setup new host:** copy the shared age private key to `~/.config/sops-nix/keys.txt`
-- **Add a new secret:** edit `secrets/secrets.yaml` (via `sops`) then
-  declare it in `modules/core/services/sync/sops.nix` under `sops.secrets`
+- **Add a new secret:** edit `secrets/secrets.yaml` (via `sops`) then declare it in
+  `modules/core/services/sync/sops.nix` under `sops.secrets`
 
 ## More
 
@@ -105,4 +103,6 @@ See `AGENTS.md` for conventions, module patterns, and rules.
 
 ## Galerry
 
-\[![Linux PC](./config/background/workstation-pc.png) \]
+[![Linux PC](./config/background/workstation-pc.png)]
+
+[![Linux Laptop](./config/background/Shell.png)]
