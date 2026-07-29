@@ -7,7 +7,15 @@
 
   core.desktop.wm.niri = {host, ...}: let
     niriOverlay = _final: prev: {
-      niri-unstable = inputs.niri.packages.${prev.system}.niri-unstable;
+      # ponytail: niri-unstable's libdisplay-info-sys pins `libdisplay-info < 0.4.0`
+      # in cargo. nixpkgs bumped to 0.4.0. Force niri to build against 0.2.0 from
+      # nixpkgs's versioned attr (tracked via flake update, no hardcoded pin).
+      # libdisplay-info-sys 0.3.0's build.rs routes 0.2.x through the v0_2 cfg
+      # gate, so the Rust side compiles fine. Drop when niri-flake bumps niri to
+      # a Cargo.lock that allows libdisplay-info >= 0.4.0.
+      niri-unstable = (inputs.niri.lib.internal.make-package-set prev).niri-unstable.override {
+        libdisplay-info = prev.libdisplay-info_0_3;
+      };
     };
   in {
     includes = [
