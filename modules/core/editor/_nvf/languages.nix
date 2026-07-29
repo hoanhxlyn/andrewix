@@ -23,7 +23,16 @@
   };
   markdown = {
     enable = true;
-    extensions.markview-nvim.enable = false;
+    extensions.markview-nvim = {
+      enable = true;
+      setupOpts = {
+        experimental = {
+          fancy_comments = true;
+          prefer_nvim = true;
+          linewise_ignore_org_indent = true;
+        };
+      };
+    };
     lsp.servers = [
       "markdown-oxide"
     ];

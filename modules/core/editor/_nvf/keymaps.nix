@@ -312,28 +312,6 @@ in [
   }
   {
     mode = "n";
-    key = L "op";
-    desc = "Markdown: Preview (glow)";
-    lua = true;
-    action = ''
-      function()
-        Snacks.terminal.open("glow -p " .. vim.fn.shellescape(vim.fn.expand("%:p")), { win = { style = "float", enter = true } })
-      end
-    '';
-  }
-  {
-    mode = "n";
-    key = L "oP";
-    desc = "Markdown: Browse (glow TUI)";
-    lua = true;
-    action = ''
-      function()
-        Snacks.terminal.open("glow .", { win = { style = "float", enter = true } })
-      end
-    '';
-  }
-  {
-    mode = "n";
     key = L "td";
     desc = "Terminal: Destroy";
     lua = true;
@@ -796,5 +774,11 @@ in [
         vim.fn.jobstart({"${host.terminal.name}", "-e", "yazi", path})
       end
     '';
+  }
+  {
+    key = L "mp";
+    mode = "n";
+    desc = "Markview: toggle";
+    action = "<cmd>Markview toggle<cr>";
   }
 ]
