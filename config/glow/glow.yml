@@ -1,9 +1,0 @@
-# glow config — used by the nvf <leader>mp markdown preview
-style: "auto"   # follow terminal light/dark
-pager: true     # scrollable view (also passed via -p in the keymap)
-all: false
-mouse: false
-# word-wrap width. Pager mode reflows to the float's view width; this caps
-# non-pager rendering so long/complex table cells wrap instead of overflowing.
-# ponytail: fixed cap, not the live viewport width — bump if your float is wider.
-width: 120

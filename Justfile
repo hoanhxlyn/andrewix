@@ -16,11 +16,6 @@ lint:
   statix check
   deadnix --no-underscore --fail
 
-# Run nix flake check
-[group('validate')]
-check:
-  nix flake check .
-
 # Build system config
 [group('nixos')]
 build h=host *args:

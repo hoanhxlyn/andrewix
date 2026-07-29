@@ -7,7 +7,6 @@ Use Justfile shortcuts (preferred). Default host = `hostname -s` (auto-detected)
 ```bash
 just fmt          # alejandra .
 just lint         # statix check + deadnix --no-underscore --fail
-just check        # nix flake check . (eval errors)
 just build <h>    # nix run .#<h> -- build
 just boot <h>     # boot new build at next restart
 just switch <h>   # nix run .#<h> -- switch
@@ -36,11 +35,11 @@ nix flake update         # no commit
 ## Validation Pipeline (run before commit)
 
 ```bash
-just fmt && just lint && just check && just test <host>
+just fmt && just lint && just test <host>
 ```
 
-`just test` needs sudo and validates the running system; `just check` catches eval errors without sudo and is the
-cheaper fast-fail.
+`just test` needs sudo and validates the running system. Build with `just build <host>` to catch eval errors without
+sudo (slower than the deprecated `just check`, but accurate).
 
 ## Architecture
 
@@ -135,7 +134,7 @@ nix run .#write-flake    # rewrites flake.nix
 
 1. **NEVER edit `flake.nix`** — use `nix run .#write-flake`.
 2. **NEVER change `stateVersion`** (currently `26.05`, set in `modules/core/system/nix-setting.nix`).
-3. **NEVER commit without** `just fmt && just lint && just check` (add `just test <host>` when feasible).
+3. **NEVER commit without** `just fmt && just lint` (add `just test <host>` when feasible).
 4. **User: `andrew`, system: `x86_64-linux`.**
 5. **No unit tests** — validate via `just build` + `just test <host>`.
 6. **Tools installed via Nix** (`modules/core/`) — no pre-commit hooks.
