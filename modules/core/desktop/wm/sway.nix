@@ -16,7 +16,7 @@
       lockCmd = "${pkgs.swaylock-effects}/bin/swaylock -f";
       display = status:
         if status == "off"
-        then "${pkgs.niri-unstable}/bin/niri msg action power-off-monitors"
+        then "${pkgs.niri-stable}/bin/niri msg action power-off-monitors"
         else ":";
       cat = "${pkgs.coreutils}/bin/cat";
       restoreBrightness = "test -f $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness) || true";
