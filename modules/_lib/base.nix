@@ -4,7 +4,7 @@
     fontSize = 12;
     padding = 2;
     opacity = 0.8;
-    name = "alacritty";
+    name = "foot";
   };
   defaultBrowser = "zen";
   # swayidle timeouts in seconds.
