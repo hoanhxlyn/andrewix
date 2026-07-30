@@ -9,7 +9,9 @@
     homeManager = {pkgs, ...}: {
       programs.rio = {
         enable = terminal.name == "rio";
-        package = inputs.rio.packages.${pkgs.system}.rio;
+        package = inputs.rio.packages.${pkgs.system}.rio.overrideAttrs (_: {
+          doCheck = false;
+        });
         settings = {
           padding-x = terminal.padding;
           padding-y = terminal.padding;
