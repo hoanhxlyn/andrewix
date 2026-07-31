@@ -35,8 +35,8 @@
             name = "Noto Sans";
           };
           monospace = {
-            package = pkgs.nerd-fonts.adwaita-mono;
-            name = "AdwaitaMono Nerd Font";
+            package = pkgs.nerd-fonts.blex-mono;
+            name = "BlexMono Nerd Font";
           };
           emoji = {
             package = pkgs.noto-fonts-color-emoji;
