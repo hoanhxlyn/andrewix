@@ -157,7 +157,7 @@
           layout = {
             gaps = 10;
             center-focused-column = "never";
-            default-column-width = {proportion = 0.5;};
+            default-column-width = {proportion = 0.7;};
             preset-column-widths = [
               {proportion = 0.7;}
               {proportion = 0.5;}
@@ -444,7 +444,6 @@
               ];
               background-effect.blur = true;
               draw-border-with-background = false;
-              default-column-width = {proportion = 0.7;};
             }
             # Applications
             {

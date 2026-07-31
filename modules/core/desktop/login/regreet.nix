@@ -12,7 +12,7 @@
           image = config.stylix.image;
         };
       in {
-        programs.regreet = {
+        services.displayManager.regreet = {
           enable = true;
           settings.background.path = lib.mkForce "${blurredBackground}";
         };
