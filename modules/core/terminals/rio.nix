@@ -27,19 +27,6 @@
             opacity-cells = terminal.opacity < 1;
             decorations = "Disabled";
           };
-          # ponytail: Make rio works like Alacritty
-          bindings.keys = [
-            {
-              key = "c";
-              "with" = "control | shift";
-              action = "Copy";
-            }
-            {
-              key = "v";
-              "with" = "control | shift";
-              action = "Paste";
-            }
-          ];
         };
       };
     };
