@@ -138,12 +138,12 @@
     enable = mini.starter;
     setupOpts = {
       evaluate_single = true;
-      header = lib.removeSuffix "\n" (builtins.readFile "${self}/config/arts/andrewix.txt");
+      header = builtins.readFile "${self}/config/arts/andrewix.txt";
       items = lib.generators.mkLuaInline ''
         {
           require("mini.starter").sections.sessions(3),
           require("mini.starter").sections.recent_files(3, true, false),
-          require("mini.starter").sections.pick(),
+          ${lib.optionalString mini.picks ''require("mini.starter").sections.pick(),''}
           require("mini.starter").sections.builtin_actions(),
         }
       '';
@@ -390,6 +390,7 @@
         "fzf"
         "help"
         "lazy"
+        "ministarter"
         "neo-tree"
         "notify"
         "sidekick_terminal"

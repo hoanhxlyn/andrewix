@@ -1,7 +1,7 @@
 {
   lib,
   mini,
-  self,
+  ...
 }: {
   snacks-nvim = {
     enable = true;
@@ -9,7 +9,7 @@
       dashboard = {
         enabled = !mini.starter;
         preset = {
-          header = lib.removeSuffix "\n" (builtins.readFile "${self}/config/arts/andrewix.txt");
+          # header = builtins.readFile "${self}/config/arts/andrewix.txt"; #ponitail: doesn't render header correctly
           keys = [
             {
               icon = " ";
@@ -64,11 +64,6 @@
             padding = 1;
           }
           {
-            # snacks' "startup" section pulls load time from lazy.stats, which
-            # nvf (nix-managed plugins, no lazy.nvim) does not provide -> use a
-            # static footer instead. Must be raw Lua: a snacks Text needs the
-            # string as the positional [1] alongside named hl/align, which a Nix
-            # attrset can't express.
             text = lib.generators.mkLuaInline ''{ { "⚡ Nvf andrewix", hl = "footer", align = "center" } }'';
             padding = 1;
           }
@@ -113,7 +108,7 @@
       image.enabled = true;
       input.enabled = true;
       indent.enabled = !mini.indent_scope;
-      notify = {
+      notifier = {
         enabled = !mini.notify;
         style = "compact";
         margin.top = 2;

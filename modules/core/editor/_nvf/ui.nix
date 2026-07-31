@@ -1,14 +1,5 @@
 {
-  ui2 = {
-    enable = true;
-    setupOpts = {
-      msg = {
-        cmd.height = 1;
-        dialog.height = 1;
-        msg.height = 1;
-      };
-    };
-  };
+  ui2.enable = false;
   borders = {
     enable = true;
     globalStyle = "rounded";
