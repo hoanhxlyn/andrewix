@@ -4,7 +4,7 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  core.disko.nixos = {
+  core.disko.nixos = {host, ...}: {
     imports = [
       inputs.disko.nixosModules.default
     ];
@@ -57,8 +57,7 @@
                 };
                 "@swap" = {
                   mountpoint = "/.swapvol";
-                  # ponytail: 8G swapfile; bump >= RAM only if you want hibernate
-                  swap.swapfile.size = "8G";
+                  swap.swapfile.size = "${toString host.ramGB}G";
                 };
               };
             };

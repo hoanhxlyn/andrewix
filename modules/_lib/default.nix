@@ -31,6 +31,7 @@ in
     profiles ? null,
     isLaptop ? false,
     monitors ? {},
+    ramGB ? 8,
     windowsName ? null,
     login ? base.login,
     backgroundImage ? base.backgroundImage,
@@ -57,7 +58,7 @@ in
       (builtins.removeAttrs base ["profiles"])
       // {
         users = effectiveProfiles;
-        inherit login backgroundImage;
+        inherit login ramGB backgroundImage;
         terminal = base.terminal // terminal;
       };
   in

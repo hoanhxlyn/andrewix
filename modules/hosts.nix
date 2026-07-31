@@ -5,6 +5,7 @@ in {
     andrew-laptop = mkHost {
       terminal.name = "rio";
       isLaptop = true;
+      ramGB = 24;
       monitors."eDP-1" = {
         resolution = {
           width = 2880;
