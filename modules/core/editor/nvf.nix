@@ -1,7 +1,6 @@
 {
   __findFile,
   inputs,
-  lib,
   self,
   ...
 }: {
@@ -15,23 +14,26 @@
     nixos = {
       pkgs,
       host,
+      lib,
       ...
     }: let
       L = key: "<leader>${key}";
-      mini = {
+      mini = rec {
         explorer = true;
         picks = false;
-        animate = true;
-        notify = true;
-        indent_scope = true;
+        animate = false;
+        notify = false;
+        indent_scope = false;
         show_dotfiles = true;
-        starter = true; # true -> mini.starter; false -> snacks dashboard
+        starter = picks; # coupled: snacks picker <-> snacks dashboard, mini.pick <-> mini.starter
       };
     in {
       imports = [inputs.nvf.nixosModules.default];
       programs.nvf = {
         enable = true;
-        settings.vim = {
+        settings.vim = let
+          cfg = import "${self}/modules/core/editor/_nvf/config.nix" {inherit host mini;};
+        in {
           extraPackages = with pkgs; [
             ueberzugpp
             graphicsmagick
@@ -52,16 +54,26 @@
           viAlias = false;
           vimAlias = true;
           syntaxHighlighting = true;
-          enableLuaLoader = true; # Speed up startup (experimental)
-          lineNumberMode = "relNumber"; # "relative" | "number" | "relNumber"
+          enableLuaLoader = true;
+          lineNumberMode = "relNumber";
           searchCase = "smart";
-          inherit
-            (import "${self}/modules/core/editor/_nvf/config.nix" {inherit host mini;})
-            options
-            globals
-            clipboard
-            luaConfigRC
-            ;
+          inherit (cfg) options globals clipboard;
+          luaConfigRC =
+            cfg.luaConfigRC
+            // {
+              ui2 = ''
+                require("vim._core.ui2").enable({
+                  enable = true,
+                  msg = {
+                    cmd = { height = 1 },
+                    dialog = { height = 1 },
+                    msg = { height = 1, timeout = 4000 },
+                    pager = { height = 1 },
+                    targets = "cmd",
+                  },
+                })
+              '';
+            };
           inherit
             (import "${self}/modules/core/editor/_nvf/autocmds.nix" {inherit lib mini;})
             autocmds
@@ -79,8 +91,8 @@
           autocomplete.blink-cmp = import "${self}/modules/core/editor/_nvf/cmp.nix" {inherit lib;};
           mini = import "${self}/modules/core/editor/_nvf/mini.nix" {inherit lib mini self;};
           lazy = import "${self}/modules/core/editor/_nvf/lazy.nix" {inherit pkgs L;};
-          keymaps = import "${self}/modules/core/editor/_nvf/keymaps.nix" {inherit L host mini;};
-          notes.todo-comments.enable = !mini.picks; # Snacks todo_comments picker needs folke plugin; highlights via mini when picks=true
+          keymaps = import "${self}/modules/core/editor/_nvf/keymaps.nix" {inherit L host mini lib;};
+          notes.todo-comments.enable = !mini.picks;
         };
       };
     };
