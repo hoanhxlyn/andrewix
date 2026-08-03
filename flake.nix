@@ -8,6 +8,10 @@
       url = "github:hoanhxlyn/aic8800-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    compress-yazi = {
+      url = "github:KKV9/compress.yazi";
+      flake = false;
+    };
     den.url = "github:denful/den";
     disko = {
       url = "github:nix-community/disko";

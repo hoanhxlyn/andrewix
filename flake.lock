@@ -88,6 +88,22 @@
         "type": "github"
       }
     },
+    "compress-yazi": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778861224,
+        "narHash": "sha256-yts/LCDpCH9cH1pY6Im/UpCQDCyzjhSGDZfGpQDdEZc=",
+        "owner": "KKV9",
+        "repo": "compress.yazi",
+        "rev": "e60e122e565e7c4798ef22767eb363428dc6704e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "KKV9",
+        "repo": "compress.yazi",
+        "type": "github"
+      }
+    },
     "crane": {
       "locked": {
         "lastModified": 1785541369,
@@ -802,6 +818,7 @@
     "root": {
       "inputs": {
         "aic8800": "aic8800",
+        "compress-yazi": "compress-yazi",
         "den": "den",
         "disko": "disko",
         "fcitx5-lotus": "fcitx5-lotus",
