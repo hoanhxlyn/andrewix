@@ -12,6 +12,10 @@
       url = "github:saumyajyoti/omp.yazi";
       flake = false;
     };
+    compress-yazi = {
+      url = "github:KKV9/compress.yazi";
+      flake = false;
+    };
   };
   core.cli.yazi = {host, ...}: {
     nixos = {
@@ -39,6 +43,11 @@
         pname = "omp.yazi";
         version = "0-unstable-2026-02-17";
         src = inputs.omp-yazi;
+      };
+      compress = plug.mkYaziPlugin {
+        pname = "compress.yazi";
+        version = "0-unstable-2026-03-09";
+        src = inputs.compress-yazi;
       };
       yambPreview = pkgs.writeShellScript "yamb-preview" ''
         if [ -d "$1" ]; then
@@ -98,7 +107,7 @@
           inherit (plug) smart-enter;
           inherit (plug) lazygit;
           inherit (plug) git;
-          inherit (plug) compress;
+          inherit compress;
           inherit yamb;
           inherit omp;
         };
