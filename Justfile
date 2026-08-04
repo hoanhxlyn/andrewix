@@ -45,6 +45,7 @@ vm h=host *args:
 [group('nixos')]
 update:
   nix run .#write-flake
+  alejandra flake.nix
   nix flake update
 
 # User store garbage collection
