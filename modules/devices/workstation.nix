@@ -31,20 +31,17 @@
       <core.office.markdown>
       <core.editor.nvf>
       <core.hardware.logitech>
+      <core.desktop.login>
+      <core.sync.sops>
+      <core.desktop.wm.niri>
     ];
 
     andrew-laptop.provides.to-users.includes = [
       <workstation>
-      <core.desktop.wm.niri>
-      <core.desktop.login>
-      <core.sync.sops>
       <core.power-manager>
     ];
     andrew-pc.provides.to-users.includes = [
       <workstation>
-      <core.desktop.wm.niri>
-      <core.desktop.login>
-      <core.sync.sops>
       <core.nvidia>
     ];
   };
