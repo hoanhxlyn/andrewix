@@ -3,6 +3,7 @@
     homeManager = {
       pkgs,
       host,
+      lib,
       ...
     }: let
       networkScript = pkgs.writeShellScriptBin "waybar-network" ''
@@ -55,16 +56,22 @@
       stylix.targets.waybar = {
         enable = true;
         enableLeftBackColors = false;
+        background = lib.mkForce "alpha(@base00, 0.55)";
       };
 
       programs.waybar = {
         enable = true;
+        systemd.enable = true;
         style =
           /*
           css
           */
           ''
-            .modules-left #workspaces button {
+             #waybar {
+               min-height: 32px;
+             }
+
+             .modules-left #workspaces button {
               border-radius: 0;
             }
             .modules-left #workspaces button.active,
@@ -96,6 +103,7 @@
           mainBar = {
             layer = "top";
             position = "top";
+            height = 32;
             spacing = 5;
 
             modules-left = [

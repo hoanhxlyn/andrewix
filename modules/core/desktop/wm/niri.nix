@@ -16,7 +16,7 @@
     };
   in {
     includes = [
-      <core/desktop/statusbar/ironbar>
+      <core/desktop/statusbar/waybar>
       <core/desktop/waycal>
       <core/desktop/menu-launcher/fuzzel>
       <core/desktop/notification/mako>
@@ -406,9 +406,8 @@
           layer-rules = [
             {
               matches = [
-                {
-                  namespace = "^ironbar$";
-                }
+                {namespace = "^ironbar$";}
+                {namespace = "^waybar$";}
               ];
               background-effect.blur = true;
             }

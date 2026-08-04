@@ -1,6 +1,7 @@
 {
   lib,
   mini,
+  self,
   ...
 }: {
   snacks-nvim = {
@@ -9,7 +10,7 @@
       dashboard = {
         enabled = !mini.starter;
         preset = {
-          # header = builtins.readFile "${self}/config/arts/andrewix.txt"; #ponitail: doesn't render header correctly
+          header = builtins.readFile "${self}/config/arts/andrewix.txt"; #ponitail: doesn't render header correctly
           keys = [
             {
               icon = " ";
