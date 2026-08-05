@@ -20,7 +20,7 @@
       L = key: "<leader>${key}";
       mini = rec {
         explorer = false;
-        picks = false;
+        picks = true;
         animate = true;
         notify = false;
         indent_scope = false;
