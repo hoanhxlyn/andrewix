@@ -337,7 +337,7 @@
                   echo "=== TLP System ==="
                   "$tlp_stat" -s 2>/dev/null || echo "TLP system stats unavailable"
                 } > "$tmp"
-                "$terminal" --class power-panel -T "Power Panel" -e less -R "$tmp"
+                "$terminal" -e less -R "$tmp"
                 rm -f "$tmp"
               }
 
