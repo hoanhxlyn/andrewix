@@ -25,7 +25,7 @@
         enable = true;
         settings = {
           actions = true;
-          anchor = "top-center";
+          anchor = "bottom-right";
           width = 400;
           border-radius = 12;
           border-size = 2;
@@ -41,8 +41,6 @@
           sort = "-time";
           margin = host.terminal.padding;
           max-history = 10;
-          on-button-left = "invoke-default-action";
-          on-button-right = "dismiss";
           # wezterm's OSC 777 notifications send expire_timeout=0 (never expire);
           # ignore it so default-timeout applies instead of hanging forever
           "app-name=wezterm" = {
