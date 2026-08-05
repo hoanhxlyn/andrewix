@@ -25,22 +25,28 @@
         enable = true;
         settings = {
           actions = true;
-          anchor = "bottom-right";
-          width = 400;
-          border-radius = 12;
-          border-size = 2;
-          padding = "10,15";
+          anchor = host.toast.position;
+          width = host.toast.width;
+          border-radius = host.toast.border.radius;
+          border-size = host.toast.border.size;
+          padding = let
+            x = builtins.mul host.terminal.padding host.toast.padding.x;
+            y = builtins.mul host.terminal.padding host.toast.padding.y;
+          in "${toString x},${toString y}";
           # icons
           max-icon-size = builtins.mul host.terminal.fontSize 2;
           icon-border-radius = 6;
           icons = true;
           icon-path = "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark";
-          layer = "top";
+          layer = host.toast.layer;
           markup = true;
-          default-timeout = 3000;
+          default-timeout = host.toast.timeout;
           sort = "-time";
-          margin = host.terminal.padding;
-          max-history = 10;
+          outer-margin = let
+            x = builtins.mul host.terminal.padding host.toast.offset.x;
+            y = builtins.mul host.terminal.padding host.toast.offset.y;
+          in "${toString x},${toString y}";
+          max-history = host.toast.history;
           # wezterm's OSC 777 notifications send expire_timeout=0 (never expire);
           # ignore it so default-timeout applies instead of hanging forever
           "app-name=wezterm" = {

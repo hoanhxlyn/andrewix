@@ -6,6 +6,25 @@
     opacity = 0.8;
     name = "foot";
   };
+  toast = {
+    width = 400;
+    border = {
+      radius = 12;
+      size = 2;
+    };
+    layer = "top";
+    position = "bottom-right";
+    timeout = 3000;
+    history = 10;
+    offset = {
+      x = 2;
+      y = 5;
+    };
+    padding = {
+      x = 5;
+      y = 8;
+    };
+  };
   defaultBrowser = "zen";
   # swayidle timeouts in seconds.
   idle = {

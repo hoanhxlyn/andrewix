@@ -1,5 +1,5 @@
 {
-  core.desktop.notification.dunst = {
+  core.desktop.notification.dunst = {host, ...}: {
     homeManager = {pkgs, ...}: {
       gtk.iconTheme = {
         package = pkgs.papirus-icon-theme;
@@ -14,18 +14,22 @@
         };
         settings = {
           global = {
-            origin = "top-center";
-            width = 400;
-            corner_radius = 12;
-            frame_width = 2;
-            padding = 10;
-            horizontal_padding = 15;
-            layer = "top";
+            origin = host.toast.position;
+            offset = let
+              x = builtins.mul host.terminal.padding host.toast.offset.x;
+              y = builtins.mul host.terminal.padding host.toast.offset.y;
+            in "${toString x}x${toString y}";
+            width = host.toast.width;
+            corner_radius = host.toast.border.radius;
+            frame_width = host.toast.border.size;
+            padding = builtins.mul host.terminal.padding host.toast.padding.x;
+            horizontal_padding = builtins.mul host.terminal.padding host.toast.padding.y;
+            layer = host.toast.layer;
             markup = "full";
-            timeout = 3;
+            timeout = host.toast.timeout / 1000;
             sort = true;
             icon_position = "left";
-            history_length = 50;
+            history_length = host.toast.history;
             sticky_history = false;
           };
         };
