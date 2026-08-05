@@ -146,28 +146,22 @@ in
       mode = "n";
       desc = "Open explore";
       lua = true;
-      action = ''
-        function()
-          local ok = pcall(MiniFiles.open, vim.api.nvim_buf_get_name(0), false)
-          if not ok then
-            MiniFiles.open(nil, false)
+      action =
+        if mini.explorer
+        then ''
+          function()
+            local ok = pcall(MiniFiles.open, vim.api.nvim_buf_get_name(0), false)
+            if not ok then MiniFiles.open(nil, false) end
           end
-        end
-      '';
+        ''
+        else ''function() Snacks.picker.explorer() end'';
     }
     {
       key = L "E";
       mode = "n";
       desc = "Open explore (dir)";
       lua = true;
-      action = ''
-        function()
-          local ok = pcall(MiniFiles.open, nil, false)
-          if not ok then
-            MiniFiles.open(nil, false)
-          end
-        end
-      '';
+      action = "function() MiniFiles.open(nil, false) end";
     }
     {
       key = "<s-h>";

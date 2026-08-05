@@ -19,9 +19,9 @@
     }: let
       L = key: "<leader>${key}";
       mini = rec {
-        explorer = true;
+        explorer = false;
         picks = false;
-        animate = false;
+        animate = true;
         notify = false;
         indent_scope = false;
         show_dotfiles = true;
