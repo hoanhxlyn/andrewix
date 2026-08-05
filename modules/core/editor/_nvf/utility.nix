@@ -94,6 +94,10 @@
               ".git"
               "node_modules"
             ];
+            layout = {
+              preset = "sidebar";
+              width = 0.3;
+            };
           };
         };
       };
