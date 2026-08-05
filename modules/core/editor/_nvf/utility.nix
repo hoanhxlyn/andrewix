@@ -1,7 +1,6 @@
 {
   lib,
   mini,
-  self,
   ...
 }: {
   snacks-nvim = {
@@ -10,7 +9,7 @@
       dashboard = {
         enabled = !mini.starter;
         preset = {
-          header = builtins.readFile "${self}/config/arts/andrewix.txt"; #ponitail: doesn't render header correctly
+          # header = builtins.readFile "${self}/config/arts/andrewix.txt"; #ponytail: doesn't render header correctly
           keys = [
             {
               icon = " ";
@@ -111,7 +110,6 @@
       indent.enabled = !mini.indent_scope;
       notifier = {
         enabled = !mini.notify;
-        style = "compact";
         margin.top = 2;
       };
       styles.notification.wo.wrap = true;
