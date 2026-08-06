@@ -22,6 +22,7 @@
             blinking = true;
           };
           mouse.hide-when-typing = true;
+          navigation.hide-if-single = true;
           window = {
             blur = terminal.opacity < 1;
             opacity-cells = terminal.opacity < 1;
