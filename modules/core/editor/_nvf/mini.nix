@@ -318,7 +318,7 @@
     };
   };
   tabline = {
-    enable = true;
+    enable = mini.tabline;
     setupOpts = {
       show_icons = true;
       format = lib.generators.mkLuaInline ''
@@ -369,7 +369,7 @@
     setupOpts = {
       cursor.enable = false;
       scroll = {
-        enable = false;
+        enable = true;
         timing = lib.mkLuaInline ''require("mini.animate").gen_timing.quadratic({ unit = "total" }); '';
       };
       resize.enable = true;
