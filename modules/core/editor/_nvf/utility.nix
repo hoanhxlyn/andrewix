@@ -114,6 +114,7 @@
       indent.enabled = !mini.indent_scope;
       notifier = {
         enabled = !mini.notify;
+        style = "fancy";
         margin.top = 2;
       };
       styles.notification.wo.wrap = true;

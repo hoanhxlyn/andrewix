@@ -10,6 +10,20 @@
     if picks
     then m
     else s;
+  # B: mini.bufremove/bracketed keymap when tabline=true, else bufferline Ex command
+  B = key: desc: action: cmd:
+    if mini.tabline
+    then {
+      inherit key desc;
+      mode = "n";
+      lua = true;
+      inherit action;
+    }
+    else {
+      inherit key desc;
+      mode = "n";
+      action = "<cmd>${cmd}<cr>";
+    };
   # Y: yank helper — key, desc, vim.fn.expand pattern
   Y = key: desc: expand: {
     key = L key;
@@ -125,6 +139,27 @@ in
       action = "Snacks.notifier.hide";
     }
   ]
+  # bufferline-only, no mini.tabline equivalent
+  ++ lib.optionals (!mini.tabline) [
+    {
+      key = L "bl";
+      mode = "n";
+      desc = "Move buffer right";
+      action = "<cmd>BufferLineMoveNext<cr>";
+    }
+    {
+      key = L "bh";
+      mode = "n";
+      desc = "Move buffer left";
+      action = "<cmd>BufferLineMovePrev<cr>";
+    }
+    {
+      key = L "bp";
+      mode = "n";
+      desc = "Toggle pin buffer";
+      action = "<cmd>BufferLineTogglePin<cr>";
+    }
+  ]
   ++ [
     {
       key = L "j";
@@ -163,28 +198,16 @@ in
       lua = true;
       action = "function() MiniFiles.open(nil, false) end";
     }
-    {
-      key = "<s-h>";
-      mode = "n";
-      desc = "Prev buffer";
-      lua = true;
-      action = ''
-        function()
-          MiniBracketed.buffer('backward')
-        end
-      '';
-    }
-    {
-      key = "<s-l>";
-      mode = "n";
-      desc = "Next buffer";
-      lua = true;
-      action = ''
-        function()
-          MiniBracketed.buffer('forward')
-        end
-      '';
-    }
+    (B "<s-h>" "Prev buffer" ''
+      function()
+        MiniBracketed.buffer('backward')
+      end
+    '' "BufferLineCyclePrev")
+    (B "<s-l>" "Next buffer" ''
+      function()
+        MiniBracketed.buffer('forward')
+      end
+    '' "BufferLineCycleNext")
     {
       key = L "bd";
       mode = "n";
@@ -228,55 +251,37 @@ in
         end
       '';
     }
-    {
-      key = L "bo";
-      mode = "n";
-      desc = "Delete other buffers";
-      lua = true;
-      action = ''
-        function()
-          local cur = vim.api.nvim_get_current_buf()
-          for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-            if vim.bo[buf].buflisted and buf ~= cur then
-              MiniBufremove.delete(buf, true)
-            end
+    (B (L "bo") "Delete other buffers" ''
+      function()
+        local cur = vim.api.nvim_get_current_buf()
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.bo[buf].buflisted and buf ~= cur then
+            MiniBufremove.delete(buf, true)
           end
         end
-      '';
-    }
-    {
-      key = L "bL";
-      mode = "n";
-      desc = "Delete buffers to the right";
-      lua = true;
-      action = ''
-        function()
-          local cur = vim.fn.bufnr()
-          local bufs = vim.tbl_filter(function(b) return vim.bo[b].buflisted end, vim.api.nvim_list_bufs())
-          local after = false
-          for _, b in ipairs(bufs) do
-            if after then MiniBufremove.delete(b, true)
-            elseif b == cur then after = true end
-          end
+      end
+    '' "BufferLineCloseOthers")
+    (B (L "bL") "Delete buffers to the right" ''
+      function()
+        local cur = vim.fn.bufnr()
+        local bufs = vim.tbl_filter(function(b) return vim.bo[b].buflisted end, vim.api.nvim_list_bufs())
+        local after = false
+        for _, b in ipairs(bufs) do
+          if after then MiniBufremove.delete(b, true)
+          elseif b == cur then after = true end
         end
-      '';
-    }
-    {
-      key = L "bH";
-      mode = "n";
-      desc = "Delete buffers to the left";
-      lua = true;
-      action = ''
-        function()
-          local cur = vim.fn.bufnr()
-          local bufs = vim.tbl_filter(function(b) return vim.bo[b].buflisted end, vim.api.nvim_list_bufs())
-          for _, b in ipairs(bufs) do
-            if b == cur then break end
-            MiniBufremove.delete(b, true)
-          end
+      end
+    '' "BufferLineCloseRight")
+    (B (L "bH") "Delete buffers to the left" ''
+      function()
+        local cur = vim.fn.bufnr()
+        local bufs = vim.tbl_filter(function(b) return vim.bo[b].buflisted end, vim.api.nvim_list_bufs())
+        for _, b in ipairs(bufs) do
+          if b == cur then break end
+          MiniBufremove.delete(b, true)
         end
-      '';
-    }
+      end
+    '' "BufferLineCloseLeft")
     {
       mode = "n";
       key = L "tn";
