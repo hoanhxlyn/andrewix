@@ -25,7 +25,7 @@
         notify = false;
         indent_scope = false;
         show_dotfiles = true;
-        tabline = true;
+        tabline = false;
         starter = picks; # coupled: snacks picker <-> snacks dashboard, mini.pick <-> mini.starter
       };
     in {

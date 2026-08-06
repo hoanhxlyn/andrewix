@@ -36,7 +36,7 @@
           };
           monospace = {
             package = pkgs.nerd-fonts.monaspace;
-            name = "MonaspiceRn Nerd Font Propo";
+            name = "MonaspiceXe Nerd Font";
           };
           emoji = {
             package = pkgs.noto-fonts-color-emoji;
