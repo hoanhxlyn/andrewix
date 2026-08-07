@@ -87,7 +87,12 @@
       '';
       programs.yazi = {
         enable = true;
-        settings.mgr.show_hidden = true;
+        settings.mgr = {
+          show_hidden = true;
+          sort_by = "mtime";
+          sort_reverse = true;
+          linemode = "size";
+        };
         # csv is text/* → yazi defaults to $EDITOR; open in calc instead
         settings.opener.calc = [
           {
