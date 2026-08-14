@@ -16,10 +16,11 @@
           WantedBy = ["default.target"];
         };
         Service = {
-          Type = "simple";
+          Type = "notify";
           ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p /home/andrew/${path}";
           ExecStart = ''
             ${pkgs.rclone}/bin/rclone mount gdrive: /home/andrew/${path} \
+            --allow-non-empty \
             --vfs-cache-max-age 24h \
             --dir-cache-time 1h \
             --poll-interval 1m \
