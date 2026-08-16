@@ -36,6 +36,7 @@ in
     login ? base.login,
     backgroundImage ? base.backgroundImage,
     terminal ? base.terminal,
+    powerManagement ? {},
   }: let
     workstation = {
       inherit isLaptop;
@@ -58,7 +59,7 @@ in
       (builtins.removeAttrs base ["profiles"])
       // {
         users = effectiveProfiles;
-        inherit login ramGB backgroundImage;
+        inherit login ramGB backgroundImage powerManagement;
         terminal = base.terminal // terminal;
       };
   in

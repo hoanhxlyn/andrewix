@@ -35,9 +35,6 @@
         pname = "yamb.yazi";
         version = "0-unstable-2026-07-18";
         src = inputs.yamb-yazi;
-        postPatch = ''
-          substituteInPlace main.lua --replace-fail 'ya.hide()' 'ui.hide()'
-        '';
       };
       omp = plug.mkYaziPlugin {
         pname = "omp.yazi";

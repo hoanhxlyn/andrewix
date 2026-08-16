@@ -20,7 +20,8 @@
         else ":";
       cat = "${pkgs.coreutils}/bin/cat";
       restoreBrightness = "test -f $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness) || true";
-      inherit (host) idle;
+      inherit (host) powerManagement;
+      enableSwayidle = with powerManagement; dim != null || lock != null || monitorOff != null || suspend != null;
     in {
       home.packages = with pkgs; [swaybg brightnessctl];
       programs.swaylock = {
@@ -36,31 +37,35 @@
         };
       };
       services.swayidle = {
-        enable = true;
+        enable = enableSwayidle;
         events = {
           before-sleep = lockCmd;
           after-resume = "${display "on"}; ${restoreBrightness}";
         };
         timeouts =
-          lib.optionals isLaptop [
+          lib.optionals (isLaptop && powerManagement.dim != null) [
             {
-              timeout = idle.dim;
+              timeout = powerManagement.dim;
               command = "[ \"$(/run/current-system/sw/bin/tlp-stat -m 2>/dev/null)\" = \"performance/AC\" ] || { ${pkgs.brightnessctl}/bin/brightnessctl get > $XDG_RUNTIME_DIR/swayidle-brightness && ${pkgs.brightnessctl}/bin/brightnessctl set 10%; }";
               resumeCommand = "${pkgs.brightnessctl}/bin/brightnessctl set $(${cat} $XDG_RUNTIME_DIR/swayidle-brightness)";
             }
           ]
-          ++ [
+          ++ lib.optionals (powerManagement.lock != null) [
             {
-              timeout = idle.lock;
+              timeout = powerManagement.lock;
               command = lockCmd;
             }
+          ]
+          ++ lib.optionals (powerManagement.monitorOff != null) [
             {
-              timeout = idle.monitorOff;
+              timeout = powerManagement.monitorOff;
               command = display "off";
               resumeCommand = display "on";
             }
+          ]
+          ++ lib.optionals (powerManagement.suspend != null) [
             {
-              timeout = idle.suspend;
+              timeout = powerManagement.suspend;
               command = "${pkgs.systemd}/bin/systemctl suspend --ignore-inhibitors";
             }
           ];

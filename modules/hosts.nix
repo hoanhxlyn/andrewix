@@ -28,6 +28,13 @@ in {
     };
     andrew-pc = mkHost {
       terminal.name = "rio";
+      powerManagement = {
+        profile = "performance";
+        suspend = null;
+        monitorOff = null;
+        dim = null;
+        lock = null;
+      };
       monitors."HDMI-A-1" = {
         resolution = {
           width = 1920;
