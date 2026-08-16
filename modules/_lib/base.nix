@@ -26,13 +26,6 @@
     };
   };
   defaultBrowser = "zen";
-  # swayidle timeouts in seconds.
-  idle = {
-    dim = 60; # laptop only, dim brightness
-    lock = 300;
-    monitorOff = 600;
-    suspend = 7200;
-  };
   profiles.andrew = {};
   # First-boot password (fresh installs + `just vm`); existing machines keep
   # their mutable /etc/shadow password. Change after install with: passwd
