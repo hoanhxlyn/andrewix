@@ -25,8 +25,11 @@
           settings = {
             git = {
               fetchAll = true;
-              pagers = [
-                {externalDiffCommand = "difft --color=always --display=inline";}
+              diffRenderers = [
+                {
+                  type = "extDiff";
+                  command = "difft --color=always --display=inline";
+                }
               ];
             };
             gui = {
