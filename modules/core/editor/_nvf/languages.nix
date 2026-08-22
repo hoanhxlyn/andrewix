@@ -19,7 +19,6 @@
   lua = {
     enable = true;
     extraDiagnostics.types = ["selene"];
-    lsp.lazydev.enable = true;
   };
   markdown = {
     enable = true;
