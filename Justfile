@@ -54,11 +54,25 @@ gc:
   nix store gc
   nix store optimise
 
+# Clean old kernel files from /boot (keeps current + 1 previous)
+[group('nixos')]
+boot-clean:
+  #!/usr/bin/env bash
+  set -uo pipefail
+  current=$(readlink /run/current-system/kernel | grep -oP 'linux-\K[0-9.]+')
+  echo "Current kernel: $current"
+  sudo find /boot/kernels/ -maxdepth 1 -type f ! -name "*$current*" -exec sh -c 'echo "Removing: $1"; sudo rm "$1"' _ {} \;
+  # GRUB only — systemd-boot manages its own entries
+  if [ -d /boot/grub ]; then
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+  fi
+
 # System-wide GC, delete old gens (user profile + system, keep 7d)
 [group('nixos')]
 clean-up:
   nix profile wipe-history --older-than 7d
   nix-collect-garbage -d --delete-older-than 7d
+  just boot-clean
   nix store optimise
 
 # Search nix packages
