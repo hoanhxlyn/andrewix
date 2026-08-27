@@ -54,14 +54,20 @@ gc:
   nix store gc
   nix store optimise
 
-# Clean old kernel files from /boot (keeps current + 1 previous)
+# Clean old kernel files from /boot (backs up current first)
 [group('nixos')]
 boot-clean:
   #!/usr/bin/env bash
-  set -uo pipefail
+  set -euo pipefail
+  if [ ! -d /boot/kernels ]; then exit 0; fi
   current=$(readlink /run/current-system/kernel | grep -oP 'linux-\K[0-9.]+')
+  [ -n "$current" ] || { echo "Failed to detect current kernel"; exit 1; }
   echo "Current kernel: $current"
-  sudo find /boot/kernels/ -maxdepth 1 -type f ! -name "*$current*" -exec sh -c 'echo "Removing: $1"; sudo rm "$1"' _ {} \;
+  backup_dir=/var/backups/nixos-kernels
+  sudo rm -rf "$backup_dir"
+  sudo mkdir -p "$backup_dir"
+  sudo find /boot/kernels/ -maxdepth 1 -type f -name "*$current*" -exec cp -t "$backup_dir" {} +
+  sudo find /boot/kernels/ -maxdepth 1 -type f ! -name "*$current*" -delete
   # GRUB only — systemd-boot manages its own entries
   if [ -d /boot/grub ]; then
     sudo grub-mkconfig -o /boot/grub/grub.cfg
