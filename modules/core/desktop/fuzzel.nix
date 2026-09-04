@@ -28,7 +28,6 @@
       };
 
       home.file.".local/share/icons/hicolor/48x48/apps/yazi.png".source = "${pkgs.yazi}/share/pixmaps/yazi.png";
-      home.file.".local/share/icons/hicolor/48x48/apps/cursor.png".source = "${pkgs.code-cursor}/share/icons/hicolor/1024x1024/apps/cursor.png";
 
       # Utilities scripts
       home.packages =

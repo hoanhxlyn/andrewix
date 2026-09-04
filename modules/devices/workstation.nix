@@ -25,7 +25,7 @@
       <core.sync.rclone>
       <core.sync.keepassxc>
       # <core.editor.vscode>
-      <core.editor.cursor>
+      # <core.editor.cursor>
       <core.terminals>
       <core.vm.podman>
       <core.office.markdown>

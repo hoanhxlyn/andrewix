@@ -1,7 +1,7 @@
 {__findFile, ...}: {
   core.cli.essentials = {
     includes = [
-      (<den.batteries.unfree> ["ngrok"])
+      (<den/batteries/unfree> ["ngrok"])
       <core/cli/node>
       <core/cli/tunneling>
       ({host, ...}:
@@ -32,7 +32,6 @@
         wget
         wl-clipboard
         sonar-scanner-cli
-        sd
       ];
       programs = {
         jq.enable = true;
