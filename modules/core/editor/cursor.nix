@@ -6,7 +6,7 @@
 }: {
   core.editor.cursor = {
     includes = [
-      (<den.batteries.unfree> ["cursor"])
+      (<den/batteries/unfree> ["cursor"])
     ];
     homeManager = {pkgs, ...}: let
       fmt = pkgs.formats.json {};

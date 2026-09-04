@@ -121,4 +121,5 @@
     };
   };
   images.image-nvim.enable = true;
+  grug-far-nvim.enable = true;
 }
