@@ -2,6 +2,7 @@
   lib,
   mini,
   self,
+  leaderGroups,
 }: {
   ai = {
     enable = true;
@@ -424,7 +425,7 @@
     };
   };
   visits.enable = true;
-  clue = {
+  clue = lib.optionalAttrs mini.clues {
     enable = true;
     setupOpts = {
       window.config = {
@@ -435,76 +436,15 @@
       };
 
       clues =
-        (map ({
-            keys,
-            desc,
-          }: {
-            mode = "n";
-            inherit keys desc;
-          }) [
-            {
-              keys = "<leader>a";
-              desc = "+ Agents";
-            }
-            {
-              keys = "<leader>b";
-              desc = "+ Buffers";
-            }
-            {
-              keys = "<leader>c";
-              desc = "+ Code";
-            }
-            {
-              keys = "<leader>cs";
-              desc = "+ Code spell";
-            }
-            {
-              keys = "<leader>d";
-              desc = "+ Debugger";
-            }
-            {
-              keys = "<leader>f";
-              desc = "+ Find";
-            }
-            {
-              keys = "<leader>g";
-              desc = "+ Git";
-            }
-            {
-              keys = "<leader>l";
-              desc = "+ Lsp";
-            }
-            {
-              keys = "<leader>n";
-              desc = "+ Notify";
-            }
-            {
-              keys = "<leader>s";
-              desc = "+ Sessions";
-            }
-            {
-              keys = "<leader>p";
-              desc = "+ Package";
-            }
-            {
-              keys = "<leader>t";
-              desc = "+ Terminal";
-            }
-            {
-              keys = "<leader>w";
-              desc = "+ Window";
-            }
-            {
-              keys = "<leader>y";
-              desc = "+ Yank";
-            }
-          ])
+        (map (key: {
+          mode =
+            if key == "o"
+            then ["n" "x" "i"]
+            else "n";
+          keys = "<leader>${key}";
+          desc = "+ ${leaderGroups.${key}}";
+        }) (builtins.attrNames leaderGroups))
         ++ [
-          {
-            mode = ["n" "x" "i"];
-            keys = "<leader>o";
-            desc = "+ Operators";
-          }
           (lib.generators.mkLuaInline "require('mini.clue').gen_clues.builtin_completion()")
           (lib.generators.mkLuaInline "require('mini.clue').gen_clues.g()")
           (lib.generators.mkLuaInline "require('mini.clue').gen_clues.marks()")

@@ -26,6 +26,7 @@
         indent_scope = false;
         show_dotfiles = true;
         tabline = false;
+        clues = false;
         starter = picks; # coupled: snacks picker <-> snacks dashboard, mini.pick <-> mini.starter
       };
     in {
@@ -34,6 +35,7 @@
         enable = true;
         settings.vim = let
           cfg = import "${self}/modules/core/editor/_nvf/config.nix" {inherit host mini;};
+          keymapsData = import "${self}/modules/core/editor/_nvf/keymaps.nix" {inherit L host mini lib;};
         in {
           extraPackages = with pkgs; [
             ueberzugpp
@@ -91,10 +93,17 @@
           pluginRC = import "${self}/modules/core/editor/_nvf/plugin-rc.nix" {inherit inputs lib;};
 
           autocomplete.blink-cmp = import "${self}/modules/core/editor/_nvf/cmp.nix" {inherit lib;};
-          mini = import "${self}/modules/core/editor/_nvf/mini.nix" {inherit lib mini self;};
+          mini = import "${self}/modules/core/editor/_nvf/mini.nix" {
+            inherit lib mini self;
+            inherit (keymapsData) leaderGroups;
+          };
           lazy = import "${self}/modules/core/editor/_nvf/lazy.nix" {inherit pkgs L;};
-          keymaps = import "${self}/modules/core/editor/_nvf/keymaps.nix" {inherit L host mini lib;};
+          inherit (keymapsData) keymaps;
           notes.todo-comments.enable = !mini.picks;
+          binds.whichKey = import "${self}/modules/core/editor/_nvf/which-key.nix" {
+            inherit mini lib;
+            inherit (keymapsData) leaderGroups;
+          };
         };
       };
     };
