@@ -233,7 +233,7 @@
               *Audio)     fuzzel-audio ;;
               *Emoji)     fuzzel-emoji ;;
               *Font)      fuzzel-font ;;
-              *Bluetooth) blueman-manager ;;
+              *Bluetooth) ${terminal.name} -e bluetui ;;
               ${lib.optionalString isLaptop ''*Battery) fuzzel-battery ;;''}
               *Notification) fuzzel-notifications ;;
               *Power)     fuzzel-power ;;
