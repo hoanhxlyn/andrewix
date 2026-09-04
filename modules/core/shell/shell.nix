@@ -31,7 +31,6 @@
           cd = "z";
           cat = "bat";
           grep = "rg";
-          sed = "sd";
         };
         plugins = with pkgs.fishPlugins; [
           {

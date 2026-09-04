@@ -1,6 +1,6 @@
 {
   core.office.libreoffice.homeManager = {pkgs, ...}: {
-    home.packages = [pkgs.libreoffice-fresh];
+    home.packages = [pkgs.libreoffice-stable];
 
     xdg.mimeApps = {
       enable = true;
