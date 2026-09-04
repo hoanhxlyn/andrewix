@@ -64,7 +64,7 @@
         Unit = {
           Description = "Keepassxc";
           After = [
-            "graphical-session-pre.target"
+            "graphical-session.target"
             "rclone-gdrive.service"
           ];
           Requires = ["rclone-gdrive.service"];
@@ -75,7 +75,10 @@
         Service = {
           Type = "simple";
           # Kill lingering gnome-keyring-daemon so KeePassXC can own Secret Service
-          ExecStartPre = "-${pkgs.procps}/bin/pkill -9 gnome-keyring-daemon";
+          ExecStartPre = [
+            "-${pkgs.procps}/bin/pkill -9 gnome-keyring-daemon"
+            "${pkgs.coreutils}/bin/sleep 3"
+          ];
           ExecStart = "${pkgs.keepassxc}/bin/keepassxc";
           Restart = "on-failure";
           RestartSec = "10s";
