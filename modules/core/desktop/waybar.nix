@@ -223,7 +223,7 @@
               format-no-controller = "";
               format-connected = "󰂱 {device_alias}";
               format-connected-battery = "󰂱 {device_alias} {device_battery_percentage}%";
-              on-click = "blueman-manager";
+              on-click = "${host.terminal.name} -e bluetui";
               tooltip-format = "{controller_alias}\t{controller_address}\n\n{num_connections} connected";
               tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
               tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";

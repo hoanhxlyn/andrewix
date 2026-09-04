@@ -35,7 +35,7 @@
         grim
         xwayland-satellite
         networkmanagerapplet
-        blueman
+        bluetui
       ];
       programs.niri = {
         enable = true;
@@ -220,7 +220,7 @@
                 };
                 "Mod+Ctrl+B" = {
                   hotkey-overlay.title = "Bluetooth";
-                  action.spawn = ["blueman-manager"];
+                  action.spawn = [terminalName "-e" "bluetui"];
                 };
                 "Mod+Y" = {
                   hotkey-overlay.title = "Clipboard";
@@ -428,7 +428,6 @@
                   app-id = "helium";
                   title = "Picture-in-Picture";
                 }
-                {app-id = "^.blueman-manager-wrapped$";}
               ];
               open-floating = true;
             }
