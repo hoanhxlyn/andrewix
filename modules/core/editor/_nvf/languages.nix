@@ -26,7 +26,7 @@
       enable = true;
       setupOpts = {
         experimental = {
-          fancy_comments = true;
+          fancy_comments = false;
           prefer_nvim = true;
           linewise_ignore_org_indent = true;
         };
