@@ -19,7 +19,6 @@
         command = lib.getExe pkgs.oxfmt;
         require_cwd = true;
       };
-      stylua = {};
       prettier = {
         prepend_args = lib.mkForce (lib.generators.mkLuaInline ''
           function(self, ctx)

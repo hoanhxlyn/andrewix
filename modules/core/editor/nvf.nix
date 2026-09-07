@@ -60,23 +60,7 @@
           enableLuaLoader = true;
           lineNumberMode = "relNumber";
           searchCase = "smart";
-          inherit (cfg) options globals clipboard;
-          luaConfigRC =
-            cfg.luaConfigRC
-            // {
-              ui2 = ''
-                require("vim._core.ui2").enable({
-                  enable = true,
-                  msg = {
-                    cmd = { height = 1 },
-                    dialog = { height = 1 },
-                    msg = { height = 1, timeout = 4000 },
-                    pager = { height = 1 },
-                    targets = "cmd",
-                  },
-                })
-              '';
-            };
+          inherit (cfg) options globals clipboard luaConfigRC;
           inherit
             (import "${self}/modules/core/editor/_nvf/autocmds.nix" {inherit lib mini;})
             autocmds
