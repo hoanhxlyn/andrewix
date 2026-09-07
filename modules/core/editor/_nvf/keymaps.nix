@@ -716,25 +716,11 @@ in {
         action = ''toggle_blame'';
       }
       {
-        key = L "gd";
-        mode = "n";
-        desc = "Git: diff against commit";
-        lua = true;
-        action = ''diff_this'';
-      }
-      {
         key = L "gh";
         mode = "n";
         desc = "Git: toggle overlay";
         lua = true;
         action = ''require("mini.diff").toggle_overlay'';
-      }
-      {
-        key = L "gt";
-        mode = "n";
-        desc = "Git: toggle diff style";
-        lua = true;
-        action = ''toggle_diff_style'';
       }
       {
         key = L "gC";
