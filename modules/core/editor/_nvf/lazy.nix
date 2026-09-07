@@ -1,11 +1,22 @@
 {
   pkgs,
   L,
-}: {
+}: let
+  inherit
+    (pkgs.vimPlugins)
+    sidekick-nvim
+    nvim-navic
+    mini-sessions
+    mini-keymap
+    nvim-ts-context-commentstring
+    diffview-nvim
+    SchemaStore-nvim
+    ;
+in {
   enable = true;
   plugins = {
-    ${pkgs.vimPlugins.sidekick-nvim.pname} = {
-      package = pkgs.vimPlugins.sidekick-nvim;
+    ${sidekick-nvim.pname} = {
+      package = sidekick-nvim;
       setupModule = "sidekick";
       setupOpts = {
         nes.enable = false;
@@ -48,8 +59,8 @@
         }
       ];
     };
-    ${pkgs.vimPlugins.nvim-navic.pname} = {
-      package = pkgs.vimPlugins.nvim-navic;
+    ${nvim-navic.pname} = {
+      package = nvim-navic;
       setupModule = "nvim-navic";
       lazy = true;
       event = ["LspAttach"];
@@ -62,8 +73,8 @@
         vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}";
       '';
     };
-    ${pkgs.vimPlugins.mini-sessions.pname} = {
-      package = pkgs.vimPlugins.mini-sessions;
+    ${mini-sessions.pname} = {
+      package = mini-sessions;
       after = ''
         vim.keymap.set("n", "<leader>ss", function()
           local default_sessions = "session-" .. os.date("%Y%m%d-%H%M%S")
@@ -95,8 +106,8 @@
         })
       '';
     };
-    ${pkgs.vimPlugins.mini-keymap.pname} = {
-      package = pkgs.vimPlugins.mini-keymap;
+    ${mini-keymap.pname} = {
+      package = mini-keymap;
       after = ''
         local MiniKeymap = require('mini.keymap')
         local map_combo = MiniKeymap.map_combo
@@ -109,15 +120,15 @@
         map_multistep("i", "<cr>", {"pmenu_accept", "minipairs_cr"})
       '';
     };
-    ${pkgs.vimPlugins.nvim-ts-context-commentstring.pname} = {
-      package = pkgs.vimPlugins.nvim-ts-context-commentstring;
+    ${nvim-ts-context-commentstring.pname} = {
+      package = nvim-ts-context-commentstring;
       lazy = true;
       setupOpts = {
         enable_autocmd = false;
       };
     };
-    ${pkgs.vimPlugins.diffview-nvim.pname} = {
-      package = pkgs.vimPlugins.diffview-nvim;
+    ${diffview-nvim.pname} = {
+      package = diffview-nvim;
       keys = [
         {
           mode = "n";
@@ -139,8 +150,8 @@
         }
       ];
     };
-    ${pkgs.vimPlugins.SchemaStore-nvim.pname} = {
-      package = pkgs.vimPlugins.SchemaStore-nvim;
+    ${SchemaStore-nvim.pname} = {
+      package = SchemaStore-nvim;
     };
   };
 }

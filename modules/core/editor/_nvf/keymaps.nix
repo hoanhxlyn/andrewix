@@ -75,7 +75,7 @@ in {
       {
         key = L "wq";
         mode = "n";
-        action = "q";
+        action = "<cmd>q<CR>";
       }
       {
         key = L "cf";

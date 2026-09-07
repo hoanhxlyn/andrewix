@@ -336,7 +336,35 @@
               icon = "󰀦 "
             end
           end
-          return string.format(" %s %s %s", icon, label, is_edited)
+          -- ponytail: mini.tabline has no offsets; pad first tab when snacks explorer sidebar is open on the left
+          local pad = ""
+          local first_buf = nil
+          for _, b in ipairs(vim.fn.getbufinfo({ buflisted = 1 })) do
+            if first_buf == nil or b.bufnr < first_buf then
+              first_buf = b.bufnr
+            end
+          end
+          if buf_id == first_buf then
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+              local ft = vim.bo[vim.api.nvim_win_get_buf(win)].filetype
+              if ft == "snacks_picker_list" or ft == "snacks_picker_input" then
+                local cfg = vim.api.nvim_win_get_config(win)
+                local width, is_left = cfg.width or 30, false
+                if cfg.relative == "" and cfg.col == 0 then
+                  is_left = true
+                elseif cfg.relative == "win" and cfg.col == 0 and cfg.win then
+                  is_left = true
+                  width = vim.api.nvim_win_get_width(cfg.win)
+                end
+                if is_left then
+                  pad = string.rep(" ", width)
+                  break
+                end
+              end
+            end
+          end
+
+          return string.format("%s %s %s %s", pad, icon, label, is_edited)
         end
       '';
     };
