@@ -1,8 +1,10 @@
 {
   inputs,
   lib,
-}: {
-  extra-lint = inputs.nvf.lib.nvim.dag.entryAnywhere ''
+}: let
+  inherit (inputs.nvf.lib.nvim.dag) entryAnywhere entryAfter;
+in {
+  extra-lint = entryAnywhere ''
     local ok, lint = pcall(require, "lint")
     if ok then
       lint.linters_by_ft = vim.tbl_extend("force", lint.linters_by_ft or {}, {
@@ -15,16 +17,16 @@
       })
     end
   '';
-  mini-icons-mock = inputs.nvf.lib.nvim.dag.entryAnywhere ''
+  mini-icons-mock = entryAnywhere ''
     MiniIcons.mock_nvim_web_devicons()
   '';
-  iskeyword-append = inputs.nvf.lib.nvim.dag.entryAnywhere ''
+  iskeyword-append = entryAnywhere ''
     vim.opt.iskeyword:append({ "@", "-" })
   '';
-  ts-error-translator = lib.mkForce (inputs.nvf.lib.nvim.dag.entryAnywhere ''
+  ts-error-translator = lib.mkForce (entryAnywhere ''
     require("ts-error-translator").setup({ auto_attach = true })
   '');
-  snacks-terminal-helpers = inputs.nvf.lib.nvim.dag.entryAfter ["snacks-nvim"] ''
+  snacks-terminal-helpers = entryAfter ["snacks-nvim"] ''
     local function get_terms()
       local terms = {}
       for i = 1, 20 do
@@ -56,7 +58,7 @@
     end
     _G.get_terms = get_terms
   '';
-  mini-git-blame = inputs.nvf.lib.nvim.dag.entryAnywhere ''
+  mini-git-blame = entryAnywhere ''
     local blame_enabled = true
     local au_group = vim.api.nvim_create_augroup("MiniGitBlameGroup", { clear = true })
     local ns_id = vim.api.nvim_create_namespace("MiniGitBlame")

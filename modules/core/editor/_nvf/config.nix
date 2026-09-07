@@ -17,6 +17,8 @@ in {
     foldenable = true;
     scrolloff = 3;
     showmode = false;
+    showcmd = false;
+    cmdheight = 0;
     formatoptions = "jcroqlnt";
     grepformat = "%f:%l:%c:%m";
     grepprg = "rg; --vimgrep";
