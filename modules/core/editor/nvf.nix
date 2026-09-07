@@ -72,6 +72,7 @@
           diagnostics = import "${self}/modules/core/editor/_nvf/diagnostics.nix" {inherit lib self;};
           languages = import "${self}/modules/core/editor/_nvf/languages.nix";
           ui = import "${self}/modules/core/editor/_nvf/ui.nix";
+          visuals = import "${self}/modules/core/editor/_nvf/visuals.nix";
           tabline = import "${self}/modules/core/editor/_nvf/tabline.nix" {inherit lib mini;};
           utility = import "${self}/modules/core/editor/_nvf/utility.nix" {inherit lib mini self;};
           pluginRC = import "${self}/modules/core/editor/_nvf/plugin-rc.nix" {inherit inputs lib;};
