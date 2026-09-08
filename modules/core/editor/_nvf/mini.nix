@@ -240,7 +240,7 @@
     };
   };
   statusline = {
-    enable = true;
+    enable = mini.statusline;
     setupOpts = {
       content = {
         active = lib.generators.mkLuaInline ''

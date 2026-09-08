@@ -19,13 +19,14 @@
     }: let
       L = key: "<leader>${key}";
       mini = rec {
-        explorer = false;
+        explorer = true;
         picks = true;
-        animate = true;
+        animate = false;
         notify = false;
         indent_scope = false;
         show_dotfiles = true;
         tabline = true;
+        statusline = false;
         clues = false;
         starter = picks; # coupled: snacks picker <-> snacks dashboard, mini.pick <-> mini.starter
       };
@@ -74,9 +75,9 @@
           ui = import "${self}/modules/core/editor/_nvf/ui.nix";
           visuals = import "${self}/modules/core/editor/_nvf/visuals.nix";
           tabline = import "${self}/modules/core/editor/_nvf/tabline.nix" {inherit lib mini;};
+          statusline = import "${self}/modules/core/editor/_nvf/statusline.nix" {inherit mini;};
           utility = import "${self}/modules/core/editor/_nvf/utility.nix" {inherit lib mini self;};
           pluginRC = import "${self}/modules/core/editor/_nvf/plugin-rc.nix" {inherit inputs lib;};
-
           autocomplete.blink-cmp = import "${self}/modules/core/editor/_nvf/cmp.nix" {inherit lib;};
           mini = import "${self}/modules/core/editor/_nvf/mini.nix" {
             inherit lib mini self;
