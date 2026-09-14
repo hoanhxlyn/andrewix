@@ -10,6 +10,7 @@
     "${self}/config/markdownlint/config.yaml"
     "-"
   ];
+  presets.biomejs.enable = true;
   config = {
     severity_sort = true;
     float = {
