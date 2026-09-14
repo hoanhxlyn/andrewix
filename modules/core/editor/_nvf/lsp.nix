@@ -16,16 +16,15 @@
   };
   presets = {
     tailwindcss-language-server.enable = true;
-    typescript-go.enable = true;
     vscode-css-language-server.enable = true;
   };
   servers = {
-    typescript-go.filetypes = [
-      "typescript"
-      "javascript"
-      "typescriptreact"
-      "javascriptreact"
-    ];
+    # typescript-go.filetypes = [
+    #   "typescript"
+    #   "javascript"
+    #   "typescriptreact"
+    #   "javascriptreact"
+    # ];
 
     tailwindcss-languages-server.settings.tailwindCSS.classFunctions = [
       "cva"

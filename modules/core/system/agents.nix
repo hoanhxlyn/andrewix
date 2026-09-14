@@ -44,7 +44,7 @@
           };
         };
         opencode = {
-          enable = true;
+          enable = false;
           package =
             if (osConfig.wsl.enable or false)
             then null
@@ -159,9 +159,9 @@
           enableMcpIntegration = true;
         };
       };
-      home.activation.installOpencode = lib.mkIf (osConfig.wsl.enable or false) ''
-        if ! command -v opencode &>/dev/null; then
-          ${pkgs.bun}/bin/bun add -g opencode-ai
+      home.activation.installMimo = ''
+        if ! command -v mimo &>/dev/null; then
+          ${pkgs.bun}/bin/bun add -g @mimo-ai/cli
         fi
       '';
     };

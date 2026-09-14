@@ -52,7 +52,6 @@
       "biome"
       "prettier"
     ];
-    lsp.servers = ["typescript-go"];
   };
   yaml.enable = true;
   fish.enable = true;
