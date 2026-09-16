@@ -22,6 +22,11 @@ in {
         nes.enable = false;
         cli.win.layout = "right";
         cli.win.split.width = 80;
+        cli.tools = {
+          mimo = {
+            cmd = ["mimo" "-c"];
+          };
+        };
       };
       keys = [
         {
