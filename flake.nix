@@ -54,10 +54,6 @@
       url = "github:saumyajyoti/omp.yazi";
       flake = false;
     };
-    opencode = {
-      url = "github:anomalyco/opencode";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     rio = {
       url = "github:raphamorim/rio/main";
       inputs.nixpkgs.follows = "nixpkgs";
