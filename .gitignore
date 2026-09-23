@@ -2,5 +2,4 @@ result
 .claude/*
 .direnv/
 *.qcow2
-.opencode/
-.mimocode/
+/.*code/
