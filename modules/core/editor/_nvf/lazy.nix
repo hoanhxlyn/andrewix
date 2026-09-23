@@ -22,10 +22,12 @@ in {
         nes.enable = false;
         cli.win.layout = "right";
         cli.win.split.width = 80;
-        cli.tools = {
-          mimo = {
-            cmd = ["mimo" "-c"];
-          };
+        cli.tools.command-code = {
+          cmd = ["cmd"];
+          is_proc = "\\<cmd\\>\\|\\<command-code\\>";
+          url = "https://commandcode.ai/docs";
+          resume = ["--resume"];
+          continue = ["--continue"];
         };
       };
       keys = [

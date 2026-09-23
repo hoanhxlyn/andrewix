@@ -10,9 +10,35 @@
     homeManager = {
       pkgs,
       config,
+      lib,
       osConfig,
       ...
-    }: {
+    }: let
+      jsonFormat = pkgs.formats.json {};
+
+      toCommandCodeMcp = name: server:
+        lib.hm.mcp.transformMcpServer {
+          inherit server;
+          extraTransforms = [
+            (lib.hm.mcp.wrapEnvFilesCommand {inherit pkgs name;})
+            (s: let
+              isRemote = (s.url or null) != null;
+            in
+              {
+                transport =
+                  if isRemote
+                  then "http"
+                  else "stdio";
+                enabled = s.enabled != false;
+              }
+              // (
+                if isRemote
+                then {inherit (s) url headers;}
+                else {inherit (s) command args env;}
+              ))
+          ];
+        };
+    in {
       programs = {
         mcp = {
           enable = true;
@@ -28,7 +54,7 @@
             };
             deepwiki.url = "https://mcp.deepwiki.com/mcp";
             brave = {
-              enable = false;
+              enabled = false;
               command = "bunx";
               args = ["@brave/brave-search-mcp-server"];
               env.BRAVE_API_KEY.file = config.sops.secrets.BRAVE_API_KEY.path;
@@ -99,11 +125,16 @@
           enableMcpIntegration = true;
         };
       };
-      home.activation.installMimo = ''
-        if ! command -v mimo &>/dev/null; then
-          ${pkgs.bun}/bin/bun add -g @mimo-ai/cli
-        fi
-      '';
+      home = {
+        activation.installCommandCode = ''
+          if ! command -v cmd &>/dev/null && [ ! -x "${config.home.homeDirectory}/.bun/bin/cmd" ]; then
+            ${pkgs.bun}/bin/bun add -g command-code
+          fi
+        '';
+        file.".commandcode/mcp.json".source = jsonFormat.generate "commandcode-mcp.json" {
+          mcpServers = lib.mapAttrs toCommandCodeMcp config.programs.mcp.servers;
+        };
+      };
     };
   };
 }
