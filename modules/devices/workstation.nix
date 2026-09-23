@@ -18,6 +18,7 @@
       <core.browsers>
       <core.media>
       <core.communications.discord>
+      <core.communications.caprine>
       <core.vpn.proton>
       <core.office.libreoffice>
       <core.office.teams>
