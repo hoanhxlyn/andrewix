@@ -6,43 +6,6 @@
       lib,
       ...
     }: let
-      networkScript = pkgs.writeShellScriptBin "waybar-network" ''
-        ICONS=("󰤯" "󰤟" "󰤢" "󰤥" "󰤨")
-        TEXT=""
-        TOOLTIP=""
-        CLASS=""
-
-        # WiFi
-        WIFI_INFO=$(${pkgs.networkmanager}/bin/nmcli -t -f IN-USE,SIGNAL,SSID dev wifi 2>/dev/null | ${pkgs.gnugrep}/bin/grep '^\*' | ${pkgs.coreutils}/bin/head -n1)
-        if [ -n "$WIFI_INFO" ]; then
-          SIGNAL=$(echo "$WIFI_INFO" | ${pkgs.coreutils}/bin/cut -d: -f2)
-          SSID=$(echo "$WIFI_INFO" | ${pkgs.coreutils}/bin/cut -d: -f3-)
-          IDX=$((SIGNAL / 25))
-          [ "$IDX" -gt 4 ] && IDX=4
-          ICON="''${ICONS[$IDX]}"
-          TEXT="$ICON $SSID"
-          TOOLTIP="WiFi: $SIGNAL%"
-        else
-          # Ethernet
-          ETH_INFO=$(${pkgs.networkmanager}/bin/nmcli -t -f DEVICE,STATE,TYPE dev 2>/dev/null | ${pkgs.gnugrep}/bin/grep ':connected:ethernet$' | ${pkgs.coreutils}/bin/head -n1)
-          if [ -n "$ETH_INFO" ]; then
-            DEV=$(echo "$ETH_INFO" | ${pkgs.coreutils}/bin/cut -d: -f1)
-            IP=$(${pkgs.iproute2}/bin/ip -4 addr show "$DEV" 2>/dev/null | ${pkgs.gnugrep}/bin/grep -oP 'inet \K[\d.]+')
-            TEXT="󰈀 $IP"
-            TOOLTIP="$DEV"
-          fi
-        fi
-
-        # VPN
-        if ${pkgs.iproute2}/bin/ip link show proton0 2>/dev/null | ${pkgs.gnugrep}/bin/grep -qE ',UP,'; then
-          TEXT="$TEXT 󰖂 "
-          TOOLTIP="$TOOLTIP\nVPN: Connected"
-        fi
-
-        [ -z "$TEXT" ] && exit 0
-
-        printf '{"text":"%s","tooltip":"%s"}' "$TEXT" "$TOOLTIP"
-      '';
       dndScript = pkgs.writeShellScriptBin "waybar-dnd" ''
         STATE_FILE="$XDG_RUNTIME_DIR/dnd-state"
         if [ -f "$STATE_FILE" ] && [ "$(cat "$STATE_FILE")" = "1" ]; then
@@ -52,7 +15,7 @@
         fi
       '';
     in {
-      home.packages = with pkgs; [playerctl] ++ [networkScript dndScript];
+      home.packages = with pkgs; [playerctl] ++ [dndScript];
       stylix.targets.waybar = {
         enable = true;
         enableLeftBackColors = false;
@@ -82,7 +45,6 @@
             }
 
             #upower, #battery  { border-bottom: 3px solid @base0B; }
-            #custom-network { border-bottom: 3px solid @base08; }
             #custom-vpn {border-bottom: 3px solid @base0C;}
             #wireplumber, #pulseaudio, #sndio {
                border-bottom: 3px solid @base07;
@@ -114,7 +76,6 @@
             modules-right = builtins.filter (m: m != null) [
               "tray"
               "privacy"
-              "custom/network"
               "bluetooth"
               "custom/dnd"
               (
@@ -128,8 +89,8 @@
                 else null
               )
               "wireplumber"
-              "cpu"
-              "memory"
+              # "cpu"
+              # "memory"
               "clock"
             ];
 
@@ -177,17 +138,17 @@
               tooltip = false;
             };
 
-            cpu = {
-              format = "󰻠 {usage}%";
-              tooltip-format = "CPU: {usage}% | {avg_frequency}GHz";
-              interval = 3;
-            };
+            # cpu = {
+            #   format = "󰻠 {usage}%";
+            #   tooltip-format = "CPU: {usage}% | {avg_frequency}GHz";
+            #   interval = 3;
+            # };
 
-            memory = {
-              format = "󰍛 {percentage}%";
-              tooltip-format = "{used:0.1f}G / {total:0.1f}G";
-              interval = 3;
-            };
+            # memory = {
+            #   format = "󰍛 {percentage}%";
+            #   tooltip-format = "{used:0.1f}G / {total:0.1f}G";
+            #   interval = 3;
+            # };
 
             wireplumber = {
               format = "{icon} {volume}%";
@@ -209,13 +170,6 @@
               return-type = "json";
               signal = 10;
               on-click = "dnd-toggle";
-            };
-
-            "custom/network" = {
-              exec = "${networkScript}/bin/waybar-network";
-              return-type = "json";
-              interval = 3;
-              on-click = "nm-connection-editor";
             };
 
             bluetooth = {
