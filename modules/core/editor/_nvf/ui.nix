@@ -1,18 +1,16 @@
 {
-  ui2.enable = false;
+  ui2.enable = true;
   borders = {
     enable = true;
     globalStyle = "rounded";
   };
   nvim-ufo.enable = true;
   noice = {
-    enable = true;
+    enable = false;
     setupOpts = {
-      # ponytail: keep snacks notifier, disable noice overlapping features
-      messages.enabled = false;
+      messages.enabled = true;
       notify.enabled = false;
       popupmenu.enabled = false;
-
       lsp = {
         override = {
           "vim.lsp.util.convert_input_to_markdown_lines" = false;
@@ -27,7 +25,7 @@
 
       presets = {
         bottom_search = true;
-        command_palette = false;
+        command_palette = true;
         long_message_to_split = true;
         inc_rename = false;
         lsp_doc_border = false;
