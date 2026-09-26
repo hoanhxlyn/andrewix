@@ -44,12 +44,13 @@
   typescript = {
     enable = true;
     extensions.ts-error-translator.enable = true;
+    lsp.servers = [
+      "typescript-go"
+    ];
     extraDiagnostics.types = [
-      "biomejs"
       "eslint_d"
     ];
     format.type = [
-      "biome"
       "prettier"
     ];
   };

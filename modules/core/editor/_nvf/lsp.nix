@@ -17,16 +17,23 @@
   presets = {
     tailwindcss-language-server.enable = true;
     vscode-css-language-server.enable = true;
+    typescript-go.enable = true;
   };
   servers = {
-    # typescript-go.filetypes = [
-    #   "typescript"
-    #   "javascript"
-    #   "typescriptreact"
-    #   "javascriptreact"
-    # ];
+    # Presence-only: nvf emits `vim.lsp.config[name]` and enables `vim.lsp.enable()`
+    # for every entry in this map, so an empty table registers biome while letting
+    # nvim-lspconfig supply `cmd`, `filetypes` and its `root_dir` guard that bails
+    # out when no biome config (or biomejs dep) is in the tree.
+    biome = {};
 
-    tailwindcss-languages-server.settings.tailwindCSS.classFunctions = [
+    typescript-go.filetypes = [
+      "typescript"
+      "javascript"
+      "typescriptreact"
+      "javascriptreact"
+    ];
+
+    tailwindcss-language-server.settings.tailwindCSS.classFunctions = [
       "cva"
       "cx"
       "tv"
@@ -35,7 +42,7 @@
       nil.nix.flake.autoArchive = true;
     };
     vscode-css-language-server.settings.css.lint.unknownAtRules = "ignore";
-    jsonls = {
+    vscode-json-language-server = {
       filetypes = ["json" "jsonc" "bak"];
       settings.json = {
         format.enable = false;
@@ -59,7 +66,7 @@
         '';
       };
     };
-    yamlls.settings.yaml = {
+    yaml-language-server.settings.yaml = {
       schemaStore = {
         enable = false;
         url = "";
