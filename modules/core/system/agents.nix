@@ -1,12 +1,8 @@
-{
-  __findFile,
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
   core.agents = {
-    includes = [
-      (<den/batteries/unfree> ["antigravity-cli"])
-    ];
+    # includes = [
+    #   (<den/batteries/unfree> ["antigravity-cli"])
+    # ];
     homeManager = {
       pkgs,
       config,
