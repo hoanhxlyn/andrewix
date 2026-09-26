@@ -2,4 +2,6 @@ result
 .claude/*
 .direnv/
 *.qcow2
-/.*code/
+/.*code/*
+!/.*code/skills
+!/.*code/taste
