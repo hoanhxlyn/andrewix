@@ -1,12 +1,12 @@
 {
-  __findFile,
   inputs,
+  self,
   ...
 }: {
   core.agents = {
-    includes = [
-      (<den/batteries/unfree> ["antigravity-cli"])
-    ];
+    # includes = [
+    #   (<den/batteries/unfree> ["antigravity-cli"])
+    # ];
     homeManager = {
       pkgs,
       config,
@@ -126,11 +126,7 @@
         };
       };
       home = {
-        activation.installCommandCode = ''
-          if ! command -v cmd &>/dev/null && [ ! -x "${config.home.homeDirectory}/.bun/bin/cmd" ]; then
-            ${pkgs.bun}/bin/bun add -g command-code
-          fi
-        '';
+        activation.installCommandCode = "${lib.getExe pkgs.fish} ${self}/config/command-code/install.fish";
         file.".commandcode/mcp.json".source = jsonFormat.generate "commandcode-mcp.json" {
           mcpServers = lib.mapAttrs toCommandCodeMcp config.programs.mcp.servers;
         };
