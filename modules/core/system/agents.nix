@@ -122,7 +122,6 @@
         };
       };
       home = {
-        activation.installCommandCode = "${lib.getExe pkgs.fish} ${self}/config/command-code/install.fish";
         file.".commandcode/mcp.json".source = jsonFormat.generate "commandcode-mcp.json" {
           mcpServers = lib.mapAttrs toCommandCodeMcp config.programs.mcp.servers;
         };
