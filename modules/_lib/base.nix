@@ -32,7 +32,7 @@
   initialPassword = "admin123";
   login = "ly";
   backgroundImage = {
-    url = "https://images6.alphacoders.com/114/1140278.png";
-    sha256 = "1vh4yw3wrhkc8y9fjvhrmydpy4fqyv2wzyyzr3qfby92if6drasi";
+    url = "https://gruvbox-wallpapers.pages.dev/wallpapers/minimalistic/gruvbox_minimal_space.png";
+    sha256 = "08qg1yjahg1r9hmzzcb5fgrgq2gaxcvx3frjxfb22wsi6bzl5qys";
   };
 }
