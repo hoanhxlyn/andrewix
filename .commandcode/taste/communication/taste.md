@@ -34,13 +34,15 @@
   where the model breaks (e.g. the upstream framework simply has no support for what they assumed the option enables).
   Same pattern for their own choices: volunteers that they don't know if something is "the right way" and wants a
   verdict plus the officially-recommended alternative. Confidence: 0.8
-- Is fluent in Nix/config semantics but NOT in shell primitives: after a line-by-line walkthrough of an agent-authored
-  `.fish` script, still asks bare "what is `test -z`" about individual builtins/flags inside it. Consequence: when
-  handing them a shell/fish script, don't assume any token is self-explanatory — gloss operators and flags (`-z`/`-n`,
-  `-x`, `-e`, `and`, `</dev/null`) inline in comments as well as in prose. Answer such definition questions in the shape
-  they accepted: one-line semantics + origin of the letter, the opposite operator, a 2-line truth-table example, and the
-  cross-shell gotcha (bash needs `"$x"` quoted so an unset var doesn't collapse to a bare `[ -z ]`; fish expands `$x` to
-  one arg or nothing, so quoting is less critical). Confidence: 0.6
+- Is fluent in Nix/config semantics but NOT in shell/Linux primitives: after a line-by-line walkthrough of an
+  agent-authored `.fish` script, still asks bare "what is `test -z`" about individual builtins/flags inside it, and
+  mid-installation asks bare "what is `modprobe`" about a kernel-module command the agent just cited. Consequence: when
+  handing them a shell/fish script or a runbook of system commands, don't assume any token is self-explanatory — gloss
+  operators, flags (`-z`/`-n`, `-x`, `-e`, `and`, `</dev/null`) and system utilities (`modprobe`, `udevadm`, `setfacl`)
+  inline in comments as well as in prose. Answer such definition questions in the shape they accepted: one-line semantics
+  + origin of the letter/name, the opposite operator, a 2-line truth-table example, and the cross-shell gotcha (bash
+  needs `"$x"` quoted so an unset var doesn't collapse to a bare `[ -z ]`; fish expands `$x` to one arg or nothing, so
+  quoting is less critical). Confidence: 0.65
 - Port/translation requests are one line: source snippet pasted inline in a fenced block, then "transform it to <target>
   in @path" — the `@path` names the _destination_ file to write, not something to explain. Expects a silent, complete
   port preserving every guard/condition 1:1 in idiomatic target syntax (no dropped presence checks), with no questions
@@ -68,7 +70,7 @@
   go-ahead: it usually bundles a request to validate the pick with a challenge to some part of it they suspect is
   superfluous. Expected shape: verdict on the choice in a line or two, resolve the embedded "why do we need X" question
   (including conceding it is redundant), show the trimmed result, and only then re-ask to apply — implementing the hedged
-  pick as stated is the wrong move. Confidence: 0.7
+  pick as stated is the wrong move. The validation axis varies by context: it may be a challenge to a superfluous piece, or an appeal to authority — "Hình như cách 2 là cách được recommended ?" — i.e. "is my pick the officially-recommended way?". For that variant, resolve it against the upstream project's own install/recommended guide (their docs, not the agent's judgment) and answer with a one-line verdict plus any gap between what's *recommended* and what actually *works* (the recommended path shipped the engine but not the uinput server); still a question to answer, not a go-ahead to implement. Confidence: 0.75
 - A "why only these?" / "why X?" follow-up is not always an audit — it can be a knowledge-gap request. Confirmed by
   "i was asking you duh because i don't have knownledge about all this base16 or token shit": the user lacked the domain
   vocabulary (base16 swatches, theme "tokens") and was asking to be taught. Failure mode the user named outright: the

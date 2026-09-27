@@ -43,11 +43,14 @@
 - Draws a privilege line around the agent session: runs the sudo-requiring step (NixOS rebuild/activation) themselves
   outside the session while letting the agent do the non-privileged validation loop (`just fmt`, `just lint`,
   `just build` — bare, no host arg —) and inspect build output/generated config — then reports real-world results back and expects a
-  follow-up diagnosis. The report is the verbatim tool output pasted as the whole message with no prose and no question
-  (e.g. the numbered `Activation (test) failed` block ending in `the following units failed: …`) — read a bare log paste
-  as "diagnose this now, unprompted": don't ask what they want, don't assume the failure is caused by the change just
+  follow-up diagnosis. The report is the verbatim tool output pasted as the whole message, carrying either no prose at all
+  or at most a bare trailing imperative tacked on after it (e.g. the numbered `Activation (test) failed` block ending in
+  `the following units failed: …fcitx5-lotus-server@andrew.service` followed only by "check what is going on ?"). That
+  one-line imperative adds no scope and is not an invitation to ask what they want; the paste may also be truncated at
+  the failing-unit line (rest of the error summary dropped), so fetching the missing detail is the agent's job. Read such
+  a paste as "diagnose this now, unprompted": don't ask what they want, don't assume the failure is caused by the change just
   being discussed, and go pull the real cause yourself (`journalctl -u <unit> -b`, `systemctl show … -p Environment`).
-  Never run sudo/activation commands. Confidence: 0.75
+  Never run sudo/activation commands. Confidence: 0.8
 - Always run repo operations through the project's `just` recipes (`just fmt`, `just lint`, `just build`,
   `just switch <host>`, and the flake-regeneration step too; note `just build` takes NO host arg) — never the equivalent raw `nix run .#<host> -- build` /
   `nix run .#write-flake` / `nix flake` form, even when the agent already used `just` for the other steps in the same
@@ -147,6 +150,12 @@
   NOT wanted — runtime/visual effect is verified by the user themselves via the repo's `just test` recipe. Expected
   response: stop immediately, don't run "one more" confirmation command, don't re-offer to check; the change is done.
   Confidence: 0.8
+- Frames research tasks as an open-ended goal with **explicit tool autonomy** — "I want you to use any tool to find out
+  how to install X on this NixOS" (stated in Vietnamese: "sử dụng bất kỳ tool gì để tìm hiểu") — i.e. they specify the
+  _outcome_, never the method: no prescribed tool, no step list, no permission checkpoints. Expected behavior: pick and
+  chain the discovery tools yourself (read the repo's existing config for the relevant module, consult docs/web/MCP,
+  then confirm the package actually exists in the pinned nixpkgs), reporting the finding rather than asking which tool
+  they want used. This grant of tool choice does NOT relax the docs-first ordering rule above. Confidence: 0.6
 - Chains asks in one message with an explicit thread-closure marker — "So my previous question has been answered but now
   i want to know if X" — meaning: drop the resolved investigation (no recap, no summary of findings, no finishing
   leftover checks) and answer the new question in the same turn. It is almost always the feasibility/how-to follow-on of
