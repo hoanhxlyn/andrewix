@@ -1,8 +1,4 @@
-{
-  inputs,
-  self,
-  ...
-}: {
+{inputs, ...}: {
   core.agents = {
     # includes = [
     #   (<den/batteries/unfree> ["antigravity-cli"])
