@@ -58,11 +58,15 @@
           LC_TIME = "en_US.UTF-8";
         };
       };
-      # users.users.uinput_proxy = lib.mkIf (!host.wsl.enable) {
-      #   isSystemUser = true;
-      #   group = "input";
-      # };
-      # services.udev.packages = lib.mkIf (!host.wsl.enable) [pkgs.fcitx5-lotus];
+      # Mirrors github:LotusInputMethod/fcitx5-lotus nix/modules/nixos/fcitx5-lotus/default.nix
+      # by hand: consuming the nixpkgs package, no flake input. The server unit runs as
+      # `uinput_proxy`, so that sysuser and the package's udev rule (which setfacl's
+      # /dev/uinput rw for it) are both required, not just systemd.packages.
+      users.users.uinput_proxy = lib.mkIf (!host.wsl.enable) {
+        isSystemUser = true;
+        group = "input";
+      };
+      services.udev.packages = lib.mkIf (!host.wsl.enable) [pkgs.fcitx5-lotus];
       systemd.packages = lib.mkIf (!host.wsl.enable) [pkgs.fcitx5-lotus];
       systemd.targets.multi-user.wants = lib.mkIf (!host.wsl.enable) [
         "fcitx5-lotus-server@andrew.service"
