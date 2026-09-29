@@ -3,6 +3,7 @@
     homeManager = {
       pkgs,
       config,
+      lib,
       ...
     }: let
       colors = config.lib.stylix.colors.withHashtag;
@@ -42,6 +43,7 @@
             settings = "prefix+S";
             edit_scrollback = "prefix+[";
             copy_mode = "prefix+]";
+            reload_config = "prefix+alt+r";
             # Tab and panes
             new_tab = "prefix+n";
             next_tab = "prefix+L";
@@ -50,8 +52,8 @@
             focus_pane_right = "prefix+l";
             focus_pane_down = "prefix+j";
             focus_pane_up = "prefix+k";
-            split_horizontal = "prefix+v";
-            split_vertical = "prefix+s";
+            split_horizontal = "prefix+s";
+            split_vertical = "prefix+v";
             rename_tab = "prefix+r";
             rename_pane = "prefix+R";
             resize_mode = "prefix+z";
@@ -63,6 +65,16 @@
             close_tab = "prefix+x";
             zoom = "prefix+f";
             goto = "prefix+\\";
+            command = [
+              {
+                key = "prefix+e";
+                type = "popup";
+                command = "${lib.getExe pkgs.fish} -c yazi";
+                description = "yazi file manager";
+                width = "90%";
+                height = "90%";
+              }
+            ];
           };
           ui = {
             sound.enabled = false;

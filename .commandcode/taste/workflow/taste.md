@@ -162,4 +162,13 @@
   what was just ruled out (native support absent → "can a herdr theme be added along with stylix"), so reply: verdict →
   the mechanism that would do it → what it costs, rather than re-litigating why the native path failed.
   Confidence: 0.6
+- Treats the standalone `kurumeii/dotfiles_pc` repo as the upstream reference for their terminal-stack config and asks
+  for its changes to be back-ported into the Nix flake with a bare imperative — "right, i want you to implement that
+  repo herdr keys into mine" — giving no file list, no commit range, no key list. Expected: derive the delta set
+  yourself (upstream `git log`/`git log -p --follow` on the file vs. the local module) and apply only the keys that
+  actually differ rather than copying the file across; re-express environment-specific values in Nix idioms (remote's
+  hardcoded `/home/linuxbrew/.linuxbrew/bin/fish` → `${lib.getExe pkgs.fish}`, widening the module's args when a helper
+  like `lib` is newly needed); validate key names against the version actually installed, not the remote's; then land
+  the edits and close with the repo validation loop (`just fmt && just lint && just build`) plus a per-delta summary of
+  what changed and why. Confidence: 0.55
 
