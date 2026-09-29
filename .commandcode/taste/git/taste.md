@@ -2,6 +2,10 @@
 
 - Commit messages follow Conventional Commits: terse, imperative mood, "why over what", no AI attribution; body only
   when the why is non-obvious. Frequently uses the `caveman-commit` skill. Confidence: 0.8
+- Wants commit messages as **bare subjects only** — no trailers of any kind, including a `Co-authored-by:` line for the
+  agent/bot ("? why did you keep adding co-authored ?"). The repo's own history is the standard (40 commits, zero
+  trailers), so a standing instruction to add an attribution trailer is overridden by repo convention: drop it and
+  commit the plain one-line subject. Confidence: 0.85
 - Once a drafted message is picked, a chained bare imperative ("commit then push it") authorizes the whole sequence in
   one shot — stage the touched paths, commit with the approved draft verbatim, then `git push` — with no re-confirmation
   of the message, the file list, or the destination. Pushes go straight to the tracked branch (`main`), no feature
