@@ -52,4 +52,11 @@
   `andrewix` flake. Consequence: when pointed at a bare GitHub URL with a one-word "read this", fetch that remote page
   and report its content (recent commits grouped by theme/date, plus an offer to pull files or a diff) rather than
   assuming it refers to the local NixOS repo. Confidence: 0.55
+- Wants machine-load-sensitive settings conditioned on the device class via the den framework's `host` data (e.g.
+  `host.isLaptop`) rather than hardcoded per machine: asked for "tuning for decrease load for my laptop device" and the
+  accepted solution gated reduced Nix build/download parallelism (`max-jobs = 2; cores = 2; http-connections = 8;
+  max-substitution-jobs = 4;`) behind `isLaptop = host.isLaptop or false;` merged over the shared `settings` attrset,
+  leaving other devices on defaults. Consequence: when a perf/resource ask names a device class, make it a conditional
+  branch on `host.*` in the existing module (small `// (if isLaptop then {...} else {})` merge), not a blanket change
+  and not a separate per-host file. Confidence: 0.7
 - Rejects reintroducing a third-party flake input + its upstream NixOS module as a fix path ("không quay lại flake module", i.e. don't go back to the flake module): when a package's full setup (here a uinput server service) only ships in the upstream repo's own flake module, expects the module *body* mirrored by hand into the repo's own Nix module — consuming the package from nixpkgs (`pkgs.fcitx5-lotus`) and wiring unit/udev/sysusers/systemd.packages manually — rather than adding a new flake input, with a comment in the file noting the flake input was intentionally avoided. Consequence: offer the nixpkgs-only route as the default; treat "add the upstream flake module" as a last resort to be proposed, not assumed. Confidence: 0.7

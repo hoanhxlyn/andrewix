@@ -50,10 +50,6 @@
       url = "github:saumyajyoti/omp.yazi";
       flake = false;
     };
-    rio = {
-      url = "github:raphamorim/rio/main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
