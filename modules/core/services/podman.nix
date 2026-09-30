@@ -1,6 +1,10 @@
 {
   core.vm.podman = {
-    nixos = {pkgs, ...}: {
+    nixos = {
+      pkgs,
+      user,
+      ...
+    }: {
       virtualisation = {
         containers = {
           enable = true;
@@ -18,7 +22,7 @@
       };
       boot.kernel.sysctl."vm.max_map_count" = 524288;
 
-      users.users.andrew.extraGroups = ["podman"];
+      users.users.${user.userName}.extraGroups = ["podman"];
 
       services.cockpit = {
         enable = true;

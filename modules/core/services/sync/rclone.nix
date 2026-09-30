@@ -5,7 +5,11 @@
     nixos = {
       programs.fuse.enable = true;
     };
-    homeManager = {pkgs, ...}: {
+    homeManager = {
+      pkgs,
+      config,
+      ...
+    }: {
       programs.rclone.enable = true;
       systemd.user.services.rclone-gdrive = {
         Unit = {
@@ -17,9 +21,9 @@
         };
         Service = {
           Type = "notify";
-          ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p /home/andrew/${path}";
+          ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${config.home.homeDirectory}/${path}";
           ExecStart = ''
-            ${pkgs.rclone}/bin/rclone mount gdrive: /home/andrew/${path} \
+            ${pkgs.rclone}/bin/rclone mount gdrive: ${config.home.homeDirectory}/${path} \
             --allow-non-empty \
             --vfs-cache-max-age 24h \
             --dir-cache-time 1h \
@@ -27,7 +31,7 @@
             --vfs-cache-mode full \
             --config %h/.config/rclone/rclone.conf
           '';
-          ExecStop = "${pkgs.fuse}/bin/fusermount -u /home/andrew/${path}";
+          ExecStop = "${pkgs.fuse}/bin/fusermount -u ${config.home.homeDirectory}/${path}";
           Restart = "on-failure";
           RestartSec = "10s";
         };
