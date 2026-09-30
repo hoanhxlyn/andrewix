@@ -174,6 +174,23 @@
   NOT follow the flag (env vars like `FZF_DEFAULT_OPTS` still exported) and the enabling gate they hang off. So for
   "what is the default of X" questions, verify defaults against upstream source on both master and the relevant stable
   branches rather than assuming one answer holds across versions. Confidence: 0.6
+- Gate file edits behind an explicit ask when the request is a stated goal/need rather than a direct work order — objects
+  sharply ("you didn't even asked me first and just go straight editing ?") when a "i want tuning for decrease load for
+  my laptop" style request is immediately followed by `edit_file` calls. Read such a request as intent to change
+  something with a choice still open: present the plan (which file, what defaults are today, what changes) and a set of
+  concrete labelled options with tradeoffs and value previews (e.g. Moderate/Light/Heavy throttle levels) via
+  `ask_user_question`, and only edit after they pick. Accepted recovery when caught: own the miss in one line, disclose
+  exactly what small edit already landed and offer to revert it, then ask. Scope: this gate applies to edits with real
+  tradeoffs/choices (tuning levels, behavioral changes) — it does NOT relax the auto-validate rule (`just build` still
+  runs unasked after any landed edit), and bare approvals ("yeah", "try it", or picking an option) still mean proceed
+  without further confirmation. Confidence: 0.85
+- When one broken package/feature blocks the whole build ("herdr is blocking everything !"), unblocks by surgically
+  disabling just that one component — e.g. flipping `programs.herdr.enable = false` with a comment naming the upstream
+  bug and the re-enable condition — and explicitly demands everything else stay untouched ("remove herdr update leave
+  everything else untouch ?"), rejecting both a nixpkgs-input pin to the fixed rev and a local overlay/override. This
+  is the minimal-delta unblock path: one-line opt-out of the blocker, comment why + when to revert, keep the rest of the
+  system updating normally. Note this complements the blast-radius rule: the *safest* fix can be a temporary disable,
+  not a workaround. Confidence: 0.75
 - Treats the standalone `kurumeii/dotfiles_pc` repo as the upstream reference for their terminal-stack config and asks
   for its changes to be back-ported into the Nix flake with a bare imperative — "right, i want you to implement that
   repo herdr keys into mine" — giving no file list, no commit range, no key list. Expected: derive the delta set

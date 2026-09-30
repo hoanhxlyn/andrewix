@@ -12,11 +12,6 @@
       programs.fish = {
         enable = true;
         interactiveShellInit = ''
-          # Auto start-or-attach herdr in every interactive terminal.
-          # HERDR_ENV=1 is set inside managed panes, so pane shells do not nest.
-          if status is-interactive; and test -z "$HERDR_ENV"
-            exec herdr
-          end
           set fish_greeting
           fastfetch
           set -gx SOPS_AGE_KEY_FILE "$HOME/.config/sops-nix/keys.txt"

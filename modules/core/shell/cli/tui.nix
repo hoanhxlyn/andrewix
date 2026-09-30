@@ -10,7 +10,9 @@
     in {
       home.packages = with pkgs; [bruno];
       programs.herdr = {
-        enable = true;
+        # Disabled: nixpkgs#568606 — herdr link failure (binutils 2.46 + vendored libghostty-vt).
+        # Re-enable once nixpkgs-unstable advances past fix ec04c0e.
+        enable = false;
         settings = {
           onboarding = false;
           theme = {
