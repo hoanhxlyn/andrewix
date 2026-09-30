@@ -14,7 +14,11 @@
         ];
       };
     };
-    homeManager = {pkgs, ...}: {
+    homeManager = {
+      pkgs,
+      config,
+      ...
+    }: {
       home.packages = with pkgs; [libsecret procps];
       programs.keepassxc = {
         enable = true;
@@ -23,7 +27,7 @@
             ConfigVersion = 2;
             UpdateCheckMessageShown = true;
             BackupBeforeSave = true;
-            BackupFilePathPattern = "/home/andrew/${path}/backups/Keepasx/{DB_FILENAME}.old.kdbx";
+            BackupFilePathPattern = "${config.home.homeDirectory}/${path}/backups/Keepasx/{DB_FILENAME}.old.kdbx";
           };
           GUI = {
             MonospaceNotes = true;

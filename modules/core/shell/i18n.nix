@@ -4,6 +4,7 @@
       pkgs,
       lib,
       host,
+      user,
       ...
     }: {
       i18n = {
@@ -69,7 +70,7 @@
       services.udev.packages = lib.mkIf (!host.wsl.enable) [pkgs.fcitx5-lotus];
       systemd.packages = lib.mkIf (!host.wsl.enable) [pkgs.fcitx5-lotus];
       systemd.targets.multi-user.wants = lib.mkIf (!host.wsl.enable) [
-        "fcitx5-lotus-server@andrew.service"
+        "fcitx5-lotus-server@${user.userName}.service"
       ];
     };
   };
