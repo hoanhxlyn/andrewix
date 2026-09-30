@@ -162,6 +162,18 @@
   what was just ruled out (native support absent → "can a herdr theme be added along with stylix"), so reply: verdict →
   the mechanism that would do it → what it costs, rather than re-litigating why the native path failed.
   Confidence: 0.6
+- Asks about a third-party option's behavior *generically*, explicitly cutting it loose from their own setup ("No
+  related to my current config") and coupling it to an explicit sourcing order ("Search online for answer"): "what
+  happened if i don't and what if i set `fzf.enableFishIntegration`. Will it true by default or not". Read this as a
+  pure upstream question — do NOT scope the research to their config files, and do NOT answer from memory. Accepted
+  shape: resolve which layer actually owns the option (here the option lives in Home Manager, not the NixOS
+  `programs.fzf` module), then state the full default-resolution chain to its terminal value
+  (`programs.fzf.enableFishIntegration` → `home.shell.enableFishIntegration` → `home.shell.enableShellIntegration` →
+  `true`), note version-dependence (older HM hardcoded `default = true`; a branch fix landed only on master), then give
+  the effect of each case separately — unset vs explicit `true` vs explicit `false` — including side effects that do
+  NOT follow the flag (env vars like `FZF_DEFAULT_OPTS` still exported) and the enabling gate they hang off. So for
+  "what is the default of X" questions, verify defaults against upstream source on both master and the relevant stable
+  branches rather than assuming one answer holds across versions. Confidence: 0.6
 - Treats the standalone `kurumeii/dotfiles_pc` repo as the upstream reference for their terminal-stack config and asks
   for its changes to be back-ported into the Nix flake with a bare imperative — "right, i want you to implement that
   repo herdr keys into mine" — giving no file list, no commit range, no key list. Expected: derive the delta set
