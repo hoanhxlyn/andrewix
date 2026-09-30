@@ -39,10 +39,10 @@
           grep = "rg";
         };
         plugins = with pkgs.fishPlugins; [
-          {
-            name = "fzf-fish";
-            inherit (fzf-fish) src;
-          }
+          # {
+          #   name = "fzf-fish";
+          #   inherit (fzf-fish) src;
+          # }
           {
             name = "done";
             inherit (done) src;

@@ -62,15 +62,29 @@
             resize_pane_down = "alt+Down";
             resize_pane_up = "alt+Up";
             close_pane = "prefix+c";
-            close_tab = "prefix+x";
+            close_tab = "prefix+C";
             zoom = "prefix+f";
             goto = "prefix+\\";
+            close_workspace = "prefix+x";
+            previous_workspace = "prefix+K";
+            next_workspace = "prefix+J";
+            switch_workspace = "prefix+shift+1..9";
+            navigate_workspace_up = "k";
+            navigate_workspace_down = "j";
             command = [
               {
                 key = "prefix+e";
                 type = "popup";
                 command = "${lib.getExe pkgs.fish} -c yazi";
                 description = "yazi file manager";
+                width = "90%";
+                height = "90%";
+              }
+              {
+                key = "prefix+/";
+                type = "popup";
+                command = "${lib.getExe pkgs.fish} -c btop";
+                description = "Open Btop";
                 width = "90%";
                 height = "90%";
               }
