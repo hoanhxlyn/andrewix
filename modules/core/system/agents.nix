@@ -1,4 +1,8 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   core.agents = {
     # includes = [
     #   (<den/batteries/unfree> ["antigravity-cli"])
@@ -122,8 +126,13 @@
         };
       };
       home = {
-        file.".commandcode/mcp.json".source = jsonFormat.generate "commandcode-mcp.json" {
-          mcpServers = lib.mapAttrs toCommandCodeMcp config.programs.mcp.servers;
+        file = {
+          ".commandcode/mcp.json".source = jsonFormat.generate "commandcode-mcp.json" {
+            mcpServers = lib.mapAttrs toCommandCodeMcp config.programs.mcp.servers;
+          };
+          ".commandcode/settings.json".source =
+            jsonFormat.generate "commandcode-settings.json"
+            (lib.importJSON "${self}/config/command-code/settings.json");
         };
       };
     };
