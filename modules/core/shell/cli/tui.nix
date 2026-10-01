@@ -1,8 +1,11 @@
 {inputs, ...}: {
-  # herdr pinned to nixpkgs 419fe0f: current channel's herdr-0.9.1 fails to link (nixpkgs#568606).
-  # Drop pin once nixpkgs-unstable passes fix ec04c0e.
-  flake-file.inputs.nixpkgs-herdr.url = "https://releases.nixos.org/nixpkgs/nixpkgs-26.11pre1080803.419fe0f449b3/nixexprs.tar.zst";
+  # herdr from prebuilt release binaries (upstream flake builds Rust+Zig from source), served from herdr.cachix.org.
+  flake-file.inputs.herdr-nix.url = "github:herdrdev/herdr-nix";
   core.cli.tui = {
+    nixos.nix.settings = {
+      extra-substituters = ["https://herdr.cachix.org"];
+      extra-trusted-public-keys = ["herdr.cachix.org-1:3nH7IStRsS0ASfdonA0DCRR2ZrSCeWitZ7Kwew0cR4I="];
+    };
     homeManager = {
       pkgs,
       config,
@@ -14,7 +17,7 @@
       home.packages = with pkgs; [bruno];
       programs.herdr = {
         enable = true;
-        package = inputs.nixpkgs-herdr.legacyPackages.${pkgs.system}.herdr;
+        package = inputs.herdr-nix.packages.${pkgs.system}.herdr;
         settings = {
           onboarding = false;
           theme = {
@@ -98,7 +101,7 @@
             sound.enabled = false;
             status_indicators = "symbols"; # symbols | dots
             toast.delivery = "herdr";
-            hide_tab_bar_when_single_tab = true;
+            hide_tab_bar_when_single_tab = false;
             confirm_close = true;
           };
         };
