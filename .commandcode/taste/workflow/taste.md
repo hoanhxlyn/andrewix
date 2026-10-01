@@ -34,6 +34,12 @@
   correct the agent (repeating "I would like you to use mcp to aid you") when it instead falls back to shell/grep or
   local filesystem spelunking; expects MCP to be used alongside — not instead of — verifying against upstream source.
   Confidence: 0.85
+- Names the specific research tools they expect by name rather than leaving the choice open — "use exa or deepwiki to
+  research on implementing X" — i.e. for a question about a third-party repo/flake's integration details (outputs,
+  cache keys, how to consume it), reach for the Exa MCP (web search + raw-source/page fetch) and the DeepWiki MCP
+  (`ask_wiki_question` against the GitHub repo) as the primary instruments, in preference to grepping the local store
+  or nixpkgs. Consequence: when a how-to-install/how-to-integrate ask arrives, open with Exa/DeepWiki queries against
+  the named upstream repo before local source spelunking. Confidence: 0.6
 - Ordering rule for research: docs lookup comes _first_, not as a fallback after local digging fails — corrects the
   agent with "I suggest you immediately use websearch or MCP to learn first!" when it burns several turns on `ls`/`find`
   over the nix store before consulting docs. Consequence: on an unfamiliar third-party option, call web search /
@@ -43,7 +49,10 @@
 - Draws a privilege line around the agent session: runs the sudo-requiring step (NixOS rebuild/activation) themselves
   outside the session while letting the agent do the non-privileged validation loop (`just fmt`, `just lint`,
   `just build` — bare, no host arg —) and inspect build output/generated config — then reports real-world results back and expects a
-  follow-up diagnosis. The report is the verbatim tool output pasted as the whole message, carrying either no prose at all
+  follow-up diagnosis. Extends to runtime diagnostics: when the agent needs system state (`wpctl status`,
+  `wpctl get-volume`, `alsamixer`, `journalctl`, `systemctl`, etc.), run them directly in the session rather than
+  listing them for the user to execute — "run it yourself" is the explicit directive. Only sudo-requiring steps
+  stay in the user's hands. Confidence: 0.8 The report is the verbatim tool output pasted as the whole message, carrying either no prose at all
   or at most a bare trailing imperative tacked on after it (e.g. the numbered `Activation (test) failed` block ending in
   `the following units failed: …fcitx5-lotus-server@andrew.service` followed only by "check what is going on ?"). That
   one-line imperative adds no scope and is not an invitation to ask what they want; the paste may also be truncated at
