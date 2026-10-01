@@ -190,7 +190,13 @@
   everything else untouch ?"), rejecting both a nixpkgs-input pin to the fixed rev and a local overlay/override. This
   is the minimal-delta unblock path: one-line opt-out of the blocker, comment why + when to revert, keep the rest of the
   system updating normally. Note this complements the blast-radius rule: the *safest* fix can be a temporary disable,
-  not a workaround. Confidence: 0.75
+  not a workaround. Refinement from the next day ("revert herdr back to previous version"): the disable is a *stopgap*,
+  not the end state — once the disabled component is missed, the wanted restore is the last *working* package, and the
+  preferred restore path is a per-package pin (`package = <old rev's pkgs>.<name>`, binary-cache-backed, one line in the
+  same module) while everything else stays on current nixpkgs, to be dropped once the channel carries the upstream fix
+  — not simply re-enabling the still-broken package, and not pinning the whole nixpkgs input. The agent should derive
+  which "previous version" that is from primary evidence (system generations + `flake.lock` git history) on its own;
+  clarifying which *intent* was meant is acceptable, asking the user for the rev is not. Confidence: 0.6
 - Treats the standalone `kurumeii/dotfiles_pc` repo as the upstream reference for their terminal-stack config and asks
   for its changes to be back-ported into the Nix flake with a bare imperative — "right, i want you to implement that
   repo herdr keys into mine" — giving no file list, no commit range, no key list. Expected: derive the delta set

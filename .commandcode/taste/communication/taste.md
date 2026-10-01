@@ -23,6 +23,13 @@
   earlier claim was wrong") followed by the corrected mechanism — no defense, no hedging, no "it depends" — and close
   with the actual option that would produce the behavior they want. Evidence screenshots are accepted as ground truth
   over the agent's own reasoning. Confidence: 0.75
+- Fact-checks the agent's *fix-status* claims against upstream evidence and their own empirical result — pastes the
+  fixing PR link with "it should have been fixed ? then why when i updated flake it still fail". Expected: verify what
+  their update actually pulled (flake.lock rev vs the fix commit) with one bounded check instead of re-asserting the
+  fix exists, then explain the discrepancy in one or two lines (here: PR merged to master, but the flake tracks a
+  `channels.nixos.org` snapshot that lags master until Hydra validates — so `nix flake update` was a no-op) and close
+  by re-presenting the remaining choices. Note they run flake updates (`just update`) themselves and report the
+  observed outcome back. Confidence: 0.6
 - Asks bare term-definition questions mid-thread ("what is popupmenu") about an option just discussed, expecting the
   answer to lead with the disambiguation — what the term does NOT mean / which confusable thing it is not (e.g. cmdline
   `wildmenu` vs the insert-mode LSP completion popup) — then the config keys with their defaults, and finally the
@@ -87,4 +94,8 @@
   editing ... match with correct value") — read it as the sole question, answer only that, and skip any recap of the
   conceded point. Confidence: 0.75
 - Sends a batch of raw grep/editor hits — `path|line col| <content>` per line (sometimes preceded by a bare "this") — then "do the same": meaning apply the fix pattern established earlier in the thread to every listed location. Expected: read each file, apply the analogous per-hit fix (including any needed arg widening), run the validation loop once at the end, and where one hit is only superficially similar (a repo-name literal among account-name literals) fix the real matches and call out the odd one as a one-line distinction instead of force-fitting it. Confidence: 0.75
+- Opens a mechanism-level rebuke with incredulity plus a file anchor — "are you serious ? @flake.lock" — meaning the
+  agent used a hand-rolled/imperative construct where the repo's declarative mechanism (the anchored file) belongs. The
+  anchor names the *correct* home for the change. Expected: one-line admission of the wrong mechanism, grep the repo for
+  its idiom, rewrite through it — no defense of the hand-rolled version. Confidence: 0.6
 - When the agent's diagnosis is presented as a numbered list, the user selects work items by number alone — "FIx 1 and 2" — and that bare reply is the complete work order: do exactly the numbered items and nothing else, act on them immediately in the same turn, and leave the unselected item (here: the redundant herdr pin) untouched without re-justifying or asking whether to include it. Consequence: when reporting multiple problems, always enumerate them so the user can pick; a prose blob of findings forces them to re-explain scope. Confidence: 0.8

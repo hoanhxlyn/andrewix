@@ -59,4 +59,12 @@
   leaving other devices on defaults. Consequence: when a perf/resource ask names a device class, make it a conditional
   branch on `host.*` in the existing module (small `// (if isLaptop then {...} else {})` merge), not a blanket change
   and not a separate per-host file. Confidence: 0.7
+- Pins a package to a different nixpkgs revision as a *flake input*, never an inline `builtins.fetchTarball` + `import`:
+  hand-rolling a fetchTarball pin drew an incredulous "are you serious ? @flake.lock" — the `@flake.lock` anchor names the
+  correct locus, i.e. the pin must land in `flake.lock` via `flake-file.inputs.<name>.url`, consumed as
+  `inputs.<name>.legacyPackages.${pkgs.system}.<pkg>` with the module's top-level args widened to `{inputs, ...}` as
+  needed (repo idiom confirmed via grep before rewriting). Cache corollary (they treat cache hits as first-class): the
+  pinned input URL must be the exact channel tarball (`https://releases.nixos.org/nixpkgs/nixpkgs-<ver>.<rev>/nixexprs.tar.zst`),
+  matching how the main nixpkgs input fetches — a `github:NixOS/nixpkgs/<rev>` fetch of the same rev hashes differently,
+  misses the binary cache, and rebuilds the package locally. Confidence: 0.8
 - Rejects reintroducing a third-party flake input + its upstream NixOS module as a fix path ("không quay lại flake module", i.e. don't go back to the flake module): when a package's full setup (here a uinput server service) only ships in the upstream repo's own flake module, expects the module *body* mirrored by hand into the repo's own Nix module — consuming the package from nixpkgs (`pkgs.fcitx5-lotus`) and wiring unit/udev/sysusers/systemd.packages manually — rather than adding a new flake input, with a comment in the file noting the flake input was intentionally avoided. Consequence: offer the nixpkgs-only route as the default; treat "add the upstream flake module" as a last resort to be proposed, not assumed. Confidence: 0.7
