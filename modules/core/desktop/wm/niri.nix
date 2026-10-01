@@ -5,16 +5,7 @@
 }: {
   flake-file.inputs.niri.url = "github:epireyn/niri-flake";
 
-  core.desktop.wm.niri = {host, ...}: let
-    niriOverlay = _final: prev: {
-      niri-stable =
-        (prev.niri-stable.override {
-          libdisplay-info = prev.libdisplay-info_0_3;
-        }).overrideAttrs (old: {
-          patches = (old.patches or []) ++ [./niri-session-import-env.patch];
-        });
-    };
-  in {
+  core.desktop.wm.niri = {host, ...}: {
     includes = [
       <core/desktop/statusbar/waybar>
       <core/desktop/waycal>
@@ -24,7 +15,7 @@
     ];
 
     nixos = {pkgs, ...}: {
-      nixpkgs.overlays = [inputs.niri.overlays.niri niriOverlay];
+      nixpkgs.overlays = [inputs.niri.overlays.niri];
       nix.settings = {
         substituters = ["https://niri-epireyn.cachix.org"];
         trusted-public-keys = ["niri-epireyn.cachix.org-1:tlVyFN7CtsDT+ZcLPS+ekFWeT1X6X4OqvWqbBMyIzFA="];
@@ -123,7 +114,7 @@
       }) ["Left" "Down" "Up" "Right"]);
     in {
       imports = [inputs.niri.homeModules.config];
-      nixpkgs.overlays = [inputs.niri.overlays.niri niriOverlay];
+      nixpkgs.overlays = [inputs.niri.overlays.niri];
       programs.niri = {
         package = pkgs.niri-stable;
         settings = {
