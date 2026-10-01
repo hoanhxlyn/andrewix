@@ -5,7 +5,10 @@
 - Wants commit messages as **bare subjects only** — no trailers of any kind, including a `Co-authored-by:` line for the
   agent/bot ("? why did you keep adding co-authored ?"). The repo's own history is the standard (40 commits, zero
   trailers), so a standing instruction to add an attribution trailer is overridden by repo convention: drop it and
-  commit the plain one-line subject. Confidence: 0.85
+  commit the plain one-line subject. Reinforced by a fresh objection after a commit still carried the trailer — "i have
+  set attribution.commit = \"\" in ~/.commandcode, why are you still adding co-authored ?" — i.e. the user has explicitly
+  disabled attribution in their coding-agent config and expects that setting to be honored without being restated:
+  never emit a `Co-authored-by:` (or any other) trailer on your own initiative. Confidence: 0.9
 - Once a drafted message is picked, a chained bare imperative ("commit then push it") authorizes the whole sequence in
   one shot — stage the touched paths, commit with the approved draft verbatim, then `git push` — with no re-confirmation
   of the message, the file list, or the destination. Pushes go straight to the tracked branch (`main`), no feature
@@ -19,7 +22,10 @@
 - Never wants `.commandcode/taste` changes to be their own commit and never wants "taste" mentioned in any commit
   message or body: instead, sneak the taste-file changes into the same commit as the related code/config change. So
   when grouping a staged diff into themed chunk commits, fold the taste edits into the chunk they document rather than
-  giving them a `docs(taste)` subject. Confidence: 0.85
+  giving them a `docs(taste)` subject. Reinforced when the agent again proposed a standalone `chore(taste)` chunk: the
+  user did not restate the rule, only issued a bare memory-check ("what did i tell you about taste files") — read that
+  as "recall the rule yourself, drop the taste-named chunk, and distribute the taste edits into the related chunks",
+  never as a request to re-explain or justify the grouping. Confidence: 0.9
 - When the index holds several unrelated changes, asks for the drafts as "1 liner, chunks theme": one *separate*
   single-subject-line conventional-commit message per themed chunk (grouped by file/topic — e.g. one for the herdr/tui
   edit, one for the i18n fix, one for the flake.lock bump), not a single combined message covering all of

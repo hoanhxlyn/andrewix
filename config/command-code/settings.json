@@ -1,0 +1,17 @@
+{
+  "attribution": {
+    "commit": ""
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/caveman ultra"
+          }
+        ]
+      }
+    ]
+  }
+}
