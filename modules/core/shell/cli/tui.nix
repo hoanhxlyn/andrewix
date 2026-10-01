@@ -1,4 +1,7 @@
-{
+{inputs, ...}: {
+  # herdr pinned to nixpkgs 419fe0f: current channel's herdr-0.9.1 fails to link (nixpkgs#568606).
+  # Drop pin once nixpkgs-unstable passes fix ec04c0e.
+  flake-file.inputs.nixpkgs-herdr.url = "https://releases.nixos.org/nixpkgs/nixpkgs-26.11pre1080803.419fe0f449b3/nixexprs.tar.zst";
   core.cli.tui = {
     homeManager = {
       pkgs,
@@ -10,9 +13,8 @@
     in {
       home.packages = with pkgs; [bruno];
       programs.herdr = {
-        # Disabled: nixpkgs#568606 — herdr link failure (binutils 2.46 + vendored libghostty-vt).
-        # Re-enable once nixpkgs-unstable advances past fix ec04c0e.
-        enable = false;
+        enable = true;
+        package = inputs.nixpkgs-herdr.legacyPackages.${pkgs.system}.herdr;
         settings = {
           onboarding = false;
           theme = {
