@@ -46,6 +46,7 @@
           "browser.search.separatePrivateDefault" = false;
           "browser.tabs.fadeOutUnloadedTabs" = true;
           "browser.tabs.min_inactive_duration_before_unload" = 300000;
+          "widget.gtk.native-emoji-dialog" = false;
         };
         keyboardShortcuts = [
           {
