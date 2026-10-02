@@ -78,6 +78,8 @@
             switch_workspace = "prefix+shift+1..9";
             navigate_workspace_up = "k";
             navigate_workspace_down = "j";
+            move_tab_previous = "prefix+<";
+            move_tab_next = "prefix+>";
             command = [
               {
                 key = "prefix+e";
