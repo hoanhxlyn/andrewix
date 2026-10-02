@@ -21,13 +21,13 @@
       mini = rec {
         explorer = true;
         picks = true;
-        animate = false;
-        notify = false;
-        indent_scope = false;
+        animate = true;
+        notify = true;
+        indent_scope = true;
         show_dotfiles = true;
         tabline = true;
-        statusline = false;
-        clues = false;
+        statusline = true;
+        clues = true;
         starter = picks; # coupled: snacks picker <-> snacks dashboard, mini.pick <-> mini.starter
       };
     in {

@@ -251,6 +251,12 @@
             local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 75 })
             mode = mode:upper()
 
+            local recording = ""
+            local reg = vim.fn.reg_recording()
+            if reg ~= "" then
+              recording = "Recording @" .. reg
+            end
+
             local git = MiniStatusline.section_git({ icon = "󰘬", trunc_width = 40 })
             local diff = MiniStatusline.section_diff({ icon = "", trunc_width = 100 })
             local diagnostics = MiniStatusline.section_diagnostics({
@@ -310,7 +316,7 @@
               "%<",
               { hl = "MiniStatuslineFileName", strings = { filename } },
               "%=",
-              { hl = "MiniStatuslineFileinfo", strings = { eol, copilot, lsp, fileinfo } },
+              { hl = "MiniStatuslineFileinfo", strings = {recording, eol, copilot, lsp, fileinfo } },
               { hl = mode_hl, strings = { search, location } },
             })
           end

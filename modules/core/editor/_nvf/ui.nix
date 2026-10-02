@@ -1,5 +1,10 @@
 {
-  ui2.enable = true;
+  ui2 = {
+    enable = true;
+    setupOpts = {
+      msg.targets = "msg";
+    };
+  };
   borders = {
     enable = true;
     globalStyle = "rounded";
