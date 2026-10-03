@@ -42,10 +42,14 @@
   the named upstream repo before local source spelunking. Confidence: 0.6
 - Ordering rule for research: docs lookup comes _first_, not as a fallback after local digging fails — corrects the
   agent with "I suggest you immediately use websearch or MCP to learn first!" when it burns several turns on `ls`/`find`
-  over the nix store before consulting docs. Consequence: on an unfamiliar third-party option, call web search /
+  over the nix store before consulting docs. Also applies to **negative capability claims** — never assert a tool lacks a
+  feature (e.g. "direnv doesn't have auto-prune") without a docs lookup first; the user will catch and correct it ("tôi
+  thấy direnv có prune mà"). Confidence: 0.8 Consequence: on an unfamiliar third-party option, call web search /
   context7 (resolve-library-id → query-docs) as the _first_ action, in parallel with reading the local config files;
   only then trace resolved source. The tolerance is near zero — a bare three-word "Use web search first" interrupted the agent after a single `grep`/`fetchTarball` over upstream sources — so the docs/web lookup (e.g. Exa web search, two queries fired in parallel) must precede the first shell-based source dive, and switching to it must be instant, not defended. The standard is now _habitual_, not merely correctly ordered — a third correction phrased as "i was expecting you to use MCP tools + websearch to try to research as your first instinct" means reaching for `nix eval`/`grep`/`ls /nix/store` before any web/MCP call is itself the failure, even when those local calls do eventually produce the answer. Fire the research tools (web_search + Exa + context7 resolve-library-id → query-docs) in the same first batch as reading the user's own config files. Confidence: 0.95
 - Tests NixOS config changes in a VM (`#vm`) before committing. Confidence: 0.6
+- Always set a max timeout on shell commands run in the session — explicitly advises "tôi khuyên bạn nên có max timeout" (I advise you to have a max timeout). Treats a bare `shell_command` call without `timeout` as a defect. Confidence: 0.8
+- Tests proposed maintenance/cleanup commands interactively in the CLI first before accepting them as a Justfile recipe — "để tôi test thử qua cli trước khi ghi vào justfile". Wants to manually verify the command works and produces expected output before it becomes a permanent entry point. Confidence: 0.7
 - Draws a privilege line around the agent session: runs the sudo-requiring step (NixOS rebuild/activation) themselves
   outside the session while letting the agent do the non-privileged validation loop (`just fmt`, `just lint`,
   `just build` — bare, no host arg —) and inspect build output/generated config — then reports real-world results back and expects a
@@ -53,14 +57,23 @@
   `wpctl get-volume`, `alsamixer`, `journalctl`, `systemctl`, etc.) or proposes cache/resource cleanup (`rm -rf ~/.cache/…`,
   `npm cache clean --force`, etc.), run them directly in the session rather than
   listing them for the user to execute — "run it yourself" / "you run it" is the explicit directive. Only sudo-requiring steps
-  stay in the user's hands. Confidence: 0.85
+  stay in the user's hands. Confidence: 0.85 This extends further: even when the agent is uncertain about the right
+  syntax or flags, presenting a command as a code block with "try this:" or "use this syntax:" instead of executing it
+  is itself the miss. The user will fire "làm đi" (just do it) or "thử xem" (try it) to redirect, and escalating
+  frustration ("làm đi ????") means the agent has been suggesting without acting across multiple turns. Run the
+  command, show output, iterate from there. Confidence: 0.9
 - When presenting cleanup/maintenance options (cache dirs, disk usage), wants the agent to categorize items as safe to
   clean vs. worth keeping and make a recommendation — don't just dump a raw list and ask what to do. Prefers a table
   with size, purpose, and a keep/remove verdict. After receiving the categorization, a bare "yes" means execute the
   recommended cleanup immediately. Confidence: 0.7
 - Interested in modern CLI tool alternatives to classic Unix utilities (e.g. `duf` over `df`, `dust` over `du`,
-  `ncdu`/`gdu` for interactive disk analysis). Proactively asks about replacements and is receptive to suggestions.
-  Confidence: 0.6 The report is the verbatim tool output pasted as the whole message, carrying either no prose at all
+  `ncdu`/`gdu` for interactive disk analysis, `fd` over `find`). Proactively asks about replacements and is receptive
+  to suggestions. When given a `find` command, substitutes `fd` on their own before running it. Will explicitly correct
+  the agent with "Sử dụng fd" (use fd) if the agent falls back to `find` in shell commands — `fd` is the expected
+  default for file searches, and falling back to `find` is itself a miss.
+  Confidence: 0.85 Technical note: `fd` respects `.gitignore` by default, so files/dirs listed there (e.g. `.direnv`)
+  require `--no-ignore` to appear in results. Failed silently twice before the cause was identified.
+  Confidence: 0.9 The report is the verbatim tool output pasted as the whole message, carrying either no prose at all
   or at most a bare trailing imperative tacked on after it (e.g. the numbered `Activation (test) failed` block ending in
   `the following units failed: …fcitx5-lotus-server@andrew.service` followed only by "check what is going on ?"). That
   one-line imperative adds no scope and is not an invitation to ask what they want; the paste may also be truncated at
