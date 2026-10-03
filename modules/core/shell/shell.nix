@@ -21,6 +21,7 @@
           set -gx EXA_API_KEY (cat ~/.config/sops-nix/secrets/EXA_API_KEY 2>/dev/null)
           set -gx EDITOR nvim
           set -gx RIPGREP_CONFIG_PATH "$HOME/.config/ripgrep/ripgreprc"
+          set -gx DIRENV_LOG_FORMAT ""
           # set -gx DOCKER_HOST unix://$XDG_RUNTIME_DIR/podman/podman.sock
           fish_add_path ~/.bun/bin
           fish_add_path ~/.local/bin

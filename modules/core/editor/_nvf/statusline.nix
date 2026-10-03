@@ -14,7 +14,11 @@
                 return "Recording @" .. reg
               end
             '';
-            color = { bg = "#ff6b6b"; fg = "#1a1b26"; gui = "bold"; };
+            color = {
+              bg = "#ff6b6b";
+              fg = "#1a1b26";
+              gui = "bold";
+            };
           }
           "filename"
         ];
