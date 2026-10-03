@@ -49,10 +49,18 @@
 - Draws a privilege line around the agent session: runs the sudo-requiring step (NixOS rebuild/activation) themselves
   outside the session while letting the agent do the non-privileged validation loop (`just fmt`, `just lint`,
   `just build` — bare, no host arg —) and inspect build output/generated config — then reports real-world results back and expects a
-  follow-up diagnosis. Extends to runtime diagnostics: when the agent needs system state (`wpctl status`,
-  `wpctl get-volume`, `alsamixer`, `journalctl`, `systemctl`, etc.), run them directly in the session rather than
-  listing them for the user to execute — "run it yourself" is the explicit directive. Only sudo-requiring steps
-  stay in the user's hands. Confidence: 0.8 The report is the verbatim tool output pasted as the whole message, carrying either no prose at all
+  follow-up diagnosis. Extends to runtime diagnostics and cleanup/maintenance commands: when the agent needs system state (`wpctl status`,
+  `wpctl get-volume`, `alsamixer`, `journalctl`, `systemctl`, etc.) or proposes cache/resource cleanup (`rm -rf ~/.cache/…`,
+  `npm cache clean --force`, etc.), run them directly in the session rather than
+  listing them for the user to execute — "run it yourself" / "you run it" is the explicit directive. Only sudo-requiring steps
+  stay in the user's hands. Confidence: 0.85
+- When presenting cleanup/maintenance options (cache dirs, disk usage), wants the agent to categorize items as safe to
+  clean vs. worth keeping and make a recommendation — don't just dump a raw list and ask what to do. Prefers a table
+  with size, purpose, and a keep/remove verdict. After receiving the categorization, a bare "yes" means execute the
+  recommended cleanup immediately. Confidence: 0.7
+- Interested in modern CLI tool alternatives to classic Unix utilities (e.g. `duf` over `df`, `dust` over `du`,
+  `ncdu`/`gdu` for interactive disk analysis). Proactively asks about replacements and is receptive to suggestions.
+  Confidence: 0.6 The report is the verbatim tool output pasted as the whole message, carrying either no prose at all
   or at most a bare trailing imperative tacked on after it (e.g. the numbered `Activation (test) failed` block ending in
   `the following units failed: …fcitx5-lotus-server@andrew.service` followed only by "check what is going on ?"). That
   one-line imperative adds no scope and is not an invitation to ask what they want; the paste may also be truncated at
