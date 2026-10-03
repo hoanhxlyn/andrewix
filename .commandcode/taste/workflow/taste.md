@@ -77,6 +77,8 @@
   one. Confidence: 0.9
 - Wants the `caveman` Command Code skill to auto-activate globally at the start of every session, with ultra mode
   enabled. Confidence: 0.8
+- Questions whether proposed maintenance/cleanup commands are truly necessary before accepting them into a script — "có thật sự cần thiết không" (is it really needed?) — and prefers removing a step that doesn't pull its weight (e.g. dropped `nix profile wipe-history` after confirming only 5 entries). Consequence: when proposing additions to existing scripts/Justfile recipes, verify the step has meaningful impact first and flag if it's borderline; don't add "just in case" commands. Confidence: 0.7
+- Prefers simple, consolidated commands — objects to needing to "run many commands" for routine maintenance and expects the agent to merge cleanup into a single existing entry point (e.g. folding `/tmp` cleanup into `just clean-up`) rather than listing manual steps. Confidence: 0.7
 - Stubs out the destination file by hand _before_ asking for content to be written into it (e.g. empty
   `config/command-code/install.fish`, then "transform it to ... in @path"). Expects the agent to stat/read that target
   before writing rather than assume it is absent; a terse contesting question ("uh i already created it ?") means "prove

@@ -76,10 +76,10 @@ boot-clean:
 # System-wide GC, delete old gens (user profile + system, keep 7d)
 [group('nixos')]
 clean-up:
-  nix profile wipe-history --older-than 7d
-  nix-collect-garbage -d --delete-older-than 7d
+  rm -rf /tmp/nh-os*
+  sudo nix-collect-garbage -d --delete-older-than 7d
   just boot-clean
-  nix store optimise
+  sudo nix store optimise
 
 # Search nix packages
 [group('info')]
