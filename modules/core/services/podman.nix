@@ -25,7 +25,7 @@
       users.users.${user.userName}.extraGroups = ["podman"];
 
       services.cockpit = {
-        enable = true;
+        enable = false;
         plugins = [pkgs.cockpit-podman];
         openFirewall = false;
       };
