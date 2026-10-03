@@ -14,7 +14,7 @@
     }: let
       colors = config.lib.stylix.colors.withHashtag;
     in {
-      home.packages = with pkgs; [bruno];
+      home.packages = with pkgs; [bruno gdu];
       programs.herdr = {
         enable = true;
         package = inputs.herdr-nix.packages.${pkgs.system}.herdr;
