@@ -13,5 +13,10 @@
         ]
       }
     ]
+  },
+  "mods": {
+    "sources": [
+      "hoanhxlyn/commandcode-statusline"
+    ]
   }
 }
