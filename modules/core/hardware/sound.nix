@@ -1,5 +1,5 @@
 {
-  core.sound.nixos = {pkgs, ...}: {
+  core.hardware.sound.nixos = {pkgs, ...}: {
     services = {
       # ACP normally flips each HDMI PCM's "IEC958 Playback Switch" on when
       # its sink activates, but that logic is disabled along with ACP below,

@@ -3,7 +3,6 @@
 in {
   den.hosts."x86_64-linux" = {
     andrew-laptop = mkHost {
-      terminal.name = "rio";
       isLaptop = true;
       ramGB = 24;
       monitors."eDP-1" = {
@@ -27,7 +26,6 @@ in {
       };
     };
     andrew-pc = mkHost {
-      terminal.name = "rio";
       powerManagement = {
         profile = "performance";
         suspend = null;

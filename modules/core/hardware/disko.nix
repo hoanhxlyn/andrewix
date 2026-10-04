@@ -4,7 +4,7 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  core.disko.nixos = {host, ...}: {
+  core.hardware.disko.nixos = {host, ...}: {
     imports = [
       inputs.disko.nixosModules.default
     ];

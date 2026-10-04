@@ -7,7 +7,7 @@
     url = lib.mkDefault "github:hoanhxlyn/aic8800-nix";
     inputs.nixpkgs.follows = lib.mkDefault "nixpkgs";
   };
-  core.wifi.nixos = {pkgs, ...}: {
+  core.hardware.wifi.nixos = {pkgs, ...}: {
     imports = [
       inputs.aic8800.nixosModules.default
     ];

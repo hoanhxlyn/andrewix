@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  core.nvidia = {
+  core.hardware.nvidia = {
     includes = [
       (<den.batteries.unfree> [
         "nvidia-x11"

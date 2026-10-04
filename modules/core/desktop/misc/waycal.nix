@@ -1,7 +1,7 @@
 {inputs, ...}: {
   flake-file.inputs.waycalix.url = "github:hoanhxlyn/waycalix";
 
-  core.desktop.waycal = {
+  core.desktop.misc.waycal = {
     nixos.nix.settings = {
       extra-substituters = ["https://waycalix.cachix.org"];
       extra-trusted-public-keys = [
