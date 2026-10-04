@@ -39,7 +39,10 @@
   cache keys, how to consume it), reach for the Exa MCP (web search + raw-source/page fetch) and the DeepWiki MCP
   (`ask_wiki_question` against the GitHub repo) as the primary instruments, in preference to grepping the local store
   or nixpkgs. Consequence: when a how-to-install/how-to-integrate ask arrives, open with Exa/DeepWiki queries against
-  the named upstream repo before local source spelunking. Confidence: 0.6
+  the named upstream repo before local source spelunking. The user will catch hedging language ("likely") about
+  framework internals and redirect to DeepWiki as a correction — meaning the agent must use DeepWiki *proactively* for
+  any framework/API behavior question, not wait to be told. Guessing ("likely", "probably") about how a framework works
+  instead of verifying is itself the miss. Confidence: 0.8
 - Ordering rule for research: docs lookup comes _first_, not as a fallback after local digging fails — corrects the
   agent with "I suggest you immediately use websearch or MCP to learn first!" when it burns several turns on `ls`/`find`
   over the nix store before consulting docs. Also applies to **negative capability claims** — never assert a tool lacks a
@@ -50,6 +53,7 @@
 - Tests NixOS config changes in a VM (`#vm`) before committing. Confidence: 0.6
 - Always set a max timeout on shell commands run in the session — explicitly advises "tôi khuyên bạn nên có max timeout" (I advise you to have a max timeout). Treats a bare `shell_command` call without `timeout` as a defect. Confidence: 0.8
 - Tests proposed maintenance/cleanup commands interactively in the CLI first before accepting them as a Justfile recipe — "để tôi test thử qua cli trước khi ghi vào justfile". Wants to manually verify the command works and produces expected output before it becomes a permanent entry point. Confidence: 0.7
+- When renaming/re-scoping a Nix module namespace (e.g. `core.sync.*` → `core.services.sync.*`), the agent must update every file that references the old namespace — both the import/include list in `default.nix` AND the actual option definitions in each sub-module file (e.g. `rclone.nix`, `sops.nix`). Treating only the import file as done is a partial fix. Confidence: 0.8
 - Draws a privilege line around the agent session: runs the sudo-requiring step (NixOS rebuild/activation) themselves
   outside the session while letting the agent do the non-privileged validation loop (`just fmt`, `just lint`,
   `just build` — bare, no host arg —) and inspect build output/generated config — then reports real-world results back and expects a

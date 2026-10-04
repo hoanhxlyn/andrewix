@@ -4,12 +4,11 @@
       includes = [
         <core.git>
         <core.agents>
-        <core/editor/nvf>
-        <core/desktop/stylix>
-        <core/shell>
-        <core.sync.sops>
+        <core.editor>
+        <core.services.sync.sops>
+        <core.services.sync.stylix>
+        <core.shell>
         <core.timezone>
-        <core.vm.podman>
         <core.i18n>
       ];
 

@@ -1,7 +1,5 @@
 {__findFile, ...}: {
-  core.media = {
-    includes = [
-      <core/media/mpv>
-    ];
-  };
+  core.media.includes = [
+    <core/media/mpv>
+  ];
 }

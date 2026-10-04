@@ -44,12 +44,14 @@
   palettes, theme tokens), skip the labelled choice, default to the explicit/full mapping that leaves nothing to
   inference, explain the reason in plain language, and land the edit. Redundant-but-harmless duplication is acceptable
   there as insurance, unlike in code they understand. Confidence: 0.8
+- Questions whether a feature justifies pulling in an entire new package as a dependency — "wait, install a whole ass package ?" — and will push back on solutions that add a heavy transitive dependency (e.g. tmux for a toggle-popup plugin) when the cost seems disproportionate to the benefit. Prefers lighter alternatives or native built-in mechanisms over plugin-plus-dependency stacks. Confidence: 0.75
 - Weighs fixes by blast radius, not just correctness: rejects a remedy that reaches low-level device/system surfaces —
   `boot.kernelModules`, `services.udev.extraRules`, `setfacl` grants on `/dev/*` — as "scary" and would rather ship the
   narrow fix (e.g. replacing an expired signing/registration key) and leave the symptom unfixed for now. Consequence:
   when a fix needs kernel modules, udev rules, or ACL/permission grants, present it as a separately-numbered optional
   item with what it touches stated up front, expect it to be skipped on first offer, and don't wire it into a file
   (like `modules/core/shell/i18n.nix`) that the user considers out of scope for the task at hand. Confidence: 0.75
+- When a Nix module fails because it depends on a service removed from the config (e.g. `Requires = ["rclone-gdrive.service"]` failing because rclone was dropped from WSL), rejects two common workarounds: (1) wrapping the module with `lib.mkIf (!host.wsl.enable)` — "i told you, don't wrap it" — and (2) weakening `Requires` to `Wants` — "no they are HARD dependency". The intended semantics must be preserved. The preferred fix is to disable the orphaned systemd unit at runtime (`systemctl --user disable …`) so the service that references the absent dependency stops failing, and let the config exclusion (module absent from the host's includes) prevent it from being re-created on next rebuild. Fix the orphan, not the declaration. Confidence: 0.85
 - Wants a repeated literal config value — above all the terminal leader `alt+q` — defined once as a `let`-bound Nix
   variable in the same module and composed into each binding (`new_tab = prefix + "+n"`, `"${prefix}+l"`) instead of
   retyped as a string literal per key. This is DRY *within* one file, so it does not contradict the no-shared-helpers

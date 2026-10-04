@@ -7,7 +7,7 @@
     url = "github:Mic92/sops-nix";
     inputs.nixpkgs.follows = "nixpkgs";
   };
-  core.sync.sops.homeManager = {config, ...}: let
+  core.services.sync.sops.homeManager = {config, ...}: let
     keyFile = "${config.home.homeDirectory}/.config/sops-nix/keys.txt";
     secrets = name: "${config.home.homeDirectory}/.config/sops-nix/secrets/${name}";
   in {

@@ -1,5 +1,5 @@
 {
-  core.bootable = {
+  core.hardware.bootable = {
     host,
     user,
     ...

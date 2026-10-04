@@ -1,16 +1,32 @@
 {
   __findFile,
+  inputs,
   lib,
   den,
   ...
 }: {
+  flake-file.inputs = {
+    flake-file.url = lib.mkForce "github:denful/flake-file";
+    den.url = lib.mkForce "github:denful/den";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+  imports = [
+    (inputs.flake-file.flakeModules.dendritic or {})
+    (inputs.den.flakeModules.dendritic or {})
+  ];
   den = {
     default = {
       includes = [
         <den.batteries.define-user>
         <den.batteries.primary-user>
         <den.batteries.hostname>
-        (<den.batteries.user-shell> "fish")
         <den.batteries.mutual-provider>
         den.batteries.self'
         den.batteries.inputs'

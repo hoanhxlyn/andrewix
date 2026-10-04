@@ -20,10 +20,6 @@
     typescript-go.enable = true;
   };
   servers = {
-    # Presence-only: nvf emits `vim.lsp.config[name]` and enables `vim.lsp.enable()`
-    # for every entry in this map, so an empty table registers biome while letting
-    # nvim-lspconfig supply `cmd`, `filetypes` and its `root_dir` guard that bails
-    # out when no biome config (or biomejs dep) is in the tree.
     biome = {};
 
     typescript-go.filetypes = [
