@@ -1,5 +1,5 @@
 {
-  core.sync.rclone = {host, ...}: let
+  core.services.sync.rclone = {host, ...}: let
     path = host.rclone.path;
   in {
     nixos = {

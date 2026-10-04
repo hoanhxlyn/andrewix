@@ -1,16 +1,12 @@
-{__findFile, ...}: {
-  core.shell = {
-    includes = [
-      <core/cli/fastfetch>
-      <core/cli/essentials>
-      <core/cli/tui>
-      <core/cli/omp>
-      <core/cli/yazi>
-      <core/gui>
-    ];
-    homeManager = {pkgs, ...}: {
+{lib, ...}: {
+  core.shell.fish = {
+    homeManager = {
+      pkgs,
+      host,
+      ...
+    }: {
       programs.fish = {
-        enable = true;
+        enable = lib.mkIf (host.terminal.shell == "fish") true;
         interactiveShellInit = ''
           set fish_greeting
           fastfetch

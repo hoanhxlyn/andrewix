@@ -1,6 +1,6 @@
 {
-  core.firmware.nixos = {
-    hardware.enableAllFirmware = true;
+  core.hardware.firmware.nixos = {
+    hardware.enableAllFirmware = false;
     hardware.enableRedistributableFirmware = true;
   };
 }
