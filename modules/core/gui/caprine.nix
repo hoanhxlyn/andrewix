@@ -1,5 +1,5 @@
 {
-  core.communications.caprine.homeManager = {pkgs, ...}: {
+  core.gui.caprine.homeManager = {pkgs, ...}: {
     home.packages = [pkgs.caprine];
     systemd.user.services.caprine-autostart = {
       Unit = {

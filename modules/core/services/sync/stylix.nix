@@ -7,7 +7,7 @@
     url = "github:nix-community/stylix";
     inputs.nixpkgs.follows = "nixpkgs";
   };
-  core.desktop.stylix = {host, ...}: let
+  core.services.sync.stylix = {host, ...}: let
     inherit (host) terminal backgroundImage;
   in {
     nixos = {

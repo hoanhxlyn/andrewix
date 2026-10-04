@@ -5,6 +5,8 @@
     padding = 2;
     opacity = 1.0;
     name = "foot";
+    shell = "fish";
+    mux = "herdr";
   };
   toast = {
     width = 400;

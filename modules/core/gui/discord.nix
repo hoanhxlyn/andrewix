@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  core.communications.discord = {
+  core.gui.discord = {
     includes = [
       (<den.batteries.unfree> [
         "discord"

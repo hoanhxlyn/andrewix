@@ -5,11 +5,12 @@
   ("Keep the instruction short", "tóm gọn lại"). Confidence: 0.8
 - Wants the purpose/meaning explained when handed commands or config, not just the raw artifact (asks "what does this
   do?", "I copied the command but don't understand anything"). Confidence: 0.7
-- Approves with a bare reply ("yeah", "fine", "try it") even when the agent offered an either/or question, meaning "go
-  ahead with the option you recommended — don't ask again". "try it" additionally means: land the edit in the file now,
-  they will judge it by rebuilding/looking at the result, so don't re-explain the rationale or ask which option they
-  meant. Consequence: put the recommended option first, restate the chosen interpretation in one line before acting,
-  then proceed without seeking further confirmation. Confidence: 0.7
+- Approves with a bare reply ("yeah", "fine", "try it", "ofc") even when the agent offered an either/or question,
+  meaning "go ahead with the option you recommended — don't ask again". "ofc" (of course) signals the question was
+  obvious and shouldn't have needed asking. "try it" additionally means: land the edit in the file now, they will judge
+  it by rebuilding/looking at the result, so don't re-explain the rationale or ask which option they meant. Consequence:
+  put the recommended option first, restate the chosen interpretation in one line before acting, then proceed without
+  seeking further confirmation. Confidence: 0.75
 - Audits the agent's adherence to stated repo conventions after the fact ("I told you to follow @Justfile command didn't
   i") — expects a one-line admission naming the exact rule broken plus an immediate redo through the correct path, with
   no defense or explanation of why the raw command was equivalent. Read such a correction as a standing rule for the
@@ -62,6 +63,13 @@
 - Explicitly warns "đừng có trả lời bừa" (don't answer carelessly/randomly) when they suspect the agent will speculate — especially when pointing at a config block they already understand and want the agent to verify before speaking. Read this as: read the actual content, look up docs if needed, then give a precise factual answer; no guessing from memory. The standard is that every claim about what a config option does must be traceable to evidence (file content + docs lookup), not intuition. Confidence: 0.8
 - Reads a bare "go on" (or "continue") as "you stopped mid-investigation — resume the exact step you were on", not as a
   request for a status recap or a re-ask of what to do next. Pick up the pending tool call/fix silently. Confidence: 0.6
+- A bare "?" means "why did you stall / I'm still waiting" — more impatient than "go on". It signals the assistant went
+  quiet mid-task (e.g. a long-running command produced no visible output, or a message ended without action). Expected
+  response: silently resume or report the result of whatever was in flight; do not explain why it took long or ask what
+  they want. Confidence: 0.7
+- When the user gives a bare command to run ("run just build", "run just test"), they want only the result — no post-hoc analysis of why it succeeded, no offers to investigate further, no follow-up questions. A corrective "i said just X" after the agent adds commentary means: output only, then stop. Confidence: 0.8
+- A bare "not done" after the agent claims completion means the scope of work was incomplete — the agent missed something. Self-audit remaining scope against the original request and continue working without asking what's left; do not defend or re-assert that the task is done. Confidence: 0.7
+- Follow-up "look at the actual file" after "not done" means the agent only touched the referencing/import file but missed the source/definition file — i.e. for a namespace rename in Nix modules, the agent must update BOTH the import/include references AND the actual module option definitions in each sub-file. The user expects the agent to trace all files involved, not just the one the request literally pointed at. Confidence: 0.8
 - The same numbering also lets them _withdraw_ an item mid-flight, with the objection stated as a bare feeling rather
   than a technical reason: "look scary, can we skip the no.2". Read a "scary"/risk-flavoured veto as final, not as a
   debate opener — do not re-argue the tradeoff, do not offer a softened version, and do not ask for another reason.

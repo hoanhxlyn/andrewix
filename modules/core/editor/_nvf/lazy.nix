@@ -21,7 +21,7 @@ in {
       setupOpts = {
         nes.enable = false;
         cli.win.layout = "right";
-        cli.win.split.width = 80;
+        cli.win.split.width = 0.4;
         cli.tools.command-code = {
           cmd = ["cmd"];
           is_proc = "\\<cmd\\>\\|\\<command-code\\>";

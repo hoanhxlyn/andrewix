@@ -1,5 +1,5 @@
 {
-  core.sync.keepassxc = {host, ...}: let
+  core.services.sync.keepassxc = {host, ...}: let
     path = host.rclone.path;
   in {
     nixos = {pkgs, ...}: {

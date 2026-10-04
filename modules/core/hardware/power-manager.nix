@@ -1,5 +1,5 @@
-{lib, ...}: {
-  core.power-manager = {
+{
+  core.hardware.power-manager = {
     nixos = {config, ...}: {
       boot = {
         extraModulePackages = with config.boot.kernelPackages; [
@@ -36,7 +36,7 @@
       };
 
       services = {
-        power-profiles-daemon.enable = lib.mkForce false;
+        power-profiles-daemon.enable = false;
         upower.enable = true;
         logind.settings.Login = {
           HandleLidSwitch = "ignore";
