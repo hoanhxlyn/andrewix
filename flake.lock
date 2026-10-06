@@ -440,7 +440,38 @@
         "type": "github"
       }
     },
+    "mini-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791212802,
+        "narHash": "sha256-dPZIUlGR9ENqlpHH/9VsL4wwjnWWwBikncAft3IQaf0=",
+        "owner": "nvim-mini",
+        "repo": "mini.nvim",
+        "rev": "6f0cd5049f414932ba55a5d6f3282a59d55c71a3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-mini",
+        "repo": "mini.nvim",
+        "type": "github"
+      }
+    },
     "mnw": {
+      "locked": {
+        "lastModified": 1790357809,
+        "narHash": "sha256-6IWPAMEotKY/nQvs1kU6qwMwCXTeW5HlOhw2RwFHFdI=",
+        "owner": "Gerg-L",
+        "repo": "mnw",
+        "rev": "a582dbedf7c8ec7effa6939ac5bdd23b27267d1b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Gerg-L",
+        "repo": "mnw",
+        "type": "github"
+      }
+    },
+    "mnw_2": {
       "locked": {
         "lastModified": 1784154424,
         "narHash": "sha256-HRn4O1X2ShYtbq5Egji72/aemyc2cIQicjRZD9hBqM8=",
@@ -668,7 +699,7 @@
     "nvf": {
       "inputs": {
         "flake-compat": "flake-compat_3",
-        "mnw": "mnw",
+        "mnw": "mnw_2",
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
@@ -714,6 +745,8 @@
         "home-manager": "home-manager",
         "import-tree": "import-tree",
         "ironbar": "ironbar",
+        "mini-nvim": "mini-nvim",
+        "mnw": "mnw",
         "niri": "niri",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_3",
