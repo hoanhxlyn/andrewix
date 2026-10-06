@@ -1,5 +1,5 @@
 local current_theme = {
-  bg = "#3c3836",
+  bg = "#282828",
   fg = "#d5c4a1",
 }
 

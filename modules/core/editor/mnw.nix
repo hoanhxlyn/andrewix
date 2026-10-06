@@ -34,11 +34,11 @@
             nvim-treesitter-context
             nvim-ts-context-commentstring
             plenary-nvim
+            SchemaStore-nvim
           ];
           opt = with pkgs.vimPlugins; [
             nvim-lspconfig
             lazydev-nvim
-            SchemaStore-nvim
             blink-cmp
             friendly-snippets
             nvim-lint
@@ -59,6 +59,14 @@
           dev.config = {
             pure = "${self}/config/nvim";
           };
+          # deps that also live in opt — null so single install under /opt
+          # (start/ auto-load would defeat lz.n lazy-load)
+          startAttrs = {
+            nvim-dap = null;
+            nvim-lspconfig = null;
+            nvim-nio = null;
+            promise-async = null;
+          };
         };
 
         extraBinPath = with pkgs; [
@@ -72,10 +80,10 @@
           fish-lsp
           marksman
           taplo
+          biome
           # Formatters
           alejandra
           stylua
-          biome
           prettier
           shfmt
           kdlfmt

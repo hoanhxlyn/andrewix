@@ -2,7 +2,7 @@ vim.g.start_time = vim.uv.hrtime()
 
 vim.g.noice = false
 vim.g.mini = {
-  tabline = false,
+  tabline = true,
   animate = true,
   completion = false,
   picks = true,
