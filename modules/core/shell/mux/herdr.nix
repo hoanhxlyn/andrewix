@@ -1,4 +1,8 @@
-{inputs, self, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake-file.inputs.herdr-nix.url = "github:herdrdev/herdr-nix";
   core.mux.herdr = {host, ...}: {
     nixos.nix.settings = {
