@@ -1,4 +1,4 @@
-{inputs, ...}: {
+{inputs, self, ...}: {
   flake-file.inputs.herdr-nix.url = "github:herdrdev/herdr-nix";
   core.mux.herdr = {host, ...}: {
     nixos.nix.settings = {
@@ -91,8 +91,24 @@
               {
                 key = "prefix+e";
                 type = "popup";
-                command = "${lib.getExe pkgs.fish} -c yazi";
-                description = "yazi file manager";
+                command = "${self}/config/yazi/yazi-resume.sh";
+                description = "yazi (resume last dir)";
+                width = "90%";
+                height = "90%";
+              }
+              {
+                key = "prefix+E";
+                type = "popup";
+                command = ''${lib.getExe pkgs.fish} -c yazi'';
+                description = "yazi (current dir)";
+                width = "90%";
+                height = "90%";
+              }
+              {
+                key = "prefix+g";
+                type = "popup";
+                command = ''${lib.getExe pkgs.fish} -c lazygit'';
+                description = "lazygit (current dir)";
                 width = "90%";
                 height = "90%";
               }
@@ -103,12 +119,6 @@
                 description = "Open Btop";
                 width = "90%";
                 height = "90%";
-              }
-              {
-                key = "prefix+t";
-                type = "plugin_action";
-                command = "maro114510.toggle-popup.toggle-shell";
-                description = "Toggle popup shell";
               }
             ];
           };
