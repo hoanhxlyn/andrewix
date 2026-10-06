@@ -1,5 +1,5 @@
 return {
-	filetypes = { "json", "jsonc", "bak" },
+	filetypes = { "json", "jsonc" },
 	settings = {
 		json = {
 			format = { enable = false },

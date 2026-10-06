@@ -63,19 +63,12 @@ return {
       },
     })
 
-    -- Enable every lspconfig config. Per-name pcall: one bad config must
-    -- not abort the rest (vim.lsp.enable is all-or-nothing on multi-name).
-    local names, seen = {}, {}
-    for _, path in ipairs(vim.api.nvim_get_runtime_file("lsp/*.lua", true)) do
-      local name = vim.fn.fnamemodify(path, ":t:r")
-      if not seen[name] then
-        seen[name] = true
-        names[#names + 1] = name
-      end
-    end
-    for _, name in ipairs(names) do
-      pcall(vim.lsp.enable, name)
-    end
+    -- Only LSPs whose binaries come from extraBinPath (modules/core/editor/mnw.nix)
+    -- Names = lspconfig config names, not binary names (nil_ls→nil, fish_lsp→fish-lsp)
+    vim.lsp.enable({
+      "nil_ls", "lua_ls", "html", "cssls", "jsonls", "yamlls",
+      "tailwindcss", "vtsls", "fish_lsp", "marksman", "taplo", "biome",
+    })
 
     utils.map("n", utils.L("ca"), vim.lsp.buf.code_action, "Code action")
     utils.map("n", utils.L("cd"), vim.diagnostic.open_float, "Code show diagnostic")

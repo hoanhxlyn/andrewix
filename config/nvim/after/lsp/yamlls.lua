@@ -1,4 +1,5 @@
 return {
+	filetypes = { "yaml" },
 	settings = {
 		yaml = {
 			schemaStore = {
