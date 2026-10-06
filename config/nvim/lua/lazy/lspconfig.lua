@@ -63,28 +63,18 @@ return {
       },
     })
 
-    -- Enable every nvim-lspconfig server whose cmd is on PATH.
-    -- PATH includes programs.mnw.extraBinPath — declare servers there only.
-    for _, path in ipairs(vim.api.nvim_get_runtime_file("lsp/*.lua", false)) do
+    -- Enable every lspconfig config. Per-name pcall: one bad config must
+    -- not abort the rest (vim.lsp.enable is all-or-nothing on multi-name).
+    local names, seen = {}, {}
+    for _, path in ipairs(vim.api.nvim_get_runtime_file("lsp/*.lua", true)) do
       local name = vim.fn.fnamemodify(path, ":t:r")
-      local chunk = loadfile(path)
-      if chunk then
-        local okc, cfg = pcall(chunk)
-        if okc and type(cfg) == "table" then
-          local cmd = cfg.cmd
-          local bin
-          if type(cmd) == "table" then
-            bin = cmd[1]
-          elseif type(cmd) == "string" then
-            bin = cmd
-          elseif type(cmd) == "function" then
-            bin = name:gsub("_", "-")
-          end
-          if type(bin) == "string" and vim.fn.executable(bin) == 1 then
-            pcall(vim.lsp.enable, name)
-          end
-        end
+      if not seen[name] then
+        seen[name] = true
+        names[#names + 1] = name
       end
+    end
+    for _, name in ipairs(names) do
+      pcall(vim.lsp.enable, name)
     end
 
     utils.map("n", utils.L("ca"), vim.lsp.buf.code_action, "Code action")

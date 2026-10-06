@@ -1,5 +1,6 @@
 local utils = require("config.utils")
 local MiniTabline = require("mini.tabline")
+local MiniBufremove = require("mini.bufremove")
 
 MiniTabline.setup({
 	show_icons = true,
