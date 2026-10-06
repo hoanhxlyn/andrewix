@@ -1,8 +1,4 @@
-{
-  inputs,
-  self,
-  ...
-}: {
+{self, ...}: {
   core.agents = {
     # includes = [
     #   (<den/batteries/unfree> ["antigravity-cli"])
@@ -62,11 +58,11 @@
           };
         };
         opencode = {
-          enable = false;
+          enable = true;
           package =
             if (osConfig.wsl.enable or false)
             then null
-            else inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.opencode;
+            else pkgs.opencode;
           enableMcpIntegration = true;
           web.enable = !(osConfig.wsl.enable or false);
           settings = {

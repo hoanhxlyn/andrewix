@@ -36,6 +36,11 @@
       url = "github:JakeStanger/ironbar";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    mini-nvim = {
+      url = "github:nvim-mini/mini.nvim";
+      flake = false;
+    };
+    mnw.url = "github:Gerg-L/mnw";
     niri.url = "github:epireyn/niri-flake";
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
