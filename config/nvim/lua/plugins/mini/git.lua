@@ -11,7 +11,7 @@ local ns_id = vim.api.nvim_create_namespace("MiniGitBlame")
 require("mini.git").setup()
 require("mini.diff").setup({
   view = {
-    style = style.sign,
+    style = style.number,
     signs = {
       add = mininvim.icons.git_signs.add,
       change = mininvim.icons.git_signs.change,
