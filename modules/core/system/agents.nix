@@ -66,7 +66,7 @@
           package =
             if (osConfig.wsl.enable or false)
             then null
-            else inputs.opencode.packages.${pkgs.system}.opencode;
+            else inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.opencode;
           enableMcpIntegration = true;
           web.enable = !(osConfig.wsl.enable or false);
           settings = {
@@ -133,6 +133,7 @@
           ".commandcode/settings.json".source =
             jsonFormat.generate "commandcode-settings.json"
             (lib.importJSON "${self}/config/command-code/settings.json");
+          ".commandcode/hooks/caveman.sh".source = "${self}/config/command-code/hooks/caveman.sh";
         };
       };
     };

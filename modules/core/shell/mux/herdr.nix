@@ -1,6 +1,6 @@
 {inputs, ...}: {
   flake-file.inputs.herdr-nix.url = "github:herdrdev/herdr-nix";
-  core.mux.herdr = {
+  core.mux.herdr = {host, ...}: {
     nixos.nix.settings = {
       extra-substituters = ["https://herdr.cachix.org"];
       extra-trusted-public-keys = ["herdr.cachix.org-1:3nH7IStRsS0ASfdonA0DCRR2ZrSCeWitZ7Kwew0cR4I="];
@@ -12,12 +12,15 @@
       ...
     }: let
       colors = config.lib.stylix.colors.withHashtag;
+      herdrPkg = inputs.herdr-nix.packages.${pkgs.stdenv.hostPlatform.system}.herdr;
+      herdrBin = lib.getExe herdrPkg;
     in {
       programs.herdr = {
-        enable = true;
-        package = inputs.herdr-nix.packages.${pkgs.system}.herdr;
+        package = herdrPkg;
+        enable = host.terminal.mux == "herdr";
         settings = {
           onboarding = false;
+          terminal.new_cwd = "home";
           theme = {
             name = "terminal";
             custom = {
@@ -80,6 +83,12 @@
             move_tab_next = "prefix+>";
             command = [
               {
+                key = "prefix+d";
+                type = "shell";
+                command = ''"${herdrBin}" tab create --cwd "$HERDR_ACTIVE_PANE_CWD" --focus'';
+                description = "duplicate tab in current cwd";
+              }
+              {
                 key = "prefix+e";
                 type = "popup";
                 command = "${lib.getExe pkgs.fish} -c yazi";
@@ -106,7 +115,11 @@
           ui = {
             sound.enabled = false;
             status_indicators = "symbols"; # symbols | dots
-            toast.delivery = "herdr";
+            toast = {
+              delivery = "herdr";
+              herdr.position = "top-right";
+            };
+            prompt_new_tab_name = false;
             hide_tab_bar_when_single_tab = false;
             confirm_close = true;
           };
