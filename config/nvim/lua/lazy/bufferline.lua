@@ -1,5 +1,7 @@
 return {
   "bufferline.nvim",
+  event = "DeferredUIEnter",
+  enabled = function() return not vim.g.mini.tabline end,
   after = function()
     local utils = require("config.utils")
     local MiniBufremove = require("mini.bufremove")

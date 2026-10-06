@@ -1,7 +1,7 @@
 return {
   "which-key.nvim",
   lazy = true,
-  cond = function() return not vim.g.mini.clues end,
+  enabled = function() return not vim.g.mini.clues end,
   after = function()
     local wk = require("which-key")
     wk.setup({

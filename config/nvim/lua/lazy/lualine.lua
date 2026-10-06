@@ -1,7 +1,7 @@
 return {
   "lualine.nvim",
   event = "DeferredUIEnter",
-  cond = function() return not vim.g.mini.statusline end,
+  enabled = function() return not vim.g.mini.statusline end,
   after = function()
     local icons = mininvim.icons
     require("lualine").setup({
