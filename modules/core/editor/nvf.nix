@@ -7,9 +7,7 @@
   flake-file.inputs.nvf.url = "github:notashelf/nvf";
 
   core.editor.nvf = {
-    includes = [
-      (<den/unfree> ["copilot-language-server"])
-    ];
+    includes = [];
 
     nixos = {
       pkgs,
