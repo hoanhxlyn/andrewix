@@ -25,7 +25,7 @@
           "style": "plain"
         },
         {
-          "template": "via {{ .Model.DisplayName }} {{ if le .TokenUsagePercent 10 }}󰂂{{ else if le .TokenUsagePercent 20 }}󰂁{{ else if le .TokenUsagePercent 30 }}󰂀{{ else if le .TokenUsagePercent 40 }}󰁿{{ else if le .TokenUsagePercent 50 }}󰁾{{ else if le .TokenUsagePercent 60 }}󰁽{{ else if le .TokenUsagePercent 70 }}󰁼{{ else if le .TokenUsagePercent 80 }}󰁻{{ else if le .TokenUsagePercent 90 }}󰁺{{ else }}󰂎{{ end }} {{ sub 100 (int .TokenUsagePercent) }}% ({{ .FormattedDuration }}) ",
+          "template": "{{ $u := max (int .TokenUsagePercent) (int .FiveHourUsage) (int .SevenDayUsage) }}via {{ .Model.DisplayName }} {{ if le $u 10 }}󰂂{{ else if le $u 20 }}󰂁{{ else if le $u 30 }}󰂀{{ else if le $u 40 }}󰁿{{ else if le $u 50 }}󰁾{{ else if le $u 60 }}󰁽{{ else if le $u 70 }}󰁼{{ else if le $u 80 }}󰁻{{ else if le $u 90 }}󰁺{{ else }}󰂎{{ end }} {{ sub 100 $u }}% ({{ .FormattedDuration }}) ",
           "foreground": "lightGreen",
           "type": "claude",
           "style": "plain"
