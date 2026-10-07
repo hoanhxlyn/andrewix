@@ -168,40 +168,6 @@ H.hexToHSL = function(hex)
   return string.format("hsl(%d, %d, %d)", math.floor(h + 0.5), math.floor(s + 0.5), math.floor(l + 0.5))
 end
 
---- Converts an HSL color value to RGB in Hex representation.
---- @param h number? The hue
---- @param s number? The saturation
---- @param l number? The lightness
---- The hex representation
-H.hslToHex = function(h, s, l)
-  local r, g, b = H.hslToRgb(h / 360, s / 100, l / 100)
-  return string.format("#%02x%02x%02x", r, g, b)
-end
-
---- Convert RGB values to hex
---- @param r? number Red value (0-255)
---- @param g? number Green value (0-255)
---- @param b? number Blue value (0-255)
---- @param a? number Alpha value (0-1)
---- Hex color representation
-H.rgbToHex = function(r, g, b, a)
-  if a then
-    return string.format("#%02x%02x%02x", r * a, g * a, b * a)
-  end
-  return string.format("#%02x%02x%02x", r, g, b)
-end
-
---- Convert OKLCH color values to hex
---- @param l? number Lightness (CSS range 0-1)
---- @param c? number Chroma
---- @param h? number Hue
---- @param a? number Alpha
---- Hex color representation
-H.oklchToHex = function(l, c, h, a)
-  local rgb = require("mini.colors").convert({ l = l * 100, c = c * 100, h = h }, "rgb")
-  return H.rgbToHex(rgb.r, rgb.g, rgb.b, a)
-end
-
 --- @param tbl table
 --- Unique values from the input table
 H.uniq = function(tbl)
