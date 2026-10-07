@@ -13,7 +13,17 @@
       <core.desktop.misc>
     ];
 
-    nixos = {pkgs, ...}: {
+    nixos = {pkgs, ...}: let
+      screenshot-annotate = pkgs.writeShellScriptBin "screenshot-annotate" ''
+        grim -g "$(slurp)" - | satty -f -
+      '';
+      screenshot-fullscreen = pkgs.writeShellScriptBin "screenshot-fullscreen" ''
+        grim - | satty -f -
+      '';
+      record-screen = pkgs.writeShellScriptBin "record-screen" ''
+        wl-screenrec -f ~/Videos/recording_$(date +%Y%m%d_%H%M%S).mp4
+      '';
+    in {
       nixpkgs.overlays = [inputs.niri.overlays.niri];
       nix.settings = {
         substituters = ["https://niri-epireyn.cachix.org"];
@@ -23,9 +33,14 @@
         acpilight
         slurp
         grim
+        satty
+        wl-screenrec
         xwayland-satellite
         networkmanagerapplet
         bluetui
+        screenshot-annotate
+        screenshot-fullscreen
+        record-screen
       ];
       programs.niri = {
         enable = true;
@@ -309,15 +324,18 @@
                   action.set-window-height = "+10%";
                 };
 
-                # Screenshots
-                "Print".action.spawn = ["niri" "msg" "action" "screenshot"];
+                # Screenshots & Recording
                 "Mod+S" = {
-                  hotkey-overlay.title = "Screenshot";
-                  action.spawn = ["niri" "msg" "action" "screenshot"];
+                  hotkey-overlay.title = "Screenshot annotate";
+                  action.spawn = ["screenshot-annotate"];
                 };
-                "Mod+Ctrl+S" = {
-                  hotkey-overlay.title = "Screenshot screen";
-                  action.spawn = ["niri" "msg" "action" "screenshot-screen"];
+                "Mod+Shift+S" = {
+                  hotkey-overlay.title = "Screenshot fullscreen";
+                  action.spawn = ["screenshot-fullscreen"];
+                };
+                "Mod+Alt+S" = {
+                  hotkey-overlay.title = "Record screen";
+                  action.spawn = ["record-toggle"];
                 };
 
                 # Audio
