@@ -15,9 +15,6 @@
           "enableTaskbarFlashing" = true;
         };
       };
-      programs.satty = {
-        enable = true;
-      };
     };
   };
 }
