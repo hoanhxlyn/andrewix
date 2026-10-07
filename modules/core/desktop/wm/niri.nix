@@ -127,7 +127,7 @@
         };
       }) ["Left" "Down" "Up" "Right"]);
     in {
-      imports = [inputs.niri.homeModules.config];
+      imports = [inputs.niri.homeModules.config inputs.niri.homeModules.stylix];
       nixpkgs.overlays = [inputs.niri.overlays.niri];
       programs.niri = {
         package = pkgs.niri-stable;
