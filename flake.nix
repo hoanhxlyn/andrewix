@@ -65,7 +65,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     stylix = {
-      url = "github:nix-community/stylix";
+      url = "github:adomixaszvers/stylix/merged-rofi-settings-font";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     waycalix.url = "github:hoanhxlyn/waycalix";

@@ -4,7 +4,9 @@
   ...
 }: {
   flake-file.inputs.stylix = {
-    url = "github:nix-community/stylix";
+    # fork = master + stylix#2501 (rofi settings.font rename), revert khi merge
+    # https://github.com/nix-community/stylix/pull/2501
+    url = "github:adomixaszvers/stylix/merged-rofi-settings-font";
     inputs.nixpkgs.follows = "nixpkgs";
   };
   core.services.sync.stylix = {host, ...}: let
