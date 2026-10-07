@@ -20,9 +20,8 @@ local KINDS = { "claude", "codex", "opencode", "gemini", "cursor", "copilot", "p
 local EXE = { ["command code"] = "cmdc", mimo = "mimo" }
 
 local TIMEOUT = 3000 -- ms; keep a hung herdr from freezing nvim
-local STARTUP_DELAY = 1500 -- ms; let a fresh agent TUI come up before sending text
 
-local pane_id, last_kind
+local pane_id, last_kind, agent_name
 
 local function herdr(args)
   local res = vim.system(vim.list_extend({ "herdr" }, args), { text = true }):wait(TIMEOUT)
@@ -39,7 +38,7 @@ local function pane_info(id)
 end
 
 local function forget()
-  pane_id, last_kind = nil, nil
+  pane_id, last_kind, agent_name = nil, nil, nil
   if state_file then
     os.remove(state_file)
   end
@@ -52,7 +51,7 @@ local function remember()
   end
   vim.fn.mkdir(vim.fn.fnamemodify(state_file, ":h"), "p")
   vim.fn.writefile(
-    { vim.json.encode({ pane_id = pane_id, terminal_id = info.terminal_id, kind = last_kind }) },
+    { vim.json.encode({ pane_id = pane_id, terminal_id = info.terminal_id, kind = last_kind, agent_name = agent_name }) },
     state_file
   )
 end
@@ -65,13 +64,13 @@ local function restore()
   local ok, saved = pcall(vim.json.decode, table.concat(vim.fn.readfile(state_file), "\n"))
   local info = ok and type(saved) == "table" and pane_info(saved.pane_id) or nil
   if info and info.terminal_id == saved.terminal_id then
-    pane_id, last_kind = saved.pane_id, saved.kind
+    pane_id, last_kind, agent_name = saved.pane_id, saved.kind, saved.agent_name
   else
     forget()
   end
 end
 
--- The agent runs as `cmd; exit`, so the pane closes when the agent quits; a live pane means a live agent.
+-- Check if the agent (or pane) is still alive.
 local function alive()
   if not pane_id then
     restore()
@@ -79,10 +78,21 @@ local function alive()
   if not pane_id then
     return false
   end
+  -- prefer agent-aware liveness when a name is known
+  if agent_name then
+    local ok = herdr({ "agent", "get", agent_name })
+    if ok then
+      return true
+    end
+    -- agent gone: close the pane best-effort, then reset
+    herdr({ "pane", "close", pane_id })
+    forget()
+    return false
+  end
+  -- fallback for sessions saved before agent_start adoption
   if pane_info(pane_id) then
     return true
   end
-  -- agent gone (or herdr errored): close best-effort so a live pane is never orphaned, then reset
   herdr({ "pane", "close", pane_id })
   forget()
   return false
@@ -135,17 +145,20 @@ local function open(cb)
     if not pane_id then
       return utils.notify("split returned no pane id", "ERROR", "Agent")
     end
-    local started, _, serr
-    started, _, serr = herdr({ "pane", "run", pane_id, (EXE[kind] or kind) .. "; exit" })
-    if not started then
-      -- don't leave a dead pane behind that alive() would treat as the agent
-      herdr({ "pane", "close", pane_id })
-      pane_id = nil
-      utils.notify("agent start failed: " .. (serr or ""), "ERROR", "Agent")
-      return
-    end
-    remember()
-    cb(pane_id, true)
+    agent_name = "agent_" .. kind
+    -- Fish vi mode fix: enter insert mode, then send the command after a short delay.
+    herdr({ "pane", "send-keys", pane_id, "i" })
+    vim.defer_fn(function()
+      local started, _, serr = herdr({ "pane", "run", pane_id, (EXE[kind] or kind) .. "; exit" })
+      if not started then
+        herdr({ "pane", "close", pane_id })
+        pane_id, agent_name = nil, nil
+        utils.notify("agent start failed: " .. (serr or ""), "ERROR", "Agent")
+        return
+      end
+      remember()
+      cb(pane_id, true)
+    end, 200)
   end)
 end
 
@@ -160,16 +173,9 @@ local function focus()
 end
 
 local function send(text)
-  open(function(id, fresh)
-    local function go()
-      herdr({ "pane", "send-text", id, text })
-      focus_agent()
-    end
-    if fresh then
-      vim.defer_fn(go, STARTUP_DELAY)
-    else
-      go()
-    end
+  open(function(id)
+    herdr({ "pane", "send-text", id, text })
+    focus_agent()
   end)
 end
 
