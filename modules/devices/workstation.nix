@@ -21,6 +21,7 @@
     andrew-laptop.provides.to-users.includes = [
       <workstation>
       <core.hardware.power-manager>
+      <core.hardware.intel-vaapi>
     ];
     andrew-pc.provides.to-users.includes = [
       <workstation>
