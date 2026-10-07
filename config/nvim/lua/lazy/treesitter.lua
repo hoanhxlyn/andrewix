@@ -4,9 +4,25 @@ for _, lang in ipairs(mininvim.tree_sitters_ensured_install) do
 end
 
 return {
+  -- nvim-treesitter: NO lazy (upstream docs)
   {
     "nvim-treesitter",
-    ft = filetypes,
+    after = function()
+      require("nvim-treesitter").setup()
+
+      vim.api.nvim_create_autocmd("FileType", {
+        desc = "Install Treesitter",
+        pattern = filetypes,
+        callback = function(ev)
+          vim.treesitter.start(ev.buf)
+          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
+      })
+    end,
+  },
+  -- textobjects: lazy on keys
+  {
+    "nvim-treesitter-textobjects",
     keys = {
       {
         "]f",
@@ -42,23 +58,6 @@ return {
       },
     },
     after = function()
-      local ts = require("nvim-treesitter")
-      ts.setup()
-
-      vim.api.nvim_create_autocmd("FileType", {
-        desc = "Install Treesitter",
-        pattern = filetypes,
-        callback = function(ev)
-          vim.treesitter.start(ev.buf)
-          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-        end,
-      })
-    end,
-  },
-  {
-    "nvim-treesitter-textobjects",
-    event = "BufReadPost",
-    after = function()
       require("nvim-treesitter-textobjects").setup({
         move = {
           enable = true,
@@ -67,8 +66,9 @@ return {
       })
     end,
   },
+  -- treesitter-context: lazy on event
   {
-    "treesitter-context",
+    "nvim-treesitter-context",
     event = "BufReadPost",
     after = function()
       require("treesitter-context").setup({
