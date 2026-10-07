@@ -1,56 +1,80 @@
-local utils = require("config.utils")
-
-local ts = require("nvim-treesitter")
-ts.setup()
--- Enable tree-sitter after opening a file for a target language
 local filetypes = {}
 for _, lang in ipairs(mininvim.tree_sitters_ensured_install) do
   vim.list_extend(filetypes, vim.treesitter.language.get_filetypes(lang))
 end
 
-require("vim.treesitter.query").add_predicate("is-mise?", function(_, _, bufnr, _)
-  local filepath = vim.api.nvim_buf_get_name(tonumber(bufnr) or 0)
-  local filename = vim.fn.fnamemodify(filepath, ":t")
-  return string.match(filename, ".*mise.*%.toml$") ~= nil
-end, {
-  force = true,
-  all = true,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  desc = "Install Treesitter",
-  pattern = filetypes,
-  callback = function(ev)
-    vim.treesitter.start(ev.buf)
-    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-  end,
-})
-vim.api.nvim_create_autocmd({ "BufReadPost" }, {
-  callback = function()
-    require("nvim-treesitter-textobjects").setup({
-      move = {
-        enable = true,
-        set_jumps = true,
+return {
+  {
+    "nvim-treesitter",
+    ft = filetypes,
+    keys = {
+      {
+        "]f",
+        function()
+          require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
+        end,
+        desc = "Next function start",
+        mode = { "n", "x", "o" },
       },
-    })
+      {
+        "]F",
+        function()
+          require("nvim-treesitter-textobjects.move").goto_next_end("@function.outer", "textobjects")
+        end,
+        desc = "Next function end",
+        mode = { "n", "x", "o" },
+      },
+      {
+        "[f",
+        function()
+          require("nvim-treesitter-textobjects.move").goto_previous_start("@function.outer", "textobjects")
+        end,
+        desc = "Previous function start",
+        mode = { "n", "x", "o" },
+      },
+      {
+        "[F",
+        function()
+          require("nvim-treesitter-textobjects.move").goto_previous_end("@function.outer", "textobjects")
+        end,
+        desc = "Previous function end",
+        mode = { "n", "x", "o" },
+      },
+    },
+    after = function()
+      local ts = require("nvim-treesitter")
+      ts.setup()
 
-    local tsc = require("treesitter-context")
-    tsc.setup({
-      mode = "topline",
-      max_lines = 3,
-    })
-    local ts_text_object = require("nvim-treesitter-textobjects.move")
-    utils.map({ "n", "x", "o" }, "]f", function()
-      ts_text_object.goto_next_start("@function.outer", "textobjects")
-    end, "Next function start")
-    utils.map({ "n", "x", "o" }, "]F", function()
-      ts_text_object.goto_next_end("@function.outer", "textobjects")
-    end, "Next function end")
-    utils.map({ "n", "x", "o" }, "[f", function()
-      ts_text_object.goto_previous_start("@function.outer", "textobjects")
-    end, "Previous function start")
-    utils.map({ "n", "x", "o" }, "[F", function()
-      ts_text_object.goto_previous_end("@function.outer", "textobjects")
-    end, "Previous function end")
-  end,
-})
+      vim.api.nvim_create_autocmd("FileType", {
+        desc = "Install Treesitter",
+        pattern = filetypes,
+        callback = function(ev)
+          vim.treesitter.start(ev.buf)
+          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
+      })
+    end,
+  },
+  {
+    "nvim-treesitter-textobjects",
+    event = "BufReadPost",
+    after = function()
+      require("nvim-treesitter-textobjects").setup({
+        move = {
+          enable = true,
+          set_jumps = true,
+        },
+      })
+    end,
+  },
+  {
+    "treesitter-context",
+    event = "BufReadPost",
+    after = function()
+      require("treesitter-context").setup({
+        mode = "topline",
+        max_lines = 3,
+      })
+    end,
+  },
+}

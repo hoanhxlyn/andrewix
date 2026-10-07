@@ -1,9 +1,28 @@
 return {
   "bufferline.nvim",
   event = "DeferredUIEnter",
-  enabled = function() return not vim.g.mini.tabline end,
+  enabled = not vim.g.mini.tabline,
+  keys = {
+    { "<leader>bp", "<cmd>BufferLineTogglePin<cr>", desc = "Toggle Pin" },
+    { "<leader>bP", "<cmd>BufferLineGroupClose ungrouped<cr>", desc = "Delete Non-Pinned Buffers" },
+    { "<leader>bL", "<cmd>BufferLineCloseRight<cr>", desc = "Delete Buffers to the Right" },
+    { "<leader>bH", "<cmd>BufferLineCloseLeft<cr>", desc = "Delete Buffers to the Left" },
+    { "<leader>bd", function() require("mini.bufremove").delete() end, desc = "Delete Buffer" },
+    { "<leader>bo", "<cmd>BufferLineCloseOthers<cr>", desc = "Delete Others Buffer" },
+    { "<S-l>", "<cmd>BufferLineCycleNext<cr>", desc = "Next Buffer" },
+    { "<S-h>", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev Buffer" },
+    { "<leader>bh", "<cmd>BufferLineMovePrev<cr>", desc = "Move buffer prev" },
+    { "<leader>bl", "<cmd>BufferLineMoveNext<cr>", desc = "Move buffer next" },
+    { "<leader>ba", function()
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.bo[buf].buflisted then
+          require("mini.bufremove").delete(buf, true)
+        end
+      end
+    end, desc = "Delete all buffer" },
+    { "<leader>bw", function() require("mini.bufremove").wipeout() end, desc = "Wipeout Buffer" },
+  },
   after = function()
-    local utils = require("config.utils")
     local MiniBufremove = require("mini.bufremove")
     local MiniIcons = require("mini.icons")
 
@@ -45,23 +64,5 @@ return {
         } or {},
       },
     })
-    utils.map("n", utils.L("bp"), utils.C("BufferLineTogglePin"), "Toggle Pin")
-    utils.map("n", utils.L("bP"), utils.C("BufferLineGroupClose ungrouped"), "Delete Non-Pinned Buffers")
-    utils.map("n", utils.L("bL"), utils.C("BufferLineCloseRight"), "Delete Buffers to the Right")
-    utils.map("n", utils.L("bH"), utils.C("BufferLineCloseLeft"), "Delete Buffers to the Left")
-    utils.map("n", utils.L("bd"), MiniBufremove.delete, "Delete Buffer")
-    utils.map("n", utils.L("bo"), utils.C("BufferLineCloseOthers"), "Delete Others Buffer")
-    utils.map("n", "<S-l>", utils.C("BufferLineCycleNext"), "Next Buffer")
-    utils.map("n", "<S-h>", utils.C("BufferLineCyclePrev"), "Prev Buffer")
-    utils.map("n", utils.L("bh"), utils.C("BufferLineMovePrev"), "Move buffer prev")
-    utils.map("n", utils.L("bl"), utils.C("BufferLineMoveNext"), "Move buffer next")
-    utils.map("n", utils.L("ba"), function()
-      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.bo[buf].buflisted then
-          MiniBufremove.delete(buf, true)
-        end
-      end
-    end, "Delete all buffer")
-    utils.map("n", utils.L("bw"), MiniBufremove.wipeout, "Wipeout Buffer")
   end,
 }
