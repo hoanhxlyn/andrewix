@@ -1,6 +1,7 @@
 return {
   "blink.cmp",
   event = { "InsertEnter", "CmdlineEnter" },
+  enabled = not vim.g.mini.completion,
   after = function()
     require("blink.cmp").setup({
       keymap = {
