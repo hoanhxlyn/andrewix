@@ -51,6 +51,7 @@
             nvim-ufo
             promise-async
             markview-nvim
+            nvim-colorizer-lua
             nvim-ts-autotag
             bufferline-nvim
             lualine-nvim
