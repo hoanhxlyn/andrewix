@@ -1,5 +1,6 @@
 return {
   "nvim-dap",
+  dependencies = { "nvim-nio", "nvim-dap-ui", "nvim-dap-virtual-text" },
   keys = {
     { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug: Toggle Breakpoint" },
     { "<F5>", function() require("dap").continue() end, desc = "Debug: Continue" },
