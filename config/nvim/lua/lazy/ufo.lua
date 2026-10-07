@@ -1,5 +1,6 @@
 return {
   "nvim-ufo",
+  dependencies = { "promise-async" },
   event = "BufReadPost",
   keys = {
     { "zO", function() require("ufo").openAllFolds() end, desc = "Open all folds" },
