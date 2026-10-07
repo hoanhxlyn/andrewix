@@ -35,7 +35,6 @@
             nvim-ts-context-commentstring
             plenary-nvim
             SchemaStore-nvim
-            promise-async
           ];
           opt = with pkgs.vimPlugins; [
             nvim-lspconfig
@@ -50,6 +49,7 @@
             nvim-dap-virtual-text
             nvim-navic
             nvim-ufo
+            promise-async
             markview-nvim
             nvim-ts-autotag
             bufferline-nvim
@@ -65,6 +65,7 @@
             nvim-dap = null;
             nvim-lspconfig = null;
             nvim-nio = null;
+            promise-async = null;
           };
         };
 

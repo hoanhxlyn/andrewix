@@ -1,2 +1,3 @@
 require("config")
-require("lz.n").load("lazy")
+
+require("config.deps").setup({ import = "lazy" })
