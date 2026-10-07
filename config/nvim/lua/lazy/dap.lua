@@ -3,12 +3,35 @@ return {
   keys = {
     { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug: Toggle Breakpoint" },
     { "<F5>", function() require("dap").continue() end, desc = "Debug: Continue" },
+    { "<F10>", function() require("dap").step_into() end, desc = "Debug: Step Into" },
+    { "<F11>", function() require("dap").step_over() end, desc = "Debug: Step Over" },
+    { "<F12>", function() require("dap").step_out() end, desc = "Debug: Step Out" },
+    { "<leader>dB", function()
+      vim.ui.input({ prompt = "Breakpoint condition" }, function(condition)
+        if condition then
+          require("dap").set_breakpoint(condition)
+        end
+      end)
+    end, desc = "Debug: Set Breakpoint" },
+    { "<leader>du", function() require("dapui").toggle() end, desc = "Debug: Toggle UI" },
+    { "<leader>dl", "<cmd>DapShowLog<cr>", desc = "Debug: Show Log" },
+    { "<leader>dp", function()
+      vim.ui.input({ prompt = "Log point message" }, function(message)
+        if message then
+          require("dap").set_breakpoint(nil, nil, message)
+        end
+      end)
+    end, desc = "Debug: Set Log Point" },
+    { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Debug: Toggle REPL" },
+    { "<leader>dt", function() require("dap").terminate() end, desc = "Debug: Terminate" },
+    { "<leader>dh", function() require("dap.ui.widgets").hover() end, desc = "Debug: widget hover", mode = { "n", "v" } },
+    { "<leader>dp", function() require("dap.ui.widgets").preview() end, desc = "Debug: widget preview", mode = { "n", "v" } },
+    { "<leader>df", function() require("dap.ui.widgets").centered_float(require("dap.ui.widgets").frames) end, desc = "Debug: widget float frames" },
+    { "<leader>ds", function() require("dap.ui.widgets").centered_float(require("dap.ui.widgets").scopes) end, desc = "Debug: widget float scopes" },
   },
   after = function()
     local dap = require("dap")
     local dapui = require("dapui")
-    local dap_widget = require("dap.ui.widgets")
-    local utils = require("config.utils")
     dap.set_log_level("TRACE")
 
     for name, icon in pairs(_G.mininvim.icons.dap) do
@@ -63,39 +86,6 @@ return {
         },
       }
     end
-
-    utils.map("n", "<F5>", dap.continue, "Debug: Start/Continue")
-    utils.map("n", "<F10>", dap.step_into, "Debug: Step Into")
-    utils.map("n", "<F11>", dap.step_over, "Debug: Step Over")
-    utils.map("n", "<F12>", dap.step_out, "Debug: Step Out")
-    utils.map("n", "<leader>db", dap.toggle_breakpoint, "Debug: Toggle Breakpoint")
-    utils.map("n", "<leader>dB", function()
-      vim.ui.input({ prompt = "Breakpoint condition" }, function(condition)
-        if condition then
-          dap.set_breakpoint(condition)
-        end
-      end)
-    end, "Debug: Set Breakpoint")
-    utils.map("n", "<leader>du", dapui.toggle, "Debug: Toggle UI")
-    utils.map("n", "<leader>dl", utils.C("DapShowLog"), "Debug: Toggle UI")
-
-    utils.map("n", "<leader>dp", function()
-      vim.ui.input({ prompt = "Log point message" }, function(message)
-        if message then
-          dap.set_breakpoint(nil, nil, message)
-        end
-      end)
-    end, "Debug: Set Log Point")
-    utils.map("n", "<leader>dr", dap.repl.toggle, "Debug: Toggle REPL")
-    utils.map("n", "<leader>dt", dap.terminate, "Debug: Terminate")
-    utils.map({ "n", "v" }, utils.L("dh"), dap_widget.hover, "Debug: widget hover")
-    utils.map({ "n", "v" }, utils.L("dp"), dap_widget.preview, "Debug: widget preview")
-    utils.map({ "n" }, utils.L("df"), function()
-      dap_widget.centered_float(dap_widget.frames)
-    end, "Debug: widget float frames")
-    utils.map({ "n" }, utils.L("ds"), function()
-      dap_widget.centered_float(dap_widget.scopes)
-    end, "Debug: widget float scopes")
 
     dap.listeners.after.event_initialized["dapui_config"] = dapui.open
     dap.listeners.before.event_terminated["dapui_config"] = dapui.close

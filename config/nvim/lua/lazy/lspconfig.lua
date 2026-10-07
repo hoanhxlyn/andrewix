@@ -1,6 +1,47 @@
 return {
   "nvim-lspconfig",
   event = "BufReadPre",
+  keys = {
+    { "<leader>ca", function() vim.lsp.buf.code_action() end, desc = "Code action" },
+    { "<leader>cd", function() vim.diagnostic.open_float() end, desc = "Code show diagnostic" },
+    { "<leader>cr", function() vim.lsp.buf.rename() end, desc = "LSP: rename" },
+    { "<s-k>", function() vim.lsp.buf.hover() end, desc = "LSP: hover" },
+    { "<c-/>", function() vim.lsp.buf.signature_help() end, mode = "i", desc = "LSP: signature help" },
+    { "<leader>cR", function()
+      local clients = vim.lsp.get_clients({ bufnr = 0 })
+      if #clients == 0 then
+        vim.notify("No active LSP clients", vim.log.levels.WARN)
+        return
+      end
+      vim.ui.select(clients, {
+        prompt = "Restart LSP:",
+        format_item = function(item)
+          return item.name
+        end,
+      }, function(choice)
+        if choice then
+          vim.cmd("LspRestart " .. choice.name)
+        end
+      end)
+    end, desc = "LSP: restart" },
+    { "<leader>cD", function()
+      local clients = vim.lsp.get_clients({ bufnr = 0 })
+      if #clients == 0 then
+        vim.notify("No active LSP clients", vim.log.levels.WARN)
+        return
+      end
+      vim.ui.select(clients, {
+        prompt = "Disable LSP:",
+        format_item = function(item)
+          return item.name
+        end,
+      }, function(choice)
+        if choice then
+          vim.cmd("LspStop " .. choice.name)
+        end
+      end)
+    end, desc = "LSP: disable" },
+  },
   after = function()
     local utils = require("config.utils")
 
@@ -70,44 +111,15 @@ return {
       "tailwindcss", "vtsls", "fish_lsp", "marksman", "taplo", "biome",
     })
 
-    utils.map("n", utils.L("ca"), vim.lsp.buf.code_action, "Code action")
-    utils.map("n", utils.L("cd"), vim.diagnostic.open_float, "Code show diagnostic")
-    utils.map("n", utils.L("cr"), vim.lsp.buf.rename, "LSP: rename")
     utils.patch_lsp_hover()
-    utils.map("n", "<s-k>", vim.lsp.buf.hover)
-    utils.map("i", "<c-/", vim.lsp.buf.signature_help)
-
-    local function select_lsp(action, cmd)
-      return function()
-        local clients = vim.lsp.get_clients({ bufnr = 0 })
-        if #clients == 0 then
-          utils.notify("No active LSP clients", "WARN")
-          return
-        end
-        vim.ui.select(clients, {
-          prompt = action .. " LSP:",
-          format_item = function(item)
-            return item.name
-          end,
-        }, function(choice)
-          if not choice then
-            return
-          end
-          vim.cmd(cmd .. " " .. choice.name)
-        end)
-      end
-    end
-
-    utils.map("n", utils.L("cR"), select_lsp("Restart", "lsp restart"), "LSP: restart")
-    utils.map("n", utils.L("cD"), select_lsp("Disable", "lsp disable"), "LSP: disable")
 
     vim.api.nvim_create_autocmd("LspAttach", {
       group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
       callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         if client and client.name == "vtsls" then
-          utils.map("n", utils.L("co"), utils.action("source.organizeImports"), "[TS] Organize imports")
-          utils.map("n", utils.L("cv"), utils.command("typescript.selectTypeScriptVersion"), "[TS] Select ts version")
+          utils.map("n", "<leader>co", utils.action("source.organizeImports"), "[TS] Organize imports")
+          utils.map("n", "<leader>cv", utils.command("typescript.selectTypeScriptVersion"), "[TS] Select ts version")
         end
         if client and client.name == "tailwindcss" then
           vim.api.nvim_create_autocmd("BufWritePre", {

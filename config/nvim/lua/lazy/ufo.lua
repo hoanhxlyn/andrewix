@@ -1,14 +1,23 @@
 return {
   "nvim-ufo",
   event = "BufReadPost",
+  keys = {
+    { "zO", function() require("ufo").openAllFolds() end, desc = "Open all folds" },
+    { "zC", function() require("ufo").closeAllFolds() end, desc = "Close all folds" },
+    { "zi", function() require("ufo").inspect() end, desc = "Ufo: inspect" },
+    { "zk", function()
+      local winid = require("ufo").peekFoldedLinesUnderCursor()
+      if not winid then
+        vim.lsp.buf.hover()
+      end
+    end, desc = "Peek Folded Lines" },
+  },
   after = function()
     vim.o.foldcolumn = "auto"
     vim.o.foldlevel = 99
     vim.o.foldlevelstart = 99
     vim.o.foldenable = true
-    local ufo = require("ufo")
-    local utils = require("config.utils")
-    ufo.setup({
+    require("ufo").setup({
       open_fold_hl_timeout = 150,
       preview = {
         win_config = {
@@ -51,14 +60,5 @@ return {
         return newVirtText
       end,
     })
-    utils.map({ "n" }, "zO", ufo.openAllFolds, "Open all folds")
-    utils.map({ "n" }, "zC", ufo.closeAllFolds, "Close all folds")
-    utils.map("n", "zi", ufo.inspect, "Ufo: inspect", { noremap = true })
-    utils.map({ "n" }, "zk", function()
-      local winid = ufo.peekFoldedLinesUnderCursor()
-      if not winid then
-        vim.lsp.buf.hover()
-      end
-    end, "Peek Folded Lines")
   end,
 }
