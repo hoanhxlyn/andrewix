@@ -111,6 +111,8 @@ return {
       "tailwindcss", "vtsls", "fish_lsp", "marksman", "taplo", "biome",
     })
 
+    vim.lsp.document_color.enable(true, nil, { style = "󰝤 " })
+
     utils.patch_lsp_hover()
 
     vim.api.nvim_create_autocmd("LspAttach", {
