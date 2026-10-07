@@ -14,8 +14,24 @@
           echo '{"text": "󰂟", "tooltip": "DND: Off"}'
         fi
       '';
+      recordingScript = pkgs.writeShellScriptBin "waybar-recording" ''
+        if pgrep -x wl-screenrec > /dev/null; then
+          echo '{"text": "󰑊", "tooltip": "Recording", "class": "recording"}'
+        else
+          echo '{"text": "", "tooltip": "Not recording"}'
+        fi
+      '';
+      recordToggle = pkgs.writeShellScriptBin "record-toggle" ''
+        if pgrep -x wl-screenrec > /dev/null; then
+          pkill -SIGINT wl-screenrec
+          pkill --signal RTMIN+11 waybar
+        else
+          wl-screenrec -f ~/Videos/recording_$(date +%Y%m%d_%H%M%S).mp4 &
+          pkill --signal RTMIN+11 waybar
+        fi
+      '';
     in {
-      home.packages = with pkgs; [playerctl] ++ [dndScript];
+      home.packages = with pkgs; [playerctl] ++ [dndScript recordToggle];
       stylix.targets.waybar = {
         enable = true;
         enableLeftBackColors = false;
@@ -53,6 +69,8 @@
             #backlight {border-bottom: 3px solid @base05;}
             #bluetooth {border-bottom: 3px solid @base0D;}
             #custom-dnd {padding: 0 5px; min-width: 18px; border-bottom: 3px solid @base04;}
+            #custom-recording {padding: 0 5px; min-width: 18px; border-bottom: 3px solid @base08;}
+            #custom-recording.recording {color: @base08; border-bottom-color: @base08;}
             #tray {border-bottom: 3px solid @base0C;}
             #cpu { border-bottom: 3px solid @base09; }
             #memory { border-bottom: 3px solid @base0A; }
@@ -78,6 +96,7 @@
               "privacy"
               "bluetooth"
               "custom/dnd"
+              "custom/recording"
               (
                 if host.isLaptop
                 then "battery"
@@ -170,6 +189,13 @@
               return-type = "json";
               signal = 10;
               on-click = "dnd-toggle";
+            };
+
+            "custom/recording" = {
+              exec = "${recordingScript}/bin/waybar-recording";
+              return-type = "json";
+              signal = 11;
+              on-click = "record-toggle";
             };
 
             bluetooth = {
