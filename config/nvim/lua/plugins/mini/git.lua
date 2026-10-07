@@ -1,4 +1,3 @@
----@diagnostic disable: need-check-nil
 local utils = require("config.utils")
 local blame_enabled = true
 local style = {
@@ -11,7 +10,7 @@ local ns_id = vim.api.nvim_create_namespace("MiniGitBlame")
 require("mini.git").setup()
 require("mini.diff").setup({
   view = {
-    style = style.number,
+    style = style.num,
     signs = {
       add = mininvim.icons.git_signs.add,
       change = mininvim.icons.git_signs.change,
@@ -199,11 +198,11 @@ vim.api.nvim_create_autocmd("CursorHold", {
           return
         end
 
-        local output = obj.stdout
+        local output = obj.stdout or ""
         -- Parse Output
-        local author = output:match("author (.-)\n")
+        local author = output:match("author (.-)\n") or "you"
         local date_ts = output:match("author%-time (.-)\n")
-        local summary = output:match("summary (.-)\n")
+        local summary = output:match("summary (.-)\n") or "what have you done"
         local hash = output:match("^(%S+)")
         if hash and hash:match("^0+$") then
           local text = "  Not committed yet"
@@ -217,7 +216,7 @@ vim.api.nvim_create_autocmd("CursorHold", {
 
         if author and date_ts and summary then
           -- Calculate relative time
-          local rel_time = utils.get_relative_time(tonumber(date_ts))
+          local rel_time = utils.get_relative_time(tonumber(date_ts) or 0)
           -- Format your text here
           local text = string.format(" (%s) %s -> %s", rel_time, author, summary)
 
