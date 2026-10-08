@@ -139,7 +139,8 @@ nix run .#write-flake    # rewrites flake.nix
 5. **No unit tests** — validate via `just build` + `just test <host>`.
 6. **Tools installed via Nix** (`modules/core/`) — no pre-commit hooks.
 7. **Research unfamiliar NixOS/HM options** with `context7` + `websearch` before guessing.
-8. **Activate `caveman` skill** — terse output mode is the default.
+8. **No system Python** — machine has no `python`/`python3`. Run Python via `uv run` (e.g. `uv run python script.py`,
+   `uv run --with <pkg> ...`).
 
 ## Operational gotchas
 
