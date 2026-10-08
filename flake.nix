@@ -56,6 +56,10 @@
       url = "github:saumyajyoti/omp.yazi";
       flake = false;
     };
+    opencode = {
+      url = "github:sst/opencode/v2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     ponytail = {
       url = "github:DietrichGebert/ponytail";
       flake = false;

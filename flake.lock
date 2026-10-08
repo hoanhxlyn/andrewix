@@ -732,6 +732,27 @@
         "type": "github"
       }
     },
+    "opencode": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791470153,
+        "narHash": "sha256-ly4U3w2RQ18XecPOl3bqasuqEFv/K0czdKtIBcl2/zE=",
+        "owner": "sst",
+        "repo": "opencode",
+        "rev": "7522502628e3257711d50d62dfefa878e19c8b8f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sst",
+        "ref": "v2",
+        "repo": "opencode",
+        "type": "github"
+      }
+    },
     "ponytail": {
       "flake": false,
       "locked": {
@@ -769,6 +790,7 @@
         "noctalia": "noctalia",
         "nvf": "nvf",
         "omp-yazi": "omp-yazi",
+        "opencode": "opencode",
         "ponytail": "ponytail",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
