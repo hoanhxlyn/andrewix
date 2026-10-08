@@ -1,4 +1,4 @@
--- Plain scripts in lua/plugins/ (mini.nvim is a start plugin, so no packadd needed).
+-- Plain scripts in lua/lazy/mini/ (mini.nvim is a start plugin, so no packadd needed).
 return {
   "mini",
   virtual = true,
@@ -7,7 +7,7 @@ return {
     local mini = vim.g.mini
     local function req(mod, enabled)
       if enabled ~= false then
-        require("plugins.mini." .. mod)
+        require("lazy.mini." .. mod)
       end
     end
 
@@ -51,6 +51,6 @@ return {
     req("map", mini.map)
     req("indentscope", mini.indent)
 
-    require("plugins.ui2")
+    require("lazy.mini.ui2")
   end,
 }
