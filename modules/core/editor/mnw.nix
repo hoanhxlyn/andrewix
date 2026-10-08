@@ -77,7 +77,7 @@
           vscode-langservers-extracted
           yaml-language-server
           tailwindcss-language-server
-          vtsls
+          typescript # tsc 7 native LSP (`tsc --lsp`)
           fish-lsp
           marksman
           taplo
