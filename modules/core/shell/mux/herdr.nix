@@ -129,13 +129,12 @@
           ui = {
             sound.enabled = false;
             status_indicators = "symbols"; # symbols | dots
-            toast = {
-              delivery = "herdr";
-              herdr.position = "top-right";
-            };
+            toast.delivery = "herdr";
+            toast.herdr.position = "top-right";
             prompt_new_tab_name = false;
             hide_tab_bar_when_single_tab = false;
             confirm_close = true;
+            sidebar_collapsed_mode = "hidden"; # hidden | compact
           };
         };
       };
