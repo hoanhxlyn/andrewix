@@ -12,69 +12,57 @@
           display.separator = " ";
           modules = [
             {
-              "key" = "╭───────────╮";
-              "type" = "custom";
-            }
-            {
-              "key" = "│ {#31} user    {#keys}│";
+              "key" = "{#31}╭ 󰇇 user    {#keys}";
               "type" = "title";
               "format" = "{user-name}";
             }
             {
-              "key" = "│ {#32}󰇅 hname   {#keys}│";
+              "key" = "{#32}├ 󰇅 hname   {#keys}";
               "type" = "title";
               "format" = "{host-name}";
             }
             {
-              "key" = "│ {#33}󰅐 uptime  {#keys}│";
+              "key" = "{#33}├ 󰅐 uptime  {#keys}";
               "type" = "uptime";
             }
             {
-              "key" = "│ {#34}{icon} distro  {#keys}│";
+              "key" = "{#34}├ {icon} distro  {#keys}";
               "type" = "os";
             }
             {
-              "key" = "│ {#35} kernel  {#keys}│";
+              "key" = "{#35}├ 󰌽 kernel  {#keys}";
               "type" = "kernel";
             }
             {
-              "key" = "│ {#36}󰇄 desktop {#keys}│";
+              "key" = "{#36}├ 󰇄 desktop {#keys}";
               "type" = "de";
             }
             {
-              "key" = "│ {#31} term    {#keys}│";
+              "key" = "{#31}├  term    {#keys}";
               "type" = "terminal";
             }
             {
-              "key" = "│ {#32} shell   {#keys}│";
+              "key" = "{#32}├  shell   {#keys}";
               "type" = "shell";
             }
             {
-              "key" = "│ {#33}󰍛 cpu     {#keys}│";
+              "key" = "{#33}├ 󰍛 cpu     {#keys}";
               "type" = "command";
               "text" = ''fastfetch -s cpu --format json | jq -r '.[0].result | (.cpu | split(" ") | last) + " @ " + (.frequency.max/1000|tostring) + "GHz"' '';
             }
             {
-              "key" = "│ {#34}󰉉 disk    {#keys}│";
+              "key" = "{#34}├ 󰉉 disk    {#keys}";
               "type" = "disk";
               "folders" = "/";
             }
             {
-              "key" = "│ {#35} memory  {#keys}│";
+              "key" = "{#35}├ 󰿅 memory  {#keys}";
               "type" = "memory";
             }
             {
-              "key" = "├───────────┤";
-              "type" = "custom";
-            }
-            {
-              "key" = "│ {#39} colors  {#keys}│";
+              "key" = "{#39}╰ 󰌈 colors  {#keys}";
               "type" = "colors";
               "symbol" = "circle";
-            }
-            {
-              "key" = "╰───────────╯";
-              "type" = "custom";
             }
           ];
         };
