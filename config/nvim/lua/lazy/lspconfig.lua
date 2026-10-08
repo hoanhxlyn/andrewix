@@ -108,7 +108,8 @@ return {
     -- Names = lspconfig config names, not binary names (nil_ls→nil, fish_lsp→fish-lsp)
     vim.lsp.enable({
       "nil_ls", "lua_ls", "html", "cssls", "jsonls", "yamlls",
-      "tailwindcss", "vtsls", "fish_lsp", "marksman", "taplo", "biome",
+      "tailwindcss", "tsc", "fish_lsp", "marksman", "taplo", "biome",
+      -- "vtsls", -- disabled: config kept in after/lsp/vtsls.lua; re-add pkg to mnw.nix + drop "tsc"
     })
 
     vim.lsp.document_color.enable(true, nil, { style = "󰝤 " })
@@ -119,8 +120,10 @@ return {
       group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
       callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if client and client.name == "vtsls" then
+        if client and (client.name == "tsc" or client.name == "vtsls") then
           utils.map("n", "<leader>co", utils.action("source.organizeImports"), "[TS] Organize imports")
+        end
+        if client and client.name == "vtsls" then
           utils.map("n", "<leader>cv", utils.command("typescript.selectTypeScriptVersion"), "[TS] Select ts version")
         end
         if client and client.name == "tailwindcss" then
