@@ -5,7 +5,11 @@ return {
   after = function()
     require("colorizer").setup({
       options = {
-        display = { mode = "virtualtext", virtualtext = { char = "󰝤", position = "before" } },
+        display = {
+          mode = "virtualtext",
+          virtualtext = { char = "󰝤", position = "before" },
+          disable_document_color = false, -- keep vim.lsp.document_color for tailwind
+        },
         parsers = {
           css_fn = true,
           hex = { default = false },
