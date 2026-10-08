@@ -17,14 +17,14 @@
     }: let
       colors = config.lib.stylix.colors.withHashtag;
       herdrPkg = inputs.herdr-nix.packages.${pkgs.stdenv.hostPlatform.system}.herdr;
-      herdrBin = lib.getExe herdrPkg;
+      # herdrBin = lib.getExe herdrPkg;
     in {
       programs.herdr = {
         package = herdrPkg;
         enable = host.terminal.mux == "herdr";
         settings = {
           onboarding = false;
-          terminal.new_cwd = "home";
+          # terminal.new_cwd = "home";
           theme = {
             name = "terminal";
             custom = {
@@ -85,26 +85,21 @@
             navigate_workspace_down = "j";
             move_tab_previous = "prefix+<";
             move_tab_next = "prefix+>";
+            detach = "prefix+d";
             command = [
               {
-                key = "prefix+d";
-                type = "shell";
-                command = ''"${herdrBin}" tab create --cwd "$HERDR_ACTIVE_PANE_CWD" --focus'';
-                description = "duplicate tab in current cwd";
-              }
-              {
-                key = "prefix+e";
+                key = "prefix+E";
                 type = "popup";
-                command = "${self}/config/yazi/yazi-resume.sh";
-                description = "yazi (resume last dir)";
+                command = ''${lib.getExe pkgs.fish} ${self}/config/yazi/yazi-resume.fish'';
+                description = "yazi (resume)";
                 width = "90%";
                 height = "90%";
               }
               {
-                key = "prefix+E";
+                key = "prefix+e";
                 type = "popup";
                 command = ''${lib.getExe pkgs.fish} -c yazi'';
-                description = "yazi (current dir)";
+                description = "yazi (current cwd)";
                 width = "90%";
                 height = "90%";
               }
@@ -112,7 +107,7 @@
                 key = "prefix+g";
                 type = "popup";
                 command = ''${lib.getExe pkgs.fish} -c lazygit'';
-                description = "lazygit (current dir)";
+                description = "lazygit";
                 width = "90%";
                 height = "90%";
               }
