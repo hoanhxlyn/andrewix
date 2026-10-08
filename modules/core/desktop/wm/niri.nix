@@ -11,15 +11,10 @@
       <core.desktop.notification.mako>
       <core.desktop.menu-launcher.fuzzel>
       <core.desktop.misc>
+      <core.desktop.screenshot>
     ];
 
     nixos = {pkgs, ...}: let
-      screenshot-annotate = pkgs.writeShellScriptBin "screenshot-annotate" ''
-        grim -g "$(slurp)" - | satty -f -
-      '';
-      screenshot-fullscreen = pkgs.writeShellScriptBin "screenshot-fullscreen" ''
-        grim - | satty -f -
-      '';
       record-screen = pkgs.writeShellScriptBin "record-screen" ''
         wl-screenrec -f ~/Videos/recording_$(date +%Y%m%d_%H%M%S).mp4
       '';
@@ -31,15 +26,10 @@
       };
       environment.systemPackages = with pkgs; [
         acpilight
-        slurp
-        grim
-        satty
         wl-screenrec
         xwayland-satellite
         networkmanagerapplet
         bluetui
-        screenshot-annotate
-        screenshot-fullscreen
         record-screen
       ];
       programs.niri = {
