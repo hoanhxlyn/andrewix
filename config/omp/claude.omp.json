@@ -25,7 +25,7 @@
           "style": "plain"
         },
         {
-          "template": "{{ $u := max (int .TokenUsagePercent) (int .FiveHourUsage) (int .SevenDayUsage) }}via {{ .Model.DisplayName }} {{ if le $u 10 }}󰂂{{ else if le $u 20 }}󰂁{{ else if le $u 30 }}󰂀{{ else if le $u 40 }}󰁿{{ else if le $u 50 }}󰁾{{ else if le $u 60 }}󰁽{{ else if le $u 70 }}󰁼{{ else if le $u 80 }}󰁻{{ else if le $u 90 }}󰁺{{ else }}󰂎{{ end }} {{ sub 100 $u }}% ({{ .FormattedDuration }}) ",
+          "template": "{{ $icons := list `󰂂` `󰂁` `󰂀` `󰁿` `󰁾` `󰁽` `󰁼` `󰁻` `󰁺` `󰂎` }}via {{ .Model.DisplayName }} {{ range $i, $p := list (list `5h` (int .FiveHourUsage)) (list `7d` (int .SevenDayUsage)) }}{{ if $i }}| {{ end }}{{ $u := index $p 1 }}{{ index $p 0 }} {{ index $icons (max 0 (sub (div (add $u 9) 10) 1)) }} {{ sub 100 $u }}% {{ end }}",
           "foreground": "lightGreen",
           "type": "claude",
           "style": "plain"
