@@ -46,7 +46,7 @@
               "type" = "shell";
             }
             {
-              "key" = "{#33}├─ 󰍛 cpu";
+              "key" = "{#33}├─ 󰻠 cpu";
               "type" = "command";
               "text" = ''fastfetch -s cpu --format json | jq -r '.[0].result | (.cpu | split(" ") | last) + " @ " + (.frequency.max/1000|tostring) + "GHz"' '';
             }
@@ -56,11 +56,11 @@
               "folders" = "/";
             }
             {
-              "key" = "{#35}├─ 󰿅 memory";
+              "key" = "{#35}├─ 󰍛 memory";
               "type" = "memory";
             }
             {
-              "key" = "{#39}╰─ 󰌈 colors";
+              "key" = "{#39}╰─  colors";
               "type" = "colors";
               "symbol" = "circle";
             }
