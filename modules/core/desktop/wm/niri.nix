@@ -185,6 +185,10 @@
           environment.QT_QPA_PLATFORM = "wayland;xcb";
           environment.GTK_USE_PORTAL = "1";
 
+          switch-events = lib.mkIf (host.isLaptop or false) {
+            lid-close.action.spawn = ["${pkgs.niri-stable}/bin/niri" "msg" "action" "power-off-monitors"];
+          };
+
           binds = with action;
             lib.mkMerge [
               {
