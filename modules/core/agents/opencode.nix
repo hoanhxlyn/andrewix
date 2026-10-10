@@ -9,6 +9,11 @@
     osConfig,
     ...
   }: {
+    home.packages =
+      if (osConfig.wsl.enable or false)
+      then []
+      else [inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.opencode-desktop];
+
     programs.opencode = {
       enable = true;
       package =

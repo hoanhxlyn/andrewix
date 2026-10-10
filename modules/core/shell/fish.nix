@@ -45,7 +45,6 @@
             inherit (plugin-git) src;
           }
         ];
-        completions.opencode = "complete -c opencode -f -a \"(opencode --get-yargs-completions (commandline -opc) 2>/dev/null)\"";
       };
 
       home.sessionVariables = {
