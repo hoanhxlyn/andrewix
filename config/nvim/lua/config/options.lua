@@ -31,3 +31,4 @@ vim.o.formatoptions = "jcroqlnt" -- tcqj
 vim.o.grepformat = "%f:%l:%c:%m"
 vim.o.grepprg = "rg --vimgrep"
 vim.o.scrolloff = 5
+vim.o.termguicolors = true
