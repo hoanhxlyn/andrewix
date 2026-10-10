@@ -88,22 +88,6 @@
         "type": "github"
       }
     },
-    "compress-yazi": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1787430742,
-        "narHash": "sha256-9cdA8D/TtwHcLqrtoyIixA0YJmTs+c8FSNrjxp8CYI0=",
-        "owner": "KKV9",
-        "repo": "compress.yazi",
-        "rev": "80e5268ec74c7ac17d4d739e13a9958cba4c70d3",
-        "type": "github"
-      },
-      "original": {
-        "owner": "KKV9",
-        "repo": "compress.yazi",
-        "type": "github"
-      }
-    },
     "crane": {
       "locked": {
         "lastModified": 1789760033,
@@ -772,7 +756,6 @@
     "root": {
       "inputs": {
         "aic8800": "aic8800",
-        "compress-yazi": "compress-yazi",
         "den": "den",
         "disko": "disko",
         "flake-file": "flake-file",
@@ -795,7 +778,6 @@
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "waycalix": "waycalix",
-        "yamb-yazi": "yamb-yazi",
         "zen-browser": "zen-browser"
       }
     },
@@ -1034,22 +1016,6 @@
       "original": {
         "owner": "Supreeeme",
         "repo": "xwayland-satellite",
-        "type": "github"
-      }
-    },
-    "yamb-yazi": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1786205317,
-        "narHash": "sha256-pbwKj4NuIiBMyuRVtbOYWBREZbyg1mKLoCWIAkxrygc=",
-        "owner": "h-hg",
-        "repo": "yamb.yazi",
-        "rev": "971b85862a1a2c5b8133da88b0dd4569adff296e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "h-hg",
-        "repo": "yamb.yazi",
         "type": "github"
       }
     },
