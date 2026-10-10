@@ -8,10 +8,6 @@
       url = "github:hoanhxlyn/aic8800-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    compress-yazi = {
-      url = "github:KKV9/compress.yazi";
-      flake = false;
-    };
     den.url = "github:denful/den";
     disko = {
       url = "github:nix-community/disko";
@@ -73,10 +69,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     waycalix.url = "github:hoanhxlyn/waycalix";
-    yamb-yazi = {
-      url = "github:h-hg/yamb.yazi";
-      flake = false;
-    };
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs = {
