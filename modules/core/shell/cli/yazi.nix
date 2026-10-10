@@ -29,11 +29,14 @@
         version = "0-unstable-2026-02-17";
         src = inputs.omp-yazi;
       };
+      # Cap preview at 1s: remote mounts (rclone/gdrive) hang eza/bat otherwise
       yambPreview = pkgs.writeShellScript "yamb-preview" ''
         if [ -d "$1" ]; then
-          ${pkgs.eza}/bin/eza -T -L 1 --color=always --icons=always "$1"
+          ${pkgs.coreutils}/bin/timeout 1 ${pkgs.eza}/bin/eza -T -L 1 --color=always --icons=always "$1" \
+            || echo "(no preview: slow or remote path)"
         else
-          ${pkgs.bat}/bin/bat --color=always --style=numbers --line-range=:100 "$1"
+          ${pkgs.coreutils}/bin/timeout 1 ${pkgs.bat}/bin/bat --color=always --style=numbers --line-range=:100 "$1" \
+            || echo "(no preview: slow or remote path)"
         fi
       '';
     in {

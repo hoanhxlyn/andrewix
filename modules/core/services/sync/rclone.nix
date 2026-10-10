@@ -21,14 +21,16 @@
         };
         Service = {
           Type = "notify";
+          EnvironmentFile = "${config.home.homeDirectory}/.config/sops-nix/rclone-env";
           ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${config.home.homeDirectory}/${path}";
           ExecStart = ''
             ${pkgs.rclone}/bin/rclone mount gdrive: ${config.home.homeDirectory}/${path} \
             --allow-non-empty \
             --vfs-cache-max-age 24h \
-            --dir-cache-time 1h \
-            --poll-interval 1m \
+            --dir-cache-time 24h \
+            --poll-interval 5m \
             --vfs-cache-mode full \
+            --vfs-cache-max-size 5G \
             --config %h/.config/rclone/rclone.conf
           '';
           ExecStop = "${pkgs.fuse}/bin/fusermount -u ${config.home.homeDirectory}/${path}";
