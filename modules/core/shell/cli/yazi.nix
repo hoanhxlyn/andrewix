@@ -4,16 +4,8 @@
   ...
 }: {
   flake-file.inputs = {
-    yamb-yazi = {
-      url = "github:h-hg/yamb.yazi";
-      flake = false;
-    };
     omp-yazi = {
       url = "github:saumyajyoti/omp.yazi";
-      flake = false;
-    };
-    compress-yazi = {
-      url = "github:KKV9/compress.yazi";
       flake = false;
     };
   };
@@ -31,20 +23,11 @@
 
     homeManager = {pkgs, ...}: let
       plug = pkgs.yaziPlugins;
-      yamb = plug.mkYaziPlugin {
-        pname = "yamb.yazi";
-        version = "0-unstable-2026-07-18";
-        src = inputs.yamb-yazi;
-      };
+      # omp.yazi isn't packaged in nixpkgs → build from flake input
       omp = plug.mkYaziPlugin {
         pname = "omp.yazi";
         version = "0-unstable-2026-02-17";
         src = inputs.omp-yazi;
-      };
-      compress = plug.mkYaziPlugin {
-        pname = "compress.yazi";
-        version = "0-unstable-2026-03-09";
-        src = inputs.compress-yazi;
       };
       yambPreview = pkgs.writeShellScript "yamb-preview" ''
         if [ -d "$1" ]; then
@@ -109,8 +92,8 @@
           inherit (plug) smart-enter;
           inherit (plug) lazygit;
           inherit (plug) git;
-          inherit compress;
-          inherit yamb;
+          inherit (plug) compress;
+          inherit (plug) yamb;
           inherit omp;
         };
         initLua = ''
@@ -120,10 +103,11 @@
             cli = "fzf --delimiter='\t' --with-nth='{3} │ {1} {2}' --preview='${yambPreview} {2}' --preview-window=right:50%:wrap --height=40% --layout=reverse --border=rounded",
           })
           require("omp"):setup({ config = "${self}/config/omp/andrew.omp.json" })
+          require("zoxide"):setup({ update_db = true })
         '';
         keymap.mgr.prepend_keymap = [
           {
-            on = ["<Enter>"];
+            on = ["l"];
             run = "plugin smart-enter";
             desc = "Enter dir or open file";
           }
