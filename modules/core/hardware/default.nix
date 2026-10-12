@@ -6,6 +6,7 @@
     <core.hardware.firmware>
     <core.hardware.logitech>
     <core.hardware.wifi>
+    <core.hardware.mount>
     <core.hardware.sound>
     <core.hardware.network>
   ];
