@@ -17,6 +17,14 @@
   }: let
     isWsl = osConfig.wsl.enable or false;
     opencodePkgs = inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system};
+    # makeWrapper alone drops .desktop files — symlinkJoin to keep them.
+    opencodeDesktop = pkgs.symlinkJoin {
+      name = "opencode-desktop";
+      paths = [config.wrappers.opencode-desktop.wrapper];
+      postBuild = ''
+        cp -r ${opencodePkgs.opencode-desktop}/share $out/share
+      '';
+    };
   in {
     imports = lib.optionals (!isWsl) [
       (inputs.nwm.lib.getInstallModule {
@@ -38,7 +46,7 @@
     };
 
     home.packages = lib.optionals (!isWsl) [
-      config.wrappers.opencode-desktop.wrapper
+      opencodeDesktop
     ];
 
     home.activation.opencodeDesktopServiceLink = lib.mkIf (!isWsl) (lib.hm.dag.entryAfter ["writeBoundary"] ''
