@@ -36,7 +36,6 @@
       url = "github:nvim-mini/mini.nvim";
       flake = false;
     };
-    mnw.url = "github:Gerg-L/mnw";
     niri.url = "github:epireyn/niri-flake";
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
@@ -48,6 +47,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nvf.url = "github:notashelf/nvf";
+    nwm = {
+      url = "github:BirdeeHub/nix-wrapper-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     omp-yazi = {
       url = "github:saumyajyoti/omp.yazi";
       flake = false;
