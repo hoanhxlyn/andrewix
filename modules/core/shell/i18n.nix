@@ -59,10 +59,7 @@
           LC_TIME = "en_US.UTF-8";
         };
       };
-      # Mirrors github:LotusInputMethod/fcitx5-lotus nix/modules/nixos/fcitx5-lotus/default.nix
-      # by hand: consuming the nixpkgs package, no flake input. The server unit runs as
-      # `uinput_proxy`, so that sysuser and the package's udev rule (which setfacl's
-      # /dev/uinput rw for it) are both required, not just systemd.packages.
+      boot.kernelModules = lib.mkIf (!host.wsl.enable) ["uinput"];
       users.users.uinput_proxy = lib.mkIf (!host.wsl.enable) {
         isSystemUser = true;
         group = "input";
