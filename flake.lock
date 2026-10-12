@@ -442,21 +442,6 @@
     },
     "mnw": {
       "locked": {
-        "lastModified": 1790357809,
-        "narHash": "sha256-6IWPAMEotKY/nQvs1kU6qwMwCXTeW5HlOhw2RwFHFdI=",
-        "owner": "Gerg-L",
-        "repo": "mnw",
-        "rev": "a582dbedf7c8ec7effa6939ac5bdd23b27267d1b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Gerg-L",
-        "repo": "mnw",
-        "type": "github"
-      }
-    },
-    "mnw_2": {
-      "locked": {
         "lastModified": 1784154424,
         "narHash": "sha256-HRn4O1X2ShYtbq5Egji72/aemyc2cIQicjRZD9hBqM8=",
         "owner": "Gerg-L",
@@ -683,7 +668,7 @@
     "nvf": {
       "inputs": {
         "flake-compat": "flake-compat_3",
-        "mnw": "mnw_2",
+        "mnw": "mnw",
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
@@ -697,6 +682,26 @@
       "original": {
         "owner": "notashelf",
         "repo": "nvf",
+        "type": "github"
+      }
+    },
+    "nwm": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791440872,
+        "narHash": "sha256-PwiSn1VO3/6BD/Gxw/3Ei2sPB3SccyKyJ7nD72Y+WU4=",
+        "owner": "BirdeeHub",
+        "repo": "nix-wrapper-modules",
+        "rev": "d82c328c504648fa952f25fac8332319eb425d4c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "BirdeeHub",
+        "repo": "nix-wrapper-modules",
         "type": "github"
       }
     },
@@ -766,12 +771,12 @@
         "import-tree": "import-tree",
         "ironbar": "ironbar",
         "mini-nvim": "mini-nvim",
-        "mnw": "mnw",
         "niri": "niri",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_3",
         "noctalia": "noctalia",
         "nvf": "nvf",
+        "nwm": "nwm",
         "omp-yazi": "omp-yazi",
         "opencode": "opencode",
         "ponytail": "ponytail",
