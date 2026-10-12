@@ -104,12 +104,12 @@ return {
       },
     })
 
-    -- Only LSPs whose binaries come from extraBinPath (modules/core/editor/mnw.nix)
+    -- Only LSPs whose binaries come from runtimePkgs (modules/core/editor/nwm.nix)
     -- Names = lspconfig config names, not binary names (nil_ls→nil, fish_lsp→fish-lsp)
     vim.lsp.enable({
       "nil_ls", "lua_ls", "html", "cssls", "jsonls", "yamlls",
       "tailwindcss", "tsc", "fish_lsp", "marksman", "taplo", "biome",
-      -- "vtsls", -- disabled: config kept in after/lsp/vtsls.lua; re-add pkg to mnw.nix + drop "tsc"
+      -- "vtsls", -- disabled: config kept in after/lsp/vtsls.lua; re-add pkg to nwm.nix + drop "tsc"
     })
 
     vim.lsp.document_color.enable(true, nil, { style = "󰝤 " })

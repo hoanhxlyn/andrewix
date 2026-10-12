@@ -1,8 +1,8 @@
--- Thin layer over lz.n (plugins are installed by Nix/mnw, so no vim.pack here).
+-- Thin layer over lz.n (plugins are installed by Nix/nwm, so no vim.pack here).
 --   setup(specs)  specs = spec | { import = "lazy" } | nested list of them
 --
 -- Spec = lz.n spec fields plus:
---   dependencies   string[]: mnw `opt` plugin names, :packadd-ed before the plugin loads
+--   dependencies   string[]: nwm `opt` plugin names, :packadd-ed before the plugin loads
 --   virtual        no package of its own (load is a no-op), only hooks/triggers
 -- `{ import = "lazy" }` requires every module directly under lua/lazy, each returning a spec or a list of specs.
 local M = {}
