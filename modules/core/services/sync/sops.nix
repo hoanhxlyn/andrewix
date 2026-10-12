@@ -24,8 +24,8 @@
       secrets = {
         CONTEXT7_API_KEY.path = secrets "CONTEXT7_API_KEY";
         BRAVE_API_KEY.path = secrets "BRAVE_API_KEY";
-        CLAUDE_CODE_OAUTH_TOKEN.path = secrets "CLAUDE_CODE_OAUTH_TOKEN";
         EXA_API_KEY.path = secrets "EXA_API_KEY";
+        # TAVILY_API_KEY = secrets "TAVILY_API_KEY";
         RCLONE_DRIVE_CLIENT_ID.path = secrets "RCLONE_DRIVE_CLIENT_ID";
         RCLONE_DRIVE_CLIENT_SECRET.path = secrets "RCLONE_DRIVE_CLIENT_SECRET";
       };
