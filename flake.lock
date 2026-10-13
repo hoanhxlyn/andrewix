@@ -328,6 +328,26 @@
         "type": "gitlab"
       }
     },
+    "gruvbox-wallpapers": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791335852,
+        "narHash": "sha256-0BvY2cNCQdUcCC8jRzrLSXsDrFjerrWvcUZtOo/0e0c=",
+        "owner": "AngelJumbo",
+        "repo": "gruvbox-wallpapers",
+        "rev": "293774acaa531ce106332f790c80301998066b25",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AngelJumbo",
+        "repo": "gruvbox-wallpapers",
+        "type": "github"
+      }
+    },
     "helium": {
       "inputs": {
         "nixpkgs": [
@@ -765,6 +785,7 @@
         "disko": "disko",
         "flake-file": "flake-file",
         "flake-parts": "flake-parts",
+        "gruvbox-wallpapers": "gruvbox-wallpapers",
         "helium": "helium",
         "herdr-nix": "herdr-nix",
         "home-manager": "home-manager",
