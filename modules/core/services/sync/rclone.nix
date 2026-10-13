@@ -22,17 +22,8 @@
         Service = {
           Type = "notify";
           EnvironmentFile = "${config.home.homeDirectory}/.config/sops-nix/rclone-env";
-          # OAuth client can't be a store symlink: rclone rewrites rclone.conf on token refresh
           ExecStartPre = [
             "${pkgs.coreutils}/bin/mkdir -p ${config.home.homeDirectory}/${path}"
-            (pkgs.writeShellScript "rclone-set-oauth-client" ''
-              conf=${config.home.homeDirectory}/.config/rclone/rclone.conf
-              ${pkgs.gnused}/bin/sed -i \
-                -e '/^\[gdrive\]/,/^\[/ { /^client_id = /d; /^client_secret = /d; }' \
-                -e "/^\[gdrive\]/a client_id = ''${RCLONE_DRIVE_CLIENT_ID}" \
-                -e "/^\[gdrive\]/a client_secret = ''${RCLONE_DRIVE_CLIENT_SECRET}" \
-                "$conf"
-            '')
           ];
           ExecStart = ''
             ${pkgs.rclone}/bin/rclone mount gdrive: ${config.home.homeDirectory}/${path} \
