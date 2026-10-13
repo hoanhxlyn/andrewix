@@ -1,7 +1,6 @@
 {__findFile, ...}: {
   den.aspects = {
     workstation.includes = [
-      (<den/batteries/import-tree/host> ../../hosts)
       <core.hardware>
       <core.services>
       <core.i18n>

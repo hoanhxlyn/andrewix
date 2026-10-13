@@ -53,7 +53,6 @@ NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto
 | `modules/defaults.nix`  | Default includes + dev shell                      |
 | `modules/dendritic.nix` | Framework bootstrapping                           |
 | `modules/_lib/`         | Host builder (`base.nix` + monitor layout)        |
-| `hosts/<host>/_nixos/`  | Hardware configs (by-uuid fileSystems)            |
 | `secrets/`              | sops-nix encrypted secrets                        |
 | `config/`               | Non-Nix app configs (symlinked into `~/.config`)  |
 | `flake.nix`             | **Auto-generated. DO NOT EDIT.**                  |
@@ -71,9 +70,9 @@ variant. Layout translates flat monitor attrs into niri's nested shape and sets 
   an aspect's `nixos`/`homeManager` fn — omit the fn wrapper when no args are used.
 - **Files:** `kebab-case.nix`, **options:** `camelCase`.
 - **No relative-path imports.** Take `{self, ...}` and use `import "${self}/modules/_lib/foo.nix"`.
-- **Underscore dirs = not aspects.** `_nvf/`, `_nixos/`, `_lib/` are path-imported, **not** auto-discovered. Split a big
+- **Underscore dirs = not aspects.** `_nvf/`, `_nwm/`, `_lib/` are path-imported, **not** auto-discovered. Split a big
   aspect into `_<name>/*.nix` sub-configs and `import "${self}/..."` them from the aspect file (see
-  `modules/core/editor/nvf.nix`).
+  `modules/core/editor/nwm.nix`).
 - **`config/<tool>/`:** non-Nix app configs, one subfolder per tool (not per format). Symlink via
   `home.file."<dest>".source = "${self}/config/<tool>/<file>"` (see `modules/core/editor/cursor.nix`).
 - **Booleans:** prefix with `enable`/`disable`. **Override defaults:** `lib.mkDefault`.
@@ -144,9 +143,10 @@ nix run .#write-flake    # rewrites flake.nix
 
 ## Operational gotchas
 
-- **Disko on live hosts:** `disko.enableConfig = false` in `modules/core/hardware/disko.nix:17` — disko provides the
-  install scripts but does **not** own the running ext4 systems' `fileSystems`. At a real btrfs reinstall, flip to
-  `true` AND drop the by-uuid `fileSystems`/`swapDevices` blocks from `hosts/<host>/_nixos/hardware-configuration.nix`.
+- **Disko owns the layout:** `disko.enableConfig = true` in `modules/core/hardware/disko.nix` — disko provides
+  `fileSystems`/`swapDevices`/`boot.resumeDevice` (xfs root, dedicated swap partition, hibernate resume) for both
+  physical hosts. The per-host `hosts/<host>/_nixos/` configs are gone; hardware boot bits (initrd `vmd`/`nvme`, kvm,
+  microcode) now live in `modules/core/hardware/bootable.nix`, shared by the two Intel workstations.
 - **First-boot password:** `admin123` (set in `modules/_lib/base.nix`). Change with `passwd` after install. The default
   is also used for `just vm`.
 - **WSL PATH:** `modules/devices/wsl.nix:20` disables WSL interop `$PATH` because Windows PATH lives on a slow 9P/DrvFs

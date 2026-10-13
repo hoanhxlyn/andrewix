@@ -1,6 +1,7 @@
 {
   lib,
   inputs,
+  self,
   ...
 }: {
   flake-file.inputs.stylix = {
@@ -9,8 +10,12 @@
     url = "github:adomixaszvers/stylix/merged-rofi-settings-font";
     inputs.nixpkgs.follows = "nixpkgs";
   };
+  flake-file.inputs.gruvbox-wallpapers = {
+    url = "github:AngelJumbo/gruvbox-wallpapers";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
   core.services.sync.stylix = {host, ...}: let
-    inherit (host) terminal backgroundImage;
+    inherit (host) terminal;
   in {
     nixos = {
       pkgs,
@@ -62,7 +67,15 @@
           kmscon.enable = true;
           fontconfig.enable = false;
         };
-        image = builtins.fetchurl backgroundImage;
+        # string = file in config/background/; { gruvbox = "<path in repo>"; }
+        # = AngelJumbo/gruvbox-wallpapers (no hash); { url; hash; } = anywhere else
+        image =
+          if builtins.isAttrs host.backgroundImage
+          then
+            if host.backgroundImage ? url
+            then pkgs.fetchurl host.backgroundImage
+            else "${inputs.gruvbox-wallpapers}/${host.backgroundImage.gruvbox}"
+          else "${self}/config/background/${host.backgroundImage}";
         imageScalingMode = "fill"; # fill | center | stretch | fit
       };
       fonts = {
