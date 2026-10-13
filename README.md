@@ -26,31 +26,28 @@ alejandra . && statix check && deadnix --no-underscore --fail
 
 ## Fresh Install
 
-Provisions disks declaratively via [disko](https://github.com/nix-community/disko) — no manual partitioning. Wipes the
-target disk (btrfs `@`/`@home`/`@nix` + swapfile, vfat ESP).
+Provisions disks declaratively via [disko](https://github.com/nix-community/disko) — no manual partitioning.
+`andrew-laptop` = one disk (ESP + swap + xfs root). `andrew-pc` = three (`nixos` ESP/swap/xfs, `works` btrfs
+`/works`, `entertainment` xfs `/entertainment`). disko owns `fileSystems`/`swapDevices`, so there is nothing to edit
+by hand before installing.
 
-> **Before installing**, hand disk ownership to disko: in `modules/core/hardware/disko.nix` set
-> `disko.enableConfig = true`, and delete the `fileSystems`/`swapDevices` blocks from the target host's
-> `hosts/<host>/_nixos/hardware-configuration.nix`. (They are kept `false`/by-uuid so `just switch` stays safe on the
-> currently-running ext4 machines.)
+1. Boot the NixOS minimal ISO and connect to the network (`nmtui`).
 
-1. Boot the [NixOS minimal ISO](https://nixos.org/download) and connect to network.
-
-1. Find the target disk:
+1. Clone the repo and run the guided installer — it reads the disk roles from the flake and asks you to pick a device
+   for each (`gum` is pulled in automatically on the stock ISO):
 
    ```bash
-   lsblk           # e.g. /dev/nvme0n1
+   git clone https://github.com/hoanhxlyn/andrewix ~/andrewix
+   ~/andrewix/install.sh
    ```
 
-1. Partition + format + install in one step (`--disk main <device>` picks the disk):
+   Non-interactive equivalent (laptop shown; `andrew-pc` also needs `--disk works <dev> --disk entertainment <dev>`):
 
    ```bash
    sudo nix --experimental-features "nix-command flakes" run \
      github:nix-community/disko/latest#disko-install -- \
-     --flake github:hoanhxlyn/andrewix#andrew-pc --disk main /dev/nvme0n1
+     --flake github:hoanhxlyn/andrewix#andrew-laptop --disk main /dev/nvme0n1
    ```
-
-   Guided alternative (disk picker + confirm): clone the repo and run `./install.sh`.
 
 1. Reboot. Log in as `andrew` / `admin123`, then:
 
@@ -70,7 +67,6 @@ Only `andrew-laptop` / `andrew-pc` are installable (WSL hosts have no disk layou
 | `modules/devices/`     | Per-device aspects (laptop, wsl)   |
 | `modules/defaults.nix` | Default includes for all hosts     |
 | `modules/hosts.nix`    | Host definitions                   |
-| `hosts/<host>/_nixos/` | Hardware configs                   |
 | `secrets/`             | sops-nix encrypted secrets         |
 | `config/`              | Non-Nix app configs                |
 | `flake.nix`            | **Auto-generated. DO NOT EDIT.**   |

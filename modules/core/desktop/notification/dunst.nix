@@ -1,11 +1,6 @@
 {
   core.desktop.notification.dunst = {host, ...}: {
     homeManager = {pkgs, ...}: {
-      gtk.iconTheme = {
-        package = pkgs.papirus-icon-theme;
-        name = "Papirus-Dark";
-      };
-
       services.dunst = {
         enable = true;
         iconTheme = {
