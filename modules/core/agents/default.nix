@@ -13,8 +13,9 @@
           enable = true;
           servers = {
             context7 = {
-              command = "bunx";
-              args = ["@upstash/context7-mcp@latest"];
+              enabled = true;
+              url = "https://mcp.context7.com/mcp";
+              headers.CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
             };
             exa = {
               enabled = false;

@@ -33,8 +33,5 @@
   # their mutable /etc/shadow password. Change after install with: passwd
   initialPassword = "admin123";
   login = "ly";
-  backgroundImage = {
-    url = "https://gruvbox-wallpapers.pages.dev/wallpapers/minimalistic/gruvbox_minimal_space.png";
-    sha256 = "08qg1yjahg1r9hmzzcb5fgrgq2gaxcvx3frjxfb22wsi6bzl5qys";
-  };
+  backgroundImage = {gruvbox = "wallpapers/minimalistic/gruvbox_minimal_space.png";};
 }

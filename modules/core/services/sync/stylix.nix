@@ -1,6 +1,7 @@
 {
   lib,
   inputs,
+  self,
   ...
 }: {
   flake-file.inputs.stylix = {
@@ -9,8 +10,12 @@
     url = "github:adomixaszvers/stylix/merged-rofi-settings-font";
     inputs.nixpkgs.follows = "nixpkgs";
   };
+  flake-file.inputs.gruvbox-wallpapers = {
+    url = "github:AngelJumbo/gruvbox-wallpapers";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
   core.services.sync.stylix = {host, ...}: let
-    inherit (host) terminal backgroundImage;
+    inherit (host) terminal;
   in {
     nixos = {
       pkgs,
@@ -51,6 +56,11 @@
             popups = terminal.fontSize + 2;
           };
         };
+        icons = {
+          enable = true;
+          package = pkgs.papirus-icon-theme;
+          dark = "Papirus-Dark";
+        };
         opacity = {
           terminal = terminal.opacity;
           desktop = terminal.opacity;
@@ -62,8 +72,16 @@
           kmscon.enable = true;
           fontconfig.enable = false;
         };
-        image = builtins.fetchurl backgroundImage;
-        imageScalingMode = "fill"; # fill | center | stretch | fit
+        # string = file in config/background/; { gruvbox = "<path in repo>"; }
+        # = AngelJumbo/gruvbox-wallpapers (no hash); { url; hash; } = anywhere else
+        image =
+          if builtins.isAttrs host.backgroundImage
+          then
+            if host.backgroundImage ? url
+            then pkgs.fetchurl host.backgroundImage
+            else "${inputs.gruvbox-wallpapers}/${host.backgroundImage.gruvbox}"
+          else "${self}/config/background/${host.backgroundImage}";
+        imageScalingMode = "center"; # fill | center | stretch | fit
       };
       fonts = {
         packages = with pkgs; [
