@@ -56,6 +56,11 @@
             popups = terminal.fontSize + 2;
           };
         };
+        icons = {
+          enable = true;
+          package = pkgs.papirus-icon-theme;
+          dark = "Papirus-Dark";
+        };
         opacity = {
           terminal = terminal.opacity;
           desktop = terminal.opacity;
@@ -76,7 +81,7 @@
             then pkgs.fetchurl host.backgroundImage
             else "${inputs.gruvbox-wallpapers}/${host.backgroundImage.gruvbox}"
           else "${self}/config/background/${host.backgroundImage}";
-        imageScalingMode = "fill"; # fill | center | stretch | fit
+        imageScalingMode = "center"; # fill | center | stretch | fit
       };
       fonts = {
         packages = with pkgs; [

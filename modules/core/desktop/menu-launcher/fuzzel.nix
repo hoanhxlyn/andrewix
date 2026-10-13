@@ -17,7 +17,7 @@
             vertical-pad = builtins.mul terminal.padding 2;
             line-height = 30;
             image-size-ratio = 1.0;
-            icon-theme = "Papirus-Dark";
+            # icon-theme = "Papirus-Dark";
             scaling-filter = "lanczos3";
           };
           border = {
@@ -33,8 +33,6 @@
       home.packages =
         [
           pkgs.libnotify
-          pkgs.papirus-icon-theme
-
           (pkgs.writeShellScriptBin "fuzzel-clipboard" ''
             CACHE="$HOME/.cache/cliphist-previews"
             mkdir -p "$CACHE"
