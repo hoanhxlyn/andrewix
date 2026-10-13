@@ -79,6 +79,7 @@
             extensions = [".nix"];
           };
         };
+        websearch = false;
         permissions = [
           {
             action = "shell";
@@ -119,6 +120,11 @@
             action = "edit";
             resource = "*";
             effect = "ask";
+          }
+          {
+            action = "webfetch";
+            resource = "*";
+            effect = "deny";
           }
           {
             action = "external_directory";
