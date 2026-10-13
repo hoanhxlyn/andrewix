@@ -41,6 +41,11 @@ switch h=host *args:
 vm h=host *args:
   nix run .#{{ h }} -- build-vm -r {{ args }}
 
+# Build the custom installer ISO
+[group('nixos')]
+iso:
+  nix build .#nixosConfigurations.iso.config.system.build.isoImage
+
 # Update flake inputs
 [group('nixos')]
 update:

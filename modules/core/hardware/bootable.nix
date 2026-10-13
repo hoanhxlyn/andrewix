@@ -4,8 +4,29 @@
     user,
     ...
   }: {
-    nixos = {pkgs, ...}: {
+    nixos = {
+      config,
+      lib,
+      modulesPath,
+      pkgs,
+      ...
+    }: {
+      # Shared hardware profiles of the two physical hosts (Intel CPU, NVMe via
+      # VMD). vmd is not in NixOS' defaults, so without it initrd can't see the
+      # NVMe root. Kept here after hosts/<host>/_nixos/ was removed.
+      imports = [
+        (modulesPath + "/installer/scan/not-detected.nix")
+      ];
+
       boot = {
+        initrd.availableKernelModules = [
+          "vmd"
+          "xhci_pci"
+          "nvme"
+          "usb_storage"
+          "sd_mod"
+        ];
+        kernelModules = ["kvm-intel"];
         loader.systemd-boot.enable = host.isLaptop;
         loader.grub = {
           enable = !host.isLaptop;
@@ -25,6 +46,8 @@
         plymouth.enable = true;
       };
       stylix.targets.grub.useWallpaper = true;
+      hardware.cpu.intel.updateMicrocode =
+        lib.mkDefault config.hardware.enableRedistributableFirmware;
 
       users.users.${user.userName}.initialPassword = host.initialPassword;
     };
