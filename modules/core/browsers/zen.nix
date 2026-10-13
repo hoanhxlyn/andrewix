@@ -20,6 +20,7 @@
     programs.zen-browser = {
       enable = true;
       nativeMessagingHosts = [keepass];
+      policies.SearchEngines.Default = "DuckDuckGo";
       profiles.default = {
         id = 0;
         isDefault = true;
