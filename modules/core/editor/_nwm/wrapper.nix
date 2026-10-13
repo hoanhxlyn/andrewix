@@ -1,6 +1,7 @@
-# Neovim via the nwm wrapper. Shared by the host systems
-# (modules/core/editor/nwm.nix) and the installer ISO (modules/iso.nix).
-{inputs, self}: {pkgs, ...}: {
+{
+  inputs,
+  self,
+}: {pkgs, ...}: {
   imports = [
     (inputs.nwm.lib.getInstallModule {
       name = "nvim";
