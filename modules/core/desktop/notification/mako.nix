@@ -14,11 +14,6 @@
         fi
       '';
     in {
-      gtk.iconTheme = {
-        package = pkgs.papirus-icon-theme;
-        name = "Papirus-Dark";
-      };
-
       home.packages = [dndToggle];
 
       services.mako = {
