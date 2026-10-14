@@ -21,7 +21,6 @@
         };
         Service = {
           Type = "notify";
-          EnvironmentFile = "${config.home.homeDirectory}/.config/sops-nix/rclone-env";
           ExecStartPre = [
             "${pkgs.coreutils}/bin/mkdir -p ${config.home.homeDirectory}/${path}"
           ];
