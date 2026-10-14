@@ -25,6 +25,7 @@
     andrew-pc.provides.to-users.includes = [
       <workstation>
       <core.hardware.nvidia>
+      <core.gaming>
     ];
   };
 }
