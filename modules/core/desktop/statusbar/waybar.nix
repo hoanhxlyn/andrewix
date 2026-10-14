@@ -89,8 +89,11 @@
             modules-left = [
               "niri/workspaces"
               "niri/window"
+              "group/mpris"
             ];
-            modules-center = ["group/mpris"];
+            modules-center = [
+              "clock"
+            ];
             modules-right = builtins.filter (m: m != null) [
               "tray"
               "privacy"
@@ -108,9 +111,8 @@
                 else null
               )
               "wireplumber"
-              # "cpu"
-              # "memory"
-              "clock"
+              "cpu"
+              "memory"
             ];
 
             "niri/workspaces" = {
@@ -157,17 +159,17 @@
               tooltip = false;
             };
 
-            # cpu = {
-            #   format = "󰻠 {usage}%";
-            #   tooltip-format = "CPU: {usage}% | {avg_frequency}GHz";
-            #   interval = 3;
-            # };
+            cpu = {
+              format = "󰻠 {usage}%";
+              tooltip-format = "CPU: {usage}% | {avg_frequency}GHz";
+              interval = 3;
+            };
 
-            # memory = {
-            #   format = "󰍛 {percentage}%";
-            #   tooltip-format = "{used:0.1f}G / {total:0.1f}G";
-            #   interval = 3;
-            # };
+            memory = {
+              format = "󰍛 {percentage}%";
+              tooltip-format = "{used:0.1f}G / {total:0.1f}G";
+              interval = 3;
+            };
 
             wireplumber = {
               format = "{icon} {volume}%";
@@ -179,8 +181,7 @@
             };
 
             clock = {
-              format = "󰥔 {:%H:%M}";
-              tooltip-format = "{:%a %m/%d/%y}";
+              format = "{:%m/%d %H:%M}";
               on-click = "waycal";
             };
 
