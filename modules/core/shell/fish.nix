@@ -25,8 +25,8 @@
         '';
         functions.fish_user_key_bindings.body = "fish_vi_key_bindings default";
         shellAliases = {
-          ll = "eza --long --icons";
-          ls = "eza --all";
+          ll = "eza -la --icons auto";
+          ls = "eza -a";
           cd = "z";
           cat = "bat";
           grep = "rg";
