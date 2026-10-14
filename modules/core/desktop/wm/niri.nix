@@ -271,8 +271,6 @@
                 "Mod+J".action = focus-window-or-workspace-down;
                 "Mod+K".action = focus-window-or-workspace-up;
                 "Mod+L".action = focus-column-right;
-                "Shift+Alt+H".action = move-column-to-monitor-left;
-                "Shift+Alt+L".action = move-column-to-monitor-right;
                 "Mod+Comma".action = consume-or-expel-window-left;
                 "Mod+Period".action = consume-or-expel-window-right;
                 "Mod+R".action = switch-preset-column-width;
@@ -286,18 +284,17 @@
                 };
                 "Mod+Shift+V".action = switch-focus-between-floating-and-tiling;
 
+                # Move column (Ctrl + hjkl)
+                "Shift+Alt+H".action = focus-monitor-left;
+                "Shift+Alt+L".action = focus-monitor-right;
+                "Mod+Shift+H".action = move-column-to-monitor-left;
+                "Mod+Shift+L".action = move-column-to-monitor-right;
                 "Shift+Alt+Left".action = move-column-to-monitor-left;
                 "Shift+Alt+Right".action = move-column-to-monitor-right;
-
-                # Move column (Ctrl + hjkl)
-                "Mod+Shift+H".action = focus-monitor-left;
-                "Mod+Shift+L".action = focus-monitor-right;
-                "Mod+Alt+H".action = move-column-to-monitor-left;
                 "Mod+Ctrl+H".action = move-column-left;
                 "Mod+Ctrl+J".action = move-window-down-or-to-workspace-down;
                 "Mod+Ctrl+K".action = move-window-up-or-to-workspace-up;
                 "Mod+Ctrl+L".action = move-column-right;
-                "Mod+Alt+L".action = move-column-to-monitor-left;
 
                 # Column resize (hidden — fine tuning)
                 "Mod+Minus" = {
