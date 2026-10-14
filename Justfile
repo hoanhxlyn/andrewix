@@ -53,12 +53,6 @@ update:
   alejandra flake.nix
   nix flake update
 
-# User store garbage collection
-[group('nixos')]
-gc:
-  nix store gc
-  nix store optimise
-
 # Clean old kernel files from /boot (backs up current first)
 [group('nixos')]
 boot-clean:
@@ -82,8 +76,8 @@ boot-clean:
 [group('nixos')]
 clean-up:
   rm -rf /tmp/nh-os*
-  sudo nix-collect-garbage -d --delete-older-than 7d
   just boot-clean
+  sudo nix store gc
   sudo nix store optimise
 
 # Search nix packages
