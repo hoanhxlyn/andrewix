@@ -56,7 +56,7 @@
       inputs.disko.nixosModules.default
     ];
 
-    # Prompt order install.sh uses per role; [] falls back to attrNames.
+    # Prompt order install.fish uses per role; [] falls back to attrNames.
     options.core.hardware.disko.diskOrder = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [];

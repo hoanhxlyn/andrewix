@@ -28,7 +28,7 @@
           # installer is one word: no URL to type, nothing to clone.
           (writeShellApplication {
             name = "andrewix-install";
-            text = "exec /iso/andrewix/install.sh";
+            text = "exec /iso/andrewix/install.fish";
           })
         ];
         # Serial console (systemd auto-spawns serial-getty@ttyS0 from this) so
@@ -36,7 +36,7 @@
         boot.kernelParams = pkgs.lib.mkAfter ["console=ttyS0,115200n8"];
         # Fetching the flake's many `github:` inputs in parallel exhausts the
         # live session's 1024 fd soft limit ("too many open files"), breaking
-        # both install.sh's `nix eval` and nixos-install.
+        # both install.fish's `nix eval` and nixos-install.
         security.pam.loginLimits = [
           {
             domain = "*";
