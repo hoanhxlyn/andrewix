@@ -72,12 +72,12 @@ boot-clean:
     sudo grub-mkconfig -o /boot/grub/grub.cfg
   fi
 
-# System-wide GC, delete old gens (user profile + system, keep 7d)
+# System-wide GC, delete old gens
 [group('nixos')]
-clean-up:
+gc:
   rm -rf /tmp/nh-os*
   just boot-clean
-  sudo nix store gc
+  sudo nix store gc -v
   sudo nix store optimise
 
 # Search nix packages

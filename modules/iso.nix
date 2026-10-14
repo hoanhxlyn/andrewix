@@ -48,7 +48,12 @@
         nix.settings.experimental-features = ["nix-command" "flakes"];
         isoImage.edition = "andrewix";
         # Read-only copy of this flake at /iso/andrewix on the live ISO.
-        isoImage.contents = [{source = self.outPath; target = "andrewix";}];
+        isoImage.contents = [
+          {
+            source = self.outPath;
+            target = "andrewix";
+          }
+        ];
       })
     ];
   };
