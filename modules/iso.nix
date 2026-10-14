@@ -24,6 +24,12 @@
           eza
           bat
           zoxide
+          # The repo is baked into the ISO (isoImage.contents below), so the
+          # installer is one word: no URL to type, nothing to clone.
+          (writeShellApplication {
+            name = "andrewix-install";
+            text = "exec /iso/andrewix/install.sh";
+          })
         ];
         # Serial console (systemd auto-spawns serial-getty@ttyS0 from this) so
         # the installer is usable headless / in a VM. mkAfter keeps root=fstab.
@@ -41,6 +47,8 @@
         ];
         nix.settings.experimental-features = ["nix-command" "flakes"];
         isoImage.edition = "andrewix";
+        # Read-only copy of this flake at /iso/andrewix on the live ISO.
+        isoImage.contents = [{source = self.outPath; target = "andrewix";}];
       })
     ];
   };
