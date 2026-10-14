@@ -72,6 +72,22 @@
       # bits (initrd vmd/nvme, kvm, microcode) live in core.hardware.bootable.
       disko.enableConfig = true;
 
+      # `just vm` tweaks. qemu-vm overrides fileSystems/swapDevices for the VM
+      # but not boot.resumeDevice, so the host's `resume=` swap leaks in and
+      # initrd waits forever for a device the VM does not have. And niri needs
+      # host GL: gtk has none, so use sdl + virtio-gpu-gl (no -vga std).
+      virtualisation.vmVariant = {
+        boot.resumeDevice = lib.mkForce "";
+        virtualisation.qemu.options = [
+          "-vga"
+          "none"
+          "-device"
+          "virtio-gpu-gl-pci"
+          "-display"
+          "sdl,gl=on"
+        ];
+      };
+
       # `device` is a placeholder — disko-install overwrites it per disk:
       #   --disk <name> /dev/<dev>
       disko.devices.disk =
