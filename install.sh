@@ -29,7 +29,11 @@ gum confirm --default=false \
 REPO_URL="https://github.com/hoanhxlyn/andrewix.git"
 CLONE_DIR="$HOME/andrewix"
 
-if [ -d "$CLONE_DIR/.git" ]; then
+# The custom ISO bakes the repo read-only at /iso/andrewix (modules/iso.nix);
+# prefer it so there is nothing to clone and the rev matches the ISO.
+if [ -f /iso/andrewix/flake.nix ]; then
+  CLONE_DIR=/iso/andrewix
+elif [ -d "$CLONE_DIR/.git" ]; then
   echo "Repo exists, updating..."
   git -C "$CLONE_DIR" pull --ff-only
 else
