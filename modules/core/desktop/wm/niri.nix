@@ -170,7 +170,6 @@
 
           spawn-at-startup = [
             {command = ["swaybg" "-i" config.stylix.image];}
-            {command = ["fcitx5" "-d"];}
             {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];}
             {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
           ];
