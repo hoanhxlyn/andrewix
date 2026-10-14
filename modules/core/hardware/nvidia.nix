@@ -8,16 +8,21 @@
       ])
     ];
 
-    nixos = {config, ...}: {
+    nixos = {
+      config,
+      lib,
+      ...
+    }: {
       boot = {
         kernelParams = ["nvidia-drm.fbdev=1"];
-        initrd.kernelModules = [
+        # Only when nvidia is the active driver: VM builds override videoDrivers
+        # to modesetting and ship no nvidia module for initrd.
+        initrd.kernelModules = lib.optionals (lib.elem "nvidia" config.services.xserver.videoDrivers) [
           "nvidia"
           "nvidia_modeset"
           "nvidia_uvm"
           "nvidia_drm"
         ];
-        extraModulePackages = [config.boot.kernelPackages.nvidia_x11];
         extraModprobeConfig = ''
           options nvidia NVreg_PreserveVideoMemoryAllocations=1
           options nvidia NVreg_EnableGpuFirmware=0

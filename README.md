@@ -38,7 +38,7 @@ by hand before installing.
 
    ```bash
    git clone https://github.com/hoanhxlyn/andrewix ~/andrewix
-   ~/andrewix/install.sh
+   ~/andrewix/install.fish
    ```
 
    Non-interactive equivalent (laptop shown; `andrew-pc` also needs `--disk works <dev> --disk entertainment <dev>`):
