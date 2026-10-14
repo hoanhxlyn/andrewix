@@ -33,5 +33,5 @@
   # their mutable /etc/shadow password. Change after install with: passwd
   initialPassword = "admin123";
   login = "ly";
-  backgroundImage = {gruvbox = "wallpapers/minimalistic/gruvbox_minimal_space.png";};
+  backgroundImage = {gruvbox = "wallpapers/anime/anime_skull.png";};
 }
