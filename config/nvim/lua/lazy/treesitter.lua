@@ -1,15 +1,12 @@
-local filetypes = {}
-for _, lang in ipairs(mininvim.tree_sitters_ensured_install) do
-  vim.list_extend(filetypes, vim.treesitter.language.get_filetypes(lang))
-end
-
 return {
-  -- nvim-treesitter: NO lazy (upstream docs)
   {
     "nvim-treesitter",
     after = function()
       require("nvim-treesitter").setup()
-
+      local filetypes = {}
+      for _, lang in ipairs(mininvim.tree_sitters_ensured_install) do
+        vim.list_extend(filetypes, vim.treesitter.language.get_filetypes(lang))
+      end
       vim.api.nvim_create_autocmd("FileType", {
         desc = "Install Treesitter",
         pattern = filetypes,

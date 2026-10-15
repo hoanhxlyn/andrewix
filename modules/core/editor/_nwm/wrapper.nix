@@ -24,6 +24,7 @@
       nvim-ts-context-commentstring
       plenary-nvim
       SchemaStore-nvim
+      scope-nvim
     ];
     specs.lazy = {
       lazy = true;
