@@ -1,7 +1,7 @@
 -- rgb()/hsl()/oklch() only; hex stays in mini.hipatterns, tailwind comes from LSP documentColor.
 return {
   "nvim-colorizer.lua",
-  event = "BufReadPre",
+  event = { "BufReadPre", "BufNewFile" },
   after = function()
     require("colorizer").setup({
       options = {
@@ -11,9 +11,17 @@ return {
           disable_document_color = false, -- keep vim.lsp.document_color for tailwind
         },
         parsers = {
-          css_fn = true,
-          hex = { default = false },
+          hex = { default = false, rgb = true, rgba = true },
+          rgb = { enable = true },
+          hsl = { enable = true },
+          oklch = { enable = true },
+          css_var = { enable = true, parsers = { css = true } },
           names = { enable = false },
+          tailwind = {
+            enable = true,
+            lsp = { enable = true },
+            update_names = true,
+          },
         },
       },
     })

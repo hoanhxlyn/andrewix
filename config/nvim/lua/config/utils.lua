@@ -1,5 +1,4 @@
 local H = {}
-local hexChars = "0123456789abcdef"
 
 --- @param mode string | table<string> -- n, v, i, x
 --- @param keys string
@@ -50,122 +49,6 @@ H.debounce = function(ms, fn)
       end)
     end
   end
-end
-
---- Convert hex color to RGB
---- @param hex string The hex color value (e.g., "#ff0000")
---- RGB values as [r, g, b] where each value is between 0 and 1
-H.hex_to_rgb = function(hex)
-  hex = string.lower(hex)
-  local ret = {}
-  for i = 0, 2 do
-    local char1 = string.sub(hex, i * 2 + 2, i * 2 + 2)
-    local char2 = string.sub(hex, i * 2 + 3, i * 2 + 3)
-    local digit1 = string.find(hexChars, char1) - 1
-    local digit2 = string.find(hexChars, char2) - 1
-    ret[i + 1] = (digit1 * 16 + digit2) / 255.0
-  end
-  return ret
-end
-
---- Converts an RGB color value to HSL. Conversion formula
---- adapted from http://en.wikipedia.org/wiki/HSL_color_space.
---- Assumes r, g, and b are contained in the set [0, 255] and
---- returns h, s, and l in the set [0, 1].
---- @param r number The red color value
---- @param g number The green color value
---- @param b number The blue color value
---- The HSL representation (h, s, l)
-H.rgbToHsl = function(r, g, b)
-  local max, min = math.max(r, g, b), math.min(r, g, b)
-  local h = 0
-  local s = 0
-  local l = 0
-
-  l = (max + min) / 2
-
-  if max == min then
-    h, s = 0, 0 -- achromatic
-  else
-    local d = max - min
-    if l > 0.5 then
-      s = d / (2 - max - min)
-    else
-      s = d / (max + min)
-    end
-    if max == r then
-      h = (g - b) / d
-      if g < b then
-        h = h + 6
-      end
-    elseif max == g then
-      h = (b - r) / d + 2
-    elseif max == b then
-      h = (r - g) / d + 4
-    end
-    h = h / 6
-  end
-
-  return h * 360, s * 100, l * 100
-end
-
---- Converts an HSL color value to RGB. Conversion formula
---- adapted from http://en.wikipedia.org/wiki/HSL_color_space.
---- Assumes h, s, and l are contained in the set [0, 1] and
---- returns r, g, and b in the set [0, 255].
---- @param h number The hue
---- @param s number The saturation
---- @param l number The lightness
---- The RGB representation (r, g, b)
-H.hslToRgb = function(h, s, l)
-  local r, g, b
-
-  if s == 0 then
-    r, g, b = l, l, l -- achromatic
-  else
-    local function hue2rgb(p, q, t)
-      if t < 0 then
-        t = t + 1
-      end
-      if t > 1 then
-        t = t - 1
-      end
-      if t < 1 / 6 then
-        return p + (q - p) * 6 * t
-      end
-      if t < 1 / 2 then
-        return q
-      end
-      if t < 2 / 3 then
-        return p + (q - p) * (2 / 3 - t) * 6
-      end
-      return p
-    end
-
-    local q
-    if l < 0.5 then
-      q = l * (1 + s)
-    else
-      q = l + s - l * s
-    end
-    local p = 2 * l - q
-
-    r = hue2rgb(p, q, h + 1 / 3)
-    g = hue2rgb(p, q, h)
-    b = hue2rgb(p, q, h - 1 / 3)
-  end
-
-  return r * 255, g * 255, b * 255
-end
-
---- Convert hex color to HSL
---- @param hex string The hex color value (e.g., "#ff0000")
---- HSL representation (e.g., "hsl(0, 100, 50)")
-H.hexToHSL = function(hex)
-  local rgb = H.hex_to_rgb(hex)
-  local h, s, l = H.rgbToHsl(rgb[1], rgb[2], rgb[3])
-
-  return string.format("hsl(%d, %d, %d)", math.floor(h + 0.5), math.floor(s + 0.5), math.floor(l + 0.5))
 end
 
 --- @param tbl table
@@ -374,6 +257,7 @@ end
 
 --- Get relative time string from timestamp
 --- @param timestamp number Unix timestamp
+--- @return string
 H.get_relative_time = function(timestamp)
   local current_time = os.time()
   local diff = os.difftime(current_time, timestamp)
@@ -390,7 +274,7 @@ H.get_relative_time = function(timestamp)
   elseif days <= 3 then
     return string.format("%d days ago", days)
   else
-    return os.date("%m/%d/%Y", timestamp)
+    return os.date("%m/%d/%Y", timestamp) --[[@as string]]
   end
 end
 
@@ -401,6 +285,84 @@ H.toggle_dotfiles = function(state, fs_entry)
     return true
   end
   return not vim.startswith(fs_entry.name, ".")
+end
+
+-- Central LSP config merger
+---@overload fun(cfg: vim.lsp.ClientConfig): table                   -- global merge
+---@overload fun(server: string, cfg: vim.lsp.ClientConfig): table    -- server specific merge
+---@param a string|table
+---@param b? table
+H.setup_lsp = function(a, b)
+  local server, cfg
+  if type(a) == "string" then
+    server, cfg = a, b or {}
+  else
+    server, cfg = "*", a or {}
+  end
+  _G.mininvim._lsp_configs = _G.mininvim._lsp_configs or { ["*"] = {} }
+  vim.tbl_deep_extend("force", _G.mininvim._lsp_configs[server] or {}, cfg)
+  vim.lsp.config(server, cfg)
+end
+
+--- Tell LSP servers a file moved so they update references (was snacks.rename).
+--- willRename clients may return a WorkspaceEdit (e.g. fix imports), which is applied
+--- before that client gets the didRename notification. Notifies the outcome once
+--- every willRename response settles.
+---@param from string
+---@param to string
+H.rename_file = function(from, to)
+  local params = {
+    files = { { oldUri = vim.uri_from_fname(from), newUri = vim.uri_from_fname(to) } },
+  }
+  local label = ("%s -> %s"):format(vim.fn.fnamemodify(from, ":t"), vim.fn.fnamemodify(to, ":t"))
+  local pending, handled, reported, errors = 0, 0, false, {}
+
+  local function report()
+    if reported then
+      return
+    end
+    reported = true
+    if #errors > 0 then
+      H.notify("Rename " .. label .. " failed: " .. table.concat(errors, "; "), "ERROR", "LSP rename")
+    elseif handled == 0 then
+      H.notify("Rename " .. label .. " skipped: no LSP server handles file renames", "WARN", "LSP rename")
+    else
+      H.notify("Renamed " .. label, "INFO", "LSP rename")
+    end
+  end
+
+  for _, client in ipairs(vim.lsp.get_clients()) do
+    local ops = client.server_capabilities.fileOperations
+    if ops and (ops.willRename or ops.didRename) then
+      handled = handled + 1
+      if ops.willRename then
+        pending = pending + 1
+        local sent = client:request("workspace/willRenameFiles", params, function(err, edit)
+          if err then
+            errors[#errors + 1] = client.name .. ": " .. (err.message or tostring(err))
+          elseif edit and not vim.tbl_isempty(edit) then
+            vim.lsp.util.apply_workspace_edit(edit, client.offset_encoding)
+          end
+          if ops.didRename then
+            client:notify("workspace/didRenameFiles", params)
+          end
+          pending = pending - 1
+          if pending == 0 then
+            report()
+          end
+        end, vim.api.nvim_get_current_buf())
+        if not sent then
+          pending = pending - 1
+          errors[#errors + 1] = client.name .. ": request not sent"
+        end
+      else
+        client:notify("workspace/didRenameFiles", params)
+      end
+    end
+  end
+  if pending == 0 then
+    report()
+  end
 end
 
 --- Remove the common leading indent of the non-blank lines
@@ -424,11 +386,14 @@ end
 --- @param lines string[]
 --- @return string[]
 H.vimdoc_to_fences = function(lines)
-  local out, block = {}, nil
+  local out = {}
+  --- @type string[]?
+  local block = nil
   local in_fence = false
 
-  local function close()
-    vim.list_extend(out, dedent(block))
+  --- @param code string[]
+  local function close(code)
+    vim.list_extend(out, dedent(code))
     out[#out + 1] = "```"
     block = nil
   end
@@ -438,13 +403,13 @@ H.vimdoc_to_fences = function(lines)
     if block then
       local rest = line:match("^<(.*)$")
       if rest then
-        close()
+        close(block)
         if rest:find("%S") then
           out[#out + 1] = vim.trim(rest)
         end
         handled = true
       elseif line:find("^%S") then
-        close() -- unindented text ends the block implicitly
+        close(block) -- unindented text ends the block implicitly
       else
         block[#block + 1] = line
         handled = true
@@ -475,22 +440,35 @@ H.vimdoc_to_fences = function(lines)
     end
   end
   if block then
-    close()
+    close(block)
   end
   return out
 end
 
---- Make LSP hover (K) highlight vimdoc code blocks (e.g. mini.nvim's ">lua")
-H.patch_lsp_hover = function()
-  local util = vim.lsp.util
-  if util._vimdoc_fences_patched then
+local wrapped = {}
+
+--- Replace `tbl[name]` with `wrapper(orig, ...)`, at most once per function
+--- @param tbl table Table holding the function (e.g. `vim.lsp.util`)
+--- @param name string Function name
+--- @param wrapper fun(orig: function, ...): ...
+H.wrap = function(tbl, name, wrapper)
+  wrapped[tbl] = wrapped[tbl] or {}
+  if wrapped[tbl][name] then
     return
   end
-  local orig = util.convert_input_to_markdown_lines
-  util.convert_input_to_markdown_lines = function(...)
-    return H.vimdoc_to_fences(orig(...))
+  wrapped[tbl][name] = true
+
+  local orig = tbl[name]
+  tbl[name] = function(...)
+    return wrapper(orig, ...)
   end
-  util._vimdoc_fences_patched = true
+end
+
+--- Make LSP hover (K) highlight vimdoc code blocks (e.g. mini.nvim's ">lua")
+H.patch_lsp_hover = function()
+  H.wrap(vim.lsp.util, "convert_input_to_markdown_lines", function(orig, ...)
+    return H.vimdoc_to_fences(orig(...))
+  end)
 end
 
 return H

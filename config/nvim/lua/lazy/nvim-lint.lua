@@ -23,25 +23,23 @@ return {
         },
         stylelint = {
           condition = function(ctx)
-            return vim.fs.find(
-              {
-                ".stylelintrc",
-                ".stylelintrc.json",
-                ".stylelintrc.yaml",
-                ".stylelintrc.yml",
-                ".stylelintrc.js",
-                ".stylelintrc.mjs",
-                ".stylelintrc.cjs",
-                "stylelint.config.js",
-                "stylelint.config.mjs",
-                "stylelint.config.cjs",
-              },
-              { path = ctx.filename, upward = true }
-            )[1]
+            return vim.fs.find({
+              ".stylelintrc",
+              ".stylelintrc.json",
+              ".stylelintrc.yaml",
+              ".stylelintrc.yml",
+              ".stylelintrc.js",
+              ".stylelintrc.mjs",
+              ".stylelintrc.cjs",
+              "stylelint.config.js",
+              "stylelint.config.mjs",
+              "stylelint.config.cjs",
+            }, { path = ctx.filename, upward = true })[1]
           end,
         },
       },
     }
+    lint.linters.biome = require("config.lint.biome").linter()
     for name, linter in pairs(opts.linters) do
       if type(linter) == "table" and type(lint.linters[name]) == "table" then
         lint.linters[name] = vim.tbl_deep_extend("force", lint.linters[name], linter)
@@ -57,6 +55,7 @@ return {
     vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
       group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
       callback = utils.debounce(200, function()
+        -- Skip scratch/special buffers (LSP hover floats, prompts, terminals)
         if vim.bo.buftype ~= "" then
           return
         end
@@ -73,6 +72,7 @@ return {
           if not linter then
             utils.notify_once("Linter not found: " .. name, "ERROR", "nvim-lint")
           end
+          ---@diagnostic disable-next-line: undefined-field
           return linter and not (type(linter) == "table" and linter.condition and not linter.condition(ctx))
         end, names)
 
@@ -81,26 +81,7 @@ return {
         end
       end),
     })
-    local cspell_config_file = cspell_util.config_path()
-    if cspell_config_file then
-      lint.linters_by_ft = {
-        ["*"] = { "cspell" },
-      }
-      lint.linters.cspell = function()
-        local default_config = require("lint.linters.cspell")
-        local config = vim.deepcopy(default_config)
-        config.args = {
-          "lint",
-          "--no-color",
-          "--no-progress",
-          "--no-summary",
-          type(cspell_config_file) == "string" and "--config=" .. cspell_config_file or "",
-          function()
-            return "stdin://" .. vim.api.nvim_buf_get_name(0)
-          end,
-        }
-        return config
-      end
-    end
+    lint.linters.cspell = cspell_util.linter()
+    lint.linters_by_ft["*"] = { "cspell" }
   end,
 }
