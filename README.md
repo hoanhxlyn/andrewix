@@ -41,21 +41,8 @@ by hand before installing.
    ~/andrewix/install.fish
    ```
 
-   Non-interactive equivalent (laptop shown; `andrew-pc` also needs `--disk works <dev> --disk entertainment <dev>`):
-
-   ```bash
-   sudo nix --experimental-features "nix-command flakes" run \
-     github:nix-community/disko/latest#disko-install -- \
-     --flake github:hoanhxlyn/andrewix#andrew-laptop --disk main /dev/nvme0n1
-   ```
-
-1. Reboot. Log in as `andrew` / `admin123`, then:
-
-   ```bash
-   passwd                                    # change the bootstrap password
-   # copy the shared age key so secrets decrypt (see Secrets below):
-   #   ~/.config/sops-nix/keys.txt
-   ```
+1. Reboot and log in as `andrew` with the password the installer asked for. Then copy the shared age key so secrets
+   decrypt (see Secrets below): `~/.config/sops-nix/keys.txt`.
 
 Only `andrew-laptop` / `andrew-pc` are installable (WSL hosts have no disk layout).
 
