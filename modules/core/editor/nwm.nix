@@ -1,4 +1,5 @@
 {
+  __findFile,
   inputs,
   self,
   ...
@@ -11,10 +12,16 @@
     url = "github:nvim-mini/mini.nvim";
     flake = false;
   };
-
-  core.editor.nwm.nixos = {
-    imports = [
-      (import "${self}/modules/core/editor/_nwm/wrapper.nix" {inherit inputs self;})
+  core.editor.nwm = {
+    includes = [
+      (<den.batteries.unfree> [
+        "scope.nvim"
+      ])
     ];
+    nixos = {
+      imports = [
+        (import "${self}/modules/core/editor/_nwm/wrapper.nix" {inherit inputs self;})
+      ];
+    };
   };
 }

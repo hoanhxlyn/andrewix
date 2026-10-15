@@ -23,10 +23,12 @@ return {
     req("animate", mini.animate)
     req("input", mini.input)
     req("statuscolumn", mini.statuscolumn)
+
+    -- tabline's keymaps index MiniBufremove at load time
+    require("mini.bufremove").setup()
     req("tabline", mini.tabline)
     req("statusline", mini.statusline)
 
-    require("mini.bufremove").setup()
     require("mini.trailspace").setup()
     require("mini.move").setup()
     require("mini.fuzzy").setup()
