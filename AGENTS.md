@@ -147,8 +147,10 @@ nix run .#write-flake    # rewrites flake.nix
   `fileSystems`/`swapDevices`/`boot.resumeDevice` (xfs root, dedicated swap partition, hibernate resume) for both
   physical hosts. The per-host `hosts/<host>/_nixos/` configs are gone; hardware boot bits (initrd `vmd`/`nvme`, kvm,
   microcode) now live in `modules/core/hardware/bootable.nix`, shared by the two Intel workstations.
-- **First-boot password:** `admin123` (set in `modules/_lib/base.nix`). Change with `passwd` after install. The default
-  is also used for `just vm`.
+- **First-boot password:** the installer (`install.fish`) prompts for it and sets it with `nixos-enter` before you
+  reboot; no default password ships in the repo. A known `admin123` survives only inside `virtualisation.vmVariant`
+  (`modules/core/hardware/disko.nix`) for `just vm`. Machines installed before this still hold the old bootstrap
+  password — check with `sudo passwd -S andrew` and run `passwd` if it shows `P`.
 - **WSL PATH:** `modules/devices/wsl.nix:20` disables WSL interop `$PATH` because Windows PATH lives on a slow 9P/DrvFs
   mount. Invoke `.exe`s by absolute path; `wsl-open` wrapper handles explorer.exe's spurious non-zero exit.
 - **Secrets:** only on `andrew-laptop` / `andrew-pc`. Decrypt with the shared age key at `~/.config/sops-nix/keys.txt`
