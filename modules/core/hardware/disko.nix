@@ -7,6 +7,7 @@
   core.hardware.disko.nixos = {
     host,
     lib,
+    user,
     ...
   }: let
     efi = {
@@ -45,7 +46,7 @@
       mountpoint,
     }: {
       type = "disk";
-      device = "/dev/nvme0n1"; # placeholder, overwritten by disko-install --disk
+      device = "/dev/nvme0n1"; # placeholder, overwritten by install.fish's generated config
       content = {
         type = "gpt";
         partitions.root = root {inherit format mountpoint;};
@@ -78,6 +79,9 @@
       # host GL: gtk has none, so use sdl + virtio-gpu-gl (no -vga std).
       virtualisation.vmVariant = {
         boot.resumeDevice = lib.mkForce "";
+        # vmVariant is applied only by `system.build.vm`, so this known password
+        # never reaches a hardware config; it exists just to log into `just vm`.
+        users.users.${user.userName}.initialPassword = "admin123";
         virtualisation.qemu.options = [
           "-vga"
           "none"
@@ -88,8 +92,6 @@
         ];
       };
 
-      # `device` is a placeholder — disko-install overwrites it per disk:
-      #   --disk <name> /dev/<dev>
       disko.devices.disk =
         if host.isLaptop
         then {

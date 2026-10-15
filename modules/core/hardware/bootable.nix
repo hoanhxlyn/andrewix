@@ -1,7 +1,6 @@
 {
   core.hardware.bootable = {
     host,
-    user,
     ...
   }: {
     nixos = {
@@ -48,8 +47,6 @@
       stylix.targets.grub.useWallpaper = true;
       hardware.cpu.intel.updateMicrocode =
         lib.mkDefault config.hardware.enableRedistributableFirmware;
-
-      users.users.${user.userName}.initialPassword = host.initialPassword;
     };
   };
 }

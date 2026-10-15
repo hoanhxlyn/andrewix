@@ -122,6 +122,21 @@ begin
     printf '}\n'
 end >"$DISKO_CONFIG"
 
+# ========= Login user ============
+# No default password ships in the repo, so this account is the only way into the
+# machine once the install finishes. Resolve it before anything destructive.
+set -l login_user (nix eval --raw --extra-experimental-features "nix-command flakes" \
+    "$CLONE_DIR#nixosConfigurations.$HOST" \
+    --apply 'c: let
+      us = builtins.filter (n: c.config.users.users.${n}.isNormalUser) (builtins.attrNames c.config.users.users);
+    in if builtins.length us == 1
+    then builtins.head us
+    else throw "expected exactly one normal user, got: ${builtins.concatStringsSep ", " us}"')
+if test -z "$login_user"
+    gum style --foreground $danger --bold "ERROR: no normal user found for $HOST (or the flake eval failed)."
+    exit 1
+end
+
 # ========= Partition part ============
 gum spin --spinner dot --title "Partitioning the selected disks..." --show-error -- \
     sudo NIX_CONFIG="experimental-features = nix-command flakes" \
@@ -134,5 +149,18 @@ gum spin --spinner dot --title "Installing NixOS" --show-output -- \
     sudo NIX_CONFIG="experimental-features = nix-command flakes" \
     nixos-install --flake "$CLONE_DIR#$HOST" --no-root-passwd --option fallback true; or exit $status
 
+# ========= First login password ============
+# Interactive on purpose — passwd prompts and validates, so no plaintext reaches
+# the repo, the store, or an argv. Stays outside gum spin: the spinner gives the
+# child no tty. An empty $login_user would make `passwd` change root's, which is
+# why it is resolved (and guarded) above, before the disks are erased.
+set -l target /mnt
+gum style --foreground $accent --bold "Set the login password for '$login_user':"
+if not sudo nixos-enter --root $target -c "passwd $login_user"
+    gum style --foreground $danger --bold "ERROR: no password set for '$login_user'. Do NOT reboot."
+    gum style --italic "Recovery: sudo nixos-enter --root $target -c 'passwd $login_user'"
+    exit 1
+end
+
 # =================
-gum style --foreground $success --bold "Done. Default login password is admin123 - change it with 'passwd' after first boot. Reboot."
+gum style --foreground $success --bold "Done. Reboot and log in as '$login_user' with the password you just set."

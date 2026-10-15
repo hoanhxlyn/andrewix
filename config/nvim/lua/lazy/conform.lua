@@ -21,12 +21,7 @@ return {
         lsp_format = "fallback",
         stop_after_first = true,
       },
-      format_after_save = function(buf)
-        return {
-          bufnr = buf,
-          async = true,
-        }
-      end,
+      format_on_save = {},
       formatters_by_ft = {
         markdown = { "markdownlint-cli2", "prettierd" },
         lua = { "stylua" },
