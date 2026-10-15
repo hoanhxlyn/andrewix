@@ -285,10 +285,10 @@
                 "Mod+Shift+V".action = switch-focus-between-floating-and-tiling;
 
                 # Move column (Ctrl + hjkl)
-                "Shift+Alt+H".action = focus-monitor-left;
-                "Shift+Alt+L".action = focus-monitor-right;
-                "Mod+Shift+H".action = move-column-to-monitor-left;
-                "Mod+Shift+L".action = move-column-to-monitor-right;
+                "Mod+Shift+H".action = focus-monitor-left;
+                "Mod+Shift+L".action = focus-monitor-right;
+                "Shift+Alt+H".action = move-column-to-monitor-left;
+                "Shift+Alt+L".action = move-column-to-monitor-right;
                 "Shift+Alt+Left".action = move-column-to-monitor-left;
                 "Shift+Alt+Right".action = move-column-to-monitor-right;
                 "Mod+Ctrl+H".action = move-column-left;
