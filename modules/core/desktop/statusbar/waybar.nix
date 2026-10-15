@@ -1,36 +1,114 @@
-{
+{inputs, ...}: {
   core.desktop.statusbar.waybar = {
     homeManager = {
       pkgs,
       host,
       lib,
+      config,
       ...
     }: let
-      dndScript = pkgs.writeShellScriptBin "waybar-dnd" ''
-        STATE_FILE="$XDG_RUNTIME_DIR/dnd-state"
-        if [ -f "$STATE_FILE" ] && [ "$(cat "$STATE_FILE")" = "1" ]; then
-          echo '{"text": "󰂛", "tooltip": "DND: On"}'
-        else
-          echo '{"text": "󰂟", "tooltip": "DND: Off"}'
-        fi
-      '';
-      recordingScript = pkgs.writeShellScriptBin "waybar-recording" ''
-        if pgrep -x wl-screenrec > /dev/null; then
-          echo '{"text": "󰑊", "tooltip": "Recording", "class": "recording"}'
-        else
-          echo '{"text": "", "tooltip": "Not recording"}'
-        fi
-      '';
-      recordToggle = pkgs.writeShellScriptBin "record-toggle" ''
-        if pgrep -x wl-screenrec > /dev/null; then
-          pkill -SIGINT wl-screenrec
-          pkill --signal RTMIN+11 waybar
-        else
-          wl-screenrec -f ~/Videos/recording_$(date +%Y%m%d_%H%M%S).mp4 &
-          pkill --signal RTMIN+11 waybar
-        fi
-      '';
+      dndScript = pkgs.writeShellApplication {
+        name = "waybar-dnd";
+        runtimeInputs = [pkgs.coreutils];
+        text = ''
+          STATE_FILE="''${XDG_RUNTIME_DIR:-/tmp}/dnd-state"
+          if [ -f "$STATE_FILE" ] && [ "$(cat "$STATE_FILE")" = "1" ]; then
+            echo '{"text": "󰂛", "tooltip": "DND: On"}'
+          else
+            echo '{"text": "󰂟", "tooltip": "DND: Off"}'
+          fi
+        '';
+      };
+      recordingScript = pkgs.writeShellApplication {
+        name = "waybar-recording";
+        runtimeInputs = [pkgs.procps];
+        text = ''
+          if pgrep -x wl-screenrec > /dev/null; then
+            echo '{"text": "󰑊", "tooltip": "Recording", "class": "recording"}'
+          else
+            echo '{"text": "", "tooltip": "Not recording"}'
+          fi
+        '';
+      };
+      recordToggle = pkgs.writeShellApplication {
+        name = "record-toggle";
+        runtimeInputs = [pkgs.coreutils pkgs.procps pkgs.wl-screenrec];
+        text = ''
+          if pgrep -x wl-screenrec > /dev/null; then
+            pkill -SIGINT wl-screenrec || true
+          else
+            wl-screenrec -f "$HOME/Videos/recording_$(date +%Y%m%d_%H%M%S).mp4" &
+          fi
+          pkill --signal RTMIN+11 waybar || true
+        '';
+      };
+      # xpad exposes no battery, and the pad's radio sleep never reaches the
+      # kernel (the USB device and input node stay), so the bar keys off real
+      # input with a grace window: it clears after 60s of silence.
+      gamepad = pkgs.writeShellApplication {
+        name = "waybar-gamepad";
+        runtimeInputs = [pkgs.coreutils pkgs.libnotify];
+        text = ''
+          STATE="''${XDG_RUNTIME_DIR:-/tmp}/waybar-gamepad"
+          ACTIVE="$STATE.last"
+          pad=""
+          ev=""
+          for js in /sys/class/input/js*; do
+            [ -r "$js/device/name" ] || continue
+            name=$(cat "$js/device/name")
+            case "$name" in
+              *[Xx]box* | *[Xx]-[Bb]ox*) pad="$name"; ev=/dev/input/$(basename "$js"/device/event*); break ;;
+            esac
+          done
+          # notify only on real plug/unplug (radio sleep is invisible here)
+          prev=$(cat "$STATE" 2>/dev/null || true)
+          if [ ! -e "$STATE" ]; then
+            printf '%s' "$pad" > "$STATE"
+          elif [ "$pad" != "$prev" ]; then
+            if [ -n "$pad" ]; then
+              notify-send "Controller" "$pad connected"
+            else
+              notify-send "Controller" "$prev disconnected"
+            fi
+            printf '%s' "$pad" > "$STATE"
+          fi
+          now=$(date +%s)
+          if [ -n "$ev" ] && [ "$( { timeout 2 cat "$ev" 2>/dev/null || true; } | wc -c )" -gt 0 ]; then
+            printf '%s' "$now" > "$ACTIVE"
+          fi
+          last=$(cat "$ACTIVE" 2>/dev/null || true)
+          if [ -n "$pad" ] && [ -n "$last" ] && [ "$((now - last))" -le 60 ]; then
+            printf '{"text":"󰊗","tooltip":"%s"}\n' "$pad"
+          else
+            printf '{"text":""}\n'
+          fi
+        '';
+      };
     in {
+      # wrap waybar so the bar's own on-click/exec tools are declared deps,
+      # not whatever happens to be on the session PATH
+      imports = [
+        (inputs.nwm.lib.getInstallModule {
+          name = "waybar";
+          value = {wlib, ...}: {
+            imports = [wlib.modules.default];
+            config.binName = "waybar";
+          };
+        })
+      ];
+
+      wrappers.waybar = {
+        enable = true;
+        package = pkgs.waybar;
+        runtimePkgs = with pkgs; [
+          playerctl
+          libnotify
+          procps
+          wireplumber
+          brightnessctl
+        ];
+      };
+
       home.packages = with pkgs; [playerctl] ++ [dndScript recordToggle];
       stylix.targets.waybar = {
         enable = true;
@@ -40,6 +118,7 @@
 
       programs.waybar = {
         enable = true;
+        package = config.wrappers.waybar.wrapper;
         systemd.enable = true;
         style =
           /*
@@ -69,6 +148,7 @@
             #backlight {border-bottom: 3px solid @base05;}
             #bluetooth {border-bottom: 3px solid @base0D;}
             #custom-dnd {padding: 0 5px; min-width: 18px; border-bottom: 3px solid @base04;}
+            #custom-gamepad {padding: 0 5px; border-bottom: 3px solid @base0E;}
             #custom-recording {padding: 0 5px; min-width: 18px; border-bottom: 3px solid @base08;}
             #custom-recording.recording {color: @base08; border-bottom-color: @base08;}
             #tray {border-bottom: 3px solid @base0C;}
@@ -98,6 +178,7 @@
               "tray"
               "privacy"
               "bluetooth"
+              "custom/gamepad"
               "custom/dnd"
               "custom/recording"
               (
@@ -110,9 +191,9 @@
                 then "backlight"
                 else null
               )
-              "wireplumber"
               "cpu"
               "memory"
+              "wireplumber"
             ];
 
             "niri/workspaces" = {
@@ -190,6 +271,13 @@
               return-type = "json";
               signal = 10;
               on-click = "dnd-toggle";
+            };
+
+            "custom/gamepad" = {
+              exec = "${gamepad}/bin/waybar-gamepad";
+              return-type = "json";
+              interval = 2;
+              tooltip = true;
             };
 
             "custom/recording" = {

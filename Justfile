@@ -53,39 +53,21 @@ update:
   alejandra flake.nix
   nix flake update
 
-# Clean old kernel files from /boot (backs up current first)
-[group('nixos')]
-boot-clean:
-  #!/usr/bin/env bash
-  set -euo pipefail
-  if [ ! -d /boot/kernels ]; then exit 0; fi
-  current=$(readlink /run/current-system/kernel | grep -oP 'linux-\K[0-9.]+')
-  [ -n "$current" ] || { echo "Failed to detect current kernel"; exit 1; }
-  echo "Current kernel: $current"
-  backup_dir=/var/backups/nixos-kernels
-  sudo rm -rf "$backup_dir"
-  sudo mkdir -p "$backup_dir"
-  sudo find /boot/kernels/ -maxdepth 1 -type f -name "*$current*" -exec cp -t "$backup_dir" {} +
-  sudo find /boot/kernels/ -maxdepth 1 -type f ! -name "*$current*" -delete
-  # GRUB only — systemd-boot manages its own entries
-  if [ -d /boot/grub ]; then
-    sudo grub-mkconfig -o /boot/grub/grub.cfg
-  fi
-
 # System-wide GC, delete old gens
 [group('nixos')]
 gc:
-  rm -rf /tmp/nh-os*
-  just boot-clean
+  sudo nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 3d
   sudo nix store gc -v
   sudo nix store optimise
+
+
+# List system generations
+[group('nixos')]
+list-gen:
+  nix profile history --profile /nix/var/nix/profiles/system
 
 # Search nix packages
 [group('info')]
 search *args:
   nps -e {{ args }} | fzf --cycle --layout=reverse-list --border rounded --height 80% --preview-window right:40%:wrap --bind 'enter:become(echo -n {1} | wl-copy)'
 
-# List system generations
-[group('nixos')]
-list-gen:
-  nixos-rebuild list-generations
