@@ -43,6 +43,7 @@
     "login"
     "backgroundImage"
     "terminal"
+    "locale"
   ];
 in
   {
@@ -53,6 +54,7 @@ in
     login ? base.login,
     backgroundImage ? base.backgroundImage,
     terminal ? base.terminal,
+    locale ? base.locale,
     ...
   } @ args: let
     facts = builtins.removeAttrs args own;
@@ -79,6 +81,7 @@ in
         users = effectiveProfiles;
         inherit login backgroundImage;
         terminal = base.terminal // terminal;
+        locale = base.locale // locale;
       };
   in
     assert lib.assertMsg (unknown == []) "mkHost: unknown host fact(s): ${toString unknown}";
