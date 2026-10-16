@@ -4,7 +4,7 @@
   in {
     homeManager = {
       programs.rio = {
-        enable = terminal.name == "rio";
+        enable = host.defaults.terminal == "rio";
         settings = {
           padding-x = terminal.padding;
           padding-y = terminal.padding;
@@ -17,8 +17,8 @@
           mouse.hide-when-typing = true;
           navigation.hide-if-single = true;
           window = {
-            blur = terminal.opacity < 1;
-            opacity-cells = terminal.opacity < 1;
+            blur = host.appearance.opacity < 1;
+            opacity-cells = host.appearance.opacity < 1;
             decorations = "Disabled";
           };
         };

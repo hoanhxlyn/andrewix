@@ -1,59 +1,17 @@
 {inputs, ...}: {
   flake-file.inputs.opencode = {
-    url = "github:sst/opencode/v2";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
-  flake-file.inputs.nwm = {
-    url = "github:BirdeeHub/nix-wrapper-modules";
+    url = "github:anomalyco/opencode/v2";
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
   core.agents.opencode.homeManager = {
     pkgs,
     osConfig,
-    lib,
-    config,
     ...
   }: let
     isWsl = osConfig.wsl.enable or false;
     opencodePkgs = inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system};
-    # makeWrapper alone drops .desktop files — symlinkJoin to keep them.
-    opencodeDesktop = pkgs.symlinkJoin {
-      name = "opencode-desktop";
-      paths = [config.wrappers.opencode-desktop.wrapper];
-      postBuild = ''
-        cp -r ${opencodePkgs.opencode-desktop}/share $out/share
-      '';
-    };
   in {
-    imports = lib.optionals (!isWsl) [
-      (inputs.nwm.lib.getInstallModule {
-        name = "opencode-desktop";
-        value = {wlib, ...}: {
-          imports = [wlib.modules.makeWrapper];
-          config.binName = "opencode-desktop";
-        };
-      })
-    ];
-
-    # ponytail: nix build stamps CLI with OPENCODE_CHANNEL=prod so it writes
-    # service-prod.json, while packaged desktop only reads service.json;
-    # drop the symlink + --no-sandbox when upstream aligns the channels.
-    wrappers.opencode-desktop = lib.mkIf (!isWsl) {
-      enable = true;
-      package = opencodePkgs.opencode-desktop;
-      flags."--no-sandbox" = true;
-    };
-
-    home.packages = lib.optionals (!isWsl) [
-      opencodeDesktop
-    ];
-
-    home.activation.opencodeDesktopServiceLink = lib.mkIf (!isWsl) (lib.hm.dag.entryAfter ["writeBoundary"] ''
-      mkdir -p "$HOME/.local/state/opencode"
-      ln -sf service-prod.json "$HOME/.local/state/opencode/service.json"
-    '');
-
     programs.opencode = {
       enable = true;
       package =
@@ -80,6 +38,23 @@
           };
         };
         websearch = false;
+        default_agent = "chat";
+        agents = {
+          plan = {
+            model = "opencode-go/deepseek-v4-pro";
+            request.body.temperature = 0.3;
+          };
+          build = {
+            model = "opencode-go/deepseek-v4.1-flash#low";
+            request.body.temperature = 0.3;
+          };
+          chat = {
+            description = "Daily chatting with heads in the cloud";
+            mode = "primary";
+            model = "opencode-go/mimo-v2.6-flash";
+            request.body.temperature = 0.8;
+          };
+        };
         permissions = [
           {
             action = "shell";

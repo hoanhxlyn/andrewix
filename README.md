@@ -1,98 +1,49 @@
-# Andrewix — NixOS + Home Manager Config
+# Andrewix
 
-Personal NixOS + Home Manager config using flake-parts with dendritic architecture.
+Personal NixOS and Home Manager configuration for five hosts: three physical machines
+(`asus-vivo14`, `asus-rog-gl552vx`, `home-pc`) and two WSL installs
+(`home-wsl`, `work-wsl`). It is built with flake-parts and the
+[den](https://github.com/denful/den) dendritic framework.
 
-## Quick Start
+## Guide
 
-```bash
-just switch <host>        # Apply config
-just test <host>          # Validate (requires sudo)
-just check                # Eval errors
-just update               # Update flake inputs (commits lock)
-just fmt && just lint     # Format + lint
-```
-
-Hosts: `andrew-asus-vivo14`, `andrew-asus-rog-gl552vx`, `andrew-pc`, `andrew-home-wsl`, `andrew-work-wsl`.
-Default host auto-detected via `hostname -s`.
-
-### No Justfile?
+Day to day, run these from the repo root. The host defaults to `hostname -s`.
 
 ```bash
-nix run .#<host> -- switch
-nix run .#<host> -- test
-nix flake check
-nix flake update --flake .
-alejandra . && statix check && deadnix --no-underscore --fail
+just build <host>         # Build only, catches eval errors
+just switch <host>        # Apply the config
+just test <host>          # Validate the running system (needs sudo)
+just update               # Update flake inputs, no commit
+just fmt && just lint     # Format and lint
 ```
 
-## Fresh Install
+Without `just`: `nix run .#<host> -- build|switch|test`.
 
-Provisions disks declaratively via [disko](https://github.com/nix-community/disko) — no manual partitioning.
-The layout follows the host's `storage.layout` fact: `single` (`andrew-asus-vivo14`, `andrew-asus-rog-gl552vx`) = one
-disk (ESP + swap + xfs root); `multi` (`andrew-pc`) = three (`nixos` ESP/swap/xfs, `works` btrfs `/works`,
-`entertainment` xfs `/entertainment`). disko owns `fileSystems`/`swapDevices`, so there is nothing to edit by hand
-before installing.
+### Fresh install
+
+Only the three physical hosts are installable. Disks are partitioned declaratively with
+[disko](https://github.com/nix-community/disko), so there is nothing to partition by hand.
 
 1. Boot the NixOS minimal ISO and connect to the network (`nmtui`).
-
-1. Clone the repo and run the guided installer — it reads the disk roles from the flake and asks you to pick a device
-   for each (`gum` is pulled in automatically on the stock ISO):
+1. Clone the repo and run the guided installer. It asks which disk to use for each role:
 
    ```bash
    git clone https://github.com/hoanhxlyn/andrewix ~/andrewix
    ~/andrewix/install.fish
    ```
 
-1. Reboot and log in as `andrew` with the password the installer asked for. Then copy the shared age key so secrets
-   decrypt (see Secrets below): `~/.config/sops-nix/keys.txt`.
+1. Reboot and log in as `andrew` with the password the installer asked for.
+1. Copy the shared age key to `~/.config/sops-nix/keys.txt` so secrets decrypt.
 
-Only `andrew-asus-vivo14` / `andrew-asus-rog-gl552vx` / `andrew-pc` are installable (WSL hosts have no disk layout).
+### Adding a device
 
-## Architecture
+Add one `mkHost` entry to `modules/hosts.nix` with its facts and monitors. Nothing else needs to
+change.
 
-| Path                   | Purpose                            |
-| ---------------------- | ---------------------------------- |
-| `modules/core/`        | All aspects (NixOS + Home Manager) |
-| `modules/devices/`     | Variant aspects (workstation, wsl) |
-| `modules/defaults.nix` | Default includes for all hosts     |
-| `modules/hosts.nix`    | Host definitions (hardware facts)  |
-| `modules/schema.nix`   | Typed host facts + defaults        |
-| `secrets/`             | sops-nix encrypted secrets         |
-| `config/`              | Non-Nix app configs                |
-| `flake.nix`            | **Auto-generated. DO NOT EDIT.**   |
+## Documentation
 
-Aspects auto-discovered. Compose via `den.aspects.<name>.includes` with angle-bracket imports (`<core/sound>`,
-`<core/shell>`).
-
-Hosts are described by hardware facts (`formFactor`, `gpu`, `bootLoader`, `storage`, ...) in `modules/hosts.nix`;
-aspects are selected from those facts, not from hostnames. To add a device, add one `mkHost` entry there. See
-`AGENTS.md` for the full fact list.
-
-## Garbage Collection
-
-```bash
-just gc        # User store
-just clean-up  # System-wide + delete old gens (sudo)
-```
-
-## Secrets
-
-Encrypted with [sops-nix](https://github.com/Mic92/sops-nix) using a shared age key. Only available on workstation hosts
-(`andrew-asus-vivo14`, `andrew-asus-rog-gl552vx`, `andrew-pc`) — not WSL.
-
-- **Encrypted file:** `secrets/secrets.yaml` (safe to commit)
-- **Age key location:** `~/.config/sops-nix/keys.txt` on each host
-- **Edit secrets:** `sops secrets/secrets.yaml`
-- **Setup new host:** copy the shared age private key to `~/.config/sops-nix/keys.txt`
-- **Add a new secret:** edit `secrets/secrets.yaml` (via `sops`) then declare it in
-  `modules/core/services/sync/sops.nix` under `sops.secrets`
-
-## More
-
-See `AGENTS.md` for conventions, module patterns, and rules.
-
-## Galerry
-
-![Linux PC](./config/background/workstation-pc.png)
-
-![Linux Laptop](./config/background/Shell.png)
+| Where                                  | What                                                    |
+| -------------------------------------- | ------------------------------------------------------- |
+| [modules/README.md](modules/README.md) | How the config is structured, and how to add an aspect  |
+| [config/README.md](config/README.md)   | Non-Nix app configs and how modules import them         |
+| [AGENTS.md](AGENTS.md)                 | Conventions, host facts, secrets, GC and the hard rules |

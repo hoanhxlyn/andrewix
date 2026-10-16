@@ -1,7 +1,7 @@
 {__findFile, ...}: {
   core.shell = {host, ...}: {
     includes = [
-      (<den/batteries/user-shell> host.terminal.shell)
+      (<den/batteries/user-shell> host.defaults.shell)
       <core.shell.fish>
       <core.cli.fastfetch>
       <core.cli.essentials>
