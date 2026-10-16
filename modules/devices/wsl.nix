@@ -8,8 +8,7 @@
         <core.services.sync.sops>
         <core.services.sync.stylix>
         <core.shell>
-        <core.timezone>
-        <core.i18n>
+        <core.locale>
       ];
 
       # Windows PATH entries live on a 9P/DrvFs mount, so appending them to
