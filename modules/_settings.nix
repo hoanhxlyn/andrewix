@@ -8,7 +8,8 @@
   locale = {
     lang = "en_US.UTF-8";
     # numbers, money, paper, address, name, phone, measurement, identification
-    formats = "vi_VN.UTF-8";
+    # vi_VN (no .UTF-8): glibc's SUPPORTED has `vi_VN/UTF-8`, and NixOS appends the charset.
+    formats = "vi_VN";
     time = "en_US.UTF-8";
   };
   # Default applications
