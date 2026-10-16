@@ -15,6 +15,7 @@ Non-Nix app configs (JSON, YAML, scripts, images) do not belong here. They live 
 | `hosts.nix`         | Host definitions and the host to variant wiring                      |
 | `schema.nix`        | Host facts as `den.schema.host` (types and defaults)                 |
 | `iso.nix`           | Installer ISO                                                        |
+| `_settings.nix`     | Shared host settings, path-imported and not auto-discovered          |
 | `core/`             | All aspects, NixOS and Home Manager together                         |
 | `devices/`          | Variant aspects: `workstation.nix` and `wsl.nix`                     |
 | `_lib/`             | Helpers, path-imported and not auto-discovered                       |
@@ -24,14 +25,13 @@ Non-Nix app configs (JSON, YAML, scripts, images) do not belong here. They live 
 | File               | Purpose                                                            |
 | ------------------ | ------------------------------------------------------------------ |
 | `mk-host.nix`      | `mkHost`: builds one host from settings, facts and monitors        |
-| `settings.nix`     | Shared settings: appearance, input, accessibility, defaults, ...   |
 | `facts.nix`        | The single definition of host facts                                |
 | `blurred-image.nix`| Blurred wallpaper helper                                           |
 
 ## How a host is built
 
 1. `hosts.nix` calls `mkHost` once per host with that host's facts and monitors.
-2. `mkHost` starts from `_lib/settings.nix`, applies the host's overrides, and rejects fact names
+2. `mkHost` starts from `_settings.nix`, applies the host's overrides, and rejects fact names
    that `_lib/facts.nix` does not know.
 3. The result is the `host` attrset. Any aspect can read it as `{host, ...}`.
 4. Each host gets a variant, chosen from the facts and never from the hostname: `workstation` for
@@ -39,7 +39,7 @@ Non-Nix app configs (JSON, YAML, scripts, images) do not belong here. They live 
 
 ## Settings and facts
 
-- **Settings** (`_lib/settings.nix`) are shared preferences, grouped like a desktop Settings app:
+- **Settings** (`_settings.nix`) are shared preferences, grouped like a desktop Settings app:
   `appearance`, `input`, `accessibility`, `defaults`, `locale`, `terminal`, `login`. A host may
   override any section, and sections merge key by key.
 - **Facts** (`_lib/facts.nix`) describe the machine: `formFactor`, `gpu`, `bootLoader`, `storage`,
