@@ -31,6 +31,9 @@
       ];
     };
     homeManager = {pkgs, ...}: {
+      # Keep stylix fonts (Font/MenuFont/TrayFont), drop its generated classicui theme
+      # (Theme/UseDarkTheme/UseAccentColor) so classicui themes stay user-controlled.
+      stylix.targets.fcitx5.colors.enable = false;
       i18n.inputMethod = {
         enable = true;
         type = "fcitx5";
@@ -41,6 +44,10 @@
         ];
         fcitx5.waylandFrontend = true;
         fcitx5.settings = {
+          addons.classicui.globalSection = {
+            Theme = "plasma";
+            UseDarkTheme = true;
+          };
           addons.lotus.globalSection = {
             AutoNonVnRestore = false;
             EnableMacro = false;
