@@ -1,7 +1,7 @@
 # DO-NOT-EDIT. This file was auto-generated using github:denful/flake-file.
 # Use `nix run .#write-flake` to regenerate it.
 {
-  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
     aic8800 = {
@@ -60,7 +60,7 @@
       flake = false;
     };
     opencode = {
-      url = "github:sst/opencode/v2";
+      url = "github:anomalyco/opencode/v2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     ponytail = {
