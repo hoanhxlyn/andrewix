@@ -23,13 +23,6 @@ if test (id -u) -eq 0
     exit 1
 end
 
-set HOST (gum choose andrew-laptop andrew-pc; or true)
-if test -z "$HOST"
-    exit 0
-end
-
-gum confirm --default=$confirm_default "Install $HOST?"; or exit 0
-
 # ========== Clone/Fetch upstream ============
 set REPO_URL "https://github.com/hoanhxlyn/andrewix.git"
 set CLONE_DIR "$HOME/andrewix"
@@ -46,6 +39,23 @@ else if test -d "$CLONE_DIR/.git"
 else
     git clone "$REPO_URL" "$CLONE_DIR"
 end
+
+# Installable hosts come from the flake (`flake.installableHosts` in modules/hosts.nix:
+# every non-WSL host), so adding a device needs no edit here.
+set HOSTS (nix eval --raw --extra-experimental-features "nix-command flakes" \
+    "$CLONE_DIR#installableHosts" \
+    --apply 'hs: builtins.concatStringsSep "\n" hs')
+if test (count $HOSTS) -eq 0
+    gum style --foreground $danger --bold "nix eval returned no installable hosts." >&2
+    exit 1
+end
+
+set HOST (gum choose $HOSTS; or true)
+if test -z "$HOST"
+    exit 0
+end
+
+gum confirm --default=$confirm_default "Install $HOST?"; or exit 0
 
 # Disk roles come from the flake (source of truth), not from the host name, so
 # laptop=1 disk and pc=3 disks need no special-casing here. diskOrder sets the
