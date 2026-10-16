@@ -20,15 +20,16 @@
       boot = {
         initrd.availableKernelModules = [
           "vmd"
+          "ahci"
           "xhci_pci"
           "nvme"
           "usb_storage"
           "sd_mod"
         ];
         kernelModules = ["kvm-intel"];
-        loader.systemd-boot.enable = host.isLaptop;
+        loader.systemd-boot.enable = host.bootLoader == "systemd-boot";
         loader.grub = {
-          enable = !host.isLaptop;
+          enable = host.bootLoader == "grub";
           efiSupport = true;
           device = "nodev";
           useOSProber = true;
