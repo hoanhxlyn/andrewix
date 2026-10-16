@@ -6,8 +6,11 @@
 # untouched; den types and defaults them via `den.schema.host`
 # (modules/schema.nix), and their names are checked here against the same
 # definition (facts.nix).
-{lib}: let
-  settings = import ./settings.nix;
+{
+  lib,
+  self,
+}: let
+  settings = import "${self}/modules/_settings.nix";
   layoutMonitors = monitors:
     builtins.mapAttrs (_: m: let
       extraKeys = builtins.removeAttrs m ["resolution" "refresh-rate" "is-primary" "scale"];
