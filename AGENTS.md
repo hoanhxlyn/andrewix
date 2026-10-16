@@ -53,12 +53,12 @@ NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto
 | `modules/devices/`      | Variant aspects (`workstation.nix`, `wsl.nix`)    |
 | `modules/defaults.nix`  | Default includes + dev shell                      |
 | `modules/dendritic.nix` | Framework bootstrapping                           |
-| `modules/_lib/`         | Host builder (`base.nix`, monitor layout)         |
+| `modules/_lib/`         | Host builder (`settings.nix`, monitor layout)         |
 | `secrets/`              | sops-nix encrypted secrets                        |
 | `config/`               | Non-Nix app configs (symlinked into `~/.config`)  |
 | `flake.nix`             | **Auto-generated. DO NOT EDIT.**                  |
 
-Host builder: `mkHost` in `modules/_lib/default.nix` composes `base.nix` with per-host data and the workstation/wsl
+Host builder: `mkHost` in `modules/_lib/default.nix` composes `settings.nix` with per-host data and the workstation/wsl
 variant. Layout translates flat monitor attrs into niri's nested shape and sets `wsl.enable` for non-workstations.
 
 **Host facts** (set in `modules/hosts.nix`). The single definition is `modules/_lib/facts.nix`; `modules/schema.nix`
