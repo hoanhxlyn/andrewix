@@ -29,8 +29,5 @@
         home.sessionVariables.BROWSER = "wsl-open";
       };
     };
-
-    andrew-home-wsl.provides.to-users.includes = [<wsl>];
-    andrew-work-wsl.provides.to-users.includes = [<wsl>];
   };
 }

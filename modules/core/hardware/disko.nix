@@ -65,7 +65,7 @@
 
     config = {
       core.hardware.disko.diskOrder =
-        if host.isLaptop
+        if host.storage.layout == "single"
         then ["main"]
         else ["nixos" "works" "entertainment"];
 
@@ -93,7 +93,7 @@
       };
 
       disko.devices.disk =
-        if host.isLaptop
+        if host.storage.layout == "single"
         then {
           main = {
             type = "disk";
@@ -102,7 +102,7 @@
               type = "gpt";
               partitions = {
                 ESP = efi;
-                swap = swap "24G";
+                swap = swap host.storage.swap;
                 root = root {
                   format = "xfs";
                   mountpoint = "/";
@@ -119,7 +119,7 @@
               type = "gpt";
               partitions = {
                 ESP = efi;
-                swap = swap "32G";
+                swap = swap host.storage.swap;
                 root = root {
                   format = "xfs";
                   mountpoint = "/";
