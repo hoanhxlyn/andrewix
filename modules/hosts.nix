@@ -1,9 +1,10 @@
 {
   __findFile,
   lib,
+  self,
   ...
 }: let
-  mkHost = import ./_lib {inherit lib;};
+  mkHost = import "${self}/modules/_lib/mk-host.nix" {inherit lib;};
   hosts = {
     andrew-asus-vivo14 = mkHost {
       formFactor = "laptop";

@@ -41,6 +41,9 @@
     "monitors"
     "windowsName"
     "login"
+    "defaults"
+    "input"
+    "accessibility"
     "appearance"
     "terminal"
     "locale"
@@ -52,9 +55,12 @@ in
     monitors ? {},
     windowsName ? null,
     login ? settings.login,
-    appearance ? settings.appearance,
-    terminal ? settings.terminal,
-    locale ? settings.locale,
+    defaults ? {},
+    input ? {},
+    accessibility ? {},
+    appearance ? {},
+    terminal ? {},
+    locale ? {},
     ...
   } @ args: let
     facts = builtins.removeAttrs args own;
@@ -75,20 +81,24 @@ in
       if profiles == null
       then settings.profiles
       else profiles;
-    baseWithUsers =
+    withSettings =
       (builtins.removeAttrs settings ["profiles"])
       // {
         users = effectiveProfiles;
         inherit login;
-        appearance = settings.appearance // appearance;
-        terminal = settings.terminal // terminal;
-        locale = settings.locale // locale;
+        # sections merge key by key: a host overrides only the keys it names
+        defaults = lib.recursiveUpdate settings.defaults defaults;
+        input = lib.recursiveUpdate settings.input input;
+        accessibility = lib.recursiveUpdate settings.accessibility accessibility;
+        appearance = lib.recursiveUpdate settings.appearance appearance;
+        terminal = lib.recursiveUpdate settings.terminal terminal;
+        locale = lib.recursiveUpdate settings.locale locale;
       };
   in
     assert lib.assertMsg (unknown == []) "mkHost: unknown host fact(s): ${toString unknown}";
     assert lib.assertMsg (is-workstation || windowsName != null) "mkHost: WSL host needs windowsName";
     assert lib.assertMsg (!is-workstation || windowsName == null) "mkHost: windowsName is WSL-only";
-      lib.recursiveUpdate baseWithUsers (
+      lib.recursiveUpdate withSettings (
         facts
         // (
           if is-workstation
