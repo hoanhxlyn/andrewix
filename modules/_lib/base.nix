@@ -27,6 +27,12 @@
       y = 8;
     };
   };
+  locale = {
+    lang = "en_US.UTF-8";
+    # numbers, money, paper, address, name, phone, measurement, identification
+    formats = "vi_VN.UTF-8";
+    time = "en_US.UTF-8";
+  };
   defaultBrowser = "zen";
   profiles.andrew = {};
   login = "ly";

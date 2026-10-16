@@ -7,17 +7,17 @@
       user,
       ...
     }: {
-      i18n.defaultLocale = "en_US.UTF-8";
+      i18n.defaultLocale = host.locale.lang;
       i18n.extraLocaleSettings = {
-        LC_ADDRESS = "vi_VN";
-        LC_IDENTIFICATION = "vi_VN";
-        LC_MEASUREMENT = "vi_VN";
-        LC_MONETARY = "vi_VN";
-        LC_NAME = "vi_VN";
-        LC_NUMERIC = "vi_VN";
-        LC_PAPER = "vi_VN";
-        LC_TELEPHONE = "vi_VN";
-        LC_TIME = "en_US.UTF-8";
+        LC_ADDRESS = host.locale.formats;
+        LC_IDENTIFICATION = host.locale.formats;
+        LC_MEASUREMENT = host.locale.formats;
+        LC_MONETARY = host.locale.formats;
+        LC_NAME = host.locale.formats;
+        LC_NUMERIC = host.locale.formats;
+        LC_PAPER = host.locale.formats;
+        LC_TELEPHONE = host.locale.formats;
+        LC_TIME = host.locale.time;
       };
       boot.kernelModules = lib.mkIf (!host.wsl.enable) ["uinput"];
       users.users.uinput_proxy = lib.mkIf (!host.wsl.enable) {
