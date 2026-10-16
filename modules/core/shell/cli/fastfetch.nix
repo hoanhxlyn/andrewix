@@ -38,7 +38,7 @@
               "type" = "de";
             }
             {
-              "key" = "{#31}├─  term";
+              "key" = "{#31}├─  term";
               "type" = "terminal";
             }
             {
