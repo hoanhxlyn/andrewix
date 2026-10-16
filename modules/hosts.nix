@@ -1,10 +1,11 @@
 {
   __findFile,
   lib,
-  self,
   ...
 }: let
-  mkHost = import "${self}/modules/_lib/mk-host.nix" {inherit lib self;};
+  # Relative import on purpose: `self` is not resolvable while den builds the
+  # flake outputs (see the same note in modules/schema.nix).
+  mkHost = import ./_lib/mk-host.nix {inherit lib;};
   hosts = {
     asus-vivo14 = mkHost {
       formFactor = "laptop";

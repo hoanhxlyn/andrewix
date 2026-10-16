@@ -5,9 +5,7 @@
       <core.agents.commandcode>
       <core.agents.claude>
     ];
-    homeManager = {config, ...}: let
-      secrets = config.sops.secrets;
-    in {
+    homeManager = {
       programs = {
         mcp = {
           enable = true;

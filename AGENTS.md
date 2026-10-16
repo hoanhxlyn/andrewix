@@ -93,7 +93,9 @@ hostname.
   (`{ core.x = ...; }`). Only take args you actually use (`{__findFile, ...}:`, `{lib, inputs, self, ...}:`). Same for
   an aspect's `nixos`/`homeManager` fn — omit the fn wrapper when no args are used.
 - **Files:** `kebab-case.nix`, **options:** `camelCase`.
-- **No relative-path imports.** Take `{self, ...}` and use `import "${self}/modules/_lib/foo.nix"`.
+- **No relative-path imports.** Take `{self, ...}` and use `import "${self}/modules/_lib/foo.nix"`. **Exception:**
+  `hosts.nix`, `schema.nix` and `_lib/mk-host.nix` run while the flake outputs are being computed, so `${self}`
+  there is infinite recursion — those three use relative imports.
 - **Underscore dirs = not aspects.** `_nvf/`, `_nwm/`, `_lib/` are path-imported, **not** auto-discovered. Split a big
   aspect into `_<name>/*.nix` sub-configs and `import "${self}/..."` them from the aspect file (see
   `modules/core/editor/nwm.nix`).
