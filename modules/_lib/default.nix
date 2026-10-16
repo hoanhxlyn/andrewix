@@ -1,6 +1,11 @@
 # Host builder: composes base settings with per-host data and the
 # workstation/wsl variant. Returns the `host` attrset consumed across
 # modules/core/**.
+#
+# Hardware facts (formFactor, gpu, bootLoader, storage, ...) pass through
+# untouched; den types and defaults them via `den.schema.host`
+# (modules/schema.nix), and their names are checked here against the same
+# definition (facts.nix).
 {lib}: let
   base = import ./base.nix;
   layoutMonitors = monitors:
@@ -25,20 +30,34 @@
     in
       baseOutput // position // extraKeys)
     monitors;
+  # attrNames never forces the option values, so `config` is not needed here.
+  knownFacts = builtins.attrNames (import ./facts.nix {
+    inherit lib;
+    config = null;
+  });
+  own = [
+    "is-workstation"
+    "profiles"
+    "monitors"
+    "windowsName"
+    "login"
+    "backgroundImage"
+    "terminal"
+  ];
 in
   {
     is-workstation ? true,
     profiles ? null,
-    isLaptop ? false,
     monitors ? {},
     windowsName ? null,
     login ? base.login,
     backgroundImage ? base.backgroundImage,
     terminal ? base.terminal,
-    powerManagement ? {},
-  }: let
+    ...
+  } @ args: let
+    facts = builtins.removeAttrs args own;
+    unknown = builtins.filter (k: !(builtins.elem k knownFacts)) (builtins.attrNames facts);
     workstation = {
-      inherit isLaptop;
       rclone.path = "gdrive";
       monitors = layoutMonitors monitors;
     };
@@ -58,12 +77,18 @@ in
       (builtins.removeAttrs base ["profiles"])
       // {
         users = effectiveProfiles;
-        inherit login backgroundImage powerManagement;
+        inherit login backgroundImage;
         terminal = base.terminal // terminal;
       };
   in
-    lib.recursiveUpdate baseWithUsers (
-      if is-workstation
-      then workstation
-      else wsl
-    )
+    assert lib.assertMsg (unknown == []) "mkHost: unknown host fact(s): ${toString unknown}";
+    assert lib.assertMsg (is-workstation || windowsName != null) "mkHost: WSL host needs windowsName";
+    assert lib.assertMsg (!is-workstation || windowsName == null) "mkHost: windowsName is WSL-only";
+      lib.recursiveUpdate baseWithUsers (
+        facts
+        // (
+          if is-workstation
+          then workstation
+          else wsl
+        )
+      )

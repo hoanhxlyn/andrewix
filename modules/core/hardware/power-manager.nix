@@ -1,6 +1,13 @@
 {
   core.hardware.power-manager = {
-    nixos = {config, ...}: {
+    nixos = {
+      config,
+      host,
+      lib,
+      ...
+    }: let
+      ct = host.chargeThreshold;
+    in {
       boot = {
         extraModulePackages = with config.boot.kernelPackages; [
           acpi_call
@@ -24,13 +31,14 @@
       # asus_wmi registers charge_control_end_threshold but its WMI GET returns
       # ENODATA on X1405VA, causing TLP's readable_sysf check to fail and skip
       # threshold setting entirely. Write directly at boot as a workaround.
-      systemd.services.battery-charge-threshold = {
+      # Only for hosts that declare `chargeThreshold`.
+      systemd.services.battery-charge-threshold = lib.mkIf (ct != null) {
         description = "Set battery charge stop threshold";
         wantedBy = ["multi-user.target"];
         after = ["systemd-modules-load.service"];
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = "/bin/sh -c 'echo 85 > /sys/class/power_supply/BAT0/charge_control_end_threshold'";
+          ExecStart = "/bin/sh -c 'echo ${toString ct.stop} > /sys/class/power_supply/BAT0/charge_control_end_threshold'";
           RemainAfterExit = true;
         };
       };
@@ -61,11 +69,6 @@
             PLATFORM_PROFILE_ON_BAT = "balanced";
             PLATFORM_PROFILE_ON_SAV = "quiet";
 
-            # Battery Charge Thresholds
-            START_CHARGE_THRESH_BAT0 = 40;
-            STOP_CHARGE_THRESH_BAT0 = 85;
-            RESTORE_THRESHOLDS_ON_BAT = 1;
-
             # PCIE & Runtime PM
             PCIE_ASPM_ON_AC = "default";
             PCIE_ASPM_ON_BAT = "powersupersave";
@@ -74,6 +77,12 @@
 
             # Peripherals
             USB_AUTOSUSPEND = 0;
+          }
+          // lib.optionalAttrs (ct != null) {
+            # Battery Charge Thresholds
+            START_CHARGE_THRESH_BAT0 = ct.start;
+            STOP_CHARGE_THRESH_BAT0 = ct.stop;
+            RESTORE_THRESHOLDS_ON_BAT = 1;
           };
         };
       };
