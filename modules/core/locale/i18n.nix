@@ -1,5 +1,5 @@
 {
-  core.i18n = {
+  core.locale.i18n = {
     nixos = {
       pkgs,
       lib,

@@ -6,8 +6,7 @@
   den.aspects.workstation.includes = [
     <core.hardware>
     <core.services>
-    <core.i18n>
-    <core.timezone>
+    <core.locale>
     <core.git>
     <core.agents>
     <core.shell>
