@@ -19,8 +19,8 @@ just gc           # nix-store gc + optimise
 just clean-up     # user+system GC, keep 7d (sudo)
 ```
 
-Hosts: `andrew-asus-vivo14`, `andrew-asus-rog-gl552vx`, `andrew-pc`, `andrew-home-wsl`, `andrew-work-wsl`. Only
-`andrew-asus-vivo14` / `andrew-asus-rog-gl552vx` / `andrew-pc` are installable (WSL hosts have no disk layout).
+Hosts: `asus-vivo14`, `asus-rog-gl552vx`, `home-pc`, `home-wsl`, `work-wsl`. Only
+`asus-vivo14` / `asus-rog-gl552vx` / `home-pc` are installable (WSL hosts have no disk layout).
 
 ### No Justfile?
 
@@ -173,19 +173,19 @@ nix run .#write-flake    # rewrites flake.nix
   gone; hardware boot bits (initrd `vmd`/`ahci`/`nvme`, kvm, microcode) live in `modules/core/hardware/bootable.nix`,
   shared by the Intel workstations; the loader comes from the `bootLoader` fact. Target disks are picked at install time
   by `install.fish`, so the `/dev/nvme0n1` in `disko.nix` is only a default.
-- **Hybrid GPU (`andrew-asus-rog-gl552vx`, GTX 950M):** `nvidiaPrime` bus IDs are unset until you fill them from
+- **Hybrid GPU (`asus-rog-gl552vx`, GTX 950M):** `nvidiaPrime` bus IDs are unset until you fill them from
   `lspci -D -d ::03xx` after install (see the `TODO`s in `hosts.nix`). niri runs on the Intel iGPU; games use the
   nvidia dGPU via PRIME offload (`nvidia-offload <cmd>`, e.g. as a Steam launch option). PRIME sync is X11-only and is
   not used. Verify connector names with `niri msg outputs`; HDMI ports wired to the nvidia GPU may behave differently.
 - **Charge limit:** `core.hardware.power-manager` sets TLP thresholds and the asus_wmi workaround only when the host
-  declares `chargeThreshold` (X1405VA, `andrew-asus-vivo14`).
+  declares `chargeThreshold` (X1405VA, `asus-vivo14`).
 - **First-boot password:** the installer (`install.fish`) prompts for it and sets it with `nixos-enter` before you
   reboot; no default password ships in the repo. A known `admin123` survives only inside `virtualisation.vmVariant`
   (`modules/core/hardware/disko.nix`) for `just vm`. Machines installed before this still hold the old bootstrap
   password — check with `sudo passwd -S andrew` and run `passwd` if it shows `P`.
 - **WSL PATH:** `modules/devices/wsl.nix:20` disables WSL interop `$PATH` because Windows PATH lives on a slow 9P/DrvFs
   mount. Invoke `.exe`s by absolute path; `wsl-open` wrapper handles explorer.exe's spurious non-zero exit.
-- **Secrets:** only on `andrew-asus-vivo14` / `andrew-asus-rog-gl552vx` / `andrew-pc`. Decrypt with the shared age key
+- **Secrets:** only on `asus-vivo14` / `asus-rog-gl552vx` / `home-pc`. Decrypt with the shared age key
   at `~/.config/sops-nix/keys.txt` on each host. Edit via `sops secrets/secrets.yaml`; declare new secrets in
   `modules/core/services/sync/sops.nix` under `sops.secrets`.
 - **Auto GC:** `nix.gc.automatic` runs daily, `--delete-older-than 7d` (see `nix-setting.nix`). `just clean-up` does the
