@@ -1,5 +1,4 @@
 {
-  lib,
   inputs,
   self,
   ...
@@ -15,7 +14,7 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
   core.services.sync.stylix = {host, ...}: let
-    inherit (host) terminal;
+    inherit (host) appearance;
   in {
     nixos = {
       pkgs,
@@ -28,12 +27,12 @@
       stylix = {
         enable = true;
         autoEnable = true;
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
-        polarity = "dark";
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/${appearance.scheme}.yaml";
+        inherit (appearance) polarity;
         cursor = {
           package = pkgs.capitaine-cursors-themed;
           name = "Capitaine Cursors - White";
-          size = lib.mul terminal.fontSize 2;
+          size = host.accessibility.cursorSize;
         };
         fonts = {
           serif = config.stylix.fonts.sansSerif;
@@ -50,10 +49,10 @@
             name = "Noto Color Emoji";
           };
           sizes = {
-            applications = terminal.fontSize + 1;
-            terminal = terminal.fontSize;
-            desktop = terminal.fontSize + 2;
-            popups = terminal.fontSize;
+            applications = appearance.font.size + 1;
+            terminal = appearance.font.size;
+            desktop = appearance.font.size + 2;
+            popups = appearance.font.size;
           };
         };
         icons = {
@@ -62,26 +61,27 @@
           dark = "Papirus-Dark";
         };
         opacity = {
-          terminal = terminal.opacity;
-          desktop = terminal.opacity;
-          popups = terminal.opacity;
-          applications = terminal.opacity;
+          terminal = appearance.opacity;
+          desktop = appearance.opacity;
+          popups = appearance.opacity;
+          applications = appearance.opacity;
         };
         targets = {
           plymouth.enable = true;
           kmscon.enable = true;
           fontconfig.enable = false;
         };
-        # string = file in config/background/; { gruvbox = "<path in repo>"; }
-        # = AngelJumbo/gruvbox-wallpapers (no hash); { url; hash; } = anywhere else
-        image =
-          if builtins.isAttrs host.backgroundImage
-          then
-            if host.backgroundImage ? url
-            then pkgs.fetchurl host.backgroundImage
-            else "${inputs.gruvbox-wallpapers}/${host.backgroundImage.gruvbox}"
-          else "${self}/config/background/${host.backgroundImage}";
-        imageScalingMode = "center"; # fill | center | stretch | fit
+        # see appearance.wallpaper in modules/_settings.nix
+        image = let
+          bg = appearance.wallpaper;
+        in
+          {
+            local = "${self}/config/background/${bg.path or ""}";
+            gruvbox = "${inputs.gruvbox-wallpapers}/${bg.path or ""}";
+            remote = pkgs.fetchurl {inherit (bg) url hash;};
+          }
+          .${bg.source};
+        imageScalingMode = appearance.wallpaper.scaling;
       };
       fonts = {
         packages = with pkgs; [

@@ -5,7 +5,7 @@
     homeManager = {
       stylix.targets.kitty.variant256Colors = true;
       programs.kitty = {
-        enable = terminal.name == "kitty";
+        enable = host.defaults.terminal == "kitty";
         settings = {
           window_padding_width = terminal.padding;
           hide_window_decorations = true;

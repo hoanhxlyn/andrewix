@@ -1,4 +1,4 @@
-# Host builder: composes base settings with per-host data and the
+# Host builder: composes shared settings with per-host data and the
 # workstation/wsl variant. Returns the `host` attrset consumed across
 # modules/core/**.
 #
@@ -6,8 +6,8 @@
 # untouched; den types and defaults them via `den.schema.host`
 # (modules/schema.nix), and their names are checked here against the same
 # definition (facts.nix).
-{lib}: let
-  base = import ./base.nix;
+{lib, ...}: let
+  settings = import ../_settings.nix;
   layoutMonitors = monitors:
     builtins.mapAttrs (_: m: let
       extraKeys = builtins.removeAttrs m ["resolution" "refresh-rate" "is-primary" "scale"];
@@ -41,7 +41,10 @@
     "monitors"
     "windowsName"
     "login"
-    "backgroundImage"
+    "defaults"
+    "input"
+    "accessibility"
+    "appearance"
     "terminal"
     "locale"
   ];
@@ -51,10 +54,13 @@ in
     profiles ? null,
     monitors ? {},
     windowsName ? null,
-    login ? base.login,
-    backgroundImage ? base.backgroundImage,
-    terminal ? base.terminal,
-    locale ? base.locale,
+    login ? settings.login,
+    defaults ? {},
+    input ? {},
+    accessibility ? {},
+    appearance ? {},
+    terminal ? {},
+    locale ? {},
     ...
   } @ args: let
     facts = builtins.removeAttrs args own;
@@ -73,21 +79,26 @@ in
       );
     effectiveProfiles =
       if profiles == null
-      then base.profiles
+      then settings.profiles
       else profiles;
-    baseWithUsers =
-      (builtins.removeAttrs base ["profiles"])
+    withSettings =
+      (builtins.removeAttrs settings ["profiles"])
       // {
         users = effectiveProfiles;
-        inherit login backgroundImage;
-        terminal = base.terminal // terminal;
-        locale = base.locale // locale;
+        inherit login;
+        # sections merge key by key: a host overrides only the keys it names
+        defaults = lib.recursiveUpdate settings.defaults defaults;
+        input = lib.recursiveUpdate settings.input input;
+        accessibility = lib.recursiveUpdate settings.accessibility accessibility;
+        appearance = lib.recursiveUpdate settings.appearance appearance;
+        terminal = lib.recursiveUpdate settings.terminal terminal;
+        locale = lib.recursiveUpdate settings.locale locale;
       };
   in
     assert lib.assertMsg (unknown == []) "mkHost: unknown host fact(s): ${toString unknown}";
     assert lib.assertMsg (is-workstation || windowsName != null) "mkHost: WSL host needs windowsName";
     assert lib.assertMsg (!is-workstation || windowsName == null) "mkHost: windowsName is WSL-only";
-      lib.recursiveUpdate baseWithUsers (
+      lib.recursiveUpdate withSettings (
         facts
         // (
           if is-workstation

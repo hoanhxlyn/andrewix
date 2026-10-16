@@ -1,10 +1,10 @@
 {
-  core.desktop.de.gnome = {
+  core.desktop.de.gnome = {host, ...}: {
     homeManager = {
       dconf.settings = {
         "org/gnome/desktop/peripherals/touchpad" = {
-          natural-scroll = true;
-          tap-to-click = true;
+          natural-scroll = host.input.touchpad.naturalScroll;
+          tap-to-click = host.input.touchpad.tap;
           two-finger-scrolling-enabled = true;
         };
         "org/gnome/desktop/interface" = {

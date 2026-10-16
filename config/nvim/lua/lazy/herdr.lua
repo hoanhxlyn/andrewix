@@ -14,14 +14,17 @@ local KINDS = { "claude", "codex", "opencode", "gemini", "cursor", "copilot", "p
 local EXE = { ["command code"] = "cmdc", mimo = "mimo" }
 
 local TIMEOUT = 3000 -- ms; keep a hung herdr from freezing nvim
+local AGENT_START_TIMEOUT = 15000 -- ms; agent start waits for the agent to be detected, so give it longer
+local SHELL_READY_TIMEOUT = 20000 -- ms; waiting for the shell prompt can take a while on a cold direnv cache
+local PROMPT_MARKER = "@andrew" -- first segment of the omp prompt; shell is ready once this shows
 local STARTUP_DELAY = 1500 -- ms; let a fresh agent TUI come up before sending text
 
 local PREVIEW_LINES = 5 -- max selected lines echoed to the agent before "..."
 
 local pane_id, last_kind
 
-local function herdr(args)
-  local res = vim.system(vim.list_extend({ "herdr" }, args), { text = true }):wait(TIMEOUT)
+local function herdr(args, timeout)
+  local res = vim.system(vim.list_extend({ "herdr" }, args), { text = true }):wait(timeout or TIMEOUT)
   local ok, json = pcall(vim.json.decode, res.stdout or "")
   return res.code == 0, ok and json or nil, res.stderr
 end
@@ -32,6 +35,16 @@ local state_file = SELF and (vim.fn.stdpath("state") .. "/herdr_agent/" .. SELF:
 local function pane_info(id)
   local ok, json = herdr({ "pane", "get", id })
   return ok and json and vim.tbl_get(json, "result", "pane") or nil
+end
+
+-- Stable name for this nvim's agent; herdr clears the name when the agent exits.
+local function agent_name()
+  return "agent-" .. SELF:gsub("[^%w]", "_"):lower()
+end
+
+local function agent_info()
+  local ok, json = herdr({ "agent", "get", agent_name() })
+  return ok and json and vim.tbl_get(json, "result", "agent") or nil
 end
 
 local function forget()
@@ -53,21 +66,21 @@ local function remember()
   )
 end
 
--- Reattach to a saved agent pane. terminal_id guards against herdr having reused the pane id for something else.
+-- Reattach to the saved agent by name; herdr clears the name when the agent exits.
 local function restore()
   if not (state_file and vim.uv.fs_stat(state_file)) then
     return
   end
   local ok, saved = pcall(vim.json.decode, table.concat(vim.fn.readfile(state_file), "\n"))
-  local info = ok and type(saved) == "table" and pane_info(saved.pane_id) or nil
-  if info and info.terminal_id == saved.terminal_id then
-    pane_id, last_kind = saved.pane_id, saved.kind
+  local info = ok and type(saved) == "table" and agent_info() or nil
+  if info then
+    pane_id, last_kind = info.pane_id, saved.kind
   else
     forget()
   end
 end
 
--- The agent runs as `cmd; exit`, so the pane closes when the agent quits; a live pane means a live agent.
+-- `agent start` runs the agent in the shell; herdr clears the name when it exits, so a live name means a live agent.
 local function alive()
   if not pane_id then
     restore()
@@ -75,7 +88,7 @@ local function alive()
   if not pane_id then
     return false
   end
-  if pane_info(pane_id) then
+  if agent_info() then
     return true
   end
   -- agent gone (or herdr errored): close best-effort so a live pane is never orphaned, then reset
@@ -131,8 +144,25 @@ local function open(cb)
     if not pane_id then
       return utils.notify("split returned no pane id", "ERROR", "Agent")
     end
+    -- direnv's `use flake` swallows the first char of input sent during startup (`opencode` ->
+    -- `pencode`), so wait for the prompt before typing into the shell.
+    local ready, _, werr =
+      herdr({ "pane", "wait-output", pane_id, "--match", PROMPT_MARKER, "--timeout", "15000" }, SHELL_READY_TIMEOUT)
+    if not ready then
+      herdr({ "pane", "close", pane_id })
+      pane_id = nil
+      utils.notify("shell not ready: " .. (werr or ""), "ERROR", "Agent")
+      return
+    end
     local started, _, serr
-    started, _, serr = herdr({ "pane", "run", pane_id, (EXE[kind] or kind) .. "; exit" })
+    if EXE[kind] then
+      -- no herdr --kind for this one: type it into the shell the old way
+      started, _, serr = herdr({ "pane", "run", pane_id, EXE[kind] .. "; exit" })
+    else
+      -- herdr-supported: agent start waits for the agent to be detected
+      started, _, serr =
+        herdr({ "agent", "start", agent_name(), "--kind", kind, "--pane", pane_id }, AGENT_START_TIMEOUT)
+    end
     if not started then
       -- don't leave a dead pane behind that alive() would treat as the agent
       herdr({ "pane", "close", pane_id })

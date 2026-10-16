@@ -3,9 +3,11 @@
   lib,
   ...
 }: let
-  mkHost = import ./_lib {inherit lib;};
+  # Relative import on purpose: `self` is not resolvable while den builds the
+  # flake outputs (see the same note in modules/schema.nix).
+  mkHost = import ./_lib/mk-host.nix {inherit lib;};
   hosts = {
-    andrew-asus-vivo14 = mkHost {
+    asus-vivo14 = mkHost {
       formFactor = "laptop";
       gpu = ["intel"];
       # asus_wmi on the X1405VA: see core.hardware.power-manager.
@@ -33,7 +35,7 @@
         focus-at-startup = true;
       };
     };
-    andrew-asus-rog-gl552vx = mkHost {
+    asus-rog-gl552vx = mkHost {
       formFactor = "laptop";
       gpu = ["intel" "nvidia"];
       # TODO: Fill after install from `lspci -D -d ::03xx`. Format is "PCI:<bus>@<domain>:<dev>:<func>" in
@@ -70,7 +72,7 @@
         scale = 1;
       };
     };
-    andrew-pc = mkHost {
+    home-pc = mkHost {
       gpu = ["nvidia"];
       bootLoader = "grub";
       storage = {
@@ -104,11 +106,11 @@
         scale = 1;
       };
     };
-    andrew-home-wsl = mkHost {
+    home-wsl = mkHost {
       is-workstation = false;
       windowsName = "hoanganh";
     };
-    andrew-work-wsl = mkHost {
+    work-wsl = mkHost {
       is-workstation = false;
       windowsName = "andrew.nguyen1";
     };

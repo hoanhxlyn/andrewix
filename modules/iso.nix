@@ -46,6 +46,10 @@
           }
         ];
         nix.settings.experimental-features = ["nix-command" "flakes"];
+        # The ISO is a plain nixosSystem, outside den, so <den.batteries.unfree>
+        # from core.editor.nwm does not reach it. scope.nvim is the unfree plugin
+        # the baked-in nvim wrapper pulls in.
+        nixpkgs.config.allowUnfreePredicate = pkg: pkgs.lib.elem (pkgs.lib.getName pkg) ["scope.nvim"];
         isoImage.edition = "andrewix";
         # Read-only copy of this flake at /iso/andrewix on the live ISO.
         isoImage.contents = [

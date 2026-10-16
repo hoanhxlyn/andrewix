@@ -57,7 +57,7 @@ in {
     # base16 plugin repaints Normal opaque after stylix runs. Re-clear on
     # every ColorScheme so the transparent terminal shows through.
     transparent-bg =
-      if host.terminal.opacity < 1
+      if host.appearance.opacity < 1
       then ''
         local function clear_bg()
           for _, g in ipairs({ "Normal", "NormalNC", "NormalFloat",

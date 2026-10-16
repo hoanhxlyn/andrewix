@@ -3,7 +3,7 @@
     inherit (host) terminal;
   in {
     homeManager.programs.alacritty = {
-      enable = terminal.name == "alacritty";
+      enable = host.defaults.terminal == "alacritty";
       settings = {
         window = {
           padding = {
@@ -11,7 +11,7 @@
             y = terminal.padding;
           };
           decorations = "None";
-          blur = host.terminal.opacity < 1;
+          blur = host.appearance.opacity < 1;
         };
         font.builtin_box_drawing = true;
         selection.save_to_clipboard = true;
