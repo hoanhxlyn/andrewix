@@ -173,8 +173,9 @@ nix run .#write-flake    # rewrites flake.nix
   shared by the Intel workstations; the loader comes from the `bootLoader` fact. Target disks are picked at install time
   by `install.fish`, so the `/dev/nvme0n1` in `disko.nix` is only a default.
 - **Hybrid GPU (`andrew-asus-rog-gl552vx`, GTX 950M):** `nvidiaPrime` bus IDs are unset until you fill them from
-  `lspci -nn | grep -E "VGA|3D"` after install (see the `TODO`s in `hosts.nix` and `nvidia.nix`). PRIME sync is
-  X11-style; niri may need its render device set to the nvidia GPU. Verify connector names with `niri msg outputs`.
+  `lspci -D -d ::03xx` after install (see the `TODO`s in `hosts.nix`). niri runs on the Intel iGPU; games use the
+  nvidia dGPU via PRIME offload (`nvidia-offload <cmd>`, e.g. as a Steam launch option). PRIME sync is X11-only and is
+  not used. Verify connector names with `niri msg outputs`; HDMI ports wired to the nvidia GPU may behave differently.
 - **Charge limit:** `core.hardware.power-manager` sets TLP thresholds and the asus_wmi workaround only when the host
   declares `chargeThreshold` (X1405VA, `andrew-asus-vivo14`).
 - **First-boot password:** the installer (`install.fish`) prompts for it and sets it with `nixos-enter` before you
