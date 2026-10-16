@@ -72,6 +72,41 @@
         scale = 1;
       };
     };
+    msi-gf63 = mkHost {
+      formFactor = "laptop";
+      gpu = ["intel" "nvidia"];
+      # TODO: Fill after install from `lspci -D -d ::03xx` (format and caveats
+      # same as asus-rog-gl552vx above). Offload stays off until then.
+      nvidiaPrime = null;
+      storage = {
+        layout = "dual";
+        swap = "24G";
+      };
+      enableGaming = true;
+      monitors."eDP-1" = {
+        resolution = {
+          width = 1920;
+          height = 1080;
+        };
+        refresh-rate = 144.0;
+        is-primary = true;
+        scale = 1;
+      };
+      monitors."HDMI-A-1" = {
+        resolution = {
+          width = 1920;
+          height = 1080;
+        };
+        refresh-rate = 60.0; # TODO: verify the panel/port's real rate after install
+        is-primary = false;
+        scale = 1;
+      };
+      # Panel drops to 75/60 Hz with the TLP profile (see fuzzel's power menu).
+      refreshThrottle."eDP-1" = {
+        balanced = 75;
+        power-saver = 60;
+      };
+    };
     home-pc = mkHost {
       gpu = ["nvidia"];
       bootLoader = "grub";
