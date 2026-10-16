@@ -17,25 +17,11 @@
               url = "https://mcp.context7.com/mcp";
               headers.CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
             };
-            exa = {
-              enabled = false;
-              command = "bunx";
-              args = ["exa-mcp-server"];
-              env.EXA_API_KEY.file = secrets.EXA_API_KEY.path;
-            };
             deepwiki.url = "https://mcp.deepwiki.com/mcp";
-            brave = {
-              enabled = false;
-              command = "bunx";
-              args = ["@brave/brave-search-mcp-server"];
-              env.BRAVE_API_KEY.file = secrets.BRAVE_API_KEY.path;
-            };
-            tavily = {
+            exa = {
               enabled = true;
-              command = "bunx";
-              args = ["tavily-mcp@latest"];
-              env.TAVILY_API_KEY.file = secrets.TAVILY_API_KEY.path;
-              env.DEFAULT_PARAMETERS = "{\"include_images\": true, \"max_results\": 10, \"search_depth\": \"advanced\"}";
+              url = "https://mcp.exa.ai/mcp";
+              headers."x-api-key" = "{env:EXA_API_KEY}";
             };
           };
         };
