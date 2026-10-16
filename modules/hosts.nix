@@ -36,7 +36,8 @@
     andrew-asus-rog-gl552vx = mkHost {
       formFactor = "laptop";
       gpu = ["intel" "nvidia"];
-      # TODO: Fill after install from `lspci -nn | grep -E "VGA|3D"`, e.g. "PCI:0:2:0" / "PCI:1:0:0".
+      # TODO: Fill after install from `lspci -D -d ::03xx`. Format is "PCI:<bus>@<domain>:<dev>:<func>" in
+      # decimal (NixOS wiki), e.g. 0000:01:00.0 -> "PCI:1@0:0:0".
       nvidiaPrime = null;
       monitors."eDP-1" = {
         resolution = {
@@ -47,7 +48,9 @@
         is-primary = false;
         scale = 1;
       };
-      # TODO: Verify connector names after install with `niri msg outputs`; with nvidia driving,
+      # TODO: After install, check which GPU owns each HDMI port (`ls /sys/class/drm`) and that
+      # `niri msg outputs` lists them under these names. If the ports are wired to the nvidia GPU
+      # they may not work with an iGPU-only niri; see the TODO in core/hardware/nvidia.nix.
       monitors."HDMI-A-1" = {
         resolution = {
           width = 1920;
