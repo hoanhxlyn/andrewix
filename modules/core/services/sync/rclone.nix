@@ -22,6 +22,10 @@
         Service = {
           Type = "notify";
           ExecStartPre = [
+            # A crashed rclone leaves a stale FUSE mount; mkdir then fails with ENOTCONN.
+            # Kill holders, lazily unmount, then (re)create the mount point.
+            "-${pkgs.psmisc}/bin/fuser -k ${config.home.homeDirectory}/${path}"
+            "-${pkgs.fuse}/bin/fusermount -uz ${config.home.homeDirectory}/${path}"
             "${pkgs.coreutils}/bin/mkdir -p ${config.home.homeDirectory}/${path}"
           ];
           ExecStart = ''
