@@ -37,46 +37,23 @@
     };
     asus-rog-gl552vx = mkHost {
       formFactor = "laptop";
-      gpu = ["intel" "nvidia"];
-      # TODO: Fill after install from `lspci -D -d ::03xx`. Format is "PCI:<bus>@<domain>:<dev>:<func>" in
-      # decimal (NixOS wiki), e.g. 0000:01:00.0 -> "PCI:1@0:0:0".
-      nvidiaPrime = null;
-      monitors."eDP-1" = {
-        resolution = {
-          width = 1920;
-          height = 1080;
-        };
-        refresh-rate = 60.0;
-        is-primary = false;
-        scale = 1;
-      };
-      # TODO: After install, check which GPU owns each HDMI port (`ls /sys/class/drm`) and that
-      # `niri msg outputs` lists them under these names. If the ports are wired to the nvidia GPU
-      # they may not work with an iGPU-only niri; see the TODO in core/hardware/nvidia.nix.
-      monitors."HDMI-A-1" = {
-        resolution = {
-          width = 1920;
-          height = 1080;
-        };
-        refresh-rate = 74.973;
-        is-primary = true; # TODO: change between 2
-        scale = 1;
-      };
-      monitors."HDMI-A-2" = {
-        resolution = {
-          width = 1920;
-          height = 1080;
-        };
-        refresh-rate = 74.973;
-        is-primary = false; # TODO: change between 2
-        scale = 1;
+      # Headless homelab server (see modules/devices/server.nix): no desktop and
+      # no GPU offload, the dGPU is unused. Facts only, the variant comes from
+      # is-server.
+      is-server = true;
+      # On AC permanently as a server; cap the charge so the battery is not held
+      # at 100%. See core.hardware.power-manager.
+      chargeThreshold = {
+        start = 40;
+        stop = 85;
       };
     };
     msi-gf63 = mkHost {
       formFactor = "laptop";
       gpu = ["intel" "nvidia"];
-      # TODO: Fill after install from `lspci -D -d ::03xx` (format and caveats
-      # same as asus-rog-gl552vx above). Offload stays off until then.
+      # TODO: Fill after install from `lspci -D -d ::03xx` (format is
+      # "PCI:<bus>@<domain>:<dev>:<func>" in decimal, e.g. 0000:01:00.0 ->
+      # "PCI:1@0:0:0"). Offload stays off until then.
       nvidiaPrime = null;
       storage = {
         layout = "dual";
@@ -157,13 +134,15 @@ in {
   flake.installableHosts =
     lib.attrNames (lib.filterAttrs (_: h: !(h.wsl.enable or false)) hosts);
 
-  # Variant (workstation | wsl) comes from the host facts, not the hostname.
+  # Variant (workstation | server | wsl) comes from the host flags, not the hostname.
   den.aspects =
     lib.mapAttrs (_: h: {
       provides.to-users.includes = [
         (
           if h.wsl.enable or false
           then <wsl>
+          else if h.server.enable or false
+          then <server>
           else <workstation>
         )
       ];
