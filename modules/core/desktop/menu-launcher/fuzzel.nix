@@ -2,6 +2,23 @@
   core.desktop.menu-launcher.fuzzel = {host, ...}: let
     inherit (host) terminal;
     isLaptop = host.isLaptop or false;
+    # After a TLP profile switch, set niri's output mode to the throttled rate
+    # (host.refreshThrottle). `performance` keeps the declared refresh-rate.
+    # Only fires from this menu; a manual `sudo tlp <mode>` does not re-throttle.
+    throttleRefresh = lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (
+        conn: rates: let
+          mode = host.monitors.${conn}.mode;
+        in ''
+          case "$profile_cmd" in
+            balanced) _hz=${toString rates.balanced} ;;
+            power-saver) _hz=${toString rates.power-saver} ;;
+            *) _hz=${toString mode.refresh} ;;
+          esac
+          niri msg output ${conn} --mode ${toString mode.width}x${toString mode.height}@$_hz || true
+        ''
+      ) (host.refreshThrottle or {})
+    );
   in {
     homeManager = {pkgs, ...}: {
       programs.fuzzel = {
@@ -247,6 +264,7 @@
               brightnessctl
               gawk
               less
+              niri-stable
             ];
             text = ''
               terminal="${host.defaults.terminal}"
@@ -316,6 +334,7 @@
                   *) return 0 ;;
                 esac
                 if sudo -n "$tlp_bin" "$profile_cmd"; then
+                  ${throttleRefresh}
                   notify-send "Power" "Profile: $(tlp_mode)"
                 else
                   notify-send "Power" "Failed to set power profile"

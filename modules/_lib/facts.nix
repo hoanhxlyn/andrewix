@@ -41,9 +41,10 @@ in {
     default = {};
     type = types.submodule {
       options = {
-        # single = one disk; multi = nixos/works/entertainment.
+        # single = one disk; multi = nixos/works/entertainment on three disks;
+        # dual = root disk + one btrfs disk holding /works and /entertainment.
         layout = mkOption {
-          type = types.enum ["single" "multi"];
+          type = types.enum ["single" "multi" "dual"];
           default = "single";
         };
         swap = mkOption {
@@ -60,6 +61,18 @@ in {
       stop = mkOption {type = types.ints.between 0 100;};
     };
   });
+  # Laptop panel refresh throttling per TLP power profile, keyed by connector.
+  # `performance` uses the monitor's declared refresh-rate, so only the throttled
+  # profiles are listed. Empty = refresh does not follow the profile.
+  refreshThrottle = mkOption {
+    type = types.attrsOf (types.submodule {
+      options = {
+        balanced = mkOption {type = types.number;};
+        power-saver = mkOption {type = types.number;};
+      };
+    });
+    default = {};
+  };
   enableGaming = mkEnableOption "the gaming aspects";
 
   powerManagement = mkOption {

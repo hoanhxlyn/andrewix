@@ -67,6 +67,8 @@
       core.hardware.disko.diskOrder =
         if host.storage.layout == "single"
         then ["main"]
+        else if host.storage.layout == "dual"
+        then ["main" "data"]
         else ["nixos" "works" "entertainment"];
 
       # disko owns fileSystems / swapDevices / boot.resumeDevice. Hardware boot
@@ -111,7 +113,8 @@
             };
           };
         }
-        else {
+        else if host.storage.layout == "multi"
+        then {
           nixos = {
             type = "disk";
             device = "/dev/nvme0n1";
@@ -134,6 +137,48 @@
           entertainment = dataDisk {
             format = "xfs";
             mountpoint = "/entertainment";
+          };
+        }
+        else {
+          main = {
+            type = "disk";
+            device = "/dev/nvme0n1";
+            content = {
+              type = "gpt";
+              partitions = {
+                ESP = efi;
+                swap = swap host.storage.swap;
+                root = root {
+                  format = "xfs";
+                  mountpoint = "/";
+                };
+              };
+            };
+          };
+          # One btrfs disk split into /works and /entertainment subvolumes.
+          data = {
+            type = "disk";
+            device = "/dev/sda"; # placeholder, overwritten by install.fish
+            content = {
+              type = "gpt";
+              partitions.data = {
+                size = "100%";
+                content = {
+                  type = "btrfs";
+                  extraArgs = ["-f"];
+                  subvolumes = {
+                    works = {
+                      mountpoint = "/works";
+                      mountOptions = ["compress=zstd" "noatime"];
+                    };
+                    entertainment = {
+                      mountpoint = "/entertainment";
+                      mountOptions = ["compress=zstd" "noatime"];
+                    };
+                  };
+                };
+              };
+            };
           };
         };
     };
