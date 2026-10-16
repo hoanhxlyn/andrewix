@@ -1,4 +1,5 @@
-# Base settings shared by all hosts (per-host overrides go through mkHost).
+# Shared host settings (DE-style sections). Per-host overrides go through mkHost; hardware facts
+# live in facts.nix.
 {
   terminal = {
     padding = 2;

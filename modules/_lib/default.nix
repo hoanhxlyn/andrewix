@@ -1,4 +1,4 @@
-# Host builder: composes base settings with per-host data and the
+# Host builder: composes shared settings with per-host data and the
 # workstation/wsl variant. Returns the `host` attrset consumed across
 # modules/core/**.
 #
@@ -7,7 +7,7 @@
 # (modules/schema.nix), and their names are checked here against the same
 # definition (facts.nix).
 {lib}: let
-  base = import ./base.nix;
+  settings = import ./settings.nix;
   layoutMonitors = monitors:
     builtins.mapAttrs (_: m: let
       extraKeys = builtins.removeAttrs m ["resolution" "refresh-rate" "is-primary" "scale"];
@@ -51,10 +51,10 @@ in
     profiles ? null,
     monitors ? {},
     windowsName ? null,
-    login ? base.login,
-    appearance ? base.appearance,
-    terminal ? base.terminal,
-    locale ? base.locale,
+    login ? settings.login,
+    appearance ? settings.appearance,
+    terminal ? settings.terminal,
+    locale ? settings.locale,
     ...
   } @ args: let
     facts = builtins.removeAttrs args own;
@@ -73,16 +73,16 @@ in
       );
     effectiveProfiles =
       if profiles == null
-      then base.profiles
+      then settings.profiles
       else profiles;
     baseWithUsers =
-      (builtins.removeAttrs base ["profiles"])
+      (builtins.removeAttrs settings ["profiles"])
       // {
         users = effectiveProfiles;
         inherit login;
-        appearance = base.appearance // appearance;
-        terminal = base.terminal // terminal;
-        locale = base.locale // locale;
+        appearance = settings.appearance // appearance;
+        terminal = settings.terminal // terminal;
+        locale = settings.locale // locale;
       };
   in
     assert lib.assertMsg (unknown == []) "mkHost: unknown host fact(s): ${toString unknown}";

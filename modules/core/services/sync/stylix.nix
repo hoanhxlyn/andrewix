@@ -71,7 +71,7 @@
           kmscon.enable = true;
           fontconfig.enable = false;
         };
-        # see appearance.wallpaper in modules/_lib/base.nix
+        # see appearance.wallpaper in modules/_lib/settings.nix
         image = let
           bg = appearance.wallpaper;
         in
