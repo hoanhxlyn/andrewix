@@ -46,12 +46,12 @@
     scheme = "gruvbox-dark-medium"; # base16-schemes name
     polarity = "dark"; # light | dark
     font.size = 12; # pt; terminal/applications/desktop derive from it
-    opacity = 1.0; # 1.0 = opaque; <1 enables blur/transparent bg
+    opacity = 0.8; # 1.0 = opaque; <1 enables blur/transparent bg
     wallpaper = {
       # local (config/background/<path>) | gruvbox (AngelJumbo/gruvbox-wallpapers, <path> in repo)
       # | remote ({url, hash} instead of path)
       source = "gruvbox";
-      path = "wallpapers/anime/anime_skull.png";
+      path = "wallpapers/brands/gruvbox-nix.png";
       scaling = "center"; # fill | center | stretch | fit
     };
     toast = {
