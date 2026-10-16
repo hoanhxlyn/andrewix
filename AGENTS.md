@@ -19,8 +19,8 @@ just gc           # nix-store gc + optimise
 just clean-up     # user+system GC, keep 7d (sudo)
 ```
 
-Hosts: `andrew-laptop`, `andrew-pc`, `andrew-home-wsl`, `andrew-work-wsl`. Only `andrew-laptop` / `andrew-pc` are
-installable (WSL hosts have no disk layout).
+Hosts: `andrew-asus-vivo14`, `andrew-asus-rog-gl552vx`, `andrew-pc`, `andrew-home-wsl`, `andrew-work-wsl`. Only
+`andrew-asus-vivo14` / `andrew-asus-rog-gl552vx` / `andrew-pc` are installable (WSL hosts have no disk layout).
 
 ### No Justfile?
 
@@ -48,17 +48,40 @@ NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto
 | Path                    | Purpose                                           |
 | ----------------------- | ------------------------------------------------- |
 | `modules/core/`         | All aspects (NixOS + Home Manager)                |
-| `modules/hosts.nix`     | Host definitions (4 hosts)                        |
-| `modules/devices/`      | Per-device aspects (`workstation.nix`, `wsl.nix`) |
+| `modules/hosts.nix`     | Host definitions (5 hosts) + host→variant wiring  |
+| `modules/schema.nix`    | Host facts → `den.schema.host` (`_lib/facts.nix`) |
+| `modules/devices/`      | Variant aspects (`workstation.nix`, `wsl.nix`)    |
 | `modules/defaults.nix`  | Default includes + dev shell                      |
 | `modules/dendritic.nix` | Framework bootstrapping                           |
-| `modules/_lib/`         | Host builder (`base.nix` + monitor layout)        |
+| `modules/_lib/`         | Host builder (`base.nix`, monitor layout)         |
 | `secrets/`              | sops-nix encrypted secrets                        |
 | `config/`               | Non-Nix app configs (symlinked into `~/.config`)  |
 | `flake.nix`             | **Auto-generated. DO NOT EDIT.**                  |
 
 Host builder: `mkHost` in `modules/_lib/default.nix` composes `base.nix` with per-host data and the workstation/wsl
 variant. Layout translates flat monitor attrs into niri's nested shape and sets `wsl.enable` for non-workstations.
+
+**Host facts** (set in `modules/hosts.nix`). The single definition is `modules/_lib/facts.nix`; `modules/schema.nix`
+feeds it to `den.schema.host` (types, defaults), `mkHost` rejects unknown fact names against it, and cross-fact checks
+are `assertions` in `modules/core/hardware/default.nix`:
+
+| Fact              | Values / meaning                                                                 |
+| ----------------- | -------------------------------------------------------------------------------- |
+| `formFactor`      | `desktop` (default) \| `laptop`; derives `host.isLaptop`                         |
+| `gpu`             | list of `intel` \| `nvidia`; both = hybrid                                       |
+| `nvidiaPrime`     | `{intelBusId, nvidiaBusId}`; hybrid only; `null` = PRIME off + build warning     |
+| `bootLoader`      | `systemd-boot` (default) \| `grub`                                               |
+| `storage`         | `{layout = "single" \| "multi"; swap = "24G";}`; `multi` = nixos/works/entertainment |
+| `chargeThreshold` | `{start, stop}` battery limits (laptop only); `null` = unmanaged                 |
+| `enableGaming`    | include `<core.gaming>`                                                          |
+
+Aspects are chosen from facts, **never from a hostname**: hardware aspects in `modules/core/hardware/default.nix`
+(`power-manager`, `intel-vaapi`, `nvidia`), gaming in `modules/devices/workstation.nix`. The workstation/wsl variant per
+host is generated in `hosts.nix` via `provides.to-users`.
+
+**Adding a device:** add one `mkHost` entry in `hosts.nix` with its facts and monitors (keyed by connector name), and
+nothing else: `install.fish` reads `flake.installableHosts` (all non-WSL hosts). No other file should mention the
+hostname.
 
 ## Conventions
 
@@ -144,18 +167,25 @@ nix run .#write-flake    # rewrites flake.nix
 ## Operational gotchas
 
 - **Disko owns the layout:** `disko.enableConfig = true` in `modules/core/hardware/disko.nix` — disko provides
-  `fileSystems`/`swapDevices`/`boot.resumeDevice` (xfs root, dedicated swap partition, hibernate resume) for both
-  physical hosts. The per-host `hosts/<host>/_nixos/` configs are gone; hardware boot bits (initrd `vmd`/`nvme`, kvm,
-  microcode) now live in `modules/core/hardware/bootable.nix`, shared by the two Intel workstations.
+  `fileSystems`/`swapDevices`/`boot.resumeDevice` (xfs root, dedicated swap partition, hibernate resume) for all
+  physical hosts; layout and swap size come from the `storage` fact. The per-host `hosts/<host>/_nixos/` configs are
+  gone; hardware boot bits (initrd `vmd`/`ahci`/`nvme`, kvm, microcode) live in `modules/core/hardware/bootable.nix`,
+  shared by the Intel workstations; the loader comes from the `bootLoader` fact. Target disks are picked at install time
+  by `install.fish`, so the `/dev/nvme0n1` in `disko.nix` is only a default.
+- **Hybrid GPU (`andrew-asus-rog-gl552vx`, GTX 950M):** `nvidiaPrime` bus IDs are unset until you fill them from
+  `lspci -nn | grep -E "VGA|3D"` after install (see the `TODO`s in `hosts.nix` and `nvidia.nix`). PRIME sync is
+  X11-style; niri may need its render device set to the nvidia GPU. Verify connector names with `niri msg outputs`.
+- **Charge limit:** `core.hardware.power-manager` sets TLP thresholds and the asus_wmi workaround only when the host
+  declares `chargeThreshold` (X1405VA, `andrew-asus-vivo14`).
 - **First-boot password:** the installer (`install.fish`) prompts for it and sets it with `nixos-enter` before you
   reboot; no default password ships in the repo. A known `admin123` survives only inside `virtualisation.vmVariant`
   (`modules/core/hardware/disko.nix`) for `just vm`. Machines installed before this still hold the old bootstrap
   password — check with `sudo passwd -S andrew` and run `passwd` if it shows `P`.
 - **WSL PATH:** `modules/devices/wsl.nix:20` disables WSL interop `$PATH` because Windows PATH lives on a slow 9P/DrvFs
   mount. Invoke `.exe`s by absolute path; `wsl-open` wrapper handles explorer.exe's spurious non-zero exit.
-- **Secrets:** only on `andrew-laptop` / `andrew-pc`. Decrypt with the shared age key at `~/.config/sops-nix/keys.txt`
-  on each host. Edit via `sops secrets/secrets.yaml`; declare new secrets in `modules/core/services/sync/sops.nix` under
-  `sops.secrets`.
+- **Secrets:** only on `andrew-asus-vivo14` / `andrew-asus-rog-gl552vx` / `andrew-pc`. Decrypt with the shared age key
+  at `~/.config/sops-nix/keys.txt` on each host. Edit via `sops secrets/secrets.yaml`; declare new secrets in
+  `modules/core/services/sync/sops.nix` under `sops.secrets`.
 - **Auto GC:** `nix.gc.automatic` runs daily, `--delete-older-than 7d` (see `nix-setting.nix`). `just clean-up` does the
   same on demand (sudo).
 
