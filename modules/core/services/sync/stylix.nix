@@ -80,7 +80,9 @@
             gruvbox = "${inputs.gruvbox-wallpapers}/${bg.path or ""}";
             remote = pkgs.fetchurl {inherit (bg) url hash;};
           }
-          .${bg.source};
+          .${
+            bg.source
+          };
         imageScalingMode = appearance.wallpaper.scaling;
       };
       fonts = {

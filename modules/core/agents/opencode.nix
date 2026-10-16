@@ -53,6 +53,13 @@
             mode = "primary";
             model = "opencode-go/mimo-v2.6-flash";
             request.body.temperature = 0.8;
+            permissions = [
+              {
+                action = "edit";
+                resource = "*";
+                effect = "deny";
+              }
+            ];
           };
         };
         permissions = [

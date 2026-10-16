@@ -1,8 +1,5 @@
 {
-  core.hardware.bootable = {
-    host,
-    ...
-  }: {
+  core.hardware.bootable = {host, ...}: {
     nixos = {
       config,
       lib,
