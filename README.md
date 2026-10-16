@@ -1,8 +1,8 @@
 # Andrewix
 
 Personal NixOS and Home Manager configuration for five hosts: three physical machines
-(`andrew-asus-vivo14`, `andrew-asus-rog-gl552vx`, `andrew-pc`) and two WSL installs
-(`andrew-home-wsl`, `andrew-work-wsl`). It is built with flake-parts and the
+(`asus-vivo14`, `asus-rog-gl552vx`, `home-pc`) and two WSL installs
+(`home-wsl`, `work-wsl`). It is built with flake-parts and the
 [den](https://github.com/denful/den) dendritic framework.
 
 ## Guide
