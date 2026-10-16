@@ -12,7 +12,8 @@ just update               # Update flake inputs (commits lock)
 just fmt && just lint     # Format + lint
 ```
 
-Hosts: `andrew-laptop`, `andrew-pc`, `andrew-home-wsl`, `andrew-work-wsl`. Default host auto-detected via `hostname -s`.
+Hosts: `andrew-asus-vivo14`, `andrew-asus-rog-gl552vx`, `andrew-pc`, `andrew-home-wsl`, `andrew-work-wsl`.
+Default host auto-detected via `hostname -s`.
 
 ### No Justfile?
 
@@ -27,9 +28,10 @@ alejandra . && statix check && deadnix --no-underscore --fail
 ## Fresh Install
 
 Provisions disks declaratively via [disko](https://github.com/nix-community/disko) — no manual partitioning.
-`andrew-laptop` = one disk (ESP + swap + xfs root). `andrew-pc` = three (`nixos` ESP/swap/xfs, `works` btrfs
-`/works`, `entertainment` xfs `/entertainment`). disko owns `fileSystems`/`swapDevices`, so there is nothing to edit
-by hand before installing.
+The layout follows the host's `storage.layout` fact: `single` (`andrew-asus-vivo14`, `andrew-asus-rog-gl552vx`) = one
+disk (ESP + swap + xfs root); `multi` (`andrew-pc`) = three (`nixos` ESP/swap/xfs, `works` btrfs `/works`,
+`entertainment` xfs `/entertainment`). disko owns `fileSystems`/`swapDevices`, so there is nothing to edit by hand
+before installing.
 
 1. Boot the NixOS minimal ISO and connect to the network (`nmtui`).
 
@@ -44,22 +46,27 @@ by hand before installing.
 1. Reboot and log in as `andrew` with the password the installer asked for. Then copy the shared age key so secrets
    decrypt (see Secrets below): `~/.config/sops-nix/keys.txt`.
 
-Only `andrew-laptop` / `andrew-pc` are installable (WSL hosts have no disk layout).
+Only `andrew-asus-vivo14` / `andrew-asus-rog-gl552vx` / `andrew-pc` are installable (WSL hosts have no disk layout).
 
 ## Architecture
 
 | Path                   | Purpose                            |
 | ---------------------- | ---------------------------------- |
 | `modules/core/`        | All aspects (NixOS + Home Manager) |
-| `modules/devices/`     | Per-device aspects (laptop, wsl)   |
+| `modules/devices/`     | Variant aspects (workstation, wsl) |
 | `modules/defaults.nix` | Default includes for all hosts     |
-| `modules/hosts.nix`    | Host definitions                   |
+| `modules/hosts.nix`    | Host definitions (hardware facts)  |
+| `modules/schema.nix`   | Typed host facts + defaults        |
 | `secrets/`             | sops-nix encrypted secrets         |
 | `config/`              | Non-Nix app configs                |
 | `flake.nix`            | **Auto-generated. DO NOT EDIT.**   |
 
 Aspects auto-discovered. Compose via `den.aspects.<name>.includes` with angle-bracket imports (`<core/sound>`,
 `<core/shell>`).
+
+Hosts are described by hardware facts (`formFactor`, `gpu`, `bootLoader`, `storage`, ...) in `modules/hosts.nix`;
+aspects are selected from those facts, not from hostnames. To add a device, add one `mkHost` entry there. See
+`AGENTS.md` for the full fact list.
 
 ## Garbage Collection
 
@@ -71,7 +78,7 @@ just clean-up  # System-wide + delete old gens (sudo)
 ## Secrets
 
 Encrypted with [sops-nix](https://github.com/Mic92/sops-nix) using a shared age key. Only available on workstation hosts
-(`andrew-laptop`, `andrew-pc`) — not WSL.
+(`andrew-asus-vivo14`, `andrew-asus-rog-gl552vx`, `andrew-pc`) — not WSL.
 
 - **Encrypted file:** `secrets/secrets.yaml` (safe to commit)
 - **Age key location:** `~/.config/sops-nix/keys.txt` on each host
