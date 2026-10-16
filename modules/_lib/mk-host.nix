@@ -1,5 +1,5 @@
 # Host builder: composes shared settings with per-host data and the
-# workstation/wsl variant. Returns the `host` attrset consumed across
+# workstation/server/wsl variant. Returns the `host` attrset consumed across
 # modules/core/**.
 #
 # Hardware facts (formFactor, gpu, bootLoader, storage, ...) pass through
@@ -37,6 +37,7 @@
   });
   own = [
     "is-workstation"
+    "is-server"
     "profiles"
     "monitors"
     "windowsName"
@@ -51,6 +52,7 @@
 in
   {
     is-workstation ? true,
+    is-server ? false,
     profiles ? null,
     monitors ? {},
     windowsName ? null,
@@ -77,6 +79,7 @@ in
         then {inherit windowsName;}
         else {}
       );
+    server = {server.enable = true;};
     effectiveProfiles =
       if profiles == null
       then settings.profiles
@@ -96,12 +99,14 @@ in
       };
   in
     assert lib.assertMsg (unknown == []) "mkHost: unknown host fact(s): ${toString unknown}";
-    assert lib.assertMsg (is-workstation || windowsName != null) "mkHost: WSL host needs windowsName";
-    assert lib.assertMsg (!is-workstation || windowsName == null) "mkHost: windowsName is WSL-only";
+    assert lib.assertMsg (is-server || is-workstation || windowsName != null) "mkHost: WSL host needs windowsName";
+    assert lib.assertMsg (!(is-server || is-workstation) || windowsName == null) "mkHost: windowsName is WSL-only";
       lib.recursiveUpdate withSettings (
         facts
         // (
-          if is-workstation
+          if is-server
+          then server
+          else if is-workstation
           then workstation
           else wsl
         )
