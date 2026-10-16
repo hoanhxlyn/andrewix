@@ -26,12 +26,12 @@
         defaultApplications = builtins.listToAttrs (
           map (mime: {
             name = mime;
-            value = browserDesktops.${host.defaultBrowser};
+            value = browserDesktops.${host.defaults.browser};
           })
           mimeTypes
         );
       };
-      home.sessionVariables.BROWSER = browserExecs.${host.defaultBrowser};
+      home.sessionVariables.BROWSER = browserExecs.${host.defaults.browser};
     };
   };
 }

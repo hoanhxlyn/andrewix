@@ -30,7 +30,11 @@
         "fcitx5-lotus-server@${user.userName}.service"
       ];
     };
-    homeManager = {pkgs, ...}: {
+    homeManager = {
+      pkgs,
+      host,
+      ...
+    }: {
       # Keep stylix fonts (Font/MenuFont/TrayFont), drop its generated classicui theme
       # (Theme/UseDarkTheme/UseAccentColor) so classicui themes stay user-controlled.
       stylix.targets.fcitx5.colors.enable = false;
@@ -78,10 +82,10 @@
           inputMethod.GroupOrder."0" = "Default";
           inputMethod."Groups/0" = {
             Name = "Default";
-            "Default Layout" = "us";
-            DefaultIM = "keyboard-us";
+            "Default Layout" = host.input.keyboard.layout;
+            DefaultIM = "keyboard-${host.input.keyboard.layout}";
           };
-          inputMethod."Groups/0/Items/0".Name = "keyboard-us";
+          inputMethod."Groups/0/Items/0".Name = "keyboard-${host.input.keyboard.layout}";
           inputMethod."Groups/0/Items/1".Name = "lotus";
         };
       };

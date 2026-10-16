@@ -811,7 +811,7 @@ in {
               vim.notify("No file path", vim.log.levels.WARN)
               return
             end
-            vim.fn.jobstart({"${host.terminal.name}", "-e", "yazi", path})
+            vim.fn.jobstart({"${host.defaults.terminal}", "-e", "yazi", path})
           end
         '';
       }

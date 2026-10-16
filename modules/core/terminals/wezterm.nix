@@ -10,7 +10,7 @@
     join_mods = m: builtins.concatStringsSep "|" m;
   in {
     homeManager.programs.wezterm = {
-      enable = terminal.name == "wezterm";
+      enable = host.defaults.terminal == "wezterm";
       settings = {
         enable_wayland = true;
         enable_kitty_keyboard = true;

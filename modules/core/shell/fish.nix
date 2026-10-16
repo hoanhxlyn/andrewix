@@ -6,7 +6,7 @@
       ...
     }: {
       programs.fish = {
-        enable = lib.mkIf (host.terminal.shell == "fish") true;
+        enable = lib.mkIf (host.defaults.shell == "fish") true;
         interactiveShellInit = ''
           set fish_greeting
           fastfetch

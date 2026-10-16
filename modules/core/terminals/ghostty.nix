@@ -4,15 +4,15 @@
   in {
     homeManager = {
       programs.ghostty = {
-        enable = terminal.name == "ghostty";
+        enable = host.defaults.terminal == "ghostty";
         settings = {
           window-padding-x = terminal.padding;
           window-padding-y = builtins.sub terminal.padding terminal.padding;
           window-decoration = "none";
           mouse-hide-while-typing = true;
           copy-on-select = "clipboard";
-          background-blur = terminal.opacity < 1;
-          background-opacity = terminal.opacity;
+          background-blur = host.appearance.opacity < 1;
+          background-opacity = host.appearance.opacity;
           confirm-close-surface = false;
           cursor-style = "block";
           shell-integration-features = false;

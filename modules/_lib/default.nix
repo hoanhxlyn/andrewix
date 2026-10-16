@@ -41,7 +41,7 @@
     "monitors"
     "windowsName"
     "login"
-    "backgroundImage"
+    "appearance"
     "terminal"
     "locale"
   ];
@@ -52,7 +52,7 @@ in
     monitors ? {},
     windowsName ? null,
     login ? base.login,
-    backgroundImage ? base.backgroundImage,
+    appearance ? base.appearance,
     terminal ? base.terminal,
     locale ? base.locale,
     ...
@@ -79,7 +79,8 @@ in
       (builtins.removeAttrs base ["profiles"])
       // {
         users = effectiveProfiles;
-        inherit login backgroundImage;
+        inherit login;
+        appearance = base.appearance // appearance;
         terminal = base.terminal // terminal;
         locale = base.locale // locale;
       };

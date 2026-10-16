@@ -1,12 +1,16 @@
 {
   core.desktop.xserver = {
-    nixos = {pkgs, ...}: {
+    nixos = {
+      pkgs,
+      host,
+      ...
+    }: {
       services.xserver = {
         enable = true;
-        autoRepeatDelay = 200;
-        autoRepeatInterval = 35;
+        autoRepeatDelay = host.input.keyboard.repeatDelay;
+        autoRepeatInterval = builtins.div 1000 host.input.keyboard.repeatRate;
         xkb = {
-          layout = "us";
+          layout = host.input.keyboard.layout;
           variant = "";
         };
         excludePackages = with pkgs; [xterm];
