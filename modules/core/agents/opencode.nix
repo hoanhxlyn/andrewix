@@ -38,6 +38,23 @@
           };
         };
         websearch = false;
+        default_agent = "chat";
+        agents = {
+          plan = {
+            model = "opencode-go/deepseek-v4-pro";
+            request.body.temperature = 0.3;
+          };
+          build = {
+            model = "opencode-go/deepseek-v4.1-flash#low";
+            request.body.temperature = 0.3;
+          };
+          chat = {
+            description = "Daily chatting with heads in the cloud";
+            mode = "primary";
+            model = "opencode-go/mimo-v2.6-flash";
+            request.body.temperature = 0.8;
+          };
+        };
         permissions = [
           {
             action = "shell";
