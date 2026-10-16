@@ -49,14 +49,14 @@
     }: let
       action = config.lib.niri.actions;
       # noctalia = cmd: ["noctalia-shell" "ipc" "call"] ++ (lib.splitString " " cmd);
-      terminalName = host.terminal.name;
+      terminalName = host.defaults.terminal;
       browserBin =
         {
           zen = "zen-beta";
           helium = "helium";
           firefox = "firefox";
         }.${
-          host.defaultBrowser
+          host.defaults.browser
         };
       # Generated binds (shrinks repetitive entries)
       arrowFocus = builtins.listToAttrs (map (dir: {
@@ -124,27 +124,26 @@
         settings = {
           input = {
             keyboard = {
-              repeat-rate = 50;
-              repeat-delay = 250;
+              repeat-rate = host.input.keyboard.repeatRate;
+              repeat-delay = host.input.keyboard.repeatDelay;
               track-layout = "global";
             };
             touchpad = {
-              tap = true;
-              natural-scroll = true;
-              dwt = true;
+              inherit (host.input.touchpad) tap;
+              natural-scroll = host.input.touchpad.naturalScroll;
+              dwt = host.input.touchpad.disableWhileTyping;
             };
             mouse = {
-              accel-profile = "flat";
+              accel-profile = host.input.mouse.accelProfile;
             };
             focus-follows-mouse.max-scroll-amount = "0%";
             workspace-auto-back-and-forth = true;
           };
 
-          cursor.hide-when-typing = true;
+          cursor.hide-when-typing = host.accessibility.hideCursorWhenTyping;
 
           animations = {
-            enable = true;
-            slowdown = 1.5;
+            inherit (host.accessibility.animations) enable slowdown;
           };
 
           outputs = host.monitors or {};

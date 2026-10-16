@@ -8,7 +8,7 @@
         enable = true;
         settings = {
           main = {
-            terminal = "${terminal.name} -e";
+            terminal = "${host.defaults.terminal} -e";
             show-actions = true;
             width = 50;
             lines = 10;
@@ -230,7 +230,7 @@
               *Audio)     fuzzel-audio ;;
               *Emoji)     fuzzel-emoji ;;
               *Font)      fuzzel-font ;;
-              *Bluetooth) ${terminal.name} -e bluetui ;;
+              *Bluetooth) ${host.defaults.terminal} -e bluetui ;;
               ${lib.optionalString isLaptop ''*Battery) fuzzel-battery ;;''}
               *Notification) fuzzel-notifications ;;
               *Power)     fuzzel-power ;;
@@ -249,7 +249,7 @@
               less
             ];
             text = ''
-              terminal="${terminal.name}"
+              terminal="${host.defaults.terminal}"
               battery_dev=$(upower -e | grep -i battery | head -1)
               # Reference the system tlp (single NixOS build) rather than the
               # home-manager pkgs.tlp; the sudo NOPASSWD rule in

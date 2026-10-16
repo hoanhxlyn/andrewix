@@ -1,31 +1,8 @@
-# Base settings shared by all hosts: UI, profiles (users), default browser.
+# Base settings shared by all hosts (per-host overrides go through mkHost).
 {
   terminal = {
-    fontSize = 12;
     padding = 2;
-    opacity = 1.0;
-    name = "kitty";
-    shell = "fish";
     mux = "herdr";
-  };
-  toast = {
-    width = 400;
-    border = {
-      radius = 12;
-      size = 2;
-    };
-    layer = "top";
-    position = "bottom-right";
-    timeout = 3000;
-    history = 10;
-    offset = {
-      x = 2;
-      y = 5;
-    };
-    padding = {
-      x = 5;
-      y = 8;
-    };
   };
   locale = {
     lang = "en_US.UTF-8";
@@ -33,8 +10,66 @@
     formats = "vi_VN.UTF-8";
     time = "en_US.UTF-8";
   };
-  defaultBrowser = "zen";
+  # Default applications
+  defaults = {
+    browser = "zen";
+    terminal = "kitty";
+    shell = "fish";
+  };
   profiles.andrew = {};
   login = "ly";
-  backgroundImage = {gruvbox = "wallpapers/anime/anime_skull.png";};
+  input = {
+    keyboard = {
+      layout = "us";
+      repeatDelay = 250; # ms before repeat starts
+      repeatRate = 50; # keys per second
+    };
+    touchpad = {
+      tap = true;
+      naturalScroll = true;
+      disableWhileTyping = true;
+    };
+    mouse.accelProfile = "flat"; # flat | adaptive
+  };
+  accessibility = {
+    cursorSize = 24;
+    hideCursorWhenTyping = true;
+    animations = {
+      enable = true;
+      slowdown = 1.5; # >1 = slower
+    };
+  };
+  # Look & feel (pure data; packages stay in modules/core/services/sync/stylix.nix).
+  appearance = {
+    scheme = "gruvbox-dark-medium"; # base16-schemes name
+    polarity = "dark"; # light | dark
+    font.size = 12; # pt; terminal/applications/desktop derive from it
+    opacity = 1.0; # 1.0 = opaque; <1 enables blur/transparent bg
+    wallpaper = {
+      # local (config/background/<path>) | gruvbox (AngelJumbo/gruvbox-wallpapers, <path> in repo)
+      # | remote ({url, hash} instead of path)
+      source = "gruvbox";
+      path = "wallpapers/anime/anime_skull.png";
+      scaling = "center"; # fill | center | stretch | fit
+    };
+    toast = {
+      width = 400;
+      border = {
+        radius = 12;
+        size = 2;
+      };
+      layer = "top";
+      position = "bottom-right";
+      timeout = 3000;
+      history = 10;
+      offset = {
+        x = 2;
+        y = 5;
+      };
+      padding = {
+        x = 5;
+        y = 8;
+      };
+    };
+  };
 }

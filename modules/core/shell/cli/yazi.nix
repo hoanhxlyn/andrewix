@@ -45,7 +45,7 @@
         name = "Yazi File Manager";
         comment = "Blazing fast terminal file manager written in Rust, based on async I/O";
         icon = "yazi";
-        exec = "${host.terminal.name} -e yazi %f";
+        exec = "${host.defaults.terminal} -e yazi %f";
         terminal = false;
         categories = ["System" "FileManager" "FileTools" "ConsoleOnly"];
         mimeType = ["inode/directory"];
@@ -64,7 +64,7 @@
       xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
         [filechooser]
         cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
-        env=TERMCMD=${host.terminal.name} -e
+        env=TERMCMD=${host.defaults.terminal} -e
         open_mode=suggested
         save_mode=suggested
       '';

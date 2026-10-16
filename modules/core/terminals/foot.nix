@@ -4,7 +4,7 @@
   in {
     homeManager = {
       programs.foot = {
-        enable = terminal.name == "foot";
+        enable = host.defaults.terminal == "foot";
         server.enable = true;
         settings = {
           main = {
@@ -19,7 +19,7 @@
           };
           "colors-dark" = {
             blur =
-              if terminal.opacity < 1
+              if host.appearance.opacity < 1
               then "yes"
               else "no";
           };
