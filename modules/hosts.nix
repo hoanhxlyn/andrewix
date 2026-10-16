@@ -51,10 +51,12 @@
     msi-gf63 = mkHost {
       formFactor = "laptop";
       gpu = ["intel" "nvidia"];
-      # TODO: Fill after install from `lspci -D -d ::03xx` (format is
-      # "PCI:<bus>@<domain>:<dev>:<func>" in decimal, e.g. 0000:01:00.0 ->
-      # "PCI:1@0:0:0"). Offload stays off until then.
-      nvidiaPrime = null;
+      # From `lspci -D -d ::03xx` on the GF63: Intel CometLake-H 0000:00:02.0,
+      # NVIDIA GTX 1650 Mobile 0000:02:00.0.
+      nvidiaPrime = {
+        intelBusId = "PCI:0@0:2:0";
+        nvidiaBusId = "PCI:2@0:0:0";
+      };
       storage = {
         layout = "dual";
         swap = "24G";
@@ -78,10 +80,11 @@
         is-primary = false;
         scale = 1;
       };
-      # Panel drops to 75/60 Hz with the TLP profile (see fuzzel's power menu).
+      # Panel only advertises 144.000 and 60.002 Hz; niri matches the refresh
+      # exactly (round(hz*1000)), so both throttled profiles use the 60 Hz mode.
       refreshThrottle."eDP-1" = {
-        balanced = 75;
-        power-saver = 60;
+        balanced = 60.002;
+        power-saver = 60.002;
       };
     };
     home-pc = mkHost {
