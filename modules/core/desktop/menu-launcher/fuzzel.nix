@@ -15,7 +15,7 @@
             power-saver) _hz=${toString rates.power-saver} ;;
             *) _hz=${toString mode.refresh} ;;
           esac
-          niri msg output ${conn} --mode ${toString mode.width}x${toString mode.height}@$_hz || true
+          niri msg output ${conn} mode ${toString mode.width}x${toString mode.height}@$_hz || true
         ''
       ) (host.refreshThrottle or {})
     );
