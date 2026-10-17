@@ -4,15 +4,24 @@
       config,
       host,
       lib,
+      pkgs,
       ...
     }: let
       ct = host.chargeThreshold;
+      # MSI ECs expose no charge_control sysfs (the mainline msi-ec driver does
+      # not cover every model), so the limit is written to the EC byte directly.
+      ecReg =
+        if ct == null
+        then null
+        else ct.ecRegister;
     in {
       boot = {
         extraModulePackages = with config.boot.kernelPackages; [
           acpi_call
         ];
-        kernelModules = ["acpi_call"];
+        kernelModules = ["acpi_call"] ++ lib.optional (ecReg != null) "ec_sys";
+        # ec_sys is read-only unless write_support is set.
+        extraModprobeConfig = lib.optionalString (ecReg != null) "options ec_sys write_support=1\n";
       };
 
       # Allow wheel to flip TLP power profiles without a password. Scoped to the
@@ -31,16 +40,29 @@
       # asus_wmi registers charge_control_end_threshold but its WMI GET returns
       # ENODATA on X1405VA, causing TLP's readable_sysf check to fail and skip
       # threshold setting entirely. Write directly at boot as a workaround.
-      # Only for hosts that declare `chargeThreshold`.
+      # MSI has no such sysfs at all, so write the EC byte (`stop + 0x80`) via
+      # the ec_sys debugfs instead. Only for hosts that declare `chargeThreshold`.
       systemd.services.battery-charge-threshold = lib.mkIf (ct != null) {
         description = "Set battery charge stop threshold";
         wantedBy = ["multi-user.target"];
         after = ["systemd-modules-load.service"];
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = "/bin/sh -c 'echo ${toString ct.stop} > /sys/class/power_supply/BAT0/charge_control_end_threshold'";
           RemainAfterExit = true;
         };
+        path = lib.optionals (ecReg != null) [pkgs.coreutils];
+        script =
+          if ecReg == null
+          then "echo ${toString ct.stop} > /sys/class/power_supply/BAT0/charge_control_end_threshold"
+          else ''
+            dev=/sys/kernel/debug/ec/ec0/io
+            # Only touch a register already holding a charge byte (0x8a..0xe4),
+            # so a wrong address cannot clobber unrelated EC state.
+            cur=$(dd if="$dev" bs=1 skip=${toString ecReg} count=1 2>/dev/null | od -An -tu1 | tr -dc '0-9')
+            [ -n "$cur" ] && [ "$cur" -ge 138 ] && [ "$cur" -le 228 ] || exit 1
+            printf "\\$(printf '%03o' $(( ${toString ct.stop} + 128 )))" |
+              dd of="$dev" bs=1 seek=${toString ecReg} conv=notrunc status=none
+          '';
       };
 
       services = {
@@ -79,8 +101,8 @@
               # Peripherals
               USB_AUTOSUSPEND = 0;
             }
-            // lib.optionalAttrs (ct != null) {
-              # Battery Charge Thresholds
+            // lib.optionalAttrs (ct != null && ecReg == null) {
+              # Battery Charge Thresholds (ThinkPad/acpi_call; not an MSI path)
               START_CHARGE_THRESH_BAT0 = ct.start;
               STOP_CHARGE_THRESH_BAT0 = ct.stop;
               RESTORE_THRESHOLDS_ON_BAT = 1;
