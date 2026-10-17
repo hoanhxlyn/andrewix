@@ -71,6 +71,7 @@
         logind.settings.Login = {
           HandleLidSwitch = "ignore";
           HandleLidSwitchDocked = "ignore";
+          HandlePowerKey = "hibernate";
           IdleAction = "ignore";
           IdleActionSec = "30min";
         };

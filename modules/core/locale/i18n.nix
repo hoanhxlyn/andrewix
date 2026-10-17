@@ -55,7 +55,7 @@
           addons.lotus.globalSection = {
             AutoNonVnRestore = false;
             EnableMacro = false;
-            Mode = "Uinput (Slow)";
+            Mode = "Uinput (Smooth)";
             W2U = "Disabled";
             SpellCheck = false;
             UseLotusIcons = true;
@@ -63,7 +63,6 @@
             ShortcutPreedit = 2;
             ShortcutSuperSmooth = 4;
             ShowModeSmooth = true;
-            ShowModeUinput = false;
             ShowModeSuperSmooth = false;
             ShowModeMinecraft = false;
             ShowModeSurroundingText = false;
