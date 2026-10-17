@@ -7,9 +7,10 @@
       pkgs,
       ...
     }: {
-      # Shared hardware profiles of the two physical hosts (Intel CPU, NVMe via
-      # VMD). vmd is not in NixOS' defaults, so without it initrd can't see the
-      # NVMe root. Kept here after hosts/<host>/_nixos/ was removed.
+      # Shared hardware profile of the physical hosts (NVMe via VMD). CPU vendor
+      # (kvm module, microcode) is per-host from the `cpu` fact. vmd is not in
+      # NixOS' defaults, so without it initrd can't see the NVMe root. Kept here
+      # after hosts/<host>/_nixos/ was removed.
       imports = [
         (modulesPath + "/installer/scan/not-detected.nix")
       ];
@@ -23,7 +24,7 @@
           "usb_storage"
           "sd_mod"
         ];
-        kernelModules = ["kvm-intel"];
+        kernelModules = ["kvm-${host.cpu}"];
         loader.systemd-boot.enable = host.bootLoader == "systemd-boot";
         loader.grub = {
           enable = host.bootLoader == "grub";
@@ -43,8 +44,12 @@
         plymouth.enable = true;
       };
       stylix.targets.grub.useWallpaper = true;
-      hardware.cpu.intel.updateMicrocode =
-        lib.mkDefault config.hardware.enableRedistributableFirmware;
+      hardware.cpu = {
+        intel.updateMicrocode =
+          lib.mkDefault (host.cpu == "intel" && config.hardware.enableRedistributableFirmware);
+        amd.updateMicrocode =
+          lib.mkDefault (host.cpu == "amd" && config.hardware.enableRedistributableFirmware);
+      };
     };
   };
 }
