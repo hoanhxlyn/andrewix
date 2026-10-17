@@ -4,24 +4,17 @@
       config,
       host,
       lib,
-      pkgs,
       ...
     }: let
       ct = host.chargeThreshold;
-      # MSI ECs expose no charge_control sysfs (the mainline msi-ec driver does
-      # not cover every model), so the limit is written to the EC byte directly.
-      ecReg =
-        if ct == null
-        then null
-        else ct.ecRegister;
+      # The GF63 Thin 10SC (16R5EMS1) is absent from the in-tree msi-ec
+      # allowlist, so pull the out-of-tree driver from nixpkgs. Its ACPI battery
+      # hook registers the standard charge_control sysfs on the battery (BAT1).
+      msiEc = ct != null && ct.msiEc;
     in {
       boot = {
-        extraModulePackages = with config.boot.kernelPackages; [
-          acpi_call
-        ];
-        kernelModules = ["acpi_call"] ++ lib.optional (ecReg != null) "ec_sys";
-        # ec_sys is read-only unless write_support is set.
-        extraModprobeConfig = lib.optionalString (ecReg != null) "options ec_sys write_support=1\n";
+        extraModulePackages = lib.optional msiEc config.boot.kernelPackages.msi-ec;
+        kernelModules = lib.optional msiEc "msi-ec";
       };
 
       # Allow wheel to flip TLP power profiles without a password. Scoped to the
@@ -39,9 +32,9 @@
 
       # asus_wmi registers charge_control_end_threshold but its WMI GET returns
       # ENODATA on X1405VA, causing TLP's readable_sysf check to fail and skip
-      # threshold setting entirely. Write directly at boot as a workaround.
-      # MSI has no such sysfs at all, so write the EC byte (`stop + 0x80`) via
-      # the ec_sys debugfs instead. Only for hosts that declare `chargeThreshold`.
+      # threshold setting entirely; the msi-ec driver needs the same direct write
+      # (and only `stop` — the EC derives start). Write at boot. Only for hosts
+      # that declare `chargeThreshold`.
       systemd.services.battery-charge-threshold = lib.mkIf (ct != null) {
         description = "Set battery charge stop threshold";
         wantedBy = ["multi-user.target"];
@@ -50,19 +43,11 @@
           Type = "oneshot";
           RemainAfterExit = true;
         };
-        path = lib.optionals (ecReg != null) [pkgs.coreutils];
+        # Battery name is per driver: asus_wmi uses BAT0, msi-ec uses BAT1.
         script =
-          if ecReg == null
-          then "echo ${toString ct.stop} > /sys/class/power_supply/BAT0/charge_control_end_threshold"
-          else ''
-            dev=/sys/kernel/debug/ec/ec0/io
-            # Only touch a register already holding a charge byte (0x8a..0xe4),
-            # so a wrong address cannot clobber unrelated EC state.
-            cur=$(dd if="$dev" bs=1 skip=${toString ecReg} count=1 2>/dev/null | od -An -tu1 | tr -dc '0-9')
-            [ -n "$cur" ] && [ "$cur" -ge 138 ] && [ "$cur" -le 228 ] || exit 1
-            printf "\\$(printf '%03o' $(( ${toString ct.stop} + 128 )))" |
-              dd of="$dev" bs=1 seek=${toString ecReg} conv=notrunc status=none
-          '';
+          if msiEc
+          then "echo ${toString ct.stop} > /sys/class/power_supply/BAT1/charge_control_end_threshold"
+          else "echo ${toString ct.stop} > /sys/class/power_supply/BAT0/charge_control_end_threshold";
       };
 
       services = {
@@ -102,8 +87,9 @@
               # Peripherals
               USB_AUTOSUSPEND = 0;
             }
-            // lib.optionalAttrs (ct != null && ecReg == null) {
-              # Battery Charge Thresholds (ThinkPad/acpi_call; not an MSI path)
+            // lib.optionalAttrs (ct != null && !msiEc) {
+              # Battery Charge Thresholds (asus_wmi; the msi-ec path is set by
+              # the oneshot above and derives its own start).
               START_CHARGE_THRESH_BAT0 = ct.start;
               STOP_CHARGE_THRESH_BAT0 = ct.stop;
               RESTORE_THRESHOLDS_ON_BAT = 1;
