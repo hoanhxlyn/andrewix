@@ -61,12 +61,13 @@
         size = 2;
       };
       layer = "top";
-      position = "bottom-right";
+      position = "top-center";
       timeout = 3000;
       history = 10;
       offset = {
-        x = 2;
-        y = 5;
+        x = 0;
+        # ×2 via terminal.padding = 40px: clears the 32px top waybar with an 8px gap.
+        y = 25;
       };
       padding = {
         x = 5;
