@@ -65,33 +65,43 @@
             # every rule and leaves the card with no capture device at all, so
             # no app (Discord, Caprine, ...) sees a microphone. Disabling restore
             # makes selection rule-driven and deterministic on every boot.
+            # Same for the default sink: without restore the default follows
+            # priority, and the built-in analog jack outranks HDMI (1009 > 696),
+            # so the rear jack is the default on every boot instead of whatever
+            # was last selected by hand.
             "50-no-profile-restore" = {
-              "wireplumber.settings"."device.restore-profile" = false;
+              "wireplumber.settings" = {
+                "device.restore-profile" = false;
+                "node.restore-default-targets" = false;
+              };
             };
 
             # The NVIDIA GPU's ACP (pulse-compat) profiles expose only one HDMI
             # sink at a time, so a second identical monitor never shows up as an
-            # output. Disable ACP for that card and PipeWire creates a sink per
-            # HDMI PCM, so both monitors are selectable simultaneously. The GPU
-            # has 4 HDMI PCMs though, so also hide the 2 with no monitor attached
-            # (devices 8 & 9) and give the 2 connected monitors (devices 3 & 7)
-            # short, distinguishable names.
+            # output. Disable ACP on every NVIDIA card (matched by vendor id,
+            # 0x10de, so the rule follows the card across boards instead of a PCI
+            # address) and PipeWire creates a sink per HDMI PCM, so both monitors
+            # are selectable simultaneously. The GPU has 4 HDMI PCMs though, so
+            # also hide the 2 with no monitor attached (devices 8 & 9) and give
+            # the 2 connected monitors (devices 3 & 7) short names. The node names
+            # embed the PCI address, which moves per board, so match them with a
+            # regex (a leading ~ means POSIX ERE) on the PCM device number.
             "51-nvidia-hdmi-sinks" = {
               "monitor.alsa.rules" = [
                 {
-                  matches = [{"device.name" = "alsa_card.pci-0000_01_00.1";}];
+                  matches = [{"device.vendor.id" = "0x10de";}];
                   actions.update-props."api.alsa.use-acp" = false;
                 }
                 {
-                  matches = [{"node.name" = "alsa_output.pci-0000_01_00.1.playback.8.0";}];
+                  matches = [{"node.name" = "~alsa_output.pci-0000_.*playback.8.0";}];
                   actions.update-props."node.disabled" = true;
                 }
                 {
-                  matches = [{"node.name" = "alsa_output.pci-0000_01_00.1.playback.9.0";}];
+                  matches = [{"node.name" = "~alsa_output.pci-0000_.*playback.9.0";}];
                   actions.update-props."node.disabled" = true;
                 }
                 {
-                  matches = [{"node.name" = "alsa_output.pci-0000_01_00.1.playback.3.0";}];
+                  matches = [{"node.name" = "~alsa_output.pci-0000_.*playback.3.0";}];
                   actions.update-props = {
                     "node.description" = "Monitor 1 (HDMI)";
                     "audio.channels" = 2;
@@ -99,7 +109,7 @@
                   };
                 }
                 {
-                  matches = [{"node.name" = "alsa_output.pci-0000_01_00.1.playback.7.0";}];
+                  matches = [{"node.name" = "~alsa_output.pci-0000_.*playback.7.0";}];
                   actions.update-props = {
                     "node.description" = "Monitor 2 (HDMI)";
                     "audio.channels" = 2;
@@ -110,12 +120,18 @@
             };
 
             # The built-in HDA codec is duplex; force the duplex profile so its
-            # internal mic is always exposed as a source. Matched on the stable
-            # device.name, not the dynamic device.id.
+            # internal mic is always exposed as a source. The Intel PCH sits at
+            # the fixed 00:1f.3 address on every Intel platform; the AMD chipset
+            # controller moves with the board, so match it by vendor id (0x1022)
+            # instead of a PCI address.
             "52-builtin-duplex" = {
               "monitor.alsa.rules" = [
                 {
                   matches = [{"device.name" = "alsa_card.pci-0000_00_1f.3";}];
+                  actions.update-props."device.profile" = "output:analog-stereo+input:analog-stereo";
+                }
+                {
+                  matches = [{"device.vendor.id" = "0x1022";}];
                   actions.update-props."device.profile" = "output:analog-stereo+input:analog-stereo";
                 }
               ];
