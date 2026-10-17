@@ -60,16 +60,17 @@ in {
     };
   };
   # Battery charge limits in %; null = unmanaged. Only used by laptops.
-  # `stop` is the level charging tops out at. Hosts whose EC exposes no
-  # charge_control sysfs (MSI) set `ecRegister` to the EC byte holding the
-  # limit; the byte written is `stop + 0x80` and only 60 / 80 / 100 are honoured.
+  # `stop` is the level charging tops out at. Hosts whose EC needs the
+  # out-of-tree msi-ec driver (its in-tree allowlist lacks the firmware) set
+  # `msiEc = true`; the driver exposes the standard charge_control sysfs and
+  # only honours 60 / 80 / 100, deriving start from stop - 10.
   chargeThreshold = nullable (types.submodule {
     options = {
       start = mkOption {type = types.ints.between 0 100;};
       stop = mkOption {type = types.ints.between 0 100;};
-      ecRegister = mkOption {
-        type = types.nullOr types.ints.unsigned;
-        default = null;
+      msiEc = mkOption {
+        type = types.bool;
+        default = false;
       };
     };
   });

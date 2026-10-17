@@ -62,12 +62,13 @@
         swap = "24G";
       };
       enableGaming = true;
-      # MSI EC charge limit (no charge_control sysfs on this GF63 Thin 10SC);
-      # see core.hardware.power-manager. MSI only honours 60 / 80 / 100 %.
+      # The GF63 Thin 10SC (16R5EMS1) is missing from the in-tree msi-ec
+      # allowlist, so use the out-of-tree driver; see core.hardware.power-manager.
+      # MSI only honours 60 / 80 / 100 %.
       chargeThreshold = {
         start = 70;
         stop = 80;
-        ecRegister = 239; # 0xef
+        msiEc = true;
       };
       monitors."eDP-1" = {
         resolution = {
