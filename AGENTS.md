@@ -69,6 +69,7 @@ are `assertions` in `modules/core/hardware/default.nix`:
 | Fact              | Values / meaning                                                                 |
 | ----------------- | -------------------------------------------------------------------------------- |
 | `formFactor`      | `desktop` (default) \| `laptop`; derives `host.isLaptop`                         |
+| `cpu`             | `intel` (default) \| `amd`; kvm module + microcode in `core.hardware.bootable`   |
 | `gpu`             | list of `intel` \| `nvidia`; both = hybrid                                       |
 | `nvidiaPrime`     | `{intelBusId, nvidiaBusId}`; hybrid only; `null` = PRIME off + build warning     |
 | `bootLoader`      | `systemd-boot` (default) \| `grub`                                               |

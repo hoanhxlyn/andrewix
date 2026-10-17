@@ -22,6 +22,11 @@ in {
     readOnly = true;
     default = config.formFactor == "laptop";
   };
+  # CPU vendor, drives kvm module and microcode in core.hardware.bootable.
+  cpu = mkOption {
+    type = types.enum ["intel" "amd"];
+    default = "intel";
+  };
   gpu = mkOption {
     type = types.listOf (types.enum ["intel" "nvidia"]);
     default = [];

@@ -25,7 +25,8 @@
             # A crashed rclone leaves a stale FUSE mount; mkdir then fails with ENOTCONN.
             # Kill holders, lazily unmount, then (re)create the mount point.
             "-${pkgs.psmisc}/bin/fuser -k ${config.home.homeDirectory}/${path}"
-            "-${pkgs.fuse}/bin/fusermount -uz ${config.home.homeDirectory}/${path}"
+            # rclone mounts via FUSE 3; only the setuid fusermount3 wrapper can unmount it.
+            "-/run/wrappers/bin/fusermount3 -uz ${config.home.homeDirectory}/${path}"
             "${pkgs.coreutils}/bin/mkdir -p ${config.home.homeDirectory}/${path}"
           ];
           ExecStart = ''
@@ -38,7 +39,7 @@
             --vfs-cache-max-size 5G \
             --config %h/.config/rclone/rclone.conf
           '';
-          ExecStop = "${pkgs.fuse}/bin/fusermount -u ${config.home.homeDirectory}/${path}";
+          ExecStop = "/run/wrappers/bin/fusermount3 -u ${config.home.homeDirectory}/${path}";
           Restart = "on-failure";
           RestartSec = "10s";
         };
