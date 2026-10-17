@@ -199,10 +199,10 @@
                   hotkey-overlay.title = "Terminal";
                   action.spawn = [terminalName];
                 };
-                "Mod+E" = {
-                  hotkey-overlay.title = "Yazi Files";
-                  action.spawn = [terminalName "-e" "yazi"];
-                };
+                # "Mod+E" = {
+                #   hotkey-overlay.title = "Yazi Files";
+                #   action.spawn = [terminalName "-e" "yazi"];
+                # };
                 "Mod+B" = {
                   hotkey-overlay.title = "Browser";
                   action.spawn = [browserBin];
@@ -231,11 +231,11 @@
                   hotkey-overlay.title = "Audio";
                   action.spawn = ["fuzzel-audio"];
                 };
-                "Mod+Ctrl+E" = {
+                "Mod+E" = {
                   hotkey-overlay.title = "Emoji";
                   action.spawn = ["fuzzel-emoji"];
                 };
-                "Mod+Ctrl+X" = {
+                "Mod+X" = {
                   hotkey-overlay.title = "Power";
                   action.spawn = ["fuzzel-power"];
                 };
