@@ -47,8 +47,7 @@
             }
             {
               "key" = "{#33}├─ 󰻠 cpu";
-              "type" = "command";
-              "text" = ''fastfetch -s cpu --format json | jq -r '.[0].result | (.cpu | split(" ") | last) + " @ " + (.frequency.max/1000|tostring) + "GHz"' '';
+              "type" = "cpu";
             }
             {
               "key" = "{#34}├─ 󰉉 disk";
