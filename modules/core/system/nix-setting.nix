@@ -17,12 +17,6 @@ in {
       # to ride it out. See the nss targets in `journalctl -b -u nscd`.
       systemd.services.nscd.startLimitBurst = 50;
       nix = {
-        gc = {
-          automatic = true;
-          dates = "daily";
-          options = "--delete-older-than 7d";
-        };
-
         settings =
           {
             auto-optimise-store = true;

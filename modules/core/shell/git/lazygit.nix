@@ -16,6 +16,7 @@
           nerdFontsVersion = "3";
           showBranchCommitHash = true;
           showCommandLog = true;
+          commitHashLength = 0;
           spinner = {
             frames = ["⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏"];
             rate = 120;
