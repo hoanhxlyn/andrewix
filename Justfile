@@ -57,14 +57,23 @@ update:
 [group('nixos')]
 gc:
   sudo nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 3d
+  nix profile wipe-history --older-than 3d
   sudo nix store gc -v
-  sudo nix store optimise
-
 
 # List system generations
 [group('nixos')]
 list-gen:
   nix profile history --profile /nix/var/nix/profiles/system
+
+# Rollback to a chosen generation via fzf
+[group('nixos')]
+rollback:
+  #!/usr/bin/env bash
+  set -e
+  gen="$(nixos-rebuild list-generations | tail -n +2 | fzf --header 'pick a generation to rollback to' | awk '{print $1}')"
+  [ -n "$gen" ] || { echo 'no generation selected'; exit 0; }
+  sudo nix-env --switch-generation "$gen" -p /nix/var/nix/profiles/system
+  sudo /nix/var/nix/profiles/system/bin/switch-to-configuration switch
 
 # Search nix packages
 [group('info')]

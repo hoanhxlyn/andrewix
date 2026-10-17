@@ -15,7 +15,7 @@ just vm <h>       # build + run test VM, host store, disk untouched
 just update       # nix run .#write-flake && nix flake update (no commit)
 just search <pkg> # nps -e <pkg> in fzf
 just list-gen     # nixos-rebuild list-generations
-just gc           # nix-store gc + optimise
+just gc           # wipe old system gens + store gc
 just clean-up     # user+system GC, keep 7d (sudo)
 ```
 
@@ -193,8 +193,7 @@ nix run .#write-flake    # rewrites flake.nix
 - **Secrets:** only on `asus-vivo14` / `asus-rog-gl552vx` / `home-pc`. Decrypt with the shared age key
   at `~/.config/sops-nix/keys.txt` on each host. Edit via `sops secrets/secrets.yaml`; declare new secrets in
   `modules/core/services/sync/sops.nix` under `sops.secrets`.
-- **Auto GC:** `nix.gc.automatic` runs daily, `--delete-older-than 7d` (see `nix-setting.nix`). `just clean-up` does the
-  same on demand (sudo).
+- **GC is manual:** there is no `nix.gc` timer; run `just gc` (wipe old system generations + store gc, needs sudo).
 
 ## Dev shell
 
