@@ -59,7 +59,7 @@
           chat = {
             description = "Daily chatting with heads in the cloud";
             mode = "primary";
-            model = "opencode-go/minimax-m3";
+            model = "opencode-go/deepseek-v4.1-flash#low";
             request.body.temperature = 0.8;
             permissions = [
               {
@@ -69,6 +69,11 @@
               }
               {
                 action = "shell";
+                resource = "*";
+                effect = "deny";
+              }
+              {
+                action = "subagent";
                 resource = "*";
                 effect = "deny";
               }
