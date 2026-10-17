@@ -51,11 +51,16 @@
           chat = {
             description = "Daily chatting with heads in the cloud";
             mode = "primary";
-            model = "opencode-go/mimo-v2.6-flash";
+            model = "opencode-go/minimax-m3";
             request.body.temperature = 0.8;
             permissions = [
               {
                 action = "edit";
+                resource = "*";
+                effect = "deny";
+              }
+              {
+                action = "shell";
                 resource = "*";
                 effect = "deny";
               }
