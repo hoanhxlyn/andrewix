@@ -1,4 +1,8 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake-file.inputs.opencode = {
     url = "github:anomalyco/opencode/v2";
     inputs.nixpkgs.follows = "nixpkgs";
@@ -12,6 +16,10 @@
     isWsl = osConfig.wsl.enable or false;
     opencodePkgs = inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system};
   in {
+    # cli.json is the V2 TUI config; home-manager has no option for it.
+    # Read-only while symlinked: rm the link before tweaking from the TUI.
+    home.file.".config/opencode/cli.json".source = "${self}/config/opencode/cli.json";
+
     programs.opencode = {
       enable = true;
       package =
