@@ -49,7 +49,6 @@
         fcitx5.waylandFrontend = true;
         fcitx5.settings = {
           addons.classicui.globalSection = {
-            Theme = "plasma";
             UseDarkTheme = true;
           };
           addons.lotus.globalSection = {
