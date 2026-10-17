@@ -75,16 +75,16 @@
           height = 1080;
         };
         refresh-rate = 144.0;
-        is-primary = true;
+        is-primary = false;
         scale = 1;
       };
-      monitors."HDMI-A-1" = {
+      monitors."HDMI-A-2" = {
         resolution = {
           width = 1920;
           height = 1080;
         };
-        refresh-rate = 60.0; # TODO: verify the panel/port's real rate after install
-        is-primary = false;
+        refresh-rate = 74.973;
+        is-primary = true;
         scale = 1;
       };
       # Panel only advertises 144.000 and 60.002 Hz; niri matches the refresh
@@ -116,7 +116,7 @@
           height = 1080;
         };
         refresh-rate = 74.973;
-        is-primary = false;
+        is-primary = true;
         scale = 1;
       };
       monitors."HDMI-A-2" = {
@@ -125,7 +125,7 @@
           height = 1080;
         };
         refresh-rate = 74.973;
-        is-primary = true;
+        is-primary = false;
         scale = 1;
       };
     };
