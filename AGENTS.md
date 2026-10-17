@@ -74,7 +74,7 @@ are `assertions` in `modules/core/hardware/default.nix`:
 | `nvidiaPrime`     | `{intelBusId, nvidiaBusId}`; hybrid only; `null` = PRIME off + build warning     |
 | `bootLoader`      | `systemd-boot` (default) \| `grub`                                               |
 | `storage`         | `{layout = "single" \| "multi"; swap = "24G";}`; `multi` = nixos/works/entertainment |
-| `chargeThreshold` | `{start, stop}` battery limits (laptop only); `null` = unmanaged                 |
+| `chargeThreshold` | `{start, stop, msiEc}` battery limits (laptop only); `null` = unmanaged           |
 | `enableGaming`    | include `<core.gaming>`                                                          |
 
 Aspects are chosen from facts, **never from a hostname**: hardware aspects in `modules/core/hardware/default.nix`
@@ -181,7 +181,9 @@ nix run .#write-flake    # rewrites flake.nix
   nvidia dGPU via PRIME offload (`nvidia-offload <cmd>`, e.g. as a Steam launch option). PRIME sync is X11-only and is
   not used. Verify connector names with `niri msg outputs`; HDMI ports wired to the nvidia GPU may behave differently.
 - **Charge limit:** `core.hardware.power-manager` sets TLP thresholds and the asus_wmi workaround only when the host
-  declares `chargeThreshold` (X1405VA, `asus-vivo14`).
+  declares `chargeThreshold` (X1405VA, `asus-vivo14`). Hosts whose firmware is missing from the in-tree msi-ec
+  allowlist (GF63 Thin 10SC, `msi-gf63`) set `msiEc = true`: the aspect then pulls the out-of-tree
+  `boot.kernelPackages.msi-ec` and writes the threshold to `BAT1/charge_control_end_threshold`.
 - **First-boot password:** the installer (`install.fish`) prompts for it and sets it with `nixos-enter` before you
   reboot; no default password ships in the repo. A known `admin123` survives only inside `virtualisation.vmVariant`
   (`modules/core/hardware/disko.nix`) for `just vm`. Machines installed before this still hold the old bootstrap
