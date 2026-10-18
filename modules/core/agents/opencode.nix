@@ -9,15 +9,15 @@
   };
 
   core.agents.opencode.homeManager = {
+    config,
     pkgs,
     osConfig,
     ...
   }: let
     isWsl = osConfig.wsl.enable or false;
+    colors = config.lib.stylix.colors.withHashtag;
     opencodePkgs = inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system};
   in {
-    # cli.json is the V2 TUI config; home-manager has no option for it.
-    # Read-only while symlinked: rm the link before tweaking from the TUI.
     home.file.".config/opencode/cli.json".source = "${self}/config/opencode/cli.json";
 
     programs.opencode = {
@@ -49,14 +49,17 @@
         default_agent = "chat";
         agents = {
           plan = {
+            color = colors.base0E;
             model = "opencode-go/deepseek-v4-pro";
             request.body.temperature = 0.3;
           };
           build = {
+            color = colors.base0B;
             model = "opencode-go/deepseek-v4.1-flash#low";
             request.body.temperature = 0.3;
           };
           chat = {
+            color = colors.base0D;
             description = "Daily chatting with heads in the cloud";
             mode = "primary";
             model = "opencode-go/deepseek-v4.1-flash#low";
