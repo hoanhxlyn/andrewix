@@ -50,19 +50,19 @@
         agents = {
           plan = {
             color = colors.base0E;
-            model = "opencode-go/deepseek-v4-pro";
+            model = "opencode-go/glm-5.3-flash";
             request.body.temperature = 0.3;
           };
           build = {
             color = colors.base0B;
-            model = "opencode-go/deepseek-v4.1-flash#low";
+            model = "opencode-go/mimo-v2.6-pro";
             request.body.temperature = 0.3;
           };
           chat = {
             color = colors.base0D;
             description = "Daily chatting with heads in the cloud";
             mode = "primary";
-            model = "opencode-go/deepseek-v4.1-flash#low";
+            model = "opencode-go/deepseek-v4.1-flash";
             request.body.temperature = 0.8;
             permissions = [
               {
