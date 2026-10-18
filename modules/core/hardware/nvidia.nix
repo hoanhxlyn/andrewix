@@ -24,15 +24,11 @@
 
       boot = {
         kernelParams = ["nvidia-drm.fbdev=1"];
-        # Only when nvidia is the active driver: VM builds override videoDrivers
-        # to modesetting and ship no nvidia module for initrd. Hybrid hosts skip
-        # it so the Intel iGPU stays the boot GPU the compositor picks.
-        initrd.kernelModules = lib.optionals (!hybrid && lib.elem "nvidia" config.services.xserver.videoDrivers) [
-          "nvidia"
-          "nvidia_modeset"
-          "nvidia_uvm"
-          "nvidia_drm"
-        ];
+        # No nvidia modules in initrd (early KMS): with
+        # NVreg_PreserveVideoMemoryAllocations=1 an early-loaded driver restores
+        # VRAM itself before nvidia-resume runs, and resume from hibernation
+        # hangs at the plymouth splash. nixpkgs loads the modules from udev in
+        # stage 2 (boot.kernelModules); the splash just runs on simpledrm.
         extraModprobeConfig = ''
           options nvidia NVreg_PreserveVideoMemoryAllocations=1
           options nvidia NVreg_EnableGpuFirmware=0
