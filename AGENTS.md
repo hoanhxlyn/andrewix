@@ -19,8 +19,8 @@ just gc           # wipe old system gens + store gc
 just clean-up     # user+system GC, keep 7d (sudo)
 ```
 
-Hosts: `asus-vivo14`, `asus-rog-gl552vx`, `home-pc`, `home-wsl`, `work-wsl`. Only
-`asus-vivo14` / `asus-rog-gl552vx` / `home-pc` are installable (WSL hosts have no disk layout).
+Hosts: `asus-vivo14`, `asus-rog-gl552vx`, `msi-gf63`, `home-pc`, `home-wsl`, `work-wsl`. Only non-WSL
+hosts are installable (WSL hosts have no disk layout).
 
 ### No Justfile?
 
@@ -48,9 +48,9 @@ NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto
 | Path                    | Purpose                                           |
 | ----------------------- | ------------------------------------------------- |
 | `modules/core/`         | All aspects (NixOS + Home Manager)                |
-| `modules/hosts.nix`     | Host definitions (5 hosts) + host→variant wiring  |
+| `modules/hosts.nix`     | Host definitions (6 hosts) + host→variant wiring  |
 | `modules/schema.nix`    | Host facts → `den.schema.host` (`_lib/facts.nix`) |
-| `modules/devices/`      | Variant aspects (`workstation.nix`, `wsl.nix`)    |
+| `modules/devices/`      | Variant aspects (`workstation`, `server`, `wsl`)  |
 | `modules/defaults.nix`  | Default includes + dev shell                      |
 | `modules/dendritic.nix` | Framework bootstrapping                           |
 | `modules/_settings.nix` | Shared host settings (path-imported by `mkHost`)  |
@@ -59,8 +59,9 @@ NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto
 | `config/`               | Non-Nix app configs (symlinked into `~/.config`)  |
 | `flake.nix`             | **Auto-generated. DO NOT EDIT.**                  |
 
-Host builder: `mkHost` in `modules/_lib/mk-host.nix` composes `_settings.nix` with per-host data and the workstation/wsl
-variant. Layout translates flat monitor attrs into niri's nested shape and sets `wsl.enable` for non-workstations.
+Host builder: `mkHost` in `modules/_lib/mk-host.nix` composes `_settings.nix` with per-host data and the
+workstation/server/wsl variant. Layout translates flat monitor attrs into niri's nested shape and sets the variant flag
+(`server.enable` for servers, `wsl.enable` for WSL hosts).
 
 **Host facts** (set in `modules/hosts.nix`). The single definition is `modules/_lib/facts.nix`; `modules/schema.nix`
 feeds it to `den.schema.host` (types, defaults), `mkHost` rejects unknown fact names against it, and cross-fact checks
@@ -73,13 +74,13 @@ are `assertions` in `modules/core/hardware/default.nix`:
 | `gpu`             | list of `intel` \| `nvidia`; both = hybrid                                       |
 | `nvidiaPrime`     | `{intelBusId, nvidiaBusId}`; hybrid only; `null` = PRIME off + build warning     |
 | `bootLoader`      | `systemd-boot` (default) \| `grub`                                               |
-| `storage`         | `{layout = "single" \| "multi"; swap = "24G";}`; `multi` = nixos/works/entertainment |
+| `storage`         | `{layout = "single" \| "multi" \| "dual"; swap = "24G";}`; `multi` = nixos/works/entertainment, `dual` = root + data disk |
 | `chargeThreshold` | `{start, stop, msiEc}` battery limits (laptop only); `null` = unmanaged           |
 | `enableGaming`    | include `<core.gaming>`                                                          |
 
 Aspects are chosen from facts, **never from a hostname**: hardware aspects in `modules/core/hardware/default.nix`
-(`power-manager`, `intel-vaapi`, `nvidia`), gaming in `modules/devices/workstation.nix`. The workstation/wsl variant per
-host is generated in `hosts.nix` via `provides.to-users`.
+(`power-manager`, `intel-vaapi`, `nvidia`), gaming in `modules/devices/workstation.nix`. The variant per host is
+generated in `hosts.nix` via `provides.to-users`.
 
 **Adding a device:** add one `mkHost` entry in `hosts.nix` with its facts and monitors (keyed by connector name), and
 nothing else: `install.fish` reads `flake.installableHosts` (all non-WSL hosts). No other file should mention the
@@ -176,8 +177,8 @@ nix run .#write-flake    # rewrites flake.nix
   gone; hardware boot bits (initrd `vmd`/`ahci`/`nvme`, kvm, microcode) live in `modules/core/hardware/bootable.nix`,
   shared by the Intel workstations; the loader comes from the `bootLoader` fact. Target disks are picked at install time
   by `install.fish`, so the `/dev/nvme0n1` in `disko.nix` is only a default.
-- **Hybrid GPU (`asus-rog-gl552vx`, GTX 950M):** `nvidiaPrime` bus IDs are unset until you fill them from
-  `lspci -D -d ::03xx` after install (see the `TODO`s in `hosts.nix`). niri runs on the Intel iGPU; games use the
+- **Hybrid GPU (`msi-gf63`, GTX 1650 Mobile):** `nvidiaPrime` bus IDs are filled in from `lspci -D -d ::03xx` (see
+  `hosts.nix`); a hybrid host without them gets PRIME off and a build warning. niri runs on the Intel iGPU; games use the
   nvidia dGPU via PRIME offload (`nvidia-offload <cmd>`, e.g. as a Steam launch option). PRIME sync is X11-only and is
   not used. Verify connector names with `niri msg outputs`; HDMI ports wired to the nvidia GPU may behave differently.
 - **Charge limit:** `core.hardware.power-manager` sets TLP thresholds and the asus_wmi workaround only when the host

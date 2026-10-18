@@ -37,9 +37,7 @@
       # Hybrid: niri/desktop run on the Intel iGPU; games opt in to the nvidia dGPU with
       # `nvidia-offload <cmd>` (Steam launch option). PRIME sync is X11-only, so offload is used.
       # `modesetting` first, as the NixOS wiki advises for offload.
-      # TODO: If external ports are wired to the nvidia GPU and stay dark under offload, set niri
-      # `debug { render-drm-device "/dev/dri/renderD<n>"; }` to the nvidia node (experimental) or
-      # drop `prime` for that host. Unverified on Wayland; test after install.
+      # Every output (panel + HDMI) sits on the Intel iGPU, so niri needs no `render-drm-device`.
       services.xserver.videoDrivers = lib.optional hybrid "modesetting" ++ ["nvidia"];
       hardware = {
         graphics = {

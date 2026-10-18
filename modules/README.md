@@ -17,7 +17,7 @@ Non-Nix app configs (JSON, YAML, scripts, images) do not belong here. They live 
 | `iso.nix`           | Installer ISO                                                        |
 | `_settings.nix`     | Shared host settings, path-imported and not auto-discovered          |
 | `core/`             | All aspects, NixOS and Home Manager together                         |
-| `devices/`          | Variant aspects: `workstation.nix` and `wsl.nix`                     |
+| `devices/`          | Variant aspects: `workstation.nix`, `server.nix`, `wsl.nix`           |
 | `_lib/`             | Helpers, path-imported and not auto-discovered                       |
 
 `_lib/` contains:
@@ -73,8 +73,8 @@ With both NixOS and Home Manager parts and an include:
 }
 ```
 
-To use a new aspect, add it to a group under `core/`, or include it from `devices/workstation.nix`
-or `devices/wsl.nix`.
+To use a new aspect, add it to a group under `core/`, or include it from `devices/workstation.nix`,
+`devices/server.nix` or `devices/wsl.nix`.
 
 Run `git add` on the new file before building. Flakes only see files tracked by git, and an
 untracked aspect fails with `Namespace 'core' has no aspect '<name>'`.
