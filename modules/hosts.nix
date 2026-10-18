@@ -99,6 +99,7 @@
       cpu = "amd";
       gpu = ["nvidia"];
       bootLoader = "grub";
+      defaults.terminal = "rio";
       storage = {
         layout = "multi";
         swap = "32G";
