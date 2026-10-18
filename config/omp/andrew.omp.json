@@ -87,12 +87,6 @@
           "style": "plain"
         },
         {
-          "template": "<#ffffff>in</>  {{ .Type }} ",
-          "foreground": "#7EBAE4",
-          "type": "nix-shell",
-          "style": "plain"
-        },
-        {
           "template": " \uf119",
           "foreground": "#DCB977",
           "type": "status",
