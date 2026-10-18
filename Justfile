@@ -68,15 +68,15 @@ list-gen:
 # Rollback to a chosen generation via fzf
 [group('nixos')]
 rollback:
-  #!/usr/bin/env bash
-  set -e
-  gen="$(nixos-rebuild list-generations | tail -n +2 | fzf --header 'pick a generation to rollback to' | awk '{print $1}')"
-  [ -n "$gen" ] || { echo 'no generation selected'; exit 0; }
-  sudo nix-env --switch-generation "$gen" -p /nix/var/nix/profiles/system
-  sudo /nix/var/nix/profiles/system/bin/switch-to-configuration switch
+  fish --no-config scripts/rollback.fish
 
 # Search nix packages
 [group('info')]
 search *args:
-  nps -e {{ args }} | fzf --cycle --layout=reverse-list --border rounded --height 80% --preview-window right:40%:wrap --bind 'enter:become(echo -n {1} | wl-copy)'
+  fish --no-config scripts/search.fish {{ args }}
+
+# Pick a base16 scheme with fzf, copy name on enter
+[group('info')]
+schemes:
+  fish --no-config scripts/schemes.fish
 

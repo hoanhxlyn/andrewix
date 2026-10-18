@@ -43,7 +43,7 @@
   };
   # Look & feel (pure data; packages stay in modules/core/services/sync/stylix.nix).
   appearance = {
-    scheme = "gruvbox-dark-medium"; # base16-schemes name
+    scheme = "gruvbox-dark"; # base16-schemes name
     polarity = "dark"; # light | dark
     font.size = 12; # pt; terminal/applications/desktop derive from it
     opacity = 0.8; # 1.0 = opaque; <1 enables blur/transparent bg
