@@ -330,11 +330,11 @@
                 # Audio
                 "XF86AudioRaiseVolume" = {
                   allow-when-locked = true;
-                  action.spawn = ["wpctl" "set-volume" "--limit" "1.0" "@DEFAULT_AUDIO_SINK@" "5%+"];
+                  action.spawn = ["soundctl" "up"];
                 };
                 "XF86AudioLowerVolume" = {
                   allow-when-locked = true;
-                  action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
+                  action.spawn = ["soundctl" "down"];
                 };
                 "XF86AudioMute" = {
                   allow-when-locked = true;
@@ -352,12 +352,12 @@
                 "Mod+Page_Up" = {
                   hotkey-overlay.title = "Volume up";
                   allow-when-locked = true;
-                  action.spawn = ["wpctl" "set-volume" "--limit" "1.0" "@DEFAULT_AUDIO_SINK@" "5%+"];
+                  action.spawn = ["soundctl" "up"];
                 };
                 "Mod+Page_Down" = {
                   hotkey-overlay.title = "Volume down";
                   allow-when-locked = true;
-                  action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
+                  action.spawn = ["soundctl" "down"];
                 };
 
                 # Media

@@ -257,8 +257,8 @@
               format-muted = " Muted";
               format-icons = ["" "" ""];
               on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-              on-scroll-up = "wpctl set-volume --limit 1.0 @DEFAULT_AUDIO_SINK@ 5%+";
-              on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+              on-scroll-up = "soundctl up";
+              on-scroll-down = "soundctl down";
             };
 
             clock = {

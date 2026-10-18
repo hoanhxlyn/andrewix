@@ -1,4 +1,14 @@
-{
+{self, ...}: {
+  core.hardware.sound.homeManager = {pkgs, ...}: {
+    home.packages = [
+      (pkgs.writeShellApplication {
+        name = "soundctl";
+        runtimeInputs = [pkgs.wireplumber]; # provides wpctl
+        text = builtins.readFile "${self}/config/volume/soundctl.sh";
+      })
+    ];
+  };
+
   core.hardware.sound.nixos = {pkgs, ...}: {
     services = {
       # ACP normally flips each HDMI PCM's "IEC958 Playback Switch" on when
