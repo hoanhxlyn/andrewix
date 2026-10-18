@@ -39,7 +39,7 @@ in {
     };
   });
   bootLoader = mkOption {
-    type = types.enum ["systemd-boot" "grub"];
+    type = types.enum ["systemd-boot" "grub" "limine"];
     default = "systemd-boot";
   };
   storage = mkOption {

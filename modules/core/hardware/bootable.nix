@@ -26,12 +26,11 @@
         ];
         kernelModules = ["kvm-${host.cpu}"];
         loader.systemd-boot.enable = host.bootLoader == "systemd-boot";
-        loader.grub = {
-          enable = host.bootLoader == "grub";
-          efiSupport = true;
-          device = "nodev";
-          useOSProber = true;
-          configurationLimit = 3;
+        # kernels + initrd get copied onto the ESP (limine can't read XFS root);
+        # maxGenerations null = unbounded, which fills the 512M ESP.
+        loader.limine = {
+          enable = host.bootLoader == "limine";
+          maxGenerations = 4;
         };
         loader.efi.canTouchEfiVariables = true;
 
@@ -43,7 +42,6 @@
         kernelPackages = pkgs.linuxPackages_latest;
         plymouth.enable = true;
       };
-      stylix.targets.grub.useWallpaper = true;
       hardware.cpu = {
         intel.updateMicrocode =
           lib.mkDefault (host.cpu == "intel" && config.hardware.enableRedistributableFirmware);

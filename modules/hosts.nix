@@ -98,7 +98,7 @@
     home-pc = mkHost {
       cpu = "amd";
       gpu = ["nvidia"];
-      bootLoader = "grub";
+      bootLoader = "limine";
       defaults.terminal = "rio";
       storage = {
         layout = "multi";

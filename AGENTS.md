@@ -73,7 +73,7 @@ are `assertions` in `modules/core/hardware/default.nix`:
 | `cpu`             | `intel` (default) \| `amd`; kvm module + microcode in `core.hardware.bootable`   |
 | `gpu`             | list of `intel` \| `nvidia`; both = hybrid                                       |
 | `nvidiaPrime`     | `{intelBusId, nvidiaBusId}`; hybrid only; `null` = PRIME off + build warning     |
-| `bootLoader`      | `systemd-boot` (default) \| `grub`                                               |
+| `bootLoader`      | `systemd-boot` (default) \| `grub` \| `limine`                                       |
 | `storage`         | `{layout = "single" \| "multi" \| "dual"; swap = "24G";}`; `multi` = nixos/works/entertainment, `dual` = root + data disk |
 | `chargeThreshold` | `{start, stop, msiEc}` battery limits (laptop only); `null` = unmanaged           |
 | `enableGaming`    | include `<core.gaming>`                                                          |
