@@ -61,18 +61,6 @@
           };
         };
       };
-      systemd.services.gdm-nvidia-wayland = {
-        before = ["display-manager.service"];
-        wantedBy = ["display-manager.service"];
-        script = ''
-          mkdir -p /run/gdm/runtime-config/daemon
-          echo true > /run/gdm/runtime-config/daemon/WaylandEnable
-        '';
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-        };
-      };
     };
   };
 }

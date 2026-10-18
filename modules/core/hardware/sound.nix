@@ -63,16 +63,14 @@
             # rules -> best available profile. A stale "output:analog-stereo"
             # entry in ~/.local/state/wireplumber/default-profile thus wins over
             # every rule and leaves the card with no capture device at all, so
-            # no app (Discord, Caprine, ...) sees a microphone. Disabling restore
-            # makes selection rule-driven and deterministic on every boot.
-            # Same for the default sink: without restore the default follows
-            # priority, and the built-in analog jack outranks HDMI (1009 > 696),
-            # so the rear jack is the default on every boot instead of whatever
-            # was last selected by hand.
+            # no app (Discord, Caprine, ...) sees a microphone. Disabling profile
+            # restore makes selection rule-driven and deterministic on every boot.
+            # Default sink/source targets are restored though, so the output
+            # picked by hand survives a reboot.
             "50-no-profile-restore" = {
               "wireplumber.settings" = {
                 "device.restore-profile" = false;
-                "node.restore-default-targets" = false;
+                "node.restore-default-targets" = true;
               };
             };
 
