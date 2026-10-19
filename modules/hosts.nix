@@ -34,6 +34,12 @@
     asus-rog-gl552vx = mkHost {
       chassis = "laptop";
       is-homelab = true;
+      # Intel iGPU only, enough for niri. The NVIDIA dGPU is deliberately undeclared (no driver).
+      # Confirm with `lspci -D -d ::03xx` at install time.
+      gpu = {
+        vendor = "intel";
+        kind = "integrated";
+      };
     };
     msi-gf63 = mkHost {
       chassis = "laptop";
