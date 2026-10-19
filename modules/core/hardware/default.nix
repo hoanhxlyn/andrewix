@@ -9,6 +9,7 @@
     includes =
       [
         <core.hardware.bootable>
+        <core.hardware.bluetooth>
         <core.hardware.monitors>
         <core.hardware.disko>
         <core.hardware.firmware>
