@@ -24,10 +24,10 @@
       ];
     };
     # WSL has no Wayland compositor, so nvim's clipboard bridge goes through
-    # win32yank.exe on the Windows side (`scoop install win32yank`); options.lua
+    # win32yank.exe on the Windows side (installed on the Windows side); options.lua
     # picks up the path from this variable.
     homeManager = {lib, ...}: let
-      win32yank = "/mnt/c/Users/${host.windowsName}/scoop/root/apps/win32yank/current/win32yank.exe";
+      win32yank = host.windows.tools.win32yank;
     in {
       home.sessionVariables = lib.mkIf host.wsl.enable {
         WIN32YANK = win32yank;

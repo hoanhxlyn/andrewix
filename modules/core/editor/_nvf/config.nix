@@ -4,8 +4,8 @@
 }: let
   # wl-copy needs a Wayland compositor, which WSL doesn't run; bridge
   # nvim's clipboard to the Windows clipboard via win32yank instead
-  # (`scoop install win32yank` on the Windows side).
-  win32yank = "/mnt/c/Users/${host.windowsName}/scoop/root/apps/win32yank/current/win32yank.exe";
+  # (installed on the Windows side).
+  win32yank = host.windows.tools.win32yank;
 in {
   options = {
     wrap = false;

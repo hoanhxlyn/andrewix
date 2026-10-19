@@ -1,6 +1,6 @@
 {__findFile, inputs, ...}: {
   den.aspects = {
-    wsl = {
+    wsl = {host, ...}: {
       includes = [
         <core.git>
         <core.agents>
@@ -29,7 +29,7 @@
         home.packages = [
           (pkgs.writeShellScriptBin "wsl-open" ''
             # explorer.exe reports a spurious non-zero exit even on success.
-            /mnt/c/Windows/explorer.exe "$1" 2>/dev/null
+            ${host.windows.root}/Windows/explorer.exe "$1" 2>/dev/null
             exit 0
           '')
         ];
