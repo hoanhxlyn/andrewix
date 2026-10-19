@@ -1,12 +1,23 @@
-let
-  dns = ["1.1.1.1" "1.0.0.1" "8.8.8.8" "8.8.4.4"];
-in {
+{
   core.hardware.network.nixos = {
-    networking = {
-      nameservers = dns;
-      networkmanager.enable = true;
-      firewall.checkReversePath = "loose";
+    networking.networkmanager = {
+      enable = true;
+      ensureProfiles.profiles.default = {
+        connection = {
+          id = "Wired (default)";
+          type = "ethernet";
+        };
+        ipv4 = {
+          method = "auto";
+          ignore-auto-dns = true;
+          dns = "1.1.1.1;1.0.0.1;8.8.8.8;8.8.4.4;";
+        };
+        ipv6 = {
+          method = "auto";
+          ignore-auto-dns = true;
+        };
+      };
     };
-    hardware.bluetooth.enable = true;
+    networking.firewall.checkReversePath = "loose";
   };
 }
