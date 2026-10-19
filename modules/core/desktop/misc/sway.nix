@@ -1,4 +1,4 @@
-{self, ...}: {
+{
   core.desktop.misc.sway = {host, ...}: let
     isLaptop = host.isLaptop or false;
   in {
@@ -6,13 +6,8 @@
     homeManager = {
       pkgs,
       lib,
-      config,
       ...
     }: let
-      blurredBackground = import "${self}/modules/_lib/blurred-image.nix" {
-        inherit pkgs;
-        image = config.stylix.image;
-      };
       lockCmd = "${pkgs.swaylock-effects}/bin/swaylock -f";
       display = status:
         if status == "off"
@@ -30,8 +25,8 @@
         settings = {
           indicator-idle-visible = true;
           show-failed-attempts = false;
-          image = lib.mkForce "${blurredBackground}";
           fade-in = 0.5;
+          effect-blur = "7x5";
           clock = true;
           grace = 10;
         };
