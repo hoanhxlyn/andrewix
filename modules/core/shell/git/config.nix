@@ -1,10 +1,9 @@
 {
-  core.git.config.homeManager = {
+  core.git.config.homeManager = {user, ...}: {
     programs.git = {
       enable = true;
       settings = {
-        user.email = "hoanhxlyn@gmail.com";
-        user.name = "Andrew Nguyen";
+        user = {inherit (user.git) name email;};
         init.defaultBranch = "main";
         fetch.prune = true;
         fetch.pruneTags = true;
