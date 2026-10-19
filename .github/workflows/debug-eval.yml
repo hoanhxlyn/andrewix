@@ -25,7 +25,9 @@ jobs:
       - if: matrix.installer == 'cachix'
         uses: cachix/install-nix-action@448cde739abec1eaf0646249e3d25bb8d9bc7702 # v31
       - run: nix --version
-      - run: nix flake metadata --json | jq '.locks.nodes | {nixpkgs: .nixpkgs.locked, den: .den.locked}'
+      - name: Locked nixpkgs and den
+        run: |
+          nix flake metadata --json | jq '.locks.nodes | {nixpkgs: .nixpkgs.locked, den: .den.locked}'
       - name: Eval with trace
         run: |
           nix eval --show-trace --raw \
