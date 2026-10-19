@@ -803,6 +803,7 @@
         "ponytail": "ponytail",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
+        "tokyonight-wallpapers": "tokyonight-wallpapers",
         "waycalix": "waycalix",
         "zen-browser": "zen-browser"
       }
@@ -989,6 +990,26 @@
       "original": {
         "owner": "tinted-theming",
         "repo": "base16-zed",
+        "type": "github"
+      }
+    },
+    "tokyonight-wallpapers": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792411779,
+        "narHash": "sha256-1yi9e2jLQTESx8XVJzHXl5Hb9aJ0j/S6N8hGZQOY94c=",
+        "owner": "hoanhxlyn",
+        "repo": "tokyonight-wallpapers",
+        "rev": "708fd1cbbc24cdd93ffc0ac541305a18578e38aa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hoanhxlyn",
+        "repo": "tokyonight-wallpapers",
         "type": "github"
       }
     },

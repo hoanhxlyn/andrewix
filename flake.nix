@@ -75,6 +75,10 @@
       url = "github:adomixaszvers/stylix/merged-rofi-settings-font";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    tokyonight-wallpapers = {
+      url = "github:hoanhxlyn/tokyonight-wallpapers";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     waycalix.url = "github:hoanhxlyn/waycalix";
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";

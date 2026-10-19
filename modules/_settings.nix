@@ -59,15 +59,16 @@
   };
   # Look & feel (pure data; packages stay in modules/core/services/sync/stylix.nix).
   appearance = {
-    scheme = "gruvbox-dark-hard"; # base16-schemes name
+    scheme = "tokyodark"; # base16-schemes name
     polarity = "dark"; # light | dark
     font.size = 12; # pt; terminal/applications/desktop derive from it
     opacity = 0.8; # 1.0 = opaque; <1 enables blur/transparent bg
     wallpaper = {
       # local (config/background/<path>) | gruvbox (AngelJumbo/gruvbox-wallpapers, <path> in repo)
+      # | tokyonight (hoanhxlyn/tokyonight-wallpapers, <filename> in repo root)
       # | remote ({url, hash} instead of path)
-      source = "gruvbox";
-      path = "wallpapers/brands/gruvbox-nix.png";
+      source = "tokyonight";
+      path = "neon-city.png";
       scaling = "center"; # fill | center | stretch | fit
     };
     toast = {

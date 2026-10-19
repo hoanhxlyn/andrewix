@@ -1,6 +1,6 @@
 local current_theme = {
-  bg = "#282828",
-  fg = "#d5c4a1",
+  bg = "#11121d",
+  fg = "#a0a8cd",
 }
 
 require("mini.hues").setup({

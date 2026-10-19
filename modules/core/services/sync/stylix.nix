@@ -13,6 +13,10 @@
     url = "github:AngelJumbo/gruvbox-wallpapers";
     inputs.nixpkgs.follows = "nixpkgs";
   };
+  flake-file.inputs.tokyonight-wallpapers = {
+    url = "github:hoanhxlyn/tokyonight-wallpapers";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
   core.services.sync.stylix = {host, ...}: let
     inherit (host) appearance;
   in {
@@ -78,6 +82,7 @@
           {
             local = "${self}/config/background/${bg.path or ""}";
             gruvbox = "${inputs.gruvbox-wallpapers}/${bg.path or ""}";
+            tokyonight = "${inputs.tokyonight-wallpapers}/${bg.path or ""}";
             remote = pkgs.fetchurl {inherit (bg) url hash;};
           }
           .${
