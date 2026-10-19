@@ -36,10 +36,10 @@
       sops = {
         defaultSopsFile = "${self}/secrets/secrets.yaml";
         defaultSopsFormat = "yaml";
-        age = {
-          inherit keyFile;
-          generateKey = true;
-        };
+        # generateKey stays off on purpose: a fresh machine would get a random
+        # key that decrypts nothing. The installer drops the real shared key
+        # from secrets/keys.age (see install.fish).
+        age = {inherit keyFile;};
         secrets = {
           CONTEXT7_API_KEY.path = secrets "CONTEXT7_API_KEY";
           BRAVE_API_KEY.path = secrets "BRAVE_API_KEY";

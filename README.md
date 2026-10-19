@@ -32,8 +32,14 @@ Only the three physical hosts are installable. Disks are partitioned declarative
    ~/andrewix/install.fish
    ```
 
-1. Reboot and log in as `andrew` with the password the installer asked for.
-1. Copy the shared age key to `~/.config/sops-nix/keys.txt` so secrets decrypt.
+1. Reboot and log in as `andrew` with the password the installer asked for. Secrets are already
+   decrypted: the installer unpacks the shared age key (`secrets/keys.age`, passphrase-encrypted in
+   the repo) into `~/.config/sops-nix/keys.txt` before the reboot. Skipped that step?
+
+   ```bash
+   age -d ~/andrewix/secrets/keys.age > ~/.config/sops-nix/keys.txt \
+     && chmod 600 ~/.config/sops-nix/keys.txt
+   ```
 
 ### Adding a device
 

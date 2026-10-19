@@ -1,0 +1,33 @@
+name: Feature request
+description: New aspect, module, tool or behaviour you want in the config.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+      description: What are you trying to do, and on which host?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What should it look like? e.g. "add a `core.<name>` aspect".
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: NixOS module
+        - label: Home Manager config
+        - label: Host fact (modules/_lib/facts.nix)
+        - label: Dev shell / Justfile
+        - label: Non-Nix config (config/<tool>/)
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Anything you tried or rejected, and why.
