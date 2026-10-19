@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Resolve every flake input from the lock file; fail if it would need an update.
+  NIX_CONFIG: |
+    accept-flake-config = false
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
+      - name: alejandra
+        run: nix develop -c alejandra --check .
+      - name: statix
+        run: nix develop -c statix check
+      - name: deadnix
+        run: nix develop -c deadnix --no-underscore --fail
+
+  flake-sync:
+    # flake.nix is generated; fail if it drifted from the aspects' flake-file.inputs.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
+      - run: nix run .#write-flake
+      - run: nix develop -c alejandra flake.nix
+      - run: git diff --exit-code flake.nix
+
+  flake-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
+      - run: nix flake check --no-build
+
+  eval:
+    # Pure evaluation of each host (module errors, assertions); nothing is built.
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        host:
+          - asus-vivo14
+          - asus-rog-gl552vx
+          - msi-gf63
+          - home-pc
+          - home-wsl
+          - work-wsl
+          - iso
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
+      - name: Evaluate toplevel
+        run: |
+          nix eval --raw \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel.drvPath"
