@@ -1,4 +1,8 @@
-{__findFile, inputs, ...}: {
+{
+  __findFile,
+  inputs,
+  ...
+}: {
   den.aspects = {
     wsl = {host, ...}: {
       includes = [

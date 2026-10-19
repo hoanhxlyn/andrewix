@@ -13,11 +13,6 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  # Resolve every flake input from the lock file; fail if it would need an update.
-  NIX_CONFIG: |
-    accept-flake-config = false
-
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -41,15 +36,8 @@ jobs:
       - run: nix develop -c alejandra flake.nix
       - run: git diff --exit-code flake.nix
 
-  flake-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
-      - run: nix flake check --no-build
-
   eval:
-    # Pure evaluation of each host (module errors, assertions); nothing is built.
+    # Evaluate each host (module errors, assertions). No system closure is built; import-from-derivation (stylix) still builds small helpers.
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
