@@ -75,8 +75,8 @@ rollback:
 search *args:
   fish --no-config scripts/search.fish {{ args }}
 
-# Pick a base16 scheme with fzf, copy name on enter
+# Pick a base16 scheme with fzf (arg pre-fills the search), copy name on enter
 [group('info')]
-schemes:
-  fish --no-config scripts/schemes.fish
+schemes *args:
+  fish --no-config scripts/schemes.fish {{ args }}
 
