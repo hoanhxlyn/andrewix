@@ -10,7 +10,7 @@
     user,
     ...
   }: let
-    efi = {
+    ESP = {
       priority = 1;
       size = "512M";
       type = "EF00";
@@ -103,7 +103,7 @@
             content = {
               type = "gpt";
               partitions = {
-                ESP = efi;
+                inherit ESP;
                 swap = swap host.storage.swap;
                 root = root {
                   format = "xfs";
@@ -121,7 +121,7 @@
             content = {
               type = "gpt";
               partitions = {
-                ESP = efi;
+                inherit ESP;
                 swap = swap host.storage.swap;
                 root = root {
                   format = "xfs";
@@ -146,7 +146,7 @@
             content = {
               type = "gpt";
               partitions = {
-                ESP = efi;
+                inherit ESP;
                 swap = swap host.storage.swap;
                 root = root {
                   format = "xfs";
