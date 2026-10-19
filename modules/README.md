@@ -17,7 +17,7 @@ Non-Nix app configs (JSON, YAML, scripts, images) do not belong here. They live 
 | `iso.nix`           | Installer ISO                                                        |
 | `_settings.nix`     | Shared host settings, path-imported and not auto-discovered          |
 | `core/`             | All aspects, NixOS and Home Manager together                         |
-| `devices/`          | Variant aspects: `workstation.nix`, `server.nix`, `wsl.nix`           |
+| `devices/`          | Variant aspects: `workstation.nix`, `homelab.nix`, `wsl.nix`         |
 | `_lib/`             | Helpers, path-imported and not auto-discovered                       |
 
 `_lib/` contains:
@@ -25,14 +25,14 @@ Non-Nix app configs (JSON, YAML, scripts, images) do not belong here. They live 
 | File               | Purpose                                                            |
 | ------------------ | ------------------------------------------------------------------ |
 | `mk-host.nix`      | `mkHost`: builds one host from settings, facts and monitors        |
-| `facts.nix`        | The single definition of host facts                                |
-| `blurred-image.nix`| Blurred wallpaper helper                                           |
+| `host-facts.nix`   | The single definition of host facts                                |
+| `user-facts.nix`   | The single definition of per-user (profile) facts                  |
 
 ## How a host is built
 
 1. `hosts.nix` calls `mkHost` once per host with that host's facts and monitors.
 2. `mkHost` starts from `_settings.nix`, applies the host's overrides, and rejects fact names
-   that `_lib/facts.nix` does not know.
+   that `_lib/host-facts.nix` does not know.
 3. The result is the `host` attrset. Any aspect can read it as `{host, ...}`.
 4. Each host gets a variant, chosen from the facts and never from the hostname: `workstation` for
    physical machines, `wsl` for WSL. The variant includes the aspects under `core/`.
@@ -42,7 +42,7 @@ Non-Nix app configs (JSON, YAML, scripts, images) do not belong here. They live 
 - **Settings** (`_settings.nix`) are shared preferences, grouped like a desktop Settings app:
   `appearance`, `input`, `accessibility`, `defaults`, `locale`, `terminal`, `login`. A host may
   override any section, and sections merge key by key.
-- **Facts** (`_lib/facts.nix`) describe the machine: `formFactor`, `gpu`, `bootLoader`, `storage`,
+- **Facts** (`_lib/host-facts.nix`) describe the machine: `chassis`, `gpu`, `bootLoader`, `storage`,
   `chargeThreshold`, `enableGaming`, and so on. They are typed through `schema.nix`.
 
 Settings are pure data. Anything that needs `pkgs`, such as fonts, cursor and icon packages, stays
@@ -74,7 +74,7 @@ With both NixOS and Home Manager parts and an include:
 ```
 
 To use a new aspect, add it to a group under `core/`, or include it from `devices/workstation.nix`,
-`devices/server.nix` or `devices/wsl.nix`.
+`devices/homelab.nix` or `devices/wsl.nix`.
 
 Run `git add` on the new file before building. Flakes only see files tracked by git, and an
 untracked aspect fails with `Namespace 'core' has no aspect '<name>'`.

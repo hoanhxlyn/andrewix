@@ -1,5 +1,5 @@
 # Shared host settings (DE-style sections). Per-host overrides go through mkHost; hardware facts
-# live in facts.nix.
+# live in host-facts.nix.
 {
   terminal = {
     padding = 2;
@@ -18,8 +18,24 @@
     terminal = "kitty";
     shell = "fish";
   };
-  profiles.andrew = {};
+  # Per-user data, exposed to aspects as `user.<key>`; typed in modules/schema.nix.
+  profiles.andrew = {
+    displayName = "Andrew Nguyen";
+    git = {
+      name = "Andrew Nguyen";
+      email = "hoanhxlyn@gmail.com";
+    };
+  };
   login = "ly";
+  # WSL only: where Windows lives as seen from the distro. mkHost derives `host.windows.*` paths.
+  windows = {
+    mountRoot = "/mnt"; # wsl.conf automount root
+    drive = "c";
+    tools = {
+      gitCredentialManager = "scoop/root/apps/git/current/mingw64/bin/git-credential-manager.exe";
+      win32yank = "scoop/root/apps/win32yank/current/win32yank.exe";
+    };
+  };
   input = {
     keyboard = {
       layout = "us";

@@ -14,11 +14,18 @@
       lib,
       ...
     }: let
-      hybrid = lib.elem "intel" (host.gpu or []);
-      prime = host.nvidiaPrime or null;
+      gpus = host.gpu or [];
+      nvidiaGpu = lib.findFirst (g: g.vendor == "nvidia") null gpus;
+      intelGpu = lib.findFirst (g: g.vendor == "intel" && g.kind == "integrated") null gpus;
+      hybrid = nvidiaGpu != null && intelGpu != null;
+      prime = lib.optionalAttrs (hybrid && nvidiaGpu.busId != null && intelGpu.busId != null) {
+        intelBusId = intelGpu.busId;
+        nvidiaBusId = nvidiaGpu.busId;
+      };
+      primeReady = prime != {};
     in {
-      warnings = lib.optional (hybrid && prime == null) ''
-        ${host.name or "host"}: hybrid Intel+NVIDIA but `nvidiaPrime` bus IDs are unset in
+      warnings = lib.optional (hybrid && !primeReady) ''
+        ${host.name or "host"}: hybrid Intel+NVIDIA but a `gpu` entry has no `busId` in
         modules/hosts.nix; PRIME offload is disabled until they are filled in.
       '';
 
@@ -52,13 +59,13 @@
           powerManagement.finegrained = false;
           modesetting.enable = true;
           nvidiaPersistenced = true;
-          prime = lib.mkIf (hybrid && prime != null) {
-            offload = {
-              enable = true;
-              enableOffloadCmd = true; # adds `nvidia-offload`
-            };
-            inherit (prime) intelBusId nvidiaBusId;
-          };
+          prime = lib.mkIf primeReady ({
+              offload = {
+                enable = true;
+                enableOffloadCmd = true; # adds `nvidia-offload`
+              };
+            }
+            // prime);
         };
       };
     };
