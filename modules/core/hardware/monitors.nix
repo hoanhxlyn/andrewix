@@ -3,10 +3,15 @@
     nixos = {pkgs, ...}: {
       environment.systemPackages = with pkgs; [
         lm_sensors
-        hddtemp
+        smartmontools
       ];
     };
-    homeManager = {lib, ...}: {
+    homeManager = {
+      lib,
+      pkgs,
+      ...
+    }: {
+      home.packages = [pkgs.duf];
       programs.btop = {
         enable = true;
         settings = {
