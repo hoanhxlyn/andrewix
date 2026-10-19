@@ -78,7 +78,7 @@ are `assertions` in `modules/core/hardware/default.nix`:
 | `enableGaming`    | include `<core.gaming>`                                                          |
 
 Aspects are chosen from facts, **never from a hostname**: hardware aspects in `modules/core/hardware/default.nix`
-(`power-manager`, `intel-vaapi`, `nvidia`), gaming in `modules/devices/workstation.nix`. The variant per host is
+(`power-manager`, `intel-gpu`, `nvidia`), gaming in `modules/devices/workstation.nix`. The variant per host is
 generated in `hosts.nix` via `provides.to-users`.
 
 **Adding a device:** add one `mkHost` entry in `hosts.nix` with its facts and monitors (keyed by connector name), and

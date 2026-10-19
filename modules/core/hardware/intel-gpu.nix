@@ -1,5 +1,5 @@
 {
-  core.hardware.intel-vaapi = {
+  core.hardware.intel-gpu = {
     nixos = {pkgs, ...}: {
       hardware.graphics = {
         enable = true;
