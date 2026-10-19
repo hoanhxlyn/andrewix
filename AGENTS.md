@@ -49,37 +49,36 @@ NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto
 | ----------------------- | ------------------------------------------------- |
 | `modules/core/`         | All aspects (NixOS + Home Manager)                |
 | `modules/hosts.nix`     | Host definitions (6 hosts) + host→variant wiring  |
-| `modules/schema.nix`    | Host facts → `den.schema.host` (`_lib/facts.nix`) |
-| `modules/devices/`      | Variant aspects (`workstation`, `server`, `wsl`)  |
+| `modules/schema.nix`    | Host facts → `den.schema.host` (`_lib/host-facts.nix`) |
+| `modules/devices/`      | Variant aspects (`workstation`, `homelab`, `wsl`)  |
 | `modules/defaults.nix`  | Default includes + dev shell                      |
 | `modules/dendritic.nix` | Framework bootstrapping                           |
 | `modules/_settings.nix` | Shared host settings (path-imported by `mkHost`)  |
-| `modules/_lib/`         | Host builder (`mk-host.nix`, `facts.nix`)         |
+| `modules/_lib/`         | Host builder (`mk-host.nix`, `host-facts.nix`)    |
 | `secrets/`              | sops-nix encrypted secrets                        |
 | `config/`               | Non-Nix app configs (symlinked into `~/.config`)  |
 | `flake.nix`             | **Auto-generated. DO NOT EDIT.**                  |
 
 Host builder: `mkHost` in `modules/_lib/mk-host.nix` composes `_settings.nix` with per-host data and the
-workstation/server/wsl variant. Layout translates flat monitor attrs into niri's nested shape and sets the variant flag
-(`server.enable` for servers, `wsl.enable` for WSL hosts).
+workstation/homelab/wsl variant. Layout translates flat monitor attrs into niri's nested shape and sets the variant flag
+(`homelab.enable` for homelab hosts, `wsl.enable` for WSL hosts).
 
-**Host facts** (set in `modules/hosts.nix`). The single definition is `modules/_lib/facts.nix`; `modules/schema.nix`
+**Host facts** (set in `modules/hosts.nix`). The single definition is `modules/_lib/host-facts.nix`; `modules/schema.nix`
 feeds it to `den.schema.host` (types, defaults), `mkHost` rejects unknown fact names against it, and cross-fact checks
 are `assertions` in `modules/core/hardware/default.nix`:
 
 | Fact              | Values / meaning                                                                 |
 | ----------------- | -------------------------------------------------------------------------------- |
-| `formFactor`      | `desktop` (default) \| `laptop`; derives `host.isLaptop`                         |
+| `chassis`         | `desktop` (default) \| `laptop`; derives `host.isLaptop`                         |
 | `cpu`             | `intel` (default) \| `amd`; kvm module + microcode in `core.hardware.bootable`   |
-| `gpu`             | list of `intel` \| `nvidia`; both = hybrid                                       |
-| `nvidiaPrime`     | `{intelBusId, nvidiaBusId}`; hybrid only; `null` = PRIME off + build warning     |
+| `gpu`             | list of `{vendor = intel \| nvidia; kind = integrated \| discrete; busId ? null}`; integrated Intel + NVIDIA = hybrid. `busId` is the PRIME form `PCI:bus@domain:dev:fn` |
 | `bootLoader`      | `systemd-boot` (default) \| `grub` \| `limine`                                       |
 | `storage`         | `{layout = "single" \| "multi" \| "dual"; swap = "24G";}`; `multi` = nixos/works/entertainment, `dual` = root + data disk |
-| `chargeThreshold` | `{start, stop, msiEc}` battery limits (laptop only); `null` = unmanaged           |
+| `chargeThreshold` | `{start, stop, msiEc}` battery limits; laptops default to 70/80, others `null` = unmanaged |
 | `enableGaming`    | include `<core.gaming>`                                                          |
 
 Aspects are chosen from facts, **never from a hostname**: hardware aspects in `modules/core/hardware/default.nix`
-(`power-manager`, `intel-vaapi`, `nvidia`), gaming in `modules/devices/workstation.nix`. The variant per host is
+(`power-manager`, `intel-gpu`, `nvidia`), gaming in `modules/devices/workstation.nix`. The variant per host is
 generated in `hosts.nix` via `provides.to-users`.
 
 **Adding a device:** add one `mkHost` entry in `hosts.nix` with its facts and monitors (keyed by connector name), and
@@ -177,12 +176,12 @@ nix run .#write-flake    # rewrites flake.nix
   gone; hardware boot bits (initrd `vmd`/`ahci`/`nvme`, kvm, microcode) live in `modules/core/hardware/bootable.nix`,
   shared by the Intel workstations; the loader comes from the `bootLoader` fact. Target disks are picked at install time
   by `install.fish`, so the `/dev/nvme0n1` in `disko.nix` is only a default.
-- **Hybrid GPU (`msi-gf63`, GTX 1650 Mobile):** `nvidiaPrime` bus IDs are filled in from `lspci -D -d ::03xx` (see
+- **Hybrid GPU (`msi-gf63`, GTX 1650 Mobile):** the `gpu` entries' `busId`s are filled in from `lspci -D -d ::03xx` (see
   `hosts.nix`); a hybrid host without them gets PRIME off and a build warning. niri runs on the Intel iGPU; games use the
   nvidia dGPU via PRIME offload (`nvidia-offload <cmd>`, e.g. as a Steam launch option). PRIME sync is X11-only and is
   not used. Verify connector names with `niri msg outputs`; HDMI ports wired to the nvidia GPU may behave differently.
-- **Charge limit:** `core.hardware.power-manager` sets TLP thresholds and the asus_wmi workaround only when the host
-  declares `chargeThreshold` (X1405VA, `asus-vivo14`). Hosts whose firmware is missing from the in-tree msi-ec
+- **Charge limit:** `core.hardware.power-manager` sets TLP thresholds and the asus_wmi workaround for any laptop
+  (default 70/80; `asus-vivo14` and the others override it) unless the host sets `chargeThreshold = null`. Hosts whose firmware is missing from the in-tree msi-ec
   allowlist (GF63 Thin 10SC, `msi-gf63`) set `msiEc = true`: the aspect then pulls the out-of-tree
   `boot.kernelPackages.msi-ec` and writes the threshold to `BAT1/charge_control_end_threshold`.
 - **First-boot password:** the installer (`install.fish`) prompts for it and sets it with `nixos-enter` before you
@@ -191,12 +190,9 @@ nix run .#write-flake    # rewrites flake.nix
   password — check with `sudo passwd -S andrew` and run `passwd` if it shows `P`.
 - **WSL PATH:** `modules/devices/wsl.nix` disables WSL interop `$PATH` because Windows PATH lives on a slow 9P/DrvFs
   mount. Invoke `.exe`s by absolute path; `wsl-open` wrapper handles explorer.exe's spurious non-zero exit.
-- **Secrets:** only on `asus-vivo14` / `asus-rog-gl552vx` / `home-pc`. The shared age key lives
-  passphrase-encrypted as `secrets/keys.age` (no Drive round-trip); `install.fish` decrypts it to
-  `~/.config/sops-nix/keys.txt` at install, elsewhere run
-  `age -d secrets/keys.age > ~/.config/sops-nix/keys.txt && chmod 600 ~/.config/sops-nix/keys.txt`.
-  Edit via `sops secrets/secrets.yaml`; declare new secrets in `modules/core/services/sync/sops.nix`
-  under `sops.secrets`.
+- **Secrets:** the sops aspect is included on every workstation (via `<core.services>`), homelab and WSL host. Decrypt
+  with the shared age key at `~/.config/sops-nix/keys.txt`, which must be present on each host. Edit via `sops secrets/secrets.yaml`; declare new secrets in
+  `modules/core/services/sync/sops.nix` under `sops.secrets`.
 - **GC is manual:** there is no `nix.gc` timer; run `just gc` (wipe old system generations + store gc, needs sudo).
 
 ## Dev shell

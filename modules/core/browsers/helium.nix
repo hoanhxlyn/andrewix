@@ -35,6 +35,7 @@
     homeManager = {
       pkgs,
       lib,
+      user,
       ...
     }: {
       home.activation.heliumPreferences = lib.hm.dag.entryAfter ["writeBoundary"] ''
@@ -70,7 +71,7 @@
               "selected_languages": "en-US,en,ja"
             },
             "profile": {
-              "name": "Andrew Nguyen",
+              "name": ${builtins.toJSON user.displayName},
               "using_default_name": false,
               "avatar_index": 26,
               "using_custom_avatar": true,

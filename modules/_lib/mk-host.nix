@@ -1,11 +1,11 @@
 # Host builder: composes shared settings with per-host data and the
-# workstation/server/wsl variant. Returns the `host` attrset consumed across
+# workstation/homelab/wsl variant. Returns the `host` attrset consumed across
 # modules/core/**.
 #
-# Hardware facts (formFactor, gpu, bootLoader, storage, ...) pass through
+# Hardware facts (chassis, gpu, bootLoader, storage, ...) pass through
 # untouched; den types and defaults them via `den.schema.host`
 # (modules/schema.nix), and their names are checked here against the same
-# definition (facts.nix).
+# definition (host-facts.nix).
 {lib, ...}: let
   settings = import ../_settings.nix;
   layoutMonitors = monitors:
@@ -31,16 +31,17 @@
       baseOutput // position // extraKeys)
     monitors;
   # attrNames never forces the option values, so `config` is not needed here.
-  knownFacts = builtins.attrNames (import ./facts.nix {
+  knownFacts = builtins.attrNames (import ./host-facts.nix {
     inherit lib;
     config = null;
   });
   own = [
     "is-workstation"
-    "is-server"
+    "is-homelab"
     "profiles"
     "monitors"
     "windowsName"
+    "windows"
     "login"
     "defaults"
     "input"
@@ -52,10 +53,11 @@
 in
   {
     is-workstation ? true,
-    is-server ? false,
+    is-homelab ? false,
     profiles ? null,
     monitors ? {},
     windowsName ? null,
+    windows ? {},
     login ? settings.login,
     defaults ? {},
     input ? {},
@@ -76,16 +78,28 @@ in
       {wsl.enable = true;}
       (
         if windowsName != null
-        then {inherit windowsName;}
+        then {
+          inherit windowsName;
+          windows = let
+            cfg = lib.recursiveUpdate settings.windows windows;
+            root = "${cfg.mountRoot}/${cfg.drive}";
+            home = "${root}/Users/${windowsName}";
+          in {
+            inherit root home;
+            tools = builtins.mapAttrs (_: rel: "${home}/${rel}") cfg.tools;
+          };
+        }
         else {}
       );
-    server = {server.enable = true;};
-    effectiveProfiles =
+    homelab = {homelab.enable = true;};
+    # a host overrides only the keys it names (e.g. profiles.andrew.git.email)
+    effectiveProfiles = lib.recursiveUpdate settings.profiles (
       if profiles == null
-      then settings.profiles
-      else profiles;
+      then {}
+      else profiles
+    );
     withSettings =
-      (builtins.removeAttrs settings ["profiles"])
+      (builtins.removeAttrs settings ["profiles" "windows"])
       // {
         users = effectiveProfiles;
         inherit login;
@@ -99,13 +113,13 @@ in
       };
   in
     assert lib.assertMsg (unknown == []) "mkHost: unknown host fact(s): ${toString unknown}";
-    assert lib.assertMsg (is-server || is-workstation || windowsName != null) "mkHost: WSL host needs windowsName";
-    assert lib.assertMsg (!(is-server || is-workstation) || windowsName == null) "mkHost: windowsName is WSL-only";
+    assert lib.assertMsg (is-homelab || is-workstation || windowsName != null) "mkHost: WSL host needs windowsName";
+    assert lib.assertMsg (!(is-homelab || is-workstation) || windowsName == null) "mkHost: windowsName is WSL-only";
       lib.recursiveUpdate withSettings (
         facts
         // (
-          if is-server
-          then server
+          if is-homelab
+          then homelab
           else if is-workstation
           then workstation
           else wsl

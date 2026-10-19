@@ -3,10 +3,13 @@
   lib,
   ...
 }: {
-  core.hardware = {host, ...}: {
+  core.hardware = {host, ...}: let
+    hasGpuVendor = vendor: lib.any (g: g.vendor == vendor) host.gpu;
+  in {
     includes =
       [
         <core.hardware.bootable>
+        <core.hardware.bluetooth>
         <core.hardware.monitors>
         <core.hardware.disko>
         <core.hardware.firmware>
@@ -18,19 +21,15 @@
       ]
       # Selected from host facts (see modules/_lib), never from the hostname.
       ++ lib.optional host.isLaptop <core.hardware.power-manager>
-      ++ lib.optional (lib.elem "intel" host.gpu) <core.hardware.intel-vaapi>
-      ++ lib.optional (lib.elem "nvidia" host.gpu) <core.hardware.nvidia>;
+      ++ lib.optional (hasGpuVendor "intel") <core.hardware.intel-gpu>
+      ++ lib.optional (hasGpuVendor "nvidia") <core.hardware.nvidia>;
 
     # Cross-fact checks the schema types cannot express; the aspects they guard
     # would otherwise silently ignore the fact.
     nixos.assertions = [
       {
-        assertion = host.nvidiaPrime == null || lib.elem "nvidia" host.gpu;
-        message = "nvidiaPrime is set but gpu does not contain \"nvidia\".";
-      }
-      {
         assertion = host.chargeThreshold == null || host.isLaptop;
-        message = "chargeThreshold requires formFactor = \"laptop\".";
+        message = "chargeThreshold requires chassis = \"laptop\".";
       }
     ];
   };

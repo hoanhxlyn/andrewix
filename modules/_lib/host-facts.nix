@@ -12,32 +12,39 @@
       default = null;
     };
 in {
-  formFactor = mkOption {
+  chassis = mkOption {
     type = types.enum ["desktop" "laptop"];
     default = "desktop";
   };
-  # Derived from formFactor; read by the battery/lid/backlight bits of the UI.
+  # Derived from chassis; read by the battery/lid/backlight bits of the UI.
   isLaptop = mkOption {
     type = types.bool;
     readOnly = true;
-    default = config.formFactor == "laptop";
+    default = config.chassis == "laptop";
   };
   # CPU vendor, drives kvm module and microcode in core.hardware.bootable.
   cpu = mkOption {
     type = types.enum ["intel" "amd"];
     default = "intel";
   };
-  gpu = mkOption {
-    type = types.listOf (types.enum ["intel" "nvidia"]);
-    default = [];
-  };
-  # Hybrid Intel+NVIDIA only; null leaves PRIME off (and warns).
-  nvidiaPrime = nullable (types.submodule {
-    options = {
-      intelBusId = mkOption {type = types.str;};
-      nvidiaBusId = mkOption {type = types.str;};
+  # One entry per GPU, given as a single entry or a list; always read as a list. `kind` tells an
+  # iGPU from a dGPU, so Intel iGPU + Intel Arc is expressible. `busId` is the NixOS PRIME form
+  # (`PCI:bus@domain:dev:fn`, decimal, from `lspci -D -d ::03xx`); only needed for hybrid offload.
+  # An integrated Intel plus a discrete NVIDIA entry makes the host hybrid (see core.hardware.nvidia).
+  gpu = let
+    entry = types.submodule {
+      options = {
+        vendor = mkOption {type = types.enum ["intel" "nvidia"];};
+        kind = mkOption {type = types.enum ["integrated" "discrete"];};
+        busId = nullable types.str;
+      };
     };
-  });
+  in
+    mkOption {
+      # `coercedTo` rejects a submodule as its source type, so match any attrset instead.
+      type = types.coercedTo types.attrs lib.singleton (types.listOf entry);
+      default = [];
+    };
   bootLoader = mkOption {
     type = types.enum ["systemd-boot" "grub" "limine"];
     default = "systemd-boot";
@@ -59,29 +66,44 @@ in {
       };
     };
   };
-  # Battery charge limits in %; null = unmanaged. Only used by laptops.
+  # Battery charge limits in %. Laptops default to stopping at 80% (start = stop - 10, the
+  # step msi-ec derives); desktops and homelab hosts have no battery, so null = unmanaged. A laptop
+  # opts out with `chargeThreshold = null`.
   # `stop` is the level charging tops out at. Hosts whose EC needs the
   # out-of-tree msi-ec driver (its in-tree allowlist lacks the firmware) set
   # `msiEc = true`; the driver exposes the standard charge_control sysfs and
   # only honours 60 / 80 / 100, deriving start from stop - 10.
-  chargeThreshold = nullable (types.submodule {
-    options = {
-      start = mkOption {type = types.ints.between 0 100;};
-      stop = mkOption {type = types.ints.between 0 100;};
-      msiEc = mkOption {
-        type = types.bool;
-        default = false;
+  chargeThreshold = mkOption {
+    type = types.nullOr (types.submodule {
+      options = {
+        start = mkOption {
+          type = types.ints.between 0 100;
+          default = 70;
+        };
+        stop = mkOption {
+          type = types.ints.between 0 100;
+          default = 80;
+        };
+        msiEc = mkOption {
+          type = types.bool;
+          default = false;
+        };
       };
-    };
-  });
+    });
+    # `{}` takes the field defaults above, so a host can set just `msiEc = true`.
+    default =
+      if config.chassis == "laptop"
+      then {}
+      else null;
+  };
   # Laptop panel refresh throttling per TLP power profile, keyed by connector.
-  # `performance` uses the monitor's declared refresh-rate, so only the throttled
-  # profiles are listed. Empty = refresh does not follow the profile.
+  # `performance` uses the monitor's declared refresh-rate, and so does any profile left
+  # null, so list only the profiles that throttle. Empty = refresh does not follow the profile.
   refreshThrottle = mkOption {
     type = types.attrsOf (types.submodule {
       options = {
-        balanced = mkOption {type = types.number;};
-        power-saver = mkOption {type = types.number;};
+        balanced = nullable types.number;
+        power-saver = nullable types.number;
       };
     });
     default = {};

@@ -29,7 +29,6 @@
         wl-screenrec
         xwayland-satellite
         networkmanagerapplet
-        bluetui
         record-screen
       ];
       programs.niri = {
