@@ -1,5 +1,5 @@
 {__findFile, ...}: {
-  den.aspects.server = {
+  den.aspects.homelab = {
     includes = [
       <core.hardware>
       # Stylix is a dependency of the aspects below (bootable sets
@@ -17,7 +17,14 @@
       <core.terminals>
     ];
 
-    # Headless: SSH is the way in.
-    nixos.services.openssh.enable = true;
+    # Headless: SSH is the way in, but only over the tailnet. The default firewall rule
+    # for port 22 is off, so LAN and WAN interfaces never see sshd.
+    nixos = {config, ...}: {
+      services.openssh = {
+        enable = true;
+        openFirewall = false;
+      };
+      networking.firewall.interfaces.${config.services.tailscale.interfaceName}.allowedTCPPorts = [22];
+    };
   };
 }
