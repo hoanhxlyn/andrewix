@@ -41,7 +41,8 @@ in {
     };
   in
     mkOption {
-      type = types.coercedTo entry lib.singleton (types.listOf entry);
+      # `coercedTo` rejects a submodule as its source type, so match any attrset instead.
+      type = types.coercedTo types.attrs lib.singleton (types.listOf entry);
       default = [];
     };
   bootLoader = mkOption {
