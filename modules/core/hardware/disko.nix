@@ -33,7 +33,7 @@
     root = {
       format,
       mountpoint,
-      mountOptions ? [],
+      mountOptions ? ["defaults"],
     }: {
       priority = 3;
       size = "100%";
@@ -61,7 +61,7 @@
     dataDisk = {
       format,
       mountpoint,
-      mountOptions ? [],
+      mountOptions ? ["defaults"],
     }: {
       type = "disk";
       device = "/dev/nvme0n1"; # placeholder, overwritten by install.fish's generated config
