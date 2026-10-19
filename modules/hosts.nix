@@ -94,7 +94,6 @@
         kind = "discrete";
       };
       bootLoader = "limine";
-      defaults.terminal = "rio";
       storage = {
         layout = "multi";
         swap = "32G";
