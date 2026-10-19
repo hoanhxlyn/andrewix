@@ -1,0 +1,52 @@
+name: Bug report
+description: Something broke — build failure, misbehaving service, wrong hardware behaviour.
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: host
+    attributes:
+      label: Host
+      description: Which host from modules/hosts.nix is affected?
+      options:
+        - asus-vivo14
+        - asus-rog-gl552vx
+        - msi-gf63
+        - home-pc
+        - home-wsl
+        - work-wsl
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Commit
+      description: Short hash or branch where it happens (`git rev-parse --short HEAD`).
+    validations:
+      required: true
+  - type: textarea
+    id: what-broke
+    attributes:
+      label: What broke
+      description: What happened instead of what you wanted?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+      description: What should have happened?
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Steps to trigger it.
+      placeholder: |
+        1. just build msi-gf63
+        2. just switch msi-gf63
+        3. ...
+  - type: textarea
+    id: output
+    attributes:
+      label: Build/test output
+      description: Paste the `just build <host>` / `just test <host>` error, `journalctl -b` lines, etc.
+      render: shell
