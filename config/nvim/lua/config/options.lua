@@ -5,6 +5,17 @@ vim.o.relativenumber = true
 vim.o.mouse = "a"
 vim.o.showmode = false
 vim.o.clipboard = "unnamedplus"
+-- WSL: no Wayland compositor, so bridge to the Windows clipboard via
+-- win32yank (path exported by modules/core/editor/nwm.nix).
+if vim.env.WSL_DISTRO_NAME and vim.env.WIN32YANK then
+  local y = vim.env.WIN32YANK
+  vim.g.clipboard = {
+    name = "win32yank-wsl",
+    copy = { ["+"] = y .. " -i --crlf", ["*"] = y .. " -i --crlf" },
+    paste = { ["+"] = y .. " -o --lf", ["*"] = y .. " -o --lf" },
+    cache_enabled = 0,
+  }
+end
 vim.o.shell = os.getenv("SHELL") or "bash"
 vim.o.smartcase = true
 vim.o.smartindent = true

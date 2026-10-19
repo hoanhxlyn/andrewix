@@ -189,7 +189,7 @@ nix run .#write-flake    # rewrites flake.nix
   reboot; no default password ships in the repo. A known `admin123` survives only inside `virtualisation.vmVariant`
   (`modules/core/hardware/disko.nix`) for `just vm`. Machines installed before this still hold the old bootstrap
   password — check with `sudo passwd -S andrew` and run `passwd` if it shows `P`.
-- **WSL PATH:** `modules/devices/wsl.nix:20` disables WSL interop `$PATH` because Windows PATH lives on a slow 9P/DrvFs
+- **WSL PATH:** `modules/devices/wsl.nix` disables WSL interop `$PATH` because Windows PATH lives on a slow 9P/DrvFs
   mount. Invoke `.exe`s by absolute path; `wsl-open` wrapper handles explorer.exe's spurious non-zero exit.
 - **Secrets:** only on `asus-vivo14` / `asus-rog-gl552vx` / `home-pc`. Decrypt with the shared age key
   at `~/.config/sops-nix/keys.txt` on each host. Edit via `sops secrets/secrets.yaml`; declare new secrets in
