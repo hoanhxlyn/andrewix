@@ -172,5 +172,27 @@ if not sudo nixos-enter --root $target -c "passwd $login_user"
     exit 1
 end
 
+# ========= Shared age key ============
+# secrets/keys.age is the shared age key, passphrase-encrypted in the repo, so a
+# fresh install needs no Drive round-trip. It must be in place before first boot
+# or sops activation cannot decrypt. Interactive on purpose, like the passwd
+# step: the spinner gives the child no tty.
+gum style --foreground $accent --bold "Decrypt the shared age key for secrets:"
+set -l keyfile (mktemp)
+age -d "$CLONE_DIR/secrets/keys.age" >"$keyfile"; or begin
+    rm -f "$keyfile"
+    gum style --foreground $danger --bold "ERROR: no age key installed. Secrets will NOT decrypt."
+    gum style --italic "Recovery: age -d ~/andrewix/secrets/keys.age > ~/.config/sops-nix/keys.txt"
+    exit 1
+end
+sudo install -D -m 600 \
+    -o (stat -c %u /mnt/home/$login_user) -g (stat -c %g /mnt/home/$login_user) \
+    "$keyfile" /mnt/home/$login_user/.config/sops-nix/keys.txt; or begin
+    rm -f "$keyfile"
+    gum style --foreground $danger --bold "ERROR: could not install the age key."
+    exit 1
+end
+rm -f "$keyfile"
+
 # =================
 gum style --foreground $success --bold "Done. Reboot and log in as '$login_user' with the password you just set."

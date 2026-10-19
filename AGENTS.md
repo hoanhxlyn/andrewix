@@ -191,9 +191,12 @@ nix run .#write-flake    # rewrites flake.nix
   password — check with `sudo passwd -S andrew` and run `passwd` if it shows `P`.
 - **WSL PATH:** `modules/devices/wsl.nix` disables WSL interop `$PATH` because Windows PATH lives on a slow 9P/DrvFs
   mount. Invoke `.exe`s by absolute path; `wsl-open` wrapper handles explorer.exe's spurious non-zero exit.
-- **Secrets:** only on `asus-vivo14` / `asus-rog-gl552vx` / `home-pc`. Decrypt with the shared age key
-  at `~/.config/sops-nix/keys.txt` on each host. Edit via `sops secrets/secrets.yaml`; declare new secrets in
-  `modules/core/services/sync/sops.nix` under `sops.secrets`.
+- **Secrets:** only on `asus-vivo14` / `asus-rog-gl552vx` / `home-pc`. The shared age key lives
+  passphrase-encrypted as `secrets/keys.age` (no Drive round-trip); `install.fish` decrypts it to
+  `~/.config/sops-nix/keys.txt` at install, elsewhere run
+  `age -d secrets/keys.age > ~/.config/sops-nix/keys.txt && chmod 600 ~/.config/sops-nix/keys.txt`.
+  Edit via `sops secrets/secrets.yaml`; declare new secrets in `modules/core/services/sync/sops.nix`
+  under `sops.secrets`.
 - **GC is manual:** there is no `nix.gc` timer; run `just gc` (wipe old system generations + store gc, needs sudo).
 
 ## Dev shell
