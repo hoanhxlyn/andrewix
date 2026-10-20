@@ -10,7 +10,7 @@
         ipv4 = {
           method = "auto";
           ignore-auto-dns = true;
-          dns = "1.1.1.1;1.0.0.1;8.8.8.8;8.8.4.4;";
+          dns = "8.8.8.8, 8.8.4.4, 1.1.1.1, 1.0.0.1";
         };
         ipv6 = {
           method = "auto";
