@@ -149,18 +149,19 @@
 
           layout = {
             gaps = 10;
-            center-focused-column = "never";
+            center-focused-column = "always";
             default-column-width = {proportion = 0.7;};
             preset-column-widths = [
               {proportion = 0.7;}
               {proportion = 0.5;}
+              {proportion = 0.3;}
             ];
             focus-ring = {
-              enable = true;
+              enable = false;
               width = 3;
             };
             border = {
-              enable = false;
+              enable = true;
               width = 3;
             };
           };
@@ -424,6 +425,18 @@
                   app-id = "helium";
                   title = "Picture-in-Picture";
                 }
+              ];
+              open-floating = true;
+            }
+            # Small modal dialogs: float centered so the tiling column doesn't resize them
+            {
+              matches = [
+                {
+                  app-id = "^org\\.keepassxc\\.KeePassXC$";
+                  title = "KeePassXC - Passkey credentials";
+                }
+                {app-id = "org\\.fcitx\\.fcitx5-config-qt";}
+                {app-id = "nm-connection-editor";}
               ];
               open-floating = true;
             }

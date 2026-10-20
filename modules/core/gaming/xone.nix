@@ -6,7 +6,7 @@
       ])
     ];
     nixos = {
-      hardware.xone.enable = true;
+      hardware.xone.enable = false;
       services.udev.extraRules = ''
         SUBSYSTEM=="input", ENV{ID_INPUT_JOYSTICK}=="?*", TAG="uaccess"
         KERNEL=="js[0-9]*", TAG="uaccess"
