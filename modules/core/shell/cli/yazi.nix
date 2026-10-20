@@ -1,4 +1,5 @@
 {
+  __findFile,
   inputs,
   self,
   ...
@@ -10,6 +11,9 @@
     };
   };
   core.cli.yazi = {host, ...}: {
+    # free _7zz ships without the RAR decoder (unRAR license); yazi's extract is 7zz-only
+    # uasm: unfree Open-Watcom assembler that enableUnfree's asm build needs
+    includes = [(<den.batteries.unfree> ["7zz" "uasm"])];
     nixos = {
       pkgs,
       lib,
@@ -23,6 +27,9 @@
 
     homeManager = {pkgs, ...}: let
       plug = pkgs.yaziPlugins;
+      yazi-rar = pkgs.yazi.override {
+        _7zz = pkgs._7zz.override {enableUnfree = true;};
+      };
       # omp.yazi isn't packaged in nixpkgs → build from flake input
       omp = plug.mkYaziPlugin {
         pname = "omp.yazi";
@@ -70,6 +77,7 @@
       '';
       programs.yazi = {
         enable = true;
+        package = yazi-rar;
         settings.mgr = {
           show_hidden = true;
           # sort_by = "mtime";
