@@ -164,7 +164,7 @@ nix run .#write-flake    # rewrites flake.nix
 4. **User: `andrew`, system: `x86_64-linux`.**
 5. **No unit tests** — validate via `just build` + `just test <host>`.
 6. **Tools installed via Nix** (`modules/core/`) — no pre-commit hooks.
-7. **Research unfamiliar NixOS/HM options** with `context7` + `websearch` before guessing.
+7. **Never rely on memory.** Verify every factual claim (options, flags, config keys) before asserting it, using the combo: `deepwiki` (source-level) + `context7` (docs) + web search (`exa`). Cross-check between them — they contradict each other; raw source (`curl` + `grep` the exact packaged rev) beats any summary.
 8. **No system Python** — machine has no `python`/`python3`. Run Python via `uv run` (e.g. `uv run python script.py`,
    `uv run --with <pkg> ...`).
 
