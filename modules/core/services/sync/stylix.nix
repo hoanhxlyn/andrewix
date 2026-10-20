@@ -1,4 +1,5 @@
 {
+  lib,
   inputs,
   self,
   ...
@@ -38,20 +39,17 @@
           name = "Capitaine Cursors - White";
           size = host.accessibility.cursorSize;
         };
-        fonts = {
+        fonts = let
+          # appearance.font.<role>.pkg is a pkgs attribute path; a bad path fails at eval.
+          mkFont = f: {
+            package = lib.getAttrFromPath (lib.splitString "." f.pkg) pkgs;
+            inherit (f) name;
+          };
+        in {
           serif = config.stylix.fonts.sansSerif;
-          sansSerif = {
-            package = pkgs.noto-fonts;
-            name = "Noto Sans";
-          };
-          monospace = {
-            package = pkgs.nerd-fonts.caskaydia-cove;
-            name = "CaskaydiaCove Nerd Font";
-          };
-          emoji = {
-            package = pkgs.noto-fonts-color-emoji;
-            name = "Noto Color Emoji";
-          };
+          sansSerif = mkFont appearance.font.sans;
+          monospace = mkFont appearance.font.mono;
+          emoji = mkFont appearance.font.emoji;
           sizes = {
             applications = appearance.font.size + 1;
             terminal = appearance.font.size;

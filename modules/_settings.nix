@@ -61,7 +61,22 @@
   appearance = {
     scheme = "tokyodark"; # base16-schemes name
     polarity = "dark"; # light | dark
-    font.size = 12; # pt; terminal/applications/desktop derive from it
+    font = {
+      size = 12; # pt; terminal/applications/desktop derive from it
+      # pkg = attribute path into pkgs (resolved in stylix.nix); name = family the pkg provides.
+      mono = {
+        pkg = "nerd-fonts.caskaydia-cove";
+        name = "CaskaydiaCove Nerd Font";
+      };
+      sans = {
+        pkg = "noto-fonts";
+        name = "Noto Sans";
+      };
+      emoji = {
+        pkg = "noto-fonts-color-emoji";
+        name = "Noto Color Emoji";
+      };
+    };
     opacity = 0.8; # 1.0 = opaque; <1 enables blur/transparent bg
     wallpaper = {
       # local (config/background/<path>) | gruvbox (AngelJumbo/gruvbox-wallpapers, <path> in repo)
