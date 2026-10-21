@@ -6,6 +6,7 @@
   den.aspects.workstation.includes = [
     <core.hardware>
     <core.services>
+    <core.services.gradient-client>
     <core.locale>
     <core.git>
     <core.agents>

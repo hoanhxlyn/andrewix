@@ -8,7 +8,7 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
   core.services.sync.sops = {
-    # System-level secrets, for NixOS services (atticd, tailscaled).
+    # System-level secrets, for NixOS services (gradient, tailscaled).
     nixos = {user, ...}: {
       imports = [
         inputs.sops-nix.nixosModules.sops
@@ -20,8 +20,12 @@
         # must be present before sops-nix runs or these services fail to start.
         age.keyFile = "/home/${user.userName}/.config/sops-nix/keys.txt";
         secrets = {
-          ATTIC_SERVER_TOKEN_HS256_SECRET_BASE64 = {};
           TAILSCALE_AUTH_KEY = {};
+          GRADIENT_SECRETS_JWT = {};
+          GRADIENT_SECRETS_CRYPT = {};
+          GRADIENT_CACHE_SIGNING_KEY = {};
+          GRADIENT_PROJECT_SSH_KEY = {};
+          GRADIENT_USER_PASSWORD_HASH = {};
         };
       };
     };
