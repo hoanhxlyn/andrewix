@@ -5,3 +5,5 @@ result
 /.*code/*
 !/.*code/skills
 !/.*code/taste
+node_modules/
+dist/
