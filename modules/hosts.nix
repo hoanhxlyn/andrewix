@@ -88,6 +88,7 @@
       };
     };
     home-pc = mkHost {
+      defaults.terminal = "rio";
       cpu = "amd";
       gpu = {
         vendor = "nvidia";
