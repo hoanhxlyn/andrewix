@@ -435,7 +435,7 @@
                   app-id = "^org\\.keepassxc\\.KeePassXC$";
                   title = "KeePassXC - Passkey credentials";
                 }
-                {app-id = "org\\.fcitx\\.fcitx5-config-qt";}
+                {app-id = "^org\\.fcitx\\.$";}
                 {app-id = "nm-connection-editor";}
               ];
               open-floating = true;
