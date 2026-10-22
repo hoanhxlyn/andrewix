@@ -10,14 +10,13 @@ export const layout = style([
     position: "relative",
     height: "100%",
     flexDirection: "column",
-    borderRadius: 0,
-    "@media": {
-      [breakpoints.medium]: {
-        flexDirection: "row",
-        borderRadius: vars.shape.medium,
-      },
-    },
+    "@media": { [breakpoints.medium]: { flexDirection: "row" } },
   }),
+  // Unlayered to beat the recipe's sprinkled radius; the card chrome only floats on desktop.
+  {
+    borderRadius: 0,
+    "@media": { [breakpoints.medium]: { borderRadius: vars.shape.medium } },
+  },
 ]);
 
 /** Tree sidebar beside the source pane when it is shown; on compact it overlays the source. */
