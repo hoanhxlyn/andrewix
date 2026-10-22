@@ -14,6 +14,13 @@
     }: {
       imports = [inputs.gradient.nixosModules.default];
 
+      # Gradient's prebuilt packages (Rust server): substitute instead of
+      # compiling, same pattern as niri/herdr caches.
+      nix.settings = {
+        extra-substituters = ["https://public.gradient.ci/cache/main"];
+        extra-trusted-public-keys = ["public.gradient.ci-main:qmxRE+saUvhNa3jqaCMWje+feVU77TjABchZrPGf7A8="];
+      };
+
       services.gradient = {
         enable = true;
         # Tailnet-only: bare MagicDNS name resolved through the tailnet's search

@@ -20,6 +20,9 @@
     # Headless: SSH is the way in, but only over the tailnet. The default firewall rule
     # for port 22 is off, so LAN and WAN interfaces never see sshd.
     nixos = {config, ...}: {
+      # Register with the tailnet as "andrewix": the clients' substituter URL
+      # (core.services.gradient-client) hardcodes http://andrewix:1998.
+      services.tailscale.extraUpFlags = ["--hostname=andrewix"];
       services.openssh = {
         enable = true;
         openFirewall = false;
