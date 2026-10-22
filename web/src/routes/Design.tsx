@@ -1,11 +1,11 @@
+import { sprinkles } from "@/styles/sprinkles.css";
+import { vars } from "@/styles/tokens.css";
+import { Button, type ButtonVariants } from "@/ui/Button";
+import { Card, type CardVariants } from "@/ui/Card";
+import { Diagram } from "@/ui/Diagram";
+import { Grid } from "@/ui/Grid";
+import { ThemeScope } from "@/ui/ThemeScope";
 import AddIcon from "~icons/material-symbols/add-rounded";
-import { sprinkles } from "../styles/sprinkles.css";
-import { vars } from "../styles/tokens.css";
-import { Button, type ButtonVariants } from "../ui/Button";
-import { Card, type CardVariants } from "../ui/Card";
-import { Diagram } from "../ui/Diagram";
-import { Grid } from "../ui/Grid";
-import { ThemeScope } from "../ui/ThemeScope";
 import * as s from "./Design.css";
 import example from "./example.mmd";
 
@@ -13,12 +13,10 @@ function keysOf<T extends object>(obj: T) {
   return Object.keys(obj) as (keyof T & string)[];
 }
 
-const buttonVariants: NonNullable<ButtonVariants["variant"]>[] = [
-  "filled",
-  "tonal",
-  "outlined",
-  "text",
-];
+const buttonVariants: Exclude<
+  NonNullable<ButtonVariants["variant"]>,
+  "icon"
+>[] = ["filled", "tonal", "outlined", "text"];
 const cardVariants: NonNullable<CardVariants["variant"]>[] = [
   "elevated",
   "outlined",
@@ -66,13 +64,11 @@ function Components() {
       </div>
       <div className={row}>
         {buttonVariants.map((variant) => (
-          <Button key={variant} variant={variant} disabled>
+          <Button key={variant} variant={variant} isDisabled>
             Disabled
           </Button>
         ))}
-        <Button variant="icon" aria-label="Add" title="Add" onClick={() => {}}>
-          <AddIcon />
-        </Button>
+        <Button variant="icon" icon={<AddIcon />} aria-label="Add" />
       </div>
       <div className={row}>
         {cardVariants.map((variant) => (

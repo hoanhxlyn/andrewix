@@ -1,9 +1,9 @@
 import { globalStyle } from "@vanilla-extract/css";
 import { type RecipeVariants, recipe } from "@vanilla-extract/recipes";
-import { inComponents } from "../../styles/layers.css";
-import { sprinkles } from "../../styles/sprinkles.css";
-import { text, vars } from "../../styles/tokens.css";
-import { stateLayer } from "../shared/stateLayer.css";
+import { inComponents } from "@/styles/layers.css";
+import { sprinkles } from "@/styles/sprinkles.css";
+import { text, vars } from "@/styles/tokens.css";
+import { stateLayer } from "@/ui/shared/stateLayer.css";
 
 const onSurfaceAt = (amount: string) =>
   `color-mix(in srgb, ${vars.color.onSurface} calc(${amount} * 100%), transparent)`;
@@ -30,7 +30,7 @@ export const button = recipe({
       border: `${vars.border.outline} solid transparent`,
       cursor: "pointer",
       selectors: {
-        "&:disabled": { cursor: "not-allowed", color: disabledContent },
+        "&[data-disabled]": { cursor: "not-allowed", color: disabledContent },
       },
     }),
   ],
@@ -39,18 +39,18 @@ export const button = recipe({
       filled: inComponents({
         background: vars.color.primary,
         color: vars.color.onPrimary,
-        selectors: { "&:disabled": { background: disabledContainer } },
+        selectors: { "&[data-disabled]": { background: disabledContainer } },
       }),
       tonal: inComponents({
         background: vars.color.primaryContainer,
         color: vars.color.onPrimaryContainer,
-        selectors: { "&:disabled": { background: disabledContainer } },
+        selectors: { "&[data-disabled]": { background: disabledContainer } },
       }),
       outlined: inComponents({
         background: "transparent",
         color: vars.color.primary,
         borderColor: vars.color.outline,
-        selectors: { "&:disabled": { borderColor: disabledContainer } },
+        selectors: { "&[data-disabled]": { borderColor: disabledContainer } },
       }),
       text: inComponents({
         background: "transparent",

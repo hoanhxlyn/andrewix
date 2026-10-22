@@ -1,4 +1,4 @@
-import { sprinkles } from "../../styles/sprinkles.css";
+import { sprinkles } from "@/styles/sprinkles.css";
 
 /** Container that displays its contents in a chosen theme. */
 export const scope = sprinkles({

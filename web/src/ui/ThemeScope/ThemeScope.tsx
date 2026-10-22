@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef } from "react";
-import type { ThemeMode } from "../../atoms/theme";
+import type { ThemeMode } from "@/atoms/theme";
 import * as s from "./ThemeScope.css";
 
 interface ThemeScopeProps

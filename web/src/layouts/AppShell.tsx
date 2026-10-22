@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router";
-import { ThemeToggle } from "../ui/ThemeToggle";
+import { ThemeToggle } from "@/ui/ThemeToggle";
 import * as s from "./AppShell.css";
 
 export default function AppShell() {

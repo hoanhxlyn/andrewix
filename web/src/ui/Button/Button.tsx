@@ -1,12 +1,32 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { cloneElement, type ReactElement, type ReactNode } from "react";
+import {
+  Button as AriaButton,
+  type ButtonProps as AriaButtonProps,
+} from "react-aria-components/Button";
 import { type ButtonVariants, button } from "./Button.css";
 
-interface ButtonProps
-  extends ButtonVariants,
-    Omit<ComponentPropsWithoutRef<"button">, "className"> {
-  /** Optional leading icon, an inline SVG that inherits the button's color. */
-  icon?: ReactNode;
+type Variant = NonNullable<ButtonVariants["variant"]>;
+type Icon = ReactElement<{ "aria-hidden"?: boolean }>;
+
+interface BaseProps extends Omit<AriaButtonProps, "className" | "children"> {
+  /** Decorative inline SVG that inherits the button's color. Hidden from assistive tech. */
+  icon?: Icon;
 }
+
+interface LabelledProps extends BaseProps {
+  variant?: Exclude<Variant, "icon">;
+  children: ReactNode;
+}
+
+/** An icon-only button has no text, so it must carry an accessible name. */
+interface IconOnlyProps extends BaseProps {
+  variant: "icon";
+  icon: Icon;
+  "aria-label": string;
+  children?: never;
+}
+
+type ButtonProps = LabelledProps | IconOnlyProps;
 
 export function Button({
   variant,
@@ -16,9 +36,9 @@ export function Button({
   ...rest
 }: ButtonProps) {
   return (
-    <button type={type} className={button({ variant })} {...rest}>
-      {icon}
+    <AriaButton type={type} className={button({ variant })} {...rest}>
+      {icon && cloneElement(icon, { "aria-hidden": true })}
       {children}
-    </button>
+    </AriaButton>
   );
 }

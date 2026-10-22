@@ -6,6 +6,7 @@ import Icons from "unplugin-icons/vite";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  resolve: { tsconfigPaths: true },
   plugins: [
     reactRouter(),
     vanillaExtractPlugin(),

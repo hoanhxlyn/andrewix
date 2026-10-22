@@ -31,7 +31,7 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 - `styles/global.css.ts`: applies the themes (`createGlobalTheme` on `:root[data-theme=...]` and nested `[data-theme=...]`, so a subtree can force a theme), the per-breakpoint layout variables, element defaults, and the `--ondine-*` mapping.
 - `styles/layers.css.ts`: cascade order `base` < `components` < `utilities`, plus the `inBase` and `inComponents` wrappers. Sprinkles are the `utilities` layer, so they beat component rules. Unlayered CSS beats every layer; `routes/*.css.ts` are intentionally unlayered.
 - `styles/sprinkles.css.ts`: the utility allowlist. Only the listed properties and values exist, and values come from tokens. To use a property in `sprinkles({...})`, add it here first.
-- `ui/`: reusable primitives, one folder per component (`ui/Button/` holds `Button.tsx`, `Button.css.ts` and an `index.ts` that is the public entry, imported as `../ui/Button`). Recipes (`Button`, `Card`) compose sprinkles in `base` and `variants`. `ui/shared/` holds styles used by several components, such as `stateLayer.css.ts` (hover, focus, pressed feedback and focus ring).
+- `ui/`: reusable primitives, one folder per component (`ui/Button/` holds `Button.tsx`, `Button.css.ts` and an `index.ts` that is the public entry, imported as `../ui/Button`). Recipes (`Button`, `Card`) compose sprinkles in `base` and `variants`. `ui/shared/` holds styles used by several components, such as `stateLayer.css.ts` (hover, focus, pressed feedback and focus ring). Interactive primitives wrap React Aria Components (import from `react-aria-components/<Name>`) for behavior and accessibility; style their states with the `data-hovered`, `data-pressed`, `data-focus-visible` and `data-disabled` attributes, not `:hover` or `:disabled`, and pass the recipe class through `className`. React Aria props replace the native ones (`onPress`, `isDisabled`).
 - `layouts/`: app-specific layout routes (`AppShell`) with their `.css.ts`.
 
 **Build constraint:** a `.css.ts` file imported at run time by a `.tsx` file cannot export functions. The build fails with "Invalid exports" or "Invalid function serialization params". Export plain objects, class strings, recipes or sprinkles results. Helper functions are fine when only other `.css.ts` files import them.
@@ -47,6 +47,7 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 - Use tokens for every size, color and duration; no magic numbers and no `null` placeholder contracts.
 - Do not use `dangerouslySetInnerHTML`.
 - Every exported style class (`style`, recipe or sprinkles result in a `.css.ts` file) gets a JSDoc comment. It describes only what the class is for, never its styling (colors, sizes, variants), since those change.
+- Import across folders with the `@/` alias for `src/` (`@/styles/tokens.css`, `@/ui/Button`), set in `tsconfig.json` `paths` and enabled in Vite with `resolve.tsconfigPaths`. Use `./` only for files in the same folder.
 - Biome is the formatter and linter: double quotes, 2-space indent, organized imports.
 - Ask before structural decisions such as new folders or how to split a module.
 

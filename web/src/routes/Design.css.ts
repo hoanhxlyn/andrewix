@@ -1,6 +1,6 @@
 import { style, styleVariants } from "@vanilla-extract/css";
-import { sprinkles } from "../styles/sprinkles.css";
-import { text, vars } from "../styles/tokens.css";
+import { sprinkles } from "@/styles/sprinkles.css";
+import { text, vars } from "@/styles/tokens.css";
 
 /** Section heading in the design catalog. */
 export const heading = style([text.title, { margin: 0 }]);

@@ -1,7 +1,7 @@
 import { style } from "@vanilla-extract/css";
-import { inComponents } from "../styles/layers.css";
-import { sprinkles } from "../styles/sprinkles.css";
-import { text, vars } from "../styles/tokens.css";
+import { inComponents } from "@/styles/layers.css";
+import { sprinkles } from "@/styles/sprinkles.css";
+import { text, vars } from "@/styles/tokens.css";
 
 /** Page frame holding the app bar and the content. */
 export const shell = style([

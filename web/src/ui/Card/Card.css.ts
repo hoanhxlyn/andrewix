@@ -1,7 +1,7 @@
 import { type RecipeVariants, recipe } from "@vanilla-extract/recipes";
-import { inComponents } from "../../styles/layers.css";
-import { sprinkles } from "../../styles/sprinkles.css";
-import { text } from "../../styles/tokens.css";
+import { inComponents } from "@/styles/layers.css";
+import { sprinkles } from "@/styles/sprinkles.css";
+import { text } from "@/styles/tokens.css";
 
 /** Card container for grouped content. */
 export const card = recipe({
