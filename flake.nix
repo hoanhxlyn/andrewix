@@ -18,6 +18,10 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+    gradient = {
+      url = "github:wavelens/gradient";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     gruvbox-wallpapers = {
       url = "github:AngelJumbo/gruvbox-wallpapers";
       inputs.nixpkgs.follows = "nixpkgs";

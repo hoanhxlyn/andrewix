@@ -46,6 +46,10 @@
           }
         ];
         nix.settings.experimental-features = ["nix-command" "flakes"];
+        # Gradient's prebuilt server packages, so `install.fish` substitutes
+        # instead of compiling Rust on the live ISO.
+        nix.settings.extra-substituters = ["https://public.gradient.ci/cache/main"];
+        nix.settings.extra-trusted-public-keys = ["public.gradient.ci-main:qmxRE+saUvhNa3jqaCMWje+feVU77TjABchZrPGf7A8="];
         # The ISO is a plain nixosSystem, outside den, so <den.batteries.unfree>
         # from core.editor.nwm does not reach it. scope.nvim is the unfree plugin
         # the baked-in nvim wrapper pulls in.
