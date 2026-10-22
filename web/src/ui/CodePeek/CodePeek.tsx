@@ -4,7 +4,7 @@ import {
   createHighlighter,
   type Highlighter,
 } from "shiki";
-import { isTextFile, languageOf, loadSource } from "@/helper/config-files";
+import { isTextFile, languageOf, sourceOf } from "@/helper/config-files";
 import * as s from "./CodePeek.css";
 
 /** Grammars the pane can highlight. Shiki builds them once on first use. */
@@ -38,6 +38,8 @@ interface Token {
 
 interface Line {
   readonly id: number;
+  /** Displayed line number, counting from 1. */
+  readonly number: number;
   readonly tokens: readonly Token[];
 }
 
@@ -48,8 +50,10 @@ function withIds(
   >,
 ): Line[] {
   let id = 0;
+  let number = 0;
   return rows.map((row) => ({
     id: id++,
+    number: ++number,
     tokens: row.map((token) => ({ ...token, id: id++ })),
   }));
 }
@@ -76,8 +80,8 @@ export function CodePeek({ path, className }: CodePeekProps) {
       setMessage("Not a text file.");
       return;
     }
-    const load = loadSource(path);
-    if (!load) {
+    const code = sourceOf(path);
+    if (code === null) {
       setLines(null);
       setMessage("Not a file of the config.");
       return;
@@ -85,20 +89,18 @@ export function CodePeek({ path, className }: CodePeekProps) {
     let active = true;
     setLines(null);
     setMessage("Loading…");
-    load()
-      .then(async (code) => {
-        const lang = languageOf(path);
-        const rows = lang
-          ? (await highlighter()).codeToTokens(code, {
-              lang: lang as BundledLanguage,
-              themes: THEMES,
-            }).tokens
-          : code.split("\n").map((row) => [{ content: row }]);
-        if (active) setLines(withIds(rows));
-      })
-      .catch(() => {
-        if (active) setMessage("Could not load this file.");
-      });
+    void (async () => {
+      const lang = languageOf(path);
+      const rows = lang
+        ? (await highlighter()).codeToTokens(code, {
+            lang: lang as BundledLanguage,
+            themes: THEMES,
+          }).tokens
+        : code.split("\n").map((row) => [{ content: row }]);
+      if (active) setLines(withIds(rows));
+    })().catch(() => {
+      if (active) setMessage("Could not load this file.");
+    });
     return () => {
       active = false;
     };
@@ -111,6 +113,9 @@ export function CodePeek({ path, className }: CodePeekProps) {
         {lines ? (
           lines.map((line) => (
             <div key={line.id}>
+              <span className={s.num} data-num>
+                {line.number}
+              </span>
               {line.tokens.map((token) => (
                 <span key={token.id} style={token.htmlStyle}>
                   {token.content}

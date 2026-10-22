@@ -1,6 +1,6 @@
-import { type Dirent, readdirSync } from "node:fs";
+import { type Dirent, readdirSync, readFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
-import { filter, map, pipe, sortBy } from "remeda";
+import { map, pipe } from "remeda";
 import type { Plugin } from "vite";
 import type { FolderNode } from "@/ui/FolderTree";
 
@@ -13,16 +13,28 @@ const RESOLVED_ID = `\0${VIRTUAL_ID}`;
 /** Folders of the repository root that are scanned. */
 const SCANNED = ["modules", "config"];
 
+/** Extensions whose files the peek pane shows. */
+const TEXT = new Set([
+  "fish",
+  "json",
+  "lua",
+  "md",
+  "nix",
+  "sh",
+  "toml",
+  "yaml",
+  "yml",
+]);
+
 /** Folders first, then files, each by name. Hidden entries are skipped. */
 function visibleEntries(path: string): Dirent[] {
-  return pipe(
-    readdirSync(path, { withFileTypes: true }),
-    filter((entry) => !entry.name.startsWith(".")),
-    sortBy(
-      (entry) => (entry.isDirectory() ? 0 : 1),
-      (entry) => entry.name,
-    ),
-  );
+  return readdirSync(path, { withFileTypes: true })
+    .filter((entry) => !entry.name.startsWith("."))
+    .sort(
+      (a, b) =>
+        Number(a.isDirectory()) - Number(b.isDirectory()) ||
+        a.name.localeCompare(b.name, "en", { numeric: true }),
+    );
 }
 
 function folder(name: string, children: Node[]): Folder {
@@ -42,6 +54,23 @@ function scan(path: string, name: string): Folder {
       ),
     ),
   );
+}
+
+/** Raw text of every text file under the scanned folders, keyed by repository path. */
+function sourcesOf(root: string): Record<string, string> {
+  const sources: Record<string, string> = {};
+  const walk = (dir: string, prefix: string): void => {
+    for (const entry of visibleEntries(dir)) {
+      const path = `${prefix}/${entry.name}`;
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) walk(full, path);
+      else if (TEXT.has(entry.name.split(".").pop()?.toLowerCase() ?? "")) {
+        sources[path] = readFileSync(full, "utf8");
+      }
+    }
+  };
+  for (const name of SCANNED) walk(join(root, name), name);
+  return sources;
 }
 
 /**
@@ -65,7 +94,10 @@ export function repoTree(): Plugin {
         basename(root),
         SCANNED.map((name) => scan(join(root, name), name)),
       );
-      return `export default ${JSON.stringify(tree)}`;
+      return [
+        `export const tree = ${JSON.stringify(tree)};`,
+        `export const sources = ${JSON.stringify(sourcesOf(root))};`,
+      ].join("\n");
     },
     configureServer(server) {
       const folders = SCANNED.map((name) => join(root, name));

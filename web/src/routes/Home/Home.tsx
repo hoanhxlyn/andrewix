@@ -1,20 +1,66 @@
-import { Link } from "react-router";
-import { APP_NAME } from "@/constants";
-import { button } from "@/ui/Button";
+import { tree } from "virtual:repo-tree";
+import { parseAsBoolean, parseAsString, useQueryStates } from "nuqs";
+import { breakpoints } from "@/styles/tokens.css";
+import { Button } from "@/ui/Button";
+import { Card } from "@/ui/Card";
+import { CodePeek } from "@/ui/CodePeek";
+import { FolderTree } from "@/ui/FolderTree";
+import { SearchField } from "@/ui/SearchField";
+import ExpandIcon from "~icons/mdi/menu";
+import CollapseIcon from "~icons/mdi/menu-open";
 import * as s from "./Home.css";
 
-/** Landing banner introducing the app and leading to the map. */
+/** The repository config as a sidebar tree beside the source of the selected file. */
 export default function Home() {
+  // `file` and `search` share the page through the URL; `tree` is the sidebar toggle.
+  const [{ file, search, tree: treeShown }, setParams] = useQueryStates({
+    file: parseAsString,
+    search: parseAsString,
+    tree: parseAsBoolean.withDefault(true),
+  });
+
   return (
-    <section className={s.hero}>
-      <h1 className={s.heroTitle}>{APP_NAME}</h1>
-      <p className={s.heroTagline}>
-        The NixOS modules and app configs of this repository, drawn from its
-        folders.
-      </p>
-      <Link to="/map" className={button({ variant: "filled" })}>
-        Open the map
-      </Link>
-    </section>
+    <Card variant="elevated" className={s.layout}>
+      <aside className={treeShown ? s.pane : s.rail}>
+        <div className={s.bar}>
+          <Button
+            variant="icon"
+            icon={treeShown ? <CollapseIcon /> : <ExpandIcon />}
+            aria-label={treeShown ? "Hide the tree" : "Show the tree"}
+            aria-expanded={treeShown}
+            onPress={() => setParams({ tree: !treeShown })}
+          />
+          {treeShown && (
+            <SearchField
+              className={s.search}
+              value={search ?? ""}
+              onChange={(value) =>
+                setParams({ search: value || null }, { history: "replace" })
+              }
+              placeholder="Search files"
+            />
+          )}
+        </div>
+        {treeShown && (
+          <div className={s.scroller}>
+            <FolderTree
+              tree={tree}
+              selected={file}
+              query={search ?? ""}
+              onSelect={(path) =>
+                setParams({
+                  file: path,
+                  // A picked file hides the overlay drawer on compact; desktop keeps the sidebar.
+                  tree: window.matchMedia(breakpoints.medium).matches
+                    ? treeShown
+                    : false,
+                })
+              }
+            />
+          </div>
+        )}
+      </aside>
+      <CodePeek className={s.peek} path={file} />
+    </Card>
   );
 }

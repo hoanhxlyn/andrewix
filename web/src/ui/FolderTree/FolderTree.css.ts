@@ -1,71 +1,67 @@
-import { createVar, style } from "@vanilla-extract/css";
-import { inComponents } from "@/styles/layers.css";
-import { vars } from "@/styles/tokens.css";
+import { globalStyle, style } from "@vanilla-extract/css";
+import { inComponents, stateLayer } from "@/styles/layers.css";
+import { sprinkles } from "@/styles/sprinkles.css";
+import { text, vars } from "@/styles/tokens.css";
 
-/** Horizontal distance between a node and its children, filled by the connector lines. */
-const connector = createVar();
+/** Tree of the repository's files and folders. */
+export const tree = style(inComponents({ margin: 0, padding: 0 }));
 
-const line = `${vars.border.outline} solid ${vars.color.outline}`;
-
-/** Top-level list of the tree. Holds the connector size for every branch below it. */
-export const tree = style(
+/** One row: indent, chevron, type icon and name. Composes the state feedback. */
+export const item = style([
+  stateLayer,
   inComponents({
-    vars: { [connector]: vars.space.xl },
-    margin: 0,
-    padding: 0,
-    listStyle: "none",
+    minHeight: vars.size.control,
+    paddingBlock: 0,
+    paddingInlineEnd: vars.space.sm,
+    // Rows are flattened siblings; React Aria sets --tree-item-level on each one.
+    paddingInlineStart: `calc((var(--tree-item-level) - 1) * ${vars.size.icon} + ${vars.space.sm})`,
+    borderRadius: vars.shape.small,
+    color: vars.color.onSurface,
+    cursor: "pointer",
+    selectors: {
+      "&[data-selected]": {
+        background: vars.color.primaryContainer,
+        color: vars.color.onPrimaryContainer,
+      },
+    },
+  }),
+]);
+
+/** Contents of a row: chevron, type icon and name, laid out in one line. */
+export const row = style([
+  sprinkles({ display: "flex", alignItems: "center", gap: "sm" }),
+  inComponents({
+    width: "100%",
+    minWidth: 0,
+    minHeight: vars.size.control,
     whiteSpace: "nowrap",
   }),
+]);
+
+/** Spacer where the chevron sits on folder rows, keeping file icons aligned. */
+export const spacer = style(
+  inComponents({ width: vars.size.icon, flexShrink: 0 }),
 );
 
-/** Children of a folder, stacked and joined to it by connector lines. */
-export const list = style(
+/** Chevron of a folder row, turned down while the folder is open. */
+export const chevronOpen = style(
   inComponents({
-    position: "relative",
-    margin: 0,
-    paddingBlock: 0,
-    paddingInlineEnd: 0,
-    paddingInlineStart: connector,
-    listStyle: "none",
-    selectors: {
-      "&::before": {
-        content: '""',
-        position: "absolute",
-        left: 0,
-        top: "50%",
-        width: `calc(${connector} / 2)`,
-        borderTop: line,
-      },
-    },
+    transform: "rotate(90deg)",
+    transition: `transform ${vars.motion.duration} ${vars.motion.easing}`,
   }),
 );
 
-/** One file or folder, in a row with its children. */
-export const item = style(
+/** Note shown when the query matches no file. */
+export const empty = style([
+  sprinkles({ color: "onSurfaceVariant", padding: "md" }),
+  inComponents(text.body),
+]);
+
+globalStyle(
+  `${row} > svg`,
   inComponents({
-    position: "relative",
-    display: "flex",
-    alignItems: "center",
-    paddingBlock: vars.space.xs,
-    selectors: {
-      [`${list} > &::before`]: {
-        content: '""',
-        position: "absolute",
-        left: `calc(${connector} / -2)`,
-        top: 0,
-        bottom: 0,
-        borderLeft: line,
-      },
-      [`${list} > &:first-child::before`]: { top: "50%" },
-      [`${list} > &:last-child::before`]: { bottom: "50%" },
-      [`${list} > &::after`]: {
-        content: '""',
-        position: "absolute",
-        left: `calc(${connector} / -2)`,
-        top: "50%",
-        width: `calc(${connector} / 2)`,
-        borderTop: line,
-      },
-    },
+    width: vars.size.icon,
+    height: vars.size.icon,
+    flexShrink: 0,
   }),
 );

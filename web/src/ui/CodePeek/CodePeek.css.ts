@@ -42,10 +42,26 @@ export const code = style([
 ]);
 
 // Shiki stamps light-theme colors inline on each token span; the dark pair lives in
-// --shiki-dark, so only an !important rule can switch it per theme.
-globalStyle(`[data-theme="dark"] .${code} span`, {
+// --shiki-dark, so only an !important rule can switch it per theme. Line numbers
+// carry no shiki colors and keep their own.
+globalStyle(`[data-theme="dark"] .${code} span:not([data-num])`, {
   color: "var(--shiki-dark) !important",
 });
+
+/** Line number in the gutter, sticky so it stays while the code scrolls sideways. */
+export const num = style(
+  inComponents({
+    position: "sticky",
+    left: 0,
+    display: "inline-block",
+    width: "3ch", // shortcut: clips past 999 lines, widen to 4ch when a config file outgrows it
+    marginInlineEnd: vars.space.sm,
+    textAlign: "right",
+    userSelect: "none",
+    color: vars.color.onSurfaceVariant,
+    background: vars.color.surface,
+  }),
+);
 
 /** Empty and error state inside the source block. */
 export const message = style(

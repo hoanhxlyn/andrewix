@@ -1,3 +1,4 @@
+import { NuqsAdapter } from "nuqs/adapters/react-router/v8";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import { APP_NAME } from "@/constants";
 import "unfonts.css";
@@ -24,7 +25,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function Root() {
-  return <Outlet />;
+  return (
+    <NuqsAdapter>
+      <Outlet />
+    </NuqsAdapter>
+  );
 }
 
 export function HydrateFallback() {

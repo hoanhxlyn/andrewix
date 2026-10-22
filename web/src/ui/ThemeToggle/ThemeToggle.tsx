@@ -1,8 +1,8 @@
 import { useAtom } from "jotai";
 import { themeAtom } from "@/atoms/theme";
 import { Button } from "@/ui/Button";
-import DarkIcon from "~icons/material-symbols/dark-mode-outline-rounded";
-import LightIcon from "~icons/material-symbols/light-mode-outline-rounded";
+import DarkIcon from "~icons/mdi/weather-night";
+import LightIcon from "~icons/mdi/white-balance-sunny";
 
 export function ThemeToggle() {
   const [mode, setMode] = useAtom(themeAtom);

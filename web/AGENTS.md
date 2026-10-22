@@ -28,7 +28,7 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 **Styling is vanilla-extract, split across a few files that only make sense together:**
 
 - `styles/tokens.css.ts`: the single source of design tokens. `vars` merges `themeVars` (values that differ in light and dark: `color`, `elevation`) with the shared tokens (`space`, `shape`, `type`, `motion`, ...). Shared tokens never go inside `light`/`dark`. `light`'s shape is the contract `dark` must satisfy. Colors come from `@catppuccin/palette`, mapped to Material 3 roles. `breakpoints` are plain strings because media queries cannot read CSS variables. `text` is a plain object of typography properties to spread into styles.
-- `styles/global.css.ts`: applies the themes (`createGlobalTheme` on `:root[data-theme=...]` and nested `[data-theme=...]`, so a subtree can force a theme), the per-breakpoint layout variables, element defaults, and the `--ondine-*` mapping.
+- `styles/global.css.ts`: applies the themes (`createGlobalTheme` on `:root[data-theme=...]` and nested `[data-theme=...]`, so a subtree can force a theme), the per-breakpoint layout variables, and element defaults.
 - `styles/layers.css.ts`: cascade order `base` < `components` < `utilities`, plus the `inBase` and `inComponents` wrappers. It also holds `stateLayer`, the hover, focus and pressed feedback with focus ring that interactive components compose. Sprinkles are the `utilities` layer, so they beat component rules. Unlayered CSS beats every layer; `routes/*.css.ts` are intentionally unlayered.
 - `styles/sprinkles.css.ts`: the utility allowlist. Only the listed properties and values exist, and values come from tokens. To use a property in `sprinkles({...})`, add it here first.
 - `ui/`: reusable primitives, one folder per component (`ui/Button/` holds `Button.tsx`, `Button.css.ts` and an `index.ts` that is the public entry, imported as `../ui/Button`). Recipes (`Button`, `Card`) compose sprinkles in `base` and `variants`. Interactive primitives wrap React Aria Components (import from `react-aria-components/<Name>`) for behavior and accessibility; style their states with the `data-hovered`, `data-pressed`, `data-focus-visible` and `data-disabled` attributes, not `:hover` or `:disabled`, and pass the recipe class through `className`. React Aria props replace the native ones (`onPress`, `isDisabled`).
@@ -38,9 +38,7 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 
 **Theme switching.** `atoms/theme.ts` is a Jotai `atomWithStorage` over plain-string `localStorage` (`"light"` or `"dark"`, falling back to the OS preference) and keeps `<html data-theme>` in sync. `public/theme-init.js`, loaded as a blocking script in `root.tsx`, sets the same attribute before first paint to avoid a flash of the wrong theme. Removing it causes that flash. It duplicates the atom's storage parsing, so changing the stored values means updating both.
 
-**Diagrams.** Mermaid files (`*.mmd`) are compiled to SVG at build time by the `ondine()` Vite plugin. `ui/Diagram/Diagram.tsx` mounts the compiled result with Ondine's `mount`, which inserts the SVG without sanitizing it, so only pass imports from `.mmd` files. Colors and font follow the theme through `--ondine-*` variables.
-
-**Fonts and icons.** Fonts are Fontsource variable Roboto and Roboto Mono, injected by `unplugin-fonts` (`import "unfonts.css"` in `root.tsx`). Icons are imported as `~icons/material-symbols/<name>` through `unplugin-icons`.
+**Fonts and icons.** Fonts are Fontsource variable Roboto and Roboto Mono, injected by `unplugin-fonts` (`import "unfonts.css"` in `root.tsx`). Icons are imported as `~icons/mdi/<name>` through `unplugin-icons`.
 
 ## Conventions
 
@@ -63,6 +61,6 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 
 - Value known at build time → class (recipe, sprinkles or `inComponents`). Almost everything.
 - Small closed set of values → one class per value, like `GridItem`'s span map.
-- Value computed at runtime → `createVar()` in the `.css.ts`, assigned with `assignInlineVars` in the component, like `PanZoom`. The only escape hatch.
+- Value computed at runtime → `createVar()` in the `.css.ts`, assigned with `assignInlineVars` in the component. The only escape hatch.
 
 Inline `style` may only assign CSS variables through `assignInlineVars`, never style properties. That keeps static rules winning predictably and every runtime-dynamic element findable by grepping `assignInlineVars`.

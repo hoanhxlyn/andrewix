@@ -73,21 +73,3 @@ globalStyle(
 );
 
 globalStyle("a", inBase({ color: vars.color.primary }));
-
-// Map Ondine's theme variables onto the app tokens so diagrams follow light and dark.
-globalStyle(
-  ".ondine",
-  inBase({
-    vars: {
-      "--ondine-bg": "transparent",
-      "--ondine-fg": vars.color.onSurface,
-      "--ondine-muted": vars.color.onSurfaceVariant,
-      "--ondine-line": vars.color.outline,
-      "--ondine-border": vars.color.outline,
-      "--ondine-surface": vars.color.primaryContainer,
-      "--ondine-surface-alt": vars.color.surfaceVariant,
-      "--ondine-accent": vars.color.primary,
-      "--ondine-font": vars.typeface.body,
-    },
-  }),
-);
