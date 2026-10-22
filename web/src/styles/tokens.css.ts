@@ -24,9 +24,16 @@ export const breakpoints = {
   expanded: "(min-width: 840px)",
 };
 
+// Layout grid columns per window class. Compact is the default, the others apply from their breakpoint.
+export const columns = { compact: 4, medium: 8, expanded: 12 } as const;
+
 const shared = {
   space,
-  layout: { columns: "4", margin: space.lg, gutter: space.lg },
+  layout: {
+    columns: String(columns.compact),
+    margin: space.lg,
+    gutter: space.lg,
+  },
   size: { icon: "24px", control: "40px" },
   shape: { small: "8px", medium: "12px", large: "20px", full: "999px" },
   border: { outline: "1px", focusRing: "2px" },

@@ -1,9 +1,8 @@
 import { globalStyle } from "@vanilla-extract/css";
 import { type RecipeVariants, recipe } from "@vanilla-extract/recipes";
-import { inComponents } from "@/styles/layers.css";
+import { inComponents, stateLayer } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
 import { text, vars } from "@/styles/tokens.css";
-import { stateLayer } from "@/ui/shared/stateLayer.css";
 
 const onSurfaceAt = (amount: string) =>
   `color-mix(in srgb, ${vars.color.onSurface} calc(${amount} * 100%), transparent)`;

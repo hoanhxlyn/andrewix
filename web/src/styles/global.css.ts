@@ -4,7 +4,15 @@ import {
   globalStyle,
 } from "@vanilla-extract/css";
 import { inBase } from "./layers.css";
-import { breakpoints, dark, light, text, themeVars, vars } from "./tokens.css";
+import {
+  breakpoints,
+  columns,
+  dark,
+  light,
+  text,
+  themeVars,
+  vars,
+} from "./tokens.css";
 
 // The selectors also match nested elements, so a subtree can force a theme (used by the
 // design catalog to show both side by side). `themeVars` is the contract both modes implement.
@@ -21,14 +29,14 @@ globalStyle(":root", {
   "@media": {
     [breakpoints.medium]: {
       vars: assignVars(vars.layout, {
-        columns: "8",
+        columns: String(columns.medium),
         margin: vars.space.xl,
         gutter: vars.space.xl,
       }),
     },
     [breakpoints.expanded]: {
       vars: assignVars(vars.layout, {
-        columns: "12",
+        columns: String(columns.expanded),
         margin: vars.space.xl,
         gutter: vars.space.xl,
       }),

@@ -1,9 +1,10 @@
+import type { ComponentProps } from "react";
 import { sprinkles } from "@/styles/sprinkles.css";
 import { vars } from "@/styles/tokens.css";
 import { Button, type ButtonVariants } from "@/ui/Button";
 import { Card, type CardVariants } from "@/ui/Card";
 import { Diagram } from "@/ui/Diagram";
-import { Grid } from "@/ui/Grid";
+import { Grid, GridItem } from "@/ui/Grid";
 import { ThemeScope } from "@/ui/ThemeScope";
 import AddIcon from "~icons/material-symbols/add-rounded";
 import * as s from "./Design.css";
@@ -21,6 +22,16 @@ const cardVariants: NonNullable<CardVariants["variant"]>[] = [
   "elevated",
   "outlined",
 ];
+
+// Spans per window class (compact / medium / expanded), one example per layout shape.
+const spanExamples = [
+  { compact: 4, medium: 8, expanded: 12 },
+  { compact: 4, medium: 4, expanded: 6 },
+  { compact: 4, medium: 4, expanded: 6 },
+  { compact: 4, medium: 4, expanded: 4 },
+  { compact: 4, medium: 4, expanded: 4 },
+  { compact: 4, medium: 8, expanded: 4 },
+] satisfies ComponentProps<typeof GridItem>["span"][];
 
 const row = sprinkles({
   display: "flex",
@@ -147,6 +158,18 @@ export default function Design() {
       </Section>
 
       <Section title="Layout">
+        <p className={s.caption}>GridItem span (compact / medium / expanded)</p>
+        <Grid>
+          {spanExamples.map((span, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: the examples are static and never reorder
+            <GridItem key={i} span={span}>
+              <div className={s.cell}>
+                {span.compact} / {span.medium} / {span.expanded}
+              </div>
+            </GridItem>
+          ))}
+        </Grid>
+        <p className={s.caption}>Columns</p>
         <Grid>
           {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => (
             <div key={n} className={s.cell}>
