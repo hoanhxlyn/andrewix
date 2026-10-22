@@ -1,8 +1,9 @@
 import { globalStyle } from "@vanilla-extract/css";
 import { type RecipeVariants, recipe } from "@vanilla-extract/recipes";
-import { inComponents } from "../styles/layers.css";
-import { text, vars } from "../styles/tokens.css";
-import { stateLayer } from "./stateLayer.css";
+import { inComponents } from "../../styles/layers.css";
+import { sprinkles } from "../../styles/sprinkles.css";
+import { text, vars } from "../../styles/tokens.css";
+import { stateLayer } from "../shared/stateLayer.css";
 
 const onSurfaceAt = (amount: string) =>
   `color-mix(in srgb, ${vars.color.onSurface} calc(${amount} * 100%), transparent)`;
@@ -10,21 +11,23 @@ const onSurfaceAt = (amount: string) =>
 const disabledContainer = onSurfaceAt(vars.state.disabledContainer);
 const disabledContent = onSurfaceAt(vars.state.disabledContent);
 
-/** Button with a text label. */
+/** Button with a text label or, with the `icon` variant, only an icon. */
 export const button = recipe({
   base: [
     stateLayer,
-    inComponents({
-      ...text.label,
-      appearance: "none",
+    sprinkles({
       display: "inline-flex",
       alignItems: "center",
       justifyContent: "center",
-      gap: vars.space.sm,
+      gap: "sm",
+      borderRadius: "full",
+    }),
+    inComponents({
+      ...text.label,
+      appearance: "none",
       height: vars.size.control,
       padding: `0 ${vars.space.xl}`,
       border: `${vars.border.outline} solid transparent`,
-      borderRadius: vars.shape.full,
       cursor: "pointer",
       selectors: {
         "&:disabled": { cursor: "not-allowed", color: disabledContent },
@@ -54,6 +57,12 @@ export const button = recipe({
         color: vars.color.primary,
         padding: `0 ${vars.space.md}`,
       }),
+      icon: inComponents({
+        width: vars.size.control,
+        padding: 0,
+        background: "transparent",
+        color: vars.color.onSurfaceVariant,
+      }),
     },
   },
   defaultVariants: { variant: "filled" },
@@ -63,6 +72,6 @@ export const button = recipe({
 export type ButtonVariants = NonNullable<RecipeVariants<typeof button>>;
 
 globalStyle(
-  `${button.classNames.base} svg`,
+  `${button.classNames.base} > svg`,
   inComponents({ width: vars.size.icon, height: vars.size.icon }),
 );

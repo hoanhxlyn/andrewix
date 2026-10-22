@@ -1,13 +1,17 @@
 import { mount } from "ondine";
-import { useEffect, useRef } from "react";
+import { type ComponentPropsWithoutRef, useEffect, useRef } from "react";
 
-interface DiagramProps {
+interface DiagramProps
+  extends Omit<
+    ComponentPropsWithoutRef<"div">,
+    "children" | "dangerouslySetInnerHTML"
+  > {
   /** A compiled diagram, the default export of a `.mmd` import. */
   diagram: { readonly svg: string };
 }
 
 /** Renders a diagram compiled at build time by Ondine. */
-export function Diagram({ diagram }: DiagramProps) {
+export function Diagram({ diagram, ...rest }: DiagramProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -17,5 +21,5 @@ export function Diagram({ diagram }: DiagramProps) {
     return () => handle.unmount();
   }, [diagram]);
 
-  return <div ref={ref} />;
+  return <div ref={ref} {...rest} />;
 }

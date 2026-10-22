@@ -8,50 +8,55 @@ export const heading = style([text.title, { margin: 0 }]);
 /** Small label above a catalog sample. */
 export const caption = style([
   text.label,
-  { margin: 0, color: vars.color.onSurfaceVariant },
+  sprinkles({ color: "onSurfaceVariant" }),
+  { margin: 0 },
 ]);
 
 /** Grid that lays out the color swatches. */
-export const grid = style({
-  display: "grid",
-  gridTemplateColumns: `repeat(auto-fill, minmax(calc(${vars.space.xl} * 6), 1fr))`,
-  gap: vars.space.lg,
-});
+export const grid = style([
+  sprinkles({ display: "grid", gap: "lg" }),
+  {
+    gridTemplateColumns: `repeat(auto-fill, minmax(calc(${vars.space.xl} * 6), 1fr))`,
+  },
+]);
 
 /** One color swatch together with its label. */
 export const swatch = sprinkles({ display: "grid", gap: "xs" });
 
 /** Color preview box inside a swatch. */
-export const swatchColor = style({
-  height: `calc(${vars.space.xl} * 2)`,
-  borderRadius: vars.shape.small,
-  border: `${vars.border.outline} solid ${vars.color.outline}`,
-});
+export const swatchColor = style([
+  sprinkles({ borderRadius: "small", border: "outline" }),
+  { height: `calc(${vars.space.xl} * 2)` },
+]);
 
 /** Bar whose width shows a space step. */
-export const spaceBar = style({
-  height: vars.space.md,
-  borderRadius: vars.shape.small,
-  background: vars.color.primary,
-});
+export const spaceBar = style([
+  sprinkles({ borderRadius: "small", background: "primary" }),
+  { height: vars.space.md },
+]);
 
 /** Sample tile for the shape and elevation examples. */
-export const sample = style({
-  width: `calc(${vars.space.xl} * 3)`,
-  height: `calc(${vars.space.xl} * 3)`,
-  background: vars.color.primaryContainer,
-  color: vars.color.onPrimaryContainer,
-  display: "grid",
-  placeItems: "center",
-  ...text.label,
-});
+export const sample = style([
+  text.label,
+  sprinkles({
+    display: "grid",
+    background: "primaryContainer",
+    color: "onPrimaryContainer",
+  }),
+  {
+    width: `calc(${vars.space.xl} * 3)`,
+    height: `calc(${vars.space.xl} * 3)`,
+    placeItems: "center",
+  },
+]);
 
 /** Container that places the light and dark previews side by side. */
-export const themes = style({
-  display: "grid",
-  gridTemplateColumns: `repeat(auto-fit, minmax(calc(${vars.space.xl} * 14), 1fr))`,
-  gap: vars.space.lg,
-});
+export const themes = style([
+  sprinkles({ display: "grid", gap: "lg" }),
+  {
+    gridTemplateColumns: `repeat(auto-fit, minmax(calc(${vars.space.xl} * 14), 1fr))`,
+  },
+]);
 
 /** Sample text for each type role. */
 export const typeSample = styleVariants(vars.type, (_value, role) => [
@@ -62,12 +67,12 @@ export const typeSample = styleVariants(vars.type, (_value, role) => [
 /** Cell that shows one column of the layout grid. */
 export const cell = style([
   text.label,
-  {
+  sprinkles({
     display: "grid",
-    placeItems: "center",
-    padding: vars.space.md,
-    borderRadius: vars.shape.small,
-    background: vars.color.primaryContainer,
-    color: vars.color.onPrimaryContainer,
-  },
+    padding: "md",
+    borderRadius: "small",
+    background: "primaryContainer",
+    color: "onPrimaryContainer",
+  }),
+  { placeItems: "center" },
 ]);

@@ -1,14 +1,11 @@
 import AddIcon from "~icons/material-symbols/add-rounded";
-import { Button } from "../components/Button";
-import { Card } from "../components/Card";
-import { Diagram } from "../components/Diagram";
-import { Grid } from "../components/Grid";
-import { IconButton } from "../components/IconButton";
-import { ThemeScope } from "../components/ThemeScope";
 import { sprinkles } from "../styles/sprinkles.css";
 import { vars } from "../styles/tokens.css";
-import type { ButtonVariants } from "../variants/button.css";
-import type { CardVariants } from "../variants/card.css";
+import { Button, type ButtonVariants } from "../ui/Button";
+import { Card, type CardVariants } from "../ui/Card";
+import { Diagram } from "../ui/Diagram";
+import { Grid } from "../ui/Grid";
+import { ThemeScope } from "../ui/ThemeScope";
 import * as s from "./Design.css";
 import example from "./example.mmd";
 
@@ -73,9 +70,9 @@ function Components() {
             Disabled
           </Button>
         ))}
-        <IconButton label="Add" onClick={() => {}}>
+        <Button variant="icon" aria-label="Add" title="Add" onClick={() => {}}>
           <AddIcon />
-        </IconButton>
+        </Button>
       </div>
       <div className={row}>
         {cardVariants.map((variant) => (

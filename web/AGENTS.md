@@ -23,7 +23,7 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 
 ## Architecture
 
-**Routing.** React Router v8 framework mode as an SPA (`ssr: false`, `appDirectory: "src"`). Routes are declared in `src/routes.ts`; `components/AppShell.tsx` is the layout route and `root.tsx` holds the document shell. `/design` is a catalog of the tokens and components; it lists tokens automatically but new components must be added to `routes/Design.tsx` by hand.
+**Routing.** React Router v8 framework mode as an SPA (`ssr: false`, `appDirectory: "src"`). Routes are declared in `src/routes.ts`; `layouts/AppShell.tsx` is the layout route and `root.tsx` holds the document shell. `/design` is a catalog of the tokens and components; it lists tokens automatically but new components must be added to `routes/Design.tsx` by hand.
 
 **Styling is vanilla-extract, split across a few files that only make sense together:**
 
@@ -31,14 +31,14 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 - `styles/global.css.ts`: applies the themes (`createGlobalTheme` on `:root[data-theme=...]` and nested `[data-theme=...]`, so a subtree can force a theme), the per-breakpoint layout variables, element defaults, and the `--ondine-*` mapping.
 - `styles/layers.css.ts`: cascade order `base` < `components` < `utilities`, plus the `inBase` and `inComponents` wrappers. Sprinkles are the `utilities` layer, so they beat component rules. Unlayered CSS beats every layer; `routes/*.css.ts` are intentionally unlayered.
 - `styles/sprinkles.css.ts`: the utility allowlist. Only the listed properties and values exist, and values come from tokens. To use a property in `sprinkles({...})`, add it here first.
-- `variants/`: recipes (`button`, `card`), the plain-style `iconButton`, and the shared `stateLayer` (hover, focus, pressed feedback and focus ring). Recipes compose sprinkles in `base` and `variants`.
-- `components/`: the `.tsx` files plus `.css.ts` for components that are not recipes.
+- `ui/`: reusable primitives, one folder per component (`ui/Button/` holds `Button.tsx`, `Button.css.ts` and an `index.ts` that is the public entry, imported as `../ui/Button`). Recipes (`Button`, `Card`) compose sprinkles in `base` and `variants`. `ui/shared/` holds styles used by several components, such as `stateLayer.css.ts` (hover, focus, pressed feedback and focus ring).
+- `layouts/`: app-specific layout routes (`AppShell`) with their `.css.ts`.
 
 **Build constraint:** a `.css.ts` file imported at run time by a `.tsx` file cannot export functions. The build fails with "Invalid exports" or "Invalid function serialization params". Export plain objects, class strings, recipes or sprinkles results. Helper functions are fine when only other `.css.ts` files import them.
 
 **Theme switching.** `atoms/theme.ts` is a Jotai `atomWithStorage` over plain-string `localStorage` (`"light"` or `"dark"`, falling back to the OS preference) and keeps `<html data-theme>` in sync. `public/theme-init.js`, loaded as a blocking script in `root.tsx`, sets the same attribute before first paint to avoid a flash of the wrong theme. Removing it causes that flash. It duplicates the atom's storage parsing, so changing the stored values means updating both.
 
-**Diagrams.** Mermaid files (`*.mmd`) are compiled to SVG at build time by the `ondine()` Vite plugin. `components/Diagram.tsx` mounts the compiled result with Ondine's `mount`, which inserts the SVG without sanitizing it, so only pass imports from `.mmd` files. Colors and font follow the theme through `--ondine-*` variables.
+**Diagrams.** Mermaid files (`*.mmd`) are compiled to SVG at build time by the `ondine()` Vite plugin. `ui/Diagram/Diagram.tsx` mounts the compiled result with Ondine's `mount`, which inserts the SVG without sanitizing it, so only pass imports from `.mmd` files. Colors and font follow the theme through `--ondine-*` variables.
 
 **Fonts and icons.** Fonts are Fontsource variable Roboto and Roboto Mono, injected by `unplugin-fonts` (`import "unfonts.css"` in `root.tsx`). Icons are imported as `~icons/material-symbols/<name>` through `unplugin-icons`.
 

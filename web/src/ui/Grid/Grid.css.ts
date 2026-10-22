@@ -1,7 +1,7 @@
 import { style } from "@vanilla-extract/css";
-import { inComponents } from "../styles/layers.css";
-import { sprinkles } from "../styles/sprinkles.css";
-import { vars } from "../styles/tokens.css";
+import { inComponents } from "../../styles/layers.css";
+import { sprinkles } from "../../styles/sprinkles.css";
+import { vars } from "../../styles/tokens.css";
 
 /** Layout grid for page content. */
 export const grid = style([

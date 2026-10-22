@@ -1,6 +1,6 @@
 import { style } from "@vanilla-extract/css";
-import { inComponents } from "../styles/layers.css";
-import { vars } from "../styles/tokens.css";
+import { inComponents } from "../../styles/layers.css";
+import { vars } from "../../styles/tokens.css";
 
 /** Hover, focus and pressed feedback for interactive elements. Compose it into the element. */
 export const stateLayer = style(
