@@ -8,10 +8,15 @@
     "permissions": "autoaccept",
     "sidebar": "auto",
     "image_preview": true,
-    "scrollbar": true
+    "scrollbar": true,
+    "thinking": "hide",
+    "verbosity": "low",
+    "grouping": "auto",
+    "markdown": "rendered"
   },
   "prompt": {
-    "image_preview": true
+    "image_preview": true,
+    "paste": "compact"
   },
   "attention": {
     "notifications": true,
