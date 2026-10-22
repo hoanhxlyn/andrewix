@@ -87,16 +87,24 @@ const sharedVars = createGlobalTheme(":root", shared);
 
 export const vars = { ...themeVars, ...sharedVars };
 
-const textRole = (role: keyof typeof vars.type) => ({
-  fontSize: vars.type[role].size,
-  lineHeight: vars.type[role].lineHeight,
-  letterSpacing: vars.type[role].tracking,
-  fontWeight: vars.type[role].weight,
-});
-
 /** Style properties per type scale role, to spread into a style. */
 export const text = {
-  body: textRole("body"),
-  title: textRole("title"),
-  label: textRole("label"),
+  body: {
+    fontSize: vars.type.body.size,
+    lineHeight: vars.type.body.lineHeight,
+    letterSpacing: vars.type.body.tracking,
+    fontWeight: vars.type.body.weight,
+  },
+  title: {
+    fontSize: vars.type.title.size,
+    lineHeight: vars.type.title.lineHeight,
+    letterSpacing: vars.type.title.tracking,
+    fontWeight: vars.type.title.weight,
+  },
+  label: {
+    fontSize: vars.type.label.size,
+    lineHeight: vars.type.label.lineHeight,
+    letterSpacing: vars.type.label.tracking,
+    fontWeight: vars.type.label.weight,
+  },
 };

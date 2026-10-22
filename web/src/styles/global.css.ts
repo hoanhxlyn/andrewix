@@ -17,15 +17,21 @@ globalStyle(darkScope, { colorScheme: "dark" });
 globalStyle(lightScope, { colorScheme: "light" });
 
 // Layout grid per window class: more columns and wider margins as the window grows.
-const wide = { margin: vars.space.xl, gutter: vars.space.xl };
-
 globalStyle(":root", {
   "@media": {
     [breakpoints.medium]: {
-      vars: assignVars(vars.layout, { columns: "8", ...wide }),
+      vars: assignVars(vars.layout, {
+        columns: "8",
+        margin: vars.space.xl,
+        gutter: vars.space.xl,
+      }),
     },
     [breakpoints.expanded]: {
-      vars: assignVars(vars.layout, { columns: "12", ...wide }),
+      vars: assignVars(vars.layout, {
+        columns: "12",
+        margin: vars.space.xl,
+        gutter: vars.space.xl,
+      }),
     },
   },
 });
@@ -36,9 +42,9 @@ globalStyle(
   "*, *::before, *::after",
   inBase({
     boxSizing: "border-box",
-    transition: ["background-color", "border-color", "color", "box-shadow"]
-      .map((p) => `${p} ${vars.motion.duration} ${vars.motion.easing}`)
-      .join(", "),
+    transitionProperty: "background-color, border-color, color, box-shadow",
+    transitionDuration: vars.motion.duration,
+    transitionTimingFunction: vars.motion.easing,
     "@media": {
       "(prefers-reduced-motion: reduce)": { transition: "none" },
     },

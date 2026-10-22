@@ -18,13 +18,7 @@ const layoutProperties = defineProperties({
     alignItems: ["stretch", "flex-start", "center", "flex-end"],
     justifyContent: ["flex-start", "center", "flex-end", "space-between"],
     gap: vars.space,
-    paddingTop: vars.space,
-    paddingBottom: vars.space,
-    paddingLeft: vars.space,
-    paddingRight: vars.space,
-  },
-  shorthands: {
-    padding: ["paddingTop", "paddingBottom", "paddingLeft", "paddingRight"],
+    padding: vars.space,
   },
 });
 
