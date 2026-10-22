@@ -14,8 +14,8 @@ import {
   vars,
 } from "./tokens.css";
 
-// The selectors also match nested elements, so a subtree can force a theme (used by the
-// design catalog to show both side by side). `themeVars` is the contract both modes implement.
+// The selectors also match nested elements, so a subtree can force a theme (used by
+// `ThemeScope`). `themeVars` is the contract both modes implement.
 const darkScope = ':root[data-theme="dark"], :root [data-theme="dark"]';
 const lightScope = ':root[data-theme="light"], :root [data-theme="light"]';
 

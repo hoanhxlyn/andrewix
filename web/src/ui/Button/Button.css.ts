@@ -28,6 +28,7 @@ export const button = recipe({
       padding: `0 ${vars.space.xl}`,
       border: `${vars.border.outline} solid transparent`,
       cursor: "pointer",
+      textDecoration: "none",
       selectors: {
         "&[data-disabled]": { cursor: "not-allowed", color: disabledContent },
       },

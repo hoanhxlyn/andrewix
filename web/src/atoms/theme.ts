@@ -52,8 +52,11 @@ const storage: ThemeStorage = {
         callback(parseMode(e.newValue));
       }
     };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    const controller = new AbortController();
+    window.addEventListener("storage", onStorage, {
+      signal: controller.signal,
+    });
+    return () => controller.abort();
   },
 };
 

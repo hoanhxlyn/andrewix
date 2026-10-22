@@ -9,6 +9,7 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "skipLibCheck": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
@@ -16,6 +17,7 @@
     "rootDirs": [".", "./.react-router/types"]
   },
   "include": [
+    "vite",
     "src",
     "vite.config.ts",
     "react-router.config.ts",

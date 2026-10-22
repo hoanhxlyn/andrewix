@@ -1,7 +1,7 @@
 import { style } from "@vanilla-extract/css";
 import { inComponents } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
-import { text, vars } from "@/styles/tokens.css";
+import { breakpoints, text, vars } from "@/styles/tokens.css";
 
 /** Page frame holding the app bar and the content. */
 export const shell = style([
@@ -20,8 +20,11 @@ export const appBar = style([
     boxShadow: "level1",
   }),
   inComponents({
-    padding: `${vars.space.md} ${vars.space.xl}`,
+    padding: `${vars.space.sm} ${vars.space.md}`,
     zIndex: vars.layer.raised,
+    "@media": {
+      [breakpoints.medium]: { padding: `${vars.space.md} ${vars.space.xl}` },
+    },
   }),
 ]);
 

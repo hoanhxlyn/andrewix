@@ -23,7 +23,7 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 
 ## Architecture
 
-**Routing.** React Router v8 framework mode as an SPA (`ssr: false`, `appDirectory: "src"`). Routes are declared in `src/routes.ts`; `layouts/AppShell.tsx` is the layout route and `root.tsx` holds the document shell. `/design` is a catalog of the tokens and components; it lists tokens automatically but new components must be added to `routes/Design.tsx` by hand.
+**Routing.** React Router v8 framework mode as an SPA (`ssr: false`, `appDirectory: "src"`). Routes are declared in `src/routes.ts`; `layouts/AppShell.tsx` is the layout route and `root.tsx` holds the document shell. Route files are flat until a route needs a second file (`.css.ts`, hook, child component); then it gets a folder: `routes/<Name>/<Name>.tsx`, with no barrel because `routes.ts` imports the file by path. Route-local components stay in the route folder; only reusable primitives go in `ui/`.
 
 **Styling is vanilla-extract, split across a few files that only make sense together:**
 
@@ -58,3 +58,11 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 - `:hover`, `:disabled` and other selectors or media queries always go in `inComponents`.
 - Add a property to the allowlist only when it has a small set of token or keyword values and is repeated across about three components.
 - `inBase` is for element selectors in `global.css.ts` only.
+
+### Static vs dynamic styles
+
+- Value known at build time → class (recipe, sprinkles or `inComponents`). Almost everything.
+- Small closed set of values → one class per value, like `GridItem`'s span map.
+- Value computed at runtime → `createVar()` in the `.css.ts`, assigned with `assignInlineVars` in the component, like `PanZoom`. The only escape hatch.
+
+Inline `style` may only assign CSS variables through `assignInlineVars`, never style properties. That keeps static rules winning predictably and every runtime-dynamic element findable by grepping `assignInlineVars`.

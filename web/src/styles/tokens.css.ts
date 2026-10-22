@@ -51,6 +51,12 @@ const shared = {
     mono: "'Roboto Mono Variable', ui-monospace, monospace",
   },
   type: {
+    headline: {
+      size: "2rem",
+      lineHeight: "2.5rem",
+      tracking: "0rem",
+      weight: "400",
+    },
     body: {
       size: "1rem",
       lineHeight: "1.5rem",
@@ -96,6 +102,12 @@ export const vars = { ...themeVars, ...sharedVars };
 
 /** Style properties per type scale role, to spread into a style. */
 export const text = {
+  headline: {
+    fontSize: vars.type.headline.size,
+    lineHeight: vars.type.headline.lineHeight,
+    letterSpacing: vars.type.headline.tracking,
+    fontWeight: vars.type.headline.weight,
+  },
   body: {
     fontSize: vars.type.body.size,
     lineHeight: vars.type.body.lineHeight,

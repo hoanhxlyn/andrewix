@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router";
+import { APP_NAME } from "@/constants";
 import { ThemeToggle } from "@/ui/ThemeToggle";
 import * as s from "./AppShell.css";
 
@@ -7,7 +8,7 @@ export default function AppShell() {
     <div className={s.shell}>
       <header className={s.appBar}>
         <Link to="/" className={s.title}>
-          Flow Viewer
+          {APP_NAME}
         </Link>
         <ThemeToggle />
       </header>
