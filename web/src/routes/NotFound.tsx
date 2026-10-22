@@ -1,5 +1,5 @@
-import * as s from "./NotFound.css";
+import { sprinkles } from "@/styles/sprinkles.css";
 
 export default function NotFound() {
-  return <p className={s.message}>Page not found.</p>;
+  return <p className={sprinkles({ padding: "xl" })}>Page not found.</p>;
 }
