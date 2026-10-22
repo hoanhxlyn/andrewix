@@ -17,9 +17,9 @@ export function Diagram({ diagram, ...rest }: DiagramProps) {
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    const handle = mount(element, diagram);
+    const handle = mount(element, diagram.svg);
     return () => handle.unmount();
-  }, [diagram]);
+  }, [diagram.svg]);
 
   return <div ref={ref} {...rest} />;
 }
