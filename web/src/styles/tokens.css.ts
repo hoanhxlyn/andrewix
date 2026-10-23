@@ -35,6 +35,9 @@ export const sidebarWidth = {
   step: 16,
 } as const;
 
+// Transition length in milliseconds and its easing; a number too, for animations run from script.
+export const motion = { duration: 200, easing: "ease" } as const;
+
 const shared = {
   space,
   layout: {
@@ -52,7 +55,7 @@ const shared = {
   shape: { small: "8px", medium: "12px", large: "20px", full: "999px" },
   border: { outline: "1px", focusRing: "2px", indicator: "2px" },
   layer: { raised: "1" },
-  motion: { duration: "200ms", easing: "ease" },
+  motion: { duration: `${motion.duration}ms`, easing: motion.easing },
   state: {
     hover: "0.08",
     focus: "0.1",

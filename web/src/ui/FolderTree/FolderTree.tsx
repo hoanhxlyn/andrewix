@@ -1,7 +1,9 @@
+import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Tree } from "react-aria-components/Tree";
 import { openedFoldersAtom } from "@/atoms/folder-tree";
+import { motion } from "@/styles/tokens.css";
 import { Branch } from "./Branch";
 import * as s from "./FolderTree.css";
 import { ancestorsOf, filePaths, matches, toggled } from "./tree-paths";
@@ -60,6 +62,17 @@ export function FolderTree({
   // The flag is set in the capture phase: the tree changes the selection while handling the same
   // keydown, before a bubbling handler on this wrapper would run.
   const keyboardNav = useRef(false);
+  // Rows fade in and out as folders open and close, and the rows below slide into place. React
+  // Aria drops a closed folder's rows at once, so the leaving rows are animated from the DOM.
+  // Not `useAutoAnimate`: Strict Mode attaches the ref twice and the hook never disconnects the
+  // first observer, whose second pass cancels every fade-in. A ref cleanup tears each one down.
+  const animated = useCallback((node: HTMLDivElement) => {
+    const controller = autoAnimate(node, {
+      duration: motion.duration,
+      easing: motion.easing,
+    });
+    return () => controller.destroy?.();
+  }, []);
   // Selecting a file opens its folders once; they can be closed again afterwards.
   useEffect(() => {
     if (selected === null) return;
@@ -84,6 +97,7 @@ export function FolderTree({
       }}
     >
       <Tree
+        ref={animated}
         aria-label="Config files"
         className={s.tree}
         selectionMode="single"
