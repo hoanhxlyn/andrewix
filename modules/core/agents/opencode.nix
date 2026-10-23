@@ -45,7 +45,6 @@
             extensions = [".nix"];
           };
         };
-        websearch = false;
         default_agent = "plan";
         agents = {
           plan = {
@@ -54,7 +53,7 @@
           };
           build = {
             color = colors.base0B;
-            model = "opencode-go/mimo-v2.6-pro";
+            model = "opencode-go/deepseek-v4.1-flash";
           };
         };
         permissions = [
