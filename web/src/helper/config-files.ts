@@ -1,4 +1,7 @@
-/** Extensions that are not source text, so the peek pane cannot show them. */
+/**
+ * Extensions that are not source text, so the peek pane cannot show them. The loader glob below
+ * repeats them as its exclude pattern, since Vite needs the pattern as a literal.
+ */
 const BINARY = new Set([
   "png",
   "jpg",
@@ -42,11 +45,18 @@ export function languageOf(path: string): string | undefined {
 /** Prefix Vite gives glob keys for paths above the project root, stripped to get the repository path. */
 const ROOT = "../";
 
-/** One lazy loader per text file; each file becomes its own chunk, fetched on first use. */
+/**
+ * One lazy loader per text file; each file becomes its own chunk, fetched on first use. Every file
+ * that is not binary is included, so a new kind of text file (`.txt`, `.conf`) shows without a
+ * change here.
+ */
 const loaders = Object.fromEntries(
   Object.entries(
     import.meta.glob<string>(
-      "/../{modules,config}/**/*.{fish,json,lua,md,nix,sh,toml,yaml,yml}",
+      [
+        "/../{modules,config}/**/*",
+        "!**/*.{png,jpg,jpeg,gif,webp,ico,woff,woff2,ttf,otf}",
+      ],
       { query: "?raw", import: "default" },
     ),
   ).map(([key, load]) => [key.slice(ROOT.length), load]),
