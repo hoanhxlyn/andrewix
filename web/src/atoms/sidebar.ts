@@ -9,3 +9,11 @@ export const sidebarWidthAtom = atomWithStorage<number>(
   undefined,
   { getOnInit: true },
 );
+
+// Whether the tree sidebar is shown, remembered per browser for the same reason.
+export const sidebarShownAtom = atomWithStorage<boolean>(
+  "sidebar-shown",
+  true,
+  undefined,
+  { getOnInit: true },
+);

@@ -154,7 +154,7 @@ export function CodePeek({
     latestOpen.current(path);
   }, []);
 
-  // Built once per loaded file: the page re-renders on every URL change (tree toggle, wrap,
+  // Built once per loaded file: the page re-renders on every change of its state (tree toggle, wrap,
   // search), and recreating thousands of token spans each time made those changes stall.
   const source = useMemo(
     () =>
