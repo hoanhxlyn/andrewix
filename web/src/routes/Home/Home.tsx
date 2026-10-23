@@ -1,4 +1,6 @@
 import { tree } from "virtual:repo-tree";
+import { assignInlineVars } from "@vanilla-extract/dynamic";
+import { useAtom } from "jotai";
 import {
   createParser,
   createSerializer,
@@ -7,7 +9,10 @@ import {
   type UrlKeys,
   useQueryStates,
 } from "nuqs";
-import { breakpoints } from "@/styles/tokens.css";
+import { useId } from "react";
+import { clamp } from "remeda";
+import { sidebarWidthAtom } from "@/atoms/sidebar";
+import { breakpoints, sidebarWidth } from "@/styles/tokens.css";
 import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
 import { Checkbox } from "@/ui/Checkbox";
@@ -15,6 +20,7 @@ import { CodePeek } from "@/ui/CodePeek";
 import { FolderTree, filePaths } from "@/ui/FolderTree";
 import Icons from "@/ui/Icon";
 import { SearchField } from "@/ui/SearchField";
+import { Splitter } from "@/ui/Splitter";
 import { Tab, TabList, TabPanel, Tabs } from "@/ui/Tabs";
 import * as s from "./Home.css";
 
@@ -72,6 +78,13 @@ export default function Home() {
   const withOpened = (path: string) =>
     open.includes(path) ? open : [...open, path];
 
+  const paneId = useId();
+  const [stored, setWidth] = useAtom(sidebarWidthAtom);
+  // Storage is editable by hand, so a stored width is only trusted once it is a number in range.
+  const width = Number.isFinite(stored)
+    ? clamp(stored, sidebarWidth)
+    : sidebarWidth.initial;
+
   const close = (path: string) => {
     const rest = open.filter((other) => other !== path);
     // Closing the shown file shows its right neighbour, else the new last one.
@@ -98,7 +111,11 @@ export default function Home() {
   return (
     <Card variant="elevated" className={s.layout}>
       {treeShown && (
-        <aside className={s.pane}>
+        <aside
+          id={paneId}
+          className={s.pane}
+          style={assignInlineVars({ [s.sidebarWidth]: `${width}px` })}
+        >
           <SearchField
             value={search ?? ""}
             onChange={(value) =>
@@ -124,6 +141,19 @@ export default function Home() {
             />
           </div>
         </aside>
+      )}
+      {treeShown && (
+        <Splitter
+          className={s.splitter}
+          aria-label="Resize the tree"
+          aria-controls={paneId}
+          value={width}
+          min={sidebarWidth.min}
+          max={sidebarWidth.max}
+          step={sidebarWidth.step}
+          resetValue={sidebarWidth.initial}
+          onChange={setWidth}
+        />
       )}
       {/* No tab has the empty key, so with no file none is selected; an absent key would let
           React Aria pick the first tab on its own, out of step with the URL. Arrow keys only move

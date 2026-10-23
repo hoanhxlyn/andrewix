@@ -1,4 +1,4 @@
-import { style } from "@vanilla-extract/css";
+import { createVar, fallbackVar, style } from "@vanilla-extract/css";
 import { inComponents } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
 import { breakpoints, vars } from "@/styles/tokens.css";
@@ -25,6 +25,9 @@ export const layout = style([
   },
 ]);
 
+/** Width of the tree sidebar beside the source, as last dragged. */
+export const sidebarWidth = createVar();
+
 /** Tree sidebar beside the source pane when it is shown; on compact it overlays the source. */
 export const pane = style([
   sprinkles({ display: "flex", flexDirection: "column", gap: "sm" }),
@@ -40,7 +43,7 @@ export const pane = style([
     background: vars.color.surface,
     "@media": {
       [breakpoints.medium]: {
-        flex: `0 0 ${vars.size.sidebar}`,
+        flex: `0 0 ${fallbackVar(sidebarWidth, vars.size.sidebar)}`,
         position: "static",
         paddingBlockStart: 0,
       },
@@ -53,22 +56,21 @@ export const scroller = style(
   inComponents({ flex: 1, minHeight: 0, overflow: "auto" }),
 );
 
-/** Source pane: the open files as tabs over the selected one, divided from a shown tree sidebar. */
+/** Divider that resizes the tree sidebar beside the source; the compact overlay has none. */
+export const splitter = style({
+  display: "none",
+  // Fills the gap between the panes instead of adding its own on each side.
+  marginInline: `calc(-1 * ${vars.space.md})`,
+  "@media": { [breakpoints.medium]: { display: "block" } },
+});
+
+/** Source pane: the open files as tabs over the selected one. */
 export const peek = style(
   inComponents({
     flex: 1,
     minWidth: 0,
     minHeight: 0,
     background: vars.color.surface,
-    "@media": {
-      [breakpoints.medium]: {
-        selectors: {
-          [`${pane} ~ &`]: {
-            borderLeft: `${vars.border.outline} solid ${vars.color.outline}`,
-          },
-        },
-      },
-    },
   }),
 );
 

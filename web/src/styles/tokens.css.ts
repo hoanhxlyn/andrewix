@@ -27,6 +27,14 @@ export const breakpoints = {
 // Layout grid columns per window class. Compact is the default, the others apply from their breakpoint.
 export const columns = { compact: 4, medium: 8, expanded: 12 } as const;
 
+// Tree sidebar width in pixels: its default, the range it can be dragged to, and one arrow key step.
+export const sidebarWidth = {
+  initial: 300,
+  min: 200,
+  max: 600,
+  step: 16,
+} as const;
+
 const shared = {
   space,
   layout: {
@@ -39,7 +47,7 @@ const shared = {
     iconSmall: "16px",
     control: "40px",
     controlSmall: "32px",
-    sidebar: "300px",
+    sidebar: `${sidebarWidth.initial}px`,
   },
   shape: { small: "8px", medium: "12px", large: "20px", full: "999px" },
   border: { outline: "1px", focusRing: "2px", indicator: "2px" },
