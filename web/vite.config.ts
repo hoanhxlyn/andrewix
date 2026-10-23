@@ -4,6 +4,7 @@ import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
 import Unfonts from "unplugin-fonts/vite";
 import Icons from "unplugin-icons/vite";
 import { defineConfig } from "vite";
+import { aspects } from "./vite/aspects.ts";
 import { repoTree } from "./vite/repo-tree.ts";
 
 export default defineConfig({
@@ -14,6 +15,7 @@ export default defineConfig({
     reactRouter(),
     vanillaExtractPlugin(),
     repoTree(),
+    aspects(),
     Icons({ compiler: "jsx", jsx: "react" }),
     Unfonts({
       fontsource: {
