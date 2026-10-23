@@ -1,10 +1,26 @@
-import { style } from "@vanilla-extract/css";
+import { globalStyle, style } from "@vanilla-extract/css";
 import { inComponents } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
-import { text } from "@/styles/tokens.css";
+import { text, vars } from "@/styles/tokens.css";
 
-/** Message filling the space of content that is missing or cannot be shown. */
+/** Icon and message filling the space of content that is missing or cannot be shown. */
 export const empty = style([
-  sprinkles({ padding: "md", color: "onSurfaceVariant" }),
-  inComponents({ ...text.body, flex: 1, minHeight: 0, margin: 0 }),
+  sprinkles({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "md",
+    padding: "md",
+    color: "onSurfaceVariant",
+  }),
+  inComponents({ ...text.body, flex: 1, minHeight: 0, textAlign: "center" }),
 ]);
+
+globalStyle(
+  `${empty} > svg`,
+  inComponents({ width: vars.size.iconLarge, height: vars.size.iconLarge }),
+);
+
+/** Message under the icon. */
+export const message = style(inComponents({ margin: 0 }));

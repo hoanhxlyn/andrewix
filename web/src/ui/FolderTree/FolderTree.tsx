@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef } from "react";
 import { Tree } from "react-aria-components/Tree";
 import { openedFoldersAtom } from "@/atoms/folder-tree";
 import { motion } from "@/styles/tokens.css";
+import { EmptyState } from "@/ui/EmptyState";
+import Icons from "@/ui/Icon";
 import { Branch } from "./Branch";
 import * as s from "./FolderTree.css";
 import { ancestorsOf, filePaths, matches, toggled } from "./tree-paths";
@@ -101,7 +103,9 @@ export function FolderTree({
         }}
         expandedKeys={opened}
         onExpandedChange={setOpened}
-        renderEmptyState={() => <p className={s.empty}>No files matched.</p>}
+        renderEmptyState={() => (
+          <EmptyState icon={<Icons.Search />}>No files matched.</EmptyState>
+        )}
       >
         {tree.children
           .filter(

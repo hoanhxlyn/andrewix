@@ -1,4 +1,5 @@
 import {
+  type ComponentProps,
   type CSSProperties,
   type MouseEvent,
   useCallback,
@@ -14,6 +15,7 @@ import {
 import { aspectPath } from "@/helper/aspects";
 import { isTextFile, languageOf, sourceOf } from "@/helper/config-files";
 import { EmptyState } from "@/ui/EmptyState";
+import Icons from "@/ui/Icon";
 import * as s from "./CodePeek.css";
 import { type Line, Source } from "./Source";
 
@@ -35,6 +37,25 @@ const MIN_LOADING_MS = 1000;
 const loaded = new Map<string, Line[]>();
 
 const THEMES = { light: "catppuccin-latte", dark: "catppuccin-mocha" };
+
+/** Why a file cannot be shown, with the icon its empty state carries. */
+interface Problem {
+  icon: ComponentProps<typeof EmptyState>["icon"];
+  text: string;
+}
+
+const NOT_TEXT: Problem = {
+  icon: <Icons.UnsupportedFile />,
+  text: "Not a text file.",
+};
+const NOT_IN_CONFIG: Problem = {
+  icon: <Icons.UnknownFile />,
+  text: "Not a file of the config.",
+};
+const LOAD_FAILED: Problem = {
+  icon: <Icons.Alert />,
+  text: "Could not load this file.",
+};
 
 /** Placeholder rows of the loading skeleton. */
 const SKELETON_LINES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -89,15 +110,15 @@ export function CodePeek({
   className,
 }: CodePeekProps) {
   const [lines, setLines] = useState<Line[] | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+  const [problem, setProblem] = useState<Problem | null>(null);
 
   useEffect(() => {
     if (!isTextFile(path)) {
       setLines(null);
-      setMessage("Not a text file.");
+      setProblem(NOT_TEXT);
       return;
     }
-    setMessage(null);
+    setProblem(null);
     const known = loaded.get(path);
     if (known) {
       setLines(known);
@@ -111,7 +132,7 @@ export function CodePeek({
         new Promise((done) => setTimeout(done, MIN_LOADING_MS)),
       ]);
       if (code === null) {
-        if (active) setMessage("Not a file of the config.");
+        if (active) setProblem(NOT_IN_CONFIG);
         return;
       }
       const lang = languageOf(path);
@@ -125,7 +146,7 @@ export function CodePeek({
       loaded.set(path, numbered);
       if (active) setLines(numbered);
     })().catch(() => {
-      if (active) setMessage("Could not load this file.");
+      if (active) setProblem(LOAD_FAILED);
     });
     return () => {
       active = false;
@@ -143,8 +164,12 @@ export function CodePeek({
     latestOpen.current(path);
   }, []);
 
-  if (message !== null) {
-    return <EmptyState className={className}>{message}</EmptyState>;
+  if (problem !== null) {
+    return (
+      <EmptyState icon={problem.icon} className={className}>
+        {problem.text}
+      </EmptyState>
+    );
   }
 
   return (

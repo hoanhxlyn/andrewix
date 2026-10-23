@@ -174,7 +174,9 @@ export default function Home() {
         {/* Inside the panel, the source is left out of the hidden copy React Aria renders of the
             tabs. Every file of the repository has a tab; any other path has no panel to show in. */}
         {file === null ? (
-          <EmptyState>Pick a file in the tree.</EmptyState>
+          <EmptyState icon={<Icons.File />}>
+            Pick a file in the tree.
+          </EmptyState>
         ) : FILES.has(file) ? (
           <TabPanel id={file}>
             <CodePeek
@@ -189,7 +191,9 @@ export default function Home() {
             />
           </TabPanel>
         ) : (
-          <EmptyState>Not a file of the config.</EmptyState>
+          <EmptyState icon={<Icons.UnknownFile />}>
+            Not a file of the config.
+          </EmptyState>
         )}
       </Tabs>
     </Card>

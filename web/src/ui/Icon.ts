@@ -1,3 +1,4 @@
+import Alert from "~icons/mdi/alert-circle-outline";
 import ShellFile from "~icons/mdi/bash";
 import Check from "~icons/mdi/check";
 import Chevron from "~icons/mdi/chevron-right";
@@ -5,7 +6,9 @@ import Close from "~icons/mdi/close";
 import YamlFile from "~icons/mdi/code-braces";
 import TomlFile from "~icons/mdi/code-brackets";
 import JsonFile from "~icons/mdi/code-json";
+import UnsupportedFile from "~icons/mdi/file-cancel-outline";
 import File from "~icons/mdi/file-outline";
+import UnknownFile from "~icons/mdi/file-question-outline";
 import Folder from "~icons/mdi/folder";
 import FolderOpen from "~icons/mdi/folder-open";
 import LuaFile from "~icons/mdi/language-lua";
@@ -22,6 +25,7 @@ import Light from "~icons/mdi/white-balance-sunny";
  * the icon pack is a change to this file only.
  */
 export default {
+  Alert,
   Check,
   Chevron,
   Close,
@@ -39,5 +43,7 @@ export default {
   Search,
   ShellFile,
   TomlFile,
+  UnknownFile,
+  UnsupportedFile,
   YamlFile,
 };

@@ -1,7 +1,7 @@
 import { globalStyle, style } from "@vanilla-extract/css";
 import { inComponents, stateLayer } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
-import { text, vars } from "@/styles/tokens.css";
+import { vars } from "@/styles/tokens.css";
 
 /** Tree of the repository's files and folders. */
 export const tree = style(inComponents({ margin: 0, padding: 0 }));
@@ -66,12 +66,6 @@ export const chevronOpen = style(
     transition: `transform ${vars.motion.duration} ${vars.motion.easing}`,
   }),
 );
-
-/** Note shown when the query matches no file. */
-export const empty = style([
-  sprinkles({ color: "onSurfaceVariant", padding: "md" }),
-  inComponents(text.body),
-]);
 
 globalStyle(
   `${row} > svg`,
