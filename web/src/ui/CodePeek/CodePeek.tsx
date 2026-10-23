@@ -1,4 +1,10 @@
-import { type CSSProperties, type ReactNode, useEffect, useState } from "react";
+import {
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   type BundledLanguage,
   createHighlighter,
@@ -129,21 +135,27 @@ export function CodePeek({
     };
   }, [path]);
 
-  const source = lines?.map((line) => (
-    <div key={line.id}>
-      <span className={s.num} data-num>
-        {line.number}
-      </span>
-      <span className={s.content}>
-        {line.tokens.map((token) => (
-          <span key={token.id} style={token.htmlStyle}>
-            {token.content}
+  // Built once per loaded file: the page re-renders on every URL change (tree toggle, wrap,
+  // search), and recreating thousands of token spans each time made those changes stall.
+  const source = useMemo(
+    () =>
+      lines?.map((line) => (
+        <div key={line.id}>
+          <span className={s.num} data-num>
+            {line.number}
           </span>
-        ))}
-        {"\n"}
-      </span>
-    </div>
-  ));
+          <span className={s.content}>
+            {line.tokens.map((token) => (
+              <span key={token.id} style={token.htmlStyle}>
+                {token.content}
+              </span>
+            ))}
+            {"\n"}
+          </span>
+        </div>
+      )),
+    [lines],
+  );
 
   return (
     <section className={[s.pane, className].filter(Boolean).join(" ")}>

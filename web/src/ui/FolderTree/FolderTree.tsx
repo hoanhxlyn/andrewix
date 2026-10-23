@@ -35,7 +35,7 @@ export function FolderTree({
   const filter = query.trim().toLowerCase();
   const [opened, setOpened] = useAtom(openedFoldersAtom);
   const files = new Set(filePaths(tree, ""));
-  // Branches only re-render when the filter or tree change, not on every keystroke in the field:
+  // Branches only re-render when the filter, open folders or tree change, not on every keystroke:
   // a stable callback and memoized elements let React skip the hundreds of unchanged rows.
   const latestSelect = useRef(onSelect);
   latestSelect.current = onSelect;
@@ -50,10 +50,11 @@ export function FolderTree({
             node={child}
             path={child.name}
             filter={filter}
+            opened={opened}
             onSelect={select}
           />
         )),
-    [tree, filter, select],
+    [tree, filter, opened, select],
   );
   // Arrow-key navigation also moves the selection; it must not open files, only presses and Enter.
   // The flag is set in the capture phase: the tree changes the selection while handling the same
