@@ -1,0 +1,3 @@
+`$target.removeEventListener($...)` where {
+  register_diagnostic(span=$target, message="Remove the listener with an AbortController signal and abort().")
+}

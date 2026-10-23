@@ -1,5 +1,6 @@
 {
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
+  "plugins": ["./biome/no-remove-event-listener.grit"],
   "vcs": {
     "enabled": true,
     "clientKind": "git",

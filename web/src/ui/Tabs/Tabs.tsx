@@ -89,15 +89,19 @@ export function Tab({ children, tooltip, onClose, ...rest }: TabProps) {
   const attach = useCallback((tab: HTMLDivElement | null) => {
     ref.current = tab;
     if (!tab) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.target !== tab || !latestClose.current) return;
-      if (event.key !== "Delete" && event.key !== "Backspace") return;
-      event.preventDefault();
-      latestClose.current();
-    };
-    tab.addEventListener("keydown", onKeyDown);
+    const listeners = new AbortController();
+    tab.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.target !== tab || !latestClose.current) return;
+        if (event.key !== "Delete" && event.key !== "Backspace") return;
+        event.preventDefault();
+        latestClose.current();
+      },
+      { signal: listeners.signal },
+    );
     return () => {
-      tab.removeEventListener("keydown", onKeyDown);
+      listeners.abort();
       ref.current = null;
     };
   }, []);
