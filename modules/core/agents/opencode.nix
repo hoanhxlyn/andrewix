@@ -48,8 +48,14 @@
         websearch = false;
         default_agent = "plan";
         agents = {
-          plan.model = "opencode-go/glm-5.3-flash";
-          build.model = "opencode-go/mimo-v2.6-pro";
+          plan = {
+            color = colors.base0E;
+            model = "opencode-go/glm-5.3-flash";
+          };
+          build = {
+            color = colors.base0B;
+            model = "opencode-go/mimo-v2.6-pro";
+          };
         };
         permissions = [
           {

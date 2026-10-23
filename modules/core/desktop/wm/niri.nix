@@ -254,6 +254,10 @@
                   hotkey-overlay.title = "Maximize column";
                   action = maximize-column;
                 };
+                "Mod+Shift+F" = {
+                  hotkey-overlay.title = "Toggle window fullscreen";
+                  action = fullscreen-window;
+                };
                 "Mod+W" = {
                   hotkey-overlay.title = "Toggle column tabbed";
                   action = toggle-column-tabbed-display;
@@ -461,6 +465,13 @@
               ];
               open-maximized = false;
               default-column-width = {proportion = 1.0;};
+            }
+            # Steam auxiliary windows (properties, friends list, ...) float;
+            # keep the main "Steam" window tiled
+            {
+              matches = [{app-id = "^steam$";}];
+              excludes = [{title = "^Steam$";}];
+              open-floating = true;
             }
             {
               matches = [{}];

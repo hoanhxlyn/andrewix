@@ -39,7 +39,7 @@
           "zen.tabs.ctrl-tab.ignore-pending-tabs" = true;
           "zen.tabs.show-newtab-vertical" = false;
           "zen.view.show-newtab-button-top" = false;
-          "zen.view.compact.enable-at-startup" = true;
+          "zen.view.compact.enable-at-startup" = false;
           "zen.view.use-single-toolbar" = false;
           "zen.view.sidebar-expanded" = false;
           "zen.urlbar.behavior" = "floating-on-type";
