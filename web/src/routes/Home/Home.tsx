@@ -22,27 +22,15 @@ export default function Home() {
 
   return (
     <Card variant="elevated" className={s.layout}>
-      <aside className={treeShown ? s.pane : s.rail}>
-        <div className={s.bar}>
-          <Button
-            variant="icon"
-            icon={treeShown ? <Icons.Collapse /> : <Icons.Expand />}
-            aria-label={treeShown ? "Hide the tree" : "Show the tree"}
-            aria-expanded={treeShown}
-            onPress={() => setParams({ tree: !treeShown })}
+      {treeShown && (
+        <aside className={s.pane}>
+          <SearchField
+            value={search ?? ""}
+            onChange={(value) =>
+              setParams({ search: value || null }, { history: "replace" })
+            }
+            placeholder="Search files"
           />
-          {treeShown && (
-            <SearchField
-              className={s.search}
-              value={search ?? ""}
-              onChange={(value) =>
-                setParams({ search: value || null }, { history: "replace" })
-              }
-              placeholder="Search files"
-            />
-          )}
-        </div>
-        {treeShown && (
           <div className={s.scroller}>
             <FolderTree
               tree={tree}
@@ -59,13 +47,22 @@ export default function Home() {
               }
             />
           </div>
-        )}
-      </aside>
+        </aside>
+      )}
       <CodePeek
         className={s.peek}
         path={file}
         wrap={wrap}
         onWrapChange={(value) => setParams({ wrap: value || null })}
+        start={
+          <Button
+            variant="icon"
+            icon={treeShown ? <Icons.Collapse /> : <Icons.Expand />}
+            aria-label={treeShown ? "Hide the tree" : "Show the tree"}
+            aria-expanded={treeShown}
+            onPress={() => setParams({ tree: !treeShown })}
+          />
+        }
       />
     </Card>
   );

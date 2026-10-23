@@ -1,4 +1,4 @@
-import { type CSSProperties, useEffect, useState } from "react";
+import { type CSSProperties, type ReactNode, useEffect, useState } from "react";
 import {
   type BundledLanguage,
   createHighlighter,
@@ -72,6 +72,8 @@ interface CodePeekProps {
   wrap: boolean;
   /** Called when the wrap checkbox is toggled. */
   onWrapChange: (wrap: boolean) => void;
+  /** Controls placed before the path in the bar above the source. */
+  start?: ReactNode;
   className?: string;
 }
 
@@ -80,6 +82,7 @@ export function CodePeek({
   path,
   wrap,
   onWrapChange,
+  start,
   className,
 }: CodePeekProps) {
   const [lines, setLines] = useState<Line[] | null>(null);
@@ -145,6 +148,7 @@ export function CodePeek({
   return (
     <section className={[s.pane, className].filter(Boolean).join(" ")}>
       <div className={s.header}>
+        {start}
         <p className={s.title}>{path ?? "Source"}</p>
         <Checkbox isSelected={wrap} onChange={onWrapChange}>
           wrap

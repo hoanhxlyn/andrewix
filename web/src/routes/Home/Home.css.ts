@@ -2,6 +2,7 @@ import { style } from "@vanilla-extract/css";
 import { inComponents } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
 import { breakpoints, vars } from "@/styles/tokens.css";
+import { headerHeight } from "@/ui/CodePeek/CodePeek.css";
 
 /** Card holding the tree sidebar and the source pane. */
 export const layout = style([
@@ -25,67 +26,41 @@ export const pane = style([
   inComponents({
     minWidth: 0,
     minHeight: 0,
-    // Matches the card's padding so the toggle sits at the same spot open and closed.
+    // Inside the card's padding, starting under the source's bar so its tree toggle stays reachable.
     position: "absolute",
     inset: vars.space.lg,
+    insetBlockStart: `calc(${vars.space.lg} + ${headerHeight})`,
     zIndex: vars.layer.raised,
+    paddingBlockStart: vars.space.sm,
     background: vars.color.surface,
-    // The search field would otherwise touch the drawer edge; the toggle on the other side lines up
-    // with the closed rail, so only the end gets room.
-    paddingInlineEnd: vars.space.sm,
     "@media": {
       [breakpoints.medium]: {
         flex: `0 0 ${vars.size.sidebar}`,
         position: "static",
-        paddingInlineEnd: 0,
+        paddingBlockStart: 0,
       },
     },
   }),
 ]);
-
-/** Collapsed sidebar: just the toggle, pinned to the top of the source pane. */
-export const rail = style([
-  sprinkles({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    gap: "sm",
-  }),
-  inComponents({
-    width: "100%",
-    height: vars.size.control,
-    alignSelf: "flex-start",
-    "@media": {
-      [breakpoints.medium]: { width: vars.size.control, height: "auto" },
-    },
-  }),
-]);
-
-/** Row holding the sidebar toggle and the search field. */
-export const bar = style([
-  sprinkles({ display: "flex", alignItems: "center", gap: "sm" }),
-  inComponents({ minWidth: 0 }),
-]);
-
-/** Search field taking the rest of the toggle row. */
-export const search = style(inComponents({ flex: 1, minWidth: 0 }));
 
 /** Scrollable list of files and folders. */
 export const scroller = style(
   inComponents({ flex: 1, minHeight: 0, overflow: "auto" }),
 );
 
-/** Source pane of the selected file, divided from the tree sidebar. */
+/** Source pane of the selected file, divided from the tree sidebar while that is shown. */
 export const peek = style(
   inComponents({
     flex: 1,
     minWidth: 0,
     minHeight: 0,
-    borderTop: `${vars.border.outline} solid ${vars.color.outline}`,
     "@media": {
       [breakpoints.medium]: {
-        border: "none",
-        borderLeft: `${vars.border.outline} solid ${vars.color.outline}`,
+        selectors: {
+          [`${pane} ~ &`]: {
+            borderLeft: `${vars.border.outline} solid ${vars.color.outline}`,
+          },
+        },
       },
     },
   }),

@@ -14,6 +14,12 @@ export const pane = style([
   }),
 ]);
 
+/**
+ * Height of the bar above the source: an icon button plus a small margin above and below. Fixed,
+ * so an overlay can start right under the bar.
+ */
+export const headerHeight = `calc(${vars.size.control} + 2 * ${vars.space.sm})`;
+
 /** Bar above the source with the file path and the view options. */
 export const header = style([
   sprinkles({
@@ -21,9 +27,12 @@ export const header = style([
     alignItems: "center",
     gap: "md",
     color: "onSurfaceVariant",
-    padding: "md",
   }),
-  inComponents({ background: vars.color.surfaceVariant }),
+  inComponents({
+    height: headerHeight,
+    paddingInline: vars.space.md,
+    background: vars.color.surfaceVariant,
+  }),
 ]);
 
 /** Path of the shown file. */
