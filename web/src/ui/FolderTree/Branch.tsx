@@ -3,6 +3,7 @@ import { Button } from "@/ui/Button";
 import Icons from "@/ui/Icon";
 import type { FolderNode } from "./FolderTree";
 import * as s from "./FolderTree.css";
+import { Name } from "./Name";
 import { childPath, matches } from "./tree-paths";
 
 /** File icons per extension, falling back to the generic file icon. */
@@ -53,7 +54,7 @@ export function Branch({ node, path, filter, onSelect }: BranchProps) {
             >
               <span className={s.spacer} />
               <TypeIcon name={node.name} />
-              {node.name}
+              <Name text={node.name} isActive={isHovered || isFocusVisible} />
             </span>
           )}
         </TreeItemContent>
@@ -96,7 +97,10 @@ export function Branch({ node, path, filter, onSelect }: BranchProps) {
               }
             />
             {isExpanded ? <Icons.FolderOpen /> : <Icons.Folder />}
-            {node.name}/
+            <Name
+              text={`${node.name}/`}
+              isActive={isHovered || isFocusVisible}
+            />
           </span>
         )}
       </TreeItemContent>
