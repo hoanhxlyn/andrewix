@@ -1,7 +1,12 @@
-import { createVar, fallbackVar, style } from "@vanilla-extract/css";
+import {
+  createVar,
+  fallbackVar,
+  globalStyle,
+  style,
+} from "@vanilla-extract/css";
 import { inComponents } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
-import { breakpoints, vars } from "@/styles/tokens.css";
+import { breakpoints, text, vars } from "@/styles/tokens.css";
 
 /**
  * Height of the bar above the source: an icon button plus a small margin above and below. Fixed,
@@ -41,15 +46,57 @@ export const pane = style([
     zIndex: vars.layer.raised,
     paddingBlockStart: vars.space.sm,
     background: vars.color.surface,
+    // Clipped while the sidebar narrows, keeping room for the search field's focus ring.
+    overflow: "clip",
+    overflowClipMargin: vars.border.focusRing,
     "@media": {
       [breakpoints.medium]: {
         flex: `0 0 ${fallbackVar(sidebarWidth, vars.size.sidebar)}`,
         position: "static",
         paddingBlockStart: 0,
       },
+      "(prefers-reduced-motion: no-preference)": {
+        // Visibility flips at the end of a hide and the start of a show, so the pane stays
+        // visible for the whole slide.
+        transitionProperty:
+          "flex-basis, margin-inline-end, opacity, visibility",
+        transitionDuration: vars.motion.duration,
+        transitionTimingFunction: vars.motion.easing,
+      },
+    },
+    selectors: {
+      // A dragged width follows the pointer instead of easing after it.
+      [`${layout}:has(> [data-dragging]) &`]: { transition: "none" },
     },
   }),
 ]);
+
+/** Tree sidebar while it is hidden: kept mounted so it can slide out and back in. */
+export const paneHidden = style(
+  inComponents({
+    opacity: 0,
+    visibility: "hidden",
+    "@media": {
+      [breakpoints.medium]: {
+        flexBasis: 0,
+        // Also takes back the layout gap after it, so the source fills the card.
+        marginInlineEnd: `calc(-1 * ${vars.space.md})`,
+      },
+    },
+  }),
+);
+
+/** Fixed width of the sidebar's contents, so they are clipped rather than squeezed as it narrows. */
+globalStyle(
+  `${pane} > *`,
+  inComponents({
+    "@media": {
+      [breakpoints.medium]: {
+        minWidth: fallbackVar(sidebarWidth, vars.size.sidebar),
+      },
+    },
+  }),
+);
 
 /** Scrollable list of files and folders. */
 export const scroller = style(
@@ -74,7 +121,7 @@ export const peek = style(
   }),
 );
 
-/** Bar above the source with the tree toggle, the open files and the view options. */
+/** Bar above the open files with the tree toggle, the shown file and the view options. */
 export const bar = style([
   sprinkles({
     display: "flex",
@@ -89,3 +136,27 @@ export const bar = style([
     background: vars.color.surfaceVariant,
   }),
 ]);
+
+/** Path of the shown file in the bar. */
+export const title = style(
+  inComponents({
+    ...text.label,
+    flex: 1,
+    minWidth: 0,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    color: vars.color.onSurface,
+  }),
+);
+
+/** Row of the open files, between the bar and the source. */
+export const tabRow = style(
+  inComponents({
+    display: "flex",
+    flexShrink: 0,
+    height: vars.size.control,
+    background: vars.color.surfaceVariant,
+    borderBlockStart: `${vars.border.outline} solid ${vars.color.outline}`,
+  }),
+);

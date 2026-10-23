@@ -1,6 +1,6 @@
 import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Tree } from "react-aria-components/Tree";
 import { openedFoldersAtom } from "@/atoms/folder-tree";
 import { motion } from "@/styles/tokens.css";
@@ -38,26 +38,10 @@ export function FolderTree({
   const [opened, setOpened] = useAtom(openedFoldersAtom);
   const files = new Set(filePaths(tree, ""));
   // Branches only re-render when the filter, open folders or tree change, not on every keystroke:
-  // a stable callback and memoized elements let React skip the hundreds of unchanged rows.
+  // a stable callback lets the memoized rows skip the hundreds that did not change.
   const latestSelect = useRef(onSelect);
   latestSelect.current = onSelect;
   const select = useCallback((path: string) => latestSelect.current(path), []);
-  const items = useMemo(
-    () =>
-      tree.children
-        .filter((child) => filter === "" || matches(child, child.name, filter))
-        .map((child) => (
-          <Branch
-            key={child.name}
-            node={child}
-            path={child.name}
-            filter={filter}
-            opened={opened}
-            onSelect={select}
-          />
-        )),
-    [tree, filter, opened, select],
-  );
   // Arrow-key navigation also moves the selection; it must not open files, only presses and Enter.
   // The flag is set in the capture phase: the tree changes the selection while handling the same
   // keydown, before a bubbling handler on this wrapper would run.
@@ -119,7 +103,20 @@ export function FolderTree({
         onExpandedChange={setOpened}
         renderEmptyState={() => <p className={s.empty}>No files matched.</p>}
       >
-        {items}
+        {tree.children
+          .filter(
+            (child) => filter === "" || matches(child, child.name, filter),
+          )
+          .map((child) => (
+            <Branch
+              key={child.name}
+              node={child}
+              path={child.name}
+              filter={filter}
+              opened={opened}
+              onSelect={select}
+            />
+          ))}
       </Tree>
     </div>
   );

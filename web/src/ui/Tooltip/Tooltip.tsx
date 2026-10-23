@@ -14,17 +14,13 @@ interface TooltipProps extends Omit<AriaTooltipProps, "className"> {
  * and `isOpen` when the trigger is not focusable on its own.
  */
 export function Tooltip({ className, isOpen, ...rest }: TooltipProps) {
-  const tooltip = (
-    <AriaTooltip
-      className={[s.tooltip, className].filter(Boolean).join(" ")}
-      {...rest}
-    />
-  );
+  const classes = [s.tooltip, className].filter(Boolean).join(" ");
+  if (!rest.triggerRef) return <AriaTooltip className={classes} {...rest} />;
   // React Aria 1.22.1 positions a tooltip from the trigger's state context even when it is used
   // standalone, and crashes without one; a controlled trigger supplies it.
-  return rest.triggerRef ? (
-    <TooltipTrigger isOpen={isOpen}>{tooltip}</TooltipTrigger>
-  ) : (
-    tooltip
+  return (
+    <TooltipTrigger isOpen={isOpen}>
+      <AriaTooltip className={classes} {...rest} />
+    </TooltipTrigger>
   );
 }

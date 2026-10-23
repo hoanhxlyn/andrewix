@@ -16,6 +16,7 @@ import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
 import { Checkbox } from "@/ui/Checkbox";
 import { CodePeek } from "@/ui/CodePeek";
+import { EmptyState } from "@/ui/EmptyState";
 import { FolderTree, filePaths } from "@/ui/FolderTree";
 import Icons from "@/ui/Icon";
 import { SearchField } from "@/ui/SearchField";
@@ -89,51 +90,39 @@ export default function Home() {
     setParams({ file: next });
   };
 
-  const peek = (
-    <CodePeek
-      path={file}
-      wrap={wrap}
-      hrefOf={hrefOf}
-      // Following a link is a step the back button undoes, unlike picking in the tree.
-      onOpen={(path) => {
-        setOpenFiles(withOpened(path));
-        setParams({ file: path }, { history: "push" });
-      }}
-    />
-  );
-
   return (
     <Card variant="elevated" className={s.layout}>
-      {treeShown && (
-        <aside
-          id={paneId}
-          className={s.pane}
-          style={assignInlineVars({ [s.sidebarWidth]: `${width}px` })}
-        >
-          <SearchField
-            value={search ?? ""}
-            onChange={(value) =>
-              setParams({ search: value || null }, { history: "replace" })
-            }
-            placeholder="Search files"
+      {/* Hidden rather than unmounted, so the sidebar can slide out and back in. */}
+      <aside
+        id={paneId}
+        className={[s.pane, !treeShown && s.paneHidden]
+          .filter(Boolean)
+          .join(" ")}
+        style={assignInlineVars({ [s.sidebarWidth]: `${width}px` })}
+      >
+        <SearchField
+          value={search ?? ""}
+          onChange={(value) =>
+            setParams({ search: value || null }, { history: "replace" })
+          }
+          placeholder="Search files"
+        />
+        <div className={s.scroller}>
+          <FolderTree
+            tree={tree}
+            selected={file}
+            query={search ?? ""}
+            onSelect={(path) => {
+              setOpenFiles(withOpened(path));
+              setParams({ file: path });
+              // A picked file hides the overlay drawer on compact; desktop keeps the sidebar.
+              if (!window.matchMedia(breakpoints.medium).matches) {
+                setTreeShown(false);
+              }
+            }}
           />
-          <div className={s.scroller}>
-            <FolderTree
-              tree={tree}
-              selected={file}
-              query={search ?? ""}
-              onSelect={(path) => {
-                setOpenFiles(withOpened(path));
-                setParams({ file: path });
-                // A picked file hides the overlay drawer on compact; desktop keeps the sidebar.
-                if (!window.matchMedia(breakpoints.medium).matches) {
-                  setTreeShown(false);
-                }
-              }}
-            />
-          </div>
-        </aside>
-      )}
+        </div>
+      </aside>
       {treeShown && (
         <Splitter
           className={s.splitter}
@@ -164,6 +153,13 @@ export default function Home() {
             aria-expanded={treeShown}
             onPress={() => setTreeShown(!treeShown)}
           />
+          <span className={s.title}>{file}</span>
+          <Checkbox isSelected={wrap} onChange={setWrap}>
+            wrap
+          </Checkbox>
+        </div>
+        {/* A row of their own under the bar, apart from the toggle and the view options. */}
+        <div className={s.tabRow}>
           <TabList
             aria-label="Open files"
             items={open.map((path) => ({ id: path }))}
@@ -174,16 +170,26 @@ export default function Home() {
               </Tab>
             )}
           </TabList>
-          <Checkbox isSelected={wrap} onChange={setWrap}>
-            wrap
-          </Checkbox>
         </div>
         {/* Inside the panel, the source is left out of the hidden copy React Aria renders of the
-            tabs. A file without a tab (none picked, or not in the repository) shows only its message. */}
-        {file !== null && open.includes(file) ? (
-          <TabPanel id={file}>{peek}</TabPanel>
+            tabs. Every file of the repository has a tab; any other path has no panel to show in. */}
+        {file === null ? (
+          <EmptyState>Pick a file in the tree.</EmptyState>
+        ) : FILES.has(file) ? (
+          <TabPanel id={file}>
+            <CodePeek
+              path={file}
+              wrap={wrap}
+              hrefOf={hrefOf}
+              // Following a link is a step the back button undoes, unlike picking in the tree.
+              onOpen={(path) => {
+                setOpenFiles(withOpened(path));
+                setParams({ file: path }, { history: "push" });
+              }}
+            />
+          </TabPanel>
         ) : (
-          peek
+          <EmptyState>Not a file of the config.</EmptyState>
         )}
       </Tabs>
     </Card>

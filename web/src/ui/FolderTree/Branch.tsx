@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   type Key,
   TreeItem,
@@ -39,8 +40,17 @@ interface BranchProps {
   onSelect: (path: string) => void;
 }
 
-/** One file or folder of the tree. Nested items render as flattened rows. */
-export function Branch({ node, path, filter, opened, onSelect }: BranchProps) {
+/**
+ * One file or folder of the tree. Nested items render as flattened rows. Memoized, so a row only
+ * re-renders when its own props change, not on every keystroke in the search.
+ */
+export const Branch = memo(function Branch({
+  node,
+  path,
+  filter,
+  opened,
+  onSelect,
+}: BranchProps) {
   if (node.kind === "file") {
     return (
       <TreeItem
@@ -127,4 +137,4 @@ export function Branch({ node, path, filter, opened, onSelect }: BranchProps) {
       ))}
     </TreeItem>
   );
-}
+});

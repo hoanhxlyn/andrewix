@@ -3,7 +3,6 @@ import {
   type MouseEvent,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -14,7 +13,9 @@ import {
 } from "shiki";
 import { aspectPath } from "@/helper/aspects";
 import { isTextFile, languageOf, sourceOf } from "@/helper/config-files";
+import { EmptyState } from "@/ui/EmptyState";
 import * as s from "./CodePeek.css";
+import { type Line, Source } from "./Source";
 
 /** Grammars the pane can highlight. Shiki builds them once on first use. */
 const LANGS = [
@@ -30,6 +31,9 @@ const LANGS = [
 /** Shortest time the skeleton shows, so a fast load does not flash. */
 const MIN_LOADING_MS = 1000;
 
+/** Lines of every file shown before, so switching back to one shows it at once. */
+const loaded = new Map<string, Line[]>();
+
 const THEMES = { light: "catppuccin-latte", dark: "catppuccin-mocha" };
 
 /** Placeholder rows of the loading skeleton. */
@@ -43,21 +47,6 @@ function highlighter(): Promise<Highlighter> {
     langs: [...LANGS],
   });
   return shared;
-}
-
-interface Token {
-  readonly id: number;
-  readonly content: string;
-  readonly htmlStyle?: CSSProperties;
-  /** Repository path of the file an aspect reference points to, or null for plain code. */
-  readonly link: string | null;
-}
-
-interface Line {
-  readonly id: number;
-  /** Displayed line number, counting from 1. */
-  readonly number: number;
-  readonly tokens: readonly Token[];
 }
 
 /** Numbers tokens and lines once per file, so the render needs no index keys. */
@@ -80,8 +69,8 @@ function withIds(
 }
 
 interface CodePeekProps {
-  /** Repository path of the file to show, or null for the empty state. */
-  path: string | null;
+  /** Repository path of the file to show. */
+  path: string;
   /** Whether long lines wrap to the pane instead of scrolling sideways. */
   wrap: boolean;
   /** URL of a linked file, for opening it in a new tab. */
@@ -100,24 +89,22 @@ export function CodePeek({
   className,
 }: CodePeekProps) {
   const [lines, setLines] = useState<Line[] | null>(null);
-  const [message, setMessage] = useState<string | null>(
-    "Pick a file in the tree.",
-  );
+  const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!path) {
-      setLines(null);
-      setMessage("Pick a file in the tree.");
-      return;
-    }
     if (!isTextFile(path)) {
       setLines(null);
       setMessage("Not a text file.");
       return;
     }
+    setMessage(null);
+    const known = loaded.get(path);
+    if (known) {
+      setLines(known);
+      return;
+    }
     let active = true;
     setLines(null);
-    setMessage(null);
     void (async () => {
       const [code] = await Promise.all([
         sourceOf(path),
@@ -134,7 +121,9 @@ export function CodePeek({
             themes: THEMES,
           }).tokens
         : code.split("\n").map((row) => [{ content: row }]);
-      if (active) setLines(withIds(rows));
+      const numbered = withIds(rows);
+      loaded.set(path, numbered);
+      if (active) setLines(numbered);
     })().catch(() => {
       if (active) setMessage("Could not load this file.");
     });
@@ -144,7 +133,7 @@ export function CodePeek({
   }, [path]);
 
   // A plain click opens the file in place; modified and middle clicks follow the href as usual.
-  // The latest callback is read at click time so the memoized source below stays valid.
+  // The latest callback is read at click time so the memoized source stays valid.
   const latestOpen = useRef(onOpen);
   latestOpen.current = onOpen;
   const follow = useCallback((e: MouseEvent, path: string) => {
@@ -154,38 +143,9 @@ export function CodePeek({
     latestOpen.current(path);
   }, []);
 
-  // Built once per loaded file: the page re-renders on every change of its state (tree toggle, wrap,
-  // search), and recreating thousands of token spans each time made those changes stall.
-  const source = useMemo(
-    () =>
-      lines?.map((line) => (
-        <div key={line.id}>
-          <span className={s.num} data-num>
-            {line.number}
-          </span>
-          <span className={s.content}>
-            {line.tokens.map(({ id, content, htmlStyle, link }) =>
-              link === null ? (
-                <span key={id} style={htmlStyle}>
-                  {content}
-                </span>
-              ) : (
-                <a
-                  key={id}
-                  className={s.link}
-                  href={hrefOf(link)}
-                  onClick={(e) => follow(e, link)}
-                >
-                  <span style={htmlStyle}>{content}</span>
-                </a>
-              ),
-            )}
-            {"\n"}
-          </span>
-        </div>
-      )),
-    [lines, hrefOf, follow],
-  );
+  if (message !== null) {
+    return <EmptyState className={className}>{message}</EmptyState>;
+  }
 
   return (
     <pre
@@ -193,16 +153,14 @@ export function CodePeek({
         .filter(Boolean)
         .join(" ")}
     >
-      {source ? (
-        source
-      ) : message === null ? (
+      {lines ? (
+        <Source lines={lines} hrefOf={hrefOf} onFollow={follow} />
+      ) : (
         <div className={s.skeleton} role="status" aria-label="Loading">
           {SKELETON_LINES.map((id) => (
             <div key={id} className={s.skeletonLine} />
           ))}
         </div>
-      ) : (
-        <code className={s.message}>{message}</code>
       )}
     </pre>
   );

@@ -69,14 +69,6 @@ export const link = style(
   }),
 );
 
-/** Empty and error state inside the source block. */
-export const message = style(
-  inComponents({
-    color: vars.color.onSurfaceVariant,
-    paddingInlineStart: vars.space.md,
-  }),
-);
-
 const pulse = keyframes({
   "0%, 100%": { opacity: 1 },
   "50%": { opacity: 0.4 },
