@@ -25,16 +25,19 @@ export const pane = style([
   inComponents({
     minWidth: 0,
     minHeight: 0,
+    // Matches the card's padding so the toggle sits at the same spot open and closed.
     position: "absolute",
-    inset: 0,
+    inset: vars.space.lg,
     zIndex: vars.layer.raised,
     background: vars.color.surface,
-    boxShadow: vars.elevation.level2,
+    // The search field would otherwise touch the drawer edge; the toggle on the other side lines up
+    // with the closed rail, so only the end gets room.
+    paddingInlineEnd: vars.space.sm,
     "@media": {
       [breakpoints.medium]: {
         flex: `0 0 ${vars.size.sidebar}`,
         position: "static",
-        boxShadow: "none",
+        paddingInlineEnd: 0,
       },
     },
   }),

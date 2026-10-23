@@ -1,8 +1,7 @@
 import { useAtom } from "jotai";
 import { themeAtom } from "@/atoms/theme";
 import { Button } from "@/ui/Button";
-import DarkIcon from "~icons/mdi/weather-night";
-import LightIcon from "~icons/mdi/white-balance-sunny";
+import Icons from "@/ui/Icon";
 
 export function ThemeToggle() {
   const [mode, setMode] = useAtom(themeAtom);
@@ -11,7 +10,7 @@ export function ThemeToggle() {
   return (
     <Button
       variant="icon"
-      icon={isDark ? <DarkIcon /> : <LightIcon />}
+      icon={isDark ? <Icons.Dark /> : <Icons.Light />}
       aria-label={`Theme: ${mode}. Switch to ${nextMode}`}
       onPress={() => setMode(nextMode)}
     />

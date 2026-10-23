@@ -31,6 +31,8 @@ export const input = style(
     border: "none",
     outline: "none",
     color: vars.color.onSurface,
+    // The clear button beside the input replaces the browser's own one for type="search".
+    "::-webkit-search-cancel-button": { appearance: "none" },
   }),
 );
 

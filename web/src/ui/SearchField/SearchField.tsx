@@ -1,11 +1,12 @@
+import { useEffect, useRef, useState } from "react";
 import { Input } from "react-aria-components/Input";
 import {
   SearchField as AriaSearchField,
   type SearchFieldProps as AriaSearchFieldProps,
 } from "react-aria-components/SearchField";
+import { COMMIT_DELAY_MS } from "@/constants";
 import { Button } from "@/ui/Button";
-import CloseIcon from "~icons/mdi/close";
-import SearchIcon from "~icons/mdi/magnify";
+import Icons from "@/ui/Icon";
 import * as s from "./SearchField.css";
 
 interface SearchFieldProps
@@ -15,14 +16,17 @@ interface SearchFieldProps
   > {
   /** Current query text. */
   value: string;
-  /** Called with the new query text as it changes. */
+  /** Called with the new query text once typing pauses, and at once when it is cleared. */
   onChange: (value: string) => void;
   /** Short hint shown while the field is empty. */
   placeholder?: string;
   className?: string;
 }
 
-/** Search input with a leading icon and a clear button. */
+/**
+ * Search input with a leading icon and a clear button. The text being typed lives here, so a
+ * keystroke only re-renders the field; the page hears about it when typing pauses.
+ */
 export function SearchField({
   value,
   onChange,
@@ -30,22 +34,47 @@ export function SearchField({
   className,
   ...rest
 }: SearchFieldProps) {
+  const [draft, setDraft] = useState(value);
+  // The last text reported to the page, to tell its echo from a change made elsewhere.
+  const committed = useRef(value);
+  const report = useRef(onChange);
+  report.current = onChange;
+
+  useEffect(() => {
+    if (value === committed.current) return;
+    committed.current = value;
+    setDraft(value);
+  }, [value]);
+
+  useEffect(() => {
+    if (draft === committed.current) return;
+    const timer = setTimeout(() => {
+      committed.current = draft;
+      report.current(draft);
+    }, COMMIT_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [draft]);
+
   return (
     <AriaSearchField
-      value={value}
-      onChange={onChange}
+      value={draft}
+      onChange={setDraft}
       aria-label="Search files"
       className={[s.field, className].filter(Boolean).join(" ")}
       {...rest}
     >
-      <SearchIcon aria-hidden />
+      <Icons.Search aria-hidden />
       <Input className={s.input} placeholder={placeholder} />
       <Button
         variant="icon"
-        icon={<CloseIcon />}
+        icon={<Icons.Close />}
         aria-label="Clear search"
-        isDisabled={value === ""}
-        onPress={() => onChange("")}
+        isDisabled={draft === ""}
+        onPress={() => {
+          committed.current = "";
+          setDraft("");
+          onChange("");
+        }}
       />
     </AriaSearchField>
   );

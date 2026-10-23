@@ -5,9 +5,8 @@ import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
 import { CodePeek } from "@/ui/CodePeek";
 import { FolderTree } from "@/ui/FolderTree";
+import Icons from "@/ui/Icon";
 import { SearchField } from "@/ui/SearchField";
-import ExpandIcon from "~icons/mdi/menu";
-import CollapseIcon from "~icons/mdi/menu-open";
 import * as s from "./Home.css";
 
 /** The repository config as a sidebar tree beside the source of the selected file. */
@@ -25,7 +24,7 @@ export default function Home() {
         <div className={s.bar}>
           <Button
             variant="icon"
-            icon={treeShown ? <CollapseIcon /> : <ExpandIcon />}
+            icon={treeShown ? <Icons.Collapse /> : <Icons.Expand />}
             aria-label={treeShown ? "Hide the tree" : "Show the tree"}
             aria-expanded={treeShown}
             onPress={() => setParams({ tree: !treeShown })}

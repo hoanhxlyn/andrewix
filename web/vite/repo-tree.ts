@@ -1,4 +1,4 @@
-import { type Dirent, readdirSync, readFileSync } from "node:fs";
+import { type Dirent, readdirSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { map, pipe } from "remeda";
 import type { Plugin } from "vite";
@@ -12,19 +12,6 @@ const RESOLVED_ID = `\0${VIRTUAL_ID}`;
 
 /** Folders of the repository root that are scanned. */
 const SCANNED = ["modules", "config"];
-
-/** Extensions whose files the peek pane shows. */
-const TEXT = new Set([
-  "fish",
-  "json",
-  "lua",
-  "md",
-  "nix",
-  "sh",
-  "toml",
-  "yaml",
-  "yml",
-]);
 
 /** Folders first, then files, each by name. Hidden entries are skipped. */
 function visibleEntries(path: string): Dirent[] {
@@ -56,26 +43,10 @@ function scan(path: string, name: string): Folder {
   );
 }
 
-/** Raw text of every text file under the scanned folders, keyed by repository path. */
-function sourcesOf(root: string): Record<string, string> {
-  const sources: Record<string, string> = {};
-  const walk = (dir: string, prefix: string): void => {
-    for (const entry of visibleEntries(dir)) {
-      const path = `${prefix}/${entry.name}`;
-      const full = join(dir, entry.name);
-      if (entry.isDirectory()) walk(full, path);
-      else if (TEXT.has(entry.name.split(".").pop()?.toLowerCase() ?? "")) {
-        sources[path] = readFileSync(full, "utf8");
-      }
-    }
-  };
-  for (const name of SCANNED) walk(join(root, name), name);
-  return sources;
-}
-
 /**
  * Scans `../modules` and `../config` at build time and exposes them as a folder tree through
- * the `virtual:repo-tree` module. The dev server reloads when files there are added or removed.
+ * the `virtual:repo-tree` module. File text is not included; `helper/config-files.ts` loads it
+ * per file. The dev server reloads when files there are added or removed.
  */
 export function repoTree(): Plugin {
   let root = "";
@@ -94,10 +65,7 @@ export function repoTree(): Plugin {
         basename(root),
         SCANNED.map((name) => scan(join(root, name), name)),
       );
-      return [
-        `export const tree = ${JSON.stringify(tree)};`,
-        `export const sources = ${JSON.stringify(sourcesOf(root))};`,
-      ].join("\n");
+      return `export const tree = ${JSON.stringify(tree)};`;
     },
     configureServer(server) {
       const folders = SCANNED.map((name) => join(root, name));

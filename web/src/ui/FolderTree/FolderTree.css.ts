@@ -6,10 +6,16 @@ import { text, vars } from "@/styles/tokens.css";
 /** Tree of the repository's files and folders. */
 export const tree = style(inComponents({ margin: 0, padding: 0 }));
 
-/** One row: indent, chevron, type icon and name. Composes the state feedback. */
-export const item = style([
+/** Focusable row element React Aria renders; its default browser outline is replaced by the ring on the row contents. */
+export const item = style(inComponents({ outline: "none" }));
+
+/** Contents of a row: indent, chevron, type icon and name. Composes the state feedback. */
+export const row = style([
   stateLayer,
+  sprinkles({ display: "flex", alignItems: "center", gap: "sm" }),
   inComponents({
+    width: "100%",
+    minWidth: 0,
     minHeight: vars.size.control,
     paddingBlock: 0,
     paddingInlineEnd: vars.space.sm,
@@ -18,23 +24,32 @@ export const item = style([
     borderRadius: vars.shape.small,
     color: vars.color.onSurface,
     cursor: "pointer",
+    whiteSpace: "nowrap",
+    // Indent guides: one line per ancestor level, under the centre of that ancestor's chevron.
+    // A pseudo-element, since `::before` is the state layer and the selected background would
+    // replace a background image on the row itself.
+    "::after": {
+      content: '""',
+      position: "absolute",
+      insetBlock: 0,
+      insetInlineStart: `calc(${vars.space.sm} + ${vars.size.control} / 2)`,
+      width: `calc((var(--tree-item-level) - 1) * ${vars.size.icon})`,
+      // One tile per level, each starting with the line.
+      backgroundImage: `linear-gradient(to right, ${vars.color.outline} ${vars.border.outline}, transparent ${vars.border.outline})`,
+      backgroundSize: `${vars.size.icon} 100%`,
+      backgroundRepeat: "repeat-x",
+      pointerEvents: "none",
+    },
     selectors: {
       "&[data-selected]": {
         background: vars.color.primaryContainer,
         color: vars.color.onPrimaryContainer,
       },
+      // Inside the row: an outside ring is clipped by the scroller and the neighbouring rows.
+      "&[data-focus-visible]": {
+        outlineOffset: `calc(-1 * ${vars.border.focusRing})`,
+      },
     },
-  }),
-]);
-
-/** Contents of a row: chevron, type icon and name, laid out in one line. */
-export const row = style([
-  sprinkles({ display: "flex", alignItems: "center", gap: "sm" }),
-  inComponents({
-    width: "100%",
-    minWidth: 0,
-    minHeight: vars.size.control,
-    whiteSpace: "nowrap",
   }),
 ]);
 

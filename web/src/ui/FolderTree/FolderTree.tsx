@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   type Key,
   Tree,
@@ -6,17 +6,7 @@ import {
   TreeItemContent,
 } from "react-aria-components/Tree";
 import { Button } from "@/ui/Button";
-import BashIcon from "~icons/mdi/bash";
-import ChevronIcon from "~icons/mdi/chevron-right";
-import BracesIcon from "~icons/mdi/code-braces";
-import BracketsIcon from "~icons/mdi/code-brackets";
-import JsonIcon from "~icons/mdi/code-json";
-import GenericIcon from "~icons/mdi/file-outline";
-import ClosedIcon from "~icons/mdi/folder";
-import OpenIcon from "~icons/mdi/folder-open";
-import LuaIcon from "~icons/mdi/language-lua";
-import MarkdownIcon from "~icons/mdi/language-markdown";
-import NixIcon from "~icons/mdi/snowflake";
+import Icons from "@/ui/Icon";
 import * as s from "./FolderTree.css";
 
 /** A file, or a folder with its children. */
@@ -29,22 +19,22 @@ export type FolderNode =
     };
 
 /** File icons per extension, falling back to the generic file icon. */
-const FILE_ICONS: Record<string, typeof GenericIcon> = {
-  json: JsonIcon,
-  lua: LuaIcon,
-  md: MarkdownIcon,
-  nix: NixIcon,
-  sh: BashIcon,
-  toml: BracketsIcon,
-  yaml: BracesIcon,
-  yml: BracesIcon,
+const FILE_ICONS: Record<string, typeof Icons.File> = {
+  json: Icons.JsonFile,
+  lua: Icons.LuaFile,
+  md: Icons.MarkdownFile,
+  nix: Icons.NixFile,
+  sh: Icons.ShellFile,
+  toml: Icons.TomlFile,
+  yaml: Icons.YamlFile,
+  yml: Icons.YamlFile,
 };
 
 /** File icon of a name: its extension's icon, or the generic file icon. */
 function TypeIcon({ name }: { readonly name: string }) {
   const dot = name.lastIndexOf(".");
   const ext = dot === -1 ? "" : name.slice(dot + 1).toLowerCase();
-  const Icon = FILE_ICONS[ext] ?? GenericIcon;
+  const Icon = FILE_ICONS[ext] ?? Icons.File;
   return <Icon aria-hidden />;
 }
 
@@ -99,13 +89,26 @@ interface BranchProps {
 function Branch({ node, path, filter, onSelect }: BranchProps) {
   if (node.kind === "file") {
     return (
-      <TreeItem id={path} textValue={node.name} onAction={() => onSelect(path)}>
+      <TreeItem
+        id={path}
+        className={s.item}
+        textValue={node.name}
+        onAction={() => onSelect(path)}
+      >
         <TreeItemContent>
-          <span className={s.row}>
-            <span className={s.spacer} />
-            <TypeIcon name={node.name} />
-            {node.name}
-          </span>
+          {({ isHovered, isPressed, isFocusVisible, isSelected }) => (
+            <span
+              className={s.row}
+              data-hovered={isHovered || undefined}
+              data-pressed={isPressed || undefined}
+              data-focus-visible={isFocusVisible || undefined}
+              data-selected={isSelected || undefined}
+            >
+              <span className={s.spacer} />
+              <TypeIcon name={node.name} />
+              {node.name}
+            </span>
+          )}
         </TreeItemContent>
       </TreeItem>
     );
@@ -118,15 +121,26 @@ function Branch({ node, path, filter, onSelect }: BranchProps) {
     : node.children;
 
   return (
-    <TreeItem id={path} textValue={`${node.name}/`} hasChildItems>
+    <TreeItem
+      id={path}
+      className={s.item}
+      textValue={`${node.name}/`}
+      hasChildItems
+    >
       <TreeItemContent>
-        {({ isExpanded }) => (
-          <span className={s.row}>
+        {({ isExpanded, isHovered, isPressed, isFocusVisible, isSelected }) => (
+          <span
+            className={s.row}
+            data-hovered={isHovered || undefined}
+            data-pressed={isPressed || undefined}
+            data-focus-visible={isFocusVisible || undefined}
+            data-selected={isSelected || undefined}
+          >
             <Button
               slot="chevron"
               variant="icon"
               icon={
-                <ChevronIcon
+                <Icons.Chevron
                   className={isExpanded ? s.chevronOpen : undefined}
                 />
               }
@@ -134,7 +148,7 @@ function Branch({ node, path, filter, onSelect }: BranchProps) {
                 isExpanded ? `Collapse ${node.name}` : `Expand ${node.name}`
               }
             />
-            {isExpanded ? <OpenIcon /> : <ClosedIcon />}
+            {isExpanded ? <Icons.FolderOpen /> : <Icons.Folder />}
             {node.name}/
           </span>
         )}
@@ -172,18 +186,47 @@ export function FolderTree({
   const filter = query.trim().toLowerCase();
   const [opened, setOpened] = useState<Set<Key>>(() => new Set());
   const files = new Set(filePaths(tree, ""));
+  // Branches only re-render when the filter or tree change, not on every keystroke in the field:
+  // a stable callback and memoized elements let React skip the hundreds of unchanged rows.
+  const latestSelect = useRef(onSelect);
+  latestSelect.current = onSelect;
+  const select = useCallback((path: string) => latestSelect.current(path), []);
+  const items = useMemo(
+    () =>
+      tree.children
+        .filter((child) => filter === "" || matches(child, child.name, filter))
+        .map((child) => (
+          <Branch
+            key={child.name}
+            node={child}
+            path={child.name}
+            filter={filter}
+            onSelect={select}
+          />
+        )),
+    [tree, filter, select],
+  );
   // Arrow-key navigation also moves the selection; it must not open files, only presses and Enter.
+  // The flag is set in the capture phase: the tree changes the selection while handling the same
+  // keydown, before a bubbling handler on this wrapper would run.
   const keyboardNav = useRef(false);
   // Selecting a file opens its folders once; they can be closed again afterwards.
   useEffect(() => {
     if (selected === null) return;
     setOpened((prev) => new Set([...prev, ...ancestorsOf([selected])]));
   }, [selected]);
+  // A search opens the folders of its matches once; they can be closed again afterwards.
+  useEffect(() => {
+    if (filter === "") return;
+    const hits = filePaths(tree, "").filter((path) =>
+      path.toLowerCase().includes(filter),
+    );
+    setOpened((prev) => new Set([...prev, ...ancestorsOf(hits)]));
+  }, [filter, tree]);
 
   return (
-    // biome-ignore lint/a11y/noStaticElementInteractions: React Aria's Tree takes no keyboard props; pure event glue for the rows
     <div
-      onKeyDown={(e) => {
+      onKeyDownCapture={(e) => {
         keyboardNav.current = /^(Arrow|Home|End)/.test(e.key);
       }}
       onPointerDown={() => {
@@ -212,19 +255,7 @@ export function FolderTree({
         onExpandedChange={setOpened}
         renderEmptyState={() => <p className={s.empty}>No files matched.</p>}
       >
-        {tree.children
-          .filter(
-            (child) => filter === "" || matches(child, child.name, filter),
-          )
-          .map((child) => (
-            <Branch
-              key={child.name}
-              node={child}
-              path={child.name}
-              filter={filter}
-              onSelect={onSelect}
-            />
-          ))}
+        {items}
       </Tree>
     </div>
   );

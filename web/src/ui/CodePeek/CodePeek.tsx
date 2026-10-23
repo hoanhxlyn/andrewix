@@ -18,7 +18,13 @@ const LANGS = [
   "markdown",
 ] as const;
 
+/** Shortest time the skeleton shows, so a fast load does not flash. */
+const MIN_LOADING_MS = 1000;
+
 const THEMES = { light: "catppuccin-latte", dark: "catppuccin-mocha" };
+
+/** Placeholder rows of the loading skeleton. */
+const SKELETON_LINES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
 let shared: Promise<Highlighter> | null = null;
 
@@ -67,7 +73,9 @@ interface CodePeekProps {
 /** Shows the source of one repository file, highlighted for the current theme. */
 export function CodePeek({ path, className }: CodePeekProps) {
   const [lines, setLines] = useState<Line[] | null>(null);
-  const [message, setMessage] = useState("Pick a file in the tree.");
+  const [message, setMessage] = useState<string | null>(
+    "Pick a file in the tree.",
+  );
 
   useEffect(() => {
     if (!path) {
@@ -80,16 +88,18 @@ export function CodePeek({ path, className }: CodePeekProps) {
       setMessage("Not a text file.");
       return;
     }
-    const code = sourceOf(path);
-    if (code === null) {
-      setLines(null);
-      setMessage("Not a file of the config.");
-      return;
-    }
     let active = true;
     setLines(null);
-    setMessage("Loading…");
+    setMessage(null);
     void (async () => {
+      const [code] = await Promise.all([
+        sourceOf(path),
+        new Promise((done) => setTimeout(done, MIN_LOADING_MS)),
+      ]);
+      if (code === null) {
+        if (active) setMessage("Not a file of the config.");
+        return;
+      }
       const lang = languageOf(path);
       const rows = lang
         ? (await highlighter()).codeToTokens(code, {
@@ -124,6 +134,12 @@ export function CodePeek({ path, className }: CodePeekProps) {
               {"\n"}
             </div>
           ))
+        ) : message === null ? (
+          <div className={s.skeleton} role="status" aria-label="Loading">
+            {SKELETON_LINES.map((id) => (
+              <div key={id} className={s.skeletonLine} />
+            ))}
+          </div>
         ) : (
           <code className={s.message}>{message}</code>
         )}
