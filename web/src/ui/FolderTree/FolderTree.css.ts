@@ -81,3 +81,7 @@ globalStyle(
     flexShrink: 0,
   }),
 );
+
+// A name too long for the pane overflows into the scroller instead of squeezing the chevron,
+// which would shift the icon and name off the indent guides.
+globalStyle(`${row} > button`, inComponents({ flexShrink: 0 }));
