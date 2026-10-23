@@ -1,57 +1,13 @@
 import { globalStyle, keyframes, style } from "@vanilla-extract/css";
 import { inComponents } from "@/styles/layers.css";
-import { sprinkles } from "@/styles/sprinkles.css";
-import { text, vars } from "@/styles/tokens.css";
+import { vars } from "@/styles/tokens.css";
 
-/** Panel showing the source of the selected file. */
-export const pane = style([
-  sprinkles({ display: "flex", flexDirection: "column" }),
-  inComponents({
-    minWidth: 0,
-    minHeight: 0,
-    background: vars.color.surface,
-    color: vars.color.onSurface,
-  }),
-]);
-
-/**
- * Height of the bar above the source: an icon button plus a small margin above and below. Fixed,
- * so an overlay can start right under the bar.
- */
-export const headerHeight = `calc(${vars.size.control} + 2 * ${vars.space.sm})`;
-
-/** Bar above the source with the file path and the view options. */
-export const header = style([
-  sprinkles({
-    display: "flex",
-    alignItems: "center",
-    gap: "md",
-    color: "onSurfaceVariant",
-  }),
-  inComponents({
-    height: headerHeight,
-    paddingInline: vars.space.md,
-    background: vars.color.surfaceVariant,
-  }),
-]);
-
-/** Path of the shown file. */
-export const title = style(
-  inComponents({
-    ...text.label,
-    flex: 1,
-    minWidth: 0,
-    margin: 0,
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  }),
-);
-
-/** Scrollable source block. */
+/** Scrollable source of the shown file. */
 export const code = style(
   inComponents({
     margin: 0,
+    background: vars.color.surface,
+    color: vars.color.onSurface,
     // The gutter needs the inline-start edge: its sticky numbers clamp at the content edge.
     paddingBlock: vars.space.md,
     paddingInlineEnd: vars.space.md,
@@ -93,6 +49,23 @@ export const num = style(
     userSelect: "none",
     color: vars.color.onSurfaceVariant,
     background: vars.color.surface,
+  }),
+);
+
+/** Aspect reference in the source that opens the file defining the aspect. */
+export const link = style(
+  inComponents({
+    color: "inherit",
+    textDecorationLine: "underline",
+    textDecorationStyle: "dotted",
+    textUnderlineOffset: vars.border.focusRing,
+    borderRadius: vars.shape.small,
+    selectors: {
+      "&:hover": { textDecorationStyle: "solid" },
+      "&:focus-visible": {
+        outline: `${vars.border.focusRing} solid ${vars.color.primary}`,
+      },
+    },
   }),
 );
 

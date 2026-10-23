@@ -42,7 +42,7 @@ const shared = {
     sidebar: "300px",
   },
   shape: { small: "8px", medium: "12px", large: "20px", full: "999px" },
-  border: { outline: "1px", focusRing: "2px" },
+  border: { outline: "1px", focusRing: "2px", indicator: "2px" },
   layer: { raised: "1" },
   motion: { duration: "200ms", easing: "ease" },
   state: {

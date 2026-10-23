@@ -1,8 +1,10 @@
 import {
   type CSSProperties,
-  type ReactNode,
+  type MouseEvent,
+  useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import {
@@ -10,8 +12,8 @@ import {
   createHighlighter,
   type Highlighter,
 } from "shiki";
+import { aspectPath } from "@/helper/aspects";
 import { isTextFile, languageOf, sourceOf } from "@/helper/config-files";
-import { Checkbox } from "@/ui/Checkbox";
 import * as s from "./CodePeek.css";
 
 /** Grammars the pane can highlight. Shiki builds them once on first use. */
@@ -47,6 +49,8 @@ interface Token {
   readonly id: number;
   readonly content: string;
   readonly htmlStyle?: CSSProperties;
+  /** Repository path of the file an aspect reference points to, or null for plain code. */
+  readonly link: string | null;
 }
 
 interface Line {
@@ -67,7 +71,11 @@ function withIds(
   return rows.map((row) => ({
     id: id++,
     number: ++number,
-    tokens: row.map((token) => ({ ...token, id: id++ })),
+    tokens: row.map((token) => ({
+      ...token,
+      id: id++,
+      link: aspectPath(token.content),
+    })),
   }));
 }
 
@@ -76,10 +84,10 @@ interface CodePeekProps {
   path: string | null;
   /** Whether long lines wrap to the pane instead of scrolling sideways. */
   wrap: boolean;
-  /** Called when the wrap checkbox is toggled. */
-  onWrapChange: (wrap: boolean) => void;
-  /** Controls placed before the path in the bar above the source. */
-  start?: ReactNode;
+  /** URL of a linked file, for opening it in a new tab. */
+  hrefOf: (path: string) => string;
+  /** Called with the repository path of a linked file when its link is clicked. */
+  onOpen: (path: string) => void;
   className?: string;
 }
 
@@ -87,8 +95,8 @@ interface CodePeekProps {
 export function CodePeek({
   path,
   wrap,
-  onWrapChange,
-  start,
+  hrefOf,
+  onOpen,
   className,
 }: CodePeekProps) {
   const [lines, setLines] = useState<Line[] | null>(null);
@@ -135,6 +143,17 @@ export function CodePeek({
     };
   }, [path]);
 
+  // A plain click opens the file in place; modified and middle clicks follow the href as usual.
+  // The latest callback is read at click time so the memoized source below stays valid.
+  const latestOpen = useRef(onOpen);
+  latestOpen.current = onOpen;
+  const follow = useCallback((e: MouseEvent, path: string) => {
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
+      return;
+    e.preventDefault();
+    latestOpen.current(path);
+  }, []);
+
   // Built once per loaded file: the page re-renders on every URL change (tree toggle, wrap,
   // search), and recreating thousands of token spans each time made those changes stall.
   const source = useMemo(
@@ -145,40 +164,46 @@ export function CodePeek({
             {line.number}
           </span>
           <span className={s.content}>
-            {line.tokens.map((token) => (
-              <span key={token.id} style={token.htmlStyle}>
-                {token.content}
-              </span>
-            ))}
+            {line.tokens.map(({ id, content, htmlStyle, link }) =>
+              link === null ? (
+                <span key={id} style={htmlStyle}>
+                  {content}
+                </span>
+              ) : (
+                <a
+                  key={id}
+                  className={s.link}
+                  href={hrefOf(link)}
+                  onClick={(e) => follow(e, link)}
+                >
+                  <span style={htmlStyle}>{content}</span>
+                </a>
+              ),
+            )}
             {"\n"}
           </span>
         </div>
       )),
-    [lines],
+    [lines, hrefOf, follow],
   );
 
   return (
-    <section className={[s.pane, className].filter(Boolean).join(" ")}>
-      <div className={s.header}>
-        {start}
-        <p className={s.title}>{path ?? "Source"}</p>
-        <Checkbox isSelected={wrap} onChange={onWrapChange}>
-          wrap
-        </Checkbox>
-      </div>
-      <pre className={wrap ? `${s.code} ${s.wrapped}` : s.code}>
-        {source ? (
-          source
-        ) : message === null ? (
-          <div className={s.skeleton} role="status" aria-label="Loading">
-            {SKELETON_LINES.map((id) => (
-              <div key={id} className={s.skeletonLine} />
-            ))}
-          </div>
-        ) : (
-          <code className={s.message}>{message}</code>
-        )}
-      </pre>
-    </section>
+    <pre
+      className={[s.code, wrap && s.wrapped, className]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {source ? (
+        source
+      ) : message === null ? (
+        <div className={s.skeleton} role="status" aria-label="Loading">
+          {SKELETON_LINES.map((id) => (
+            <div key={id} className={s.skeletonLine} />
+          ))}
+        </div>
+      ) : (
+        <code className={s.message}>{message}</code>
+      )}
+    </pre>
   );
 }

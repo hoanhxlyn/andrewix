@@ -9,7 +9,7 @@ export const field = style([
     display: "flex",
     alignItems: "center",
     gap: "sm",
-    borderRadius: "full",
+    borderRadius: "small",
     background: "surface",
   }),
   inComponents({
