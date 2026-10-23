@@ -7,36 +7,21 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  type BundledLanguage,
-  createHighlighter,
-  type Highlighter,
-} from "shiki";
+import type { BundledLanguage } from "shiki";
 import { aspectPath } from "@/helper/aspects";
 import { isTextFile, languageOf, sourceOf } from "@/helper/config-files";
+import { highlighter, THEMES } from "@/helper/highlighter";
 import { EmptyState } from "@/ui/EmptyState";
 import Icons from "@/ui/Icon";
+import { Skeleton } from "@/ui/Skeleton";
 import * as s from "./CodePeek.css";
 import { type Line, Source } from "./Source";
-
-/** Grammars the pane can highlight. Shiki builds them once on first use. */
-const LANGS = [
-  "nix",
-  "lua",
-  "json",
-  "toml",
-  "yaml",
-  "bash",
-  "markdown",
-] as const;
 
 /** Shortest time the skeleton shows, so a fast load does not flash. */
 const MIN_LOADING_MS = 1000;
 
 /** Lines of every file shown before, so switching back to one shows it at once. */
 const loaded = new Map<string, Line[]>();
-
-const THEMES = { light: "catppuccin-latte", dark: "catppuccin-mocha" };
 
 /** Why a file cannot be shown, with the icon its empty state carries. */
 interface Problem {
@@ -46,7 +31,7 @@ interface Problem {
 
 const NOT_TEXT: Problem = {
   icon: <Icons.UnsupportedFile />,
-  text: "Not a text file.",
+  text: "Cannot preview this file.",
 };
 const NOT_IN_CONFIG: Problem = {
   icon: <Icons.UnknownFile />,
@@ -56,19 +41,6 @@ const LOAD_FAILED: Problem = {
   icon: <Icons.Alert />,
   text: "Could not load this file.",
 };
-
-/** Placeholder rows of the loading skeleton. */
-const SKELETON_LINES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-
-let shared: Promise<Highlighter> | null = null;
-
-function highlighter(): Promise<Highlighter> {
-  shared ??= createHighlighter({
-    themes: [THEMES.light, THEMES.dark],
-    langs: [...LANGS],
-  });
-  return shared;
-}
 
 /** Numbers tokens and lines once per file, so the render needs no index keys. */
 function withIds(
@@ -172,21 +144,17 @@ export function CodePeek({
     );
   }
 
+  if (lines === null) {
+    return <Skeleton className={className} />;
+  }
+
   return (
     <pre
       className={[s.code, wrap && s.wrapped, className]
         .filter(Boolean)
         .join(" ")}
     >
-      {lines ? (
-        <Source lines={lines} hrefOf={hrefOf} onFollow={follow} />
-      ) : (
-        <div className={s.skeleton} role="status" aria-label="Loading">
-          {SKELETON_LINES.map((id) => (
-            <div key={id} className={s.skeletonLine} />
-          ))}
-        </div>
-      )}
+      <Source lines={lines} hrefOf={hrefOf} onFollow={follow} />
     </pre>
   );
 }

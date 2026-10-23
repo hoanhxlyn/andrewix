@@ -7,10 +7,15 @@ import {
   type UrlKeys,
   useQueryStates,
 } from "nuqs";
-import { useId } from "react";
+import { lazy, Suspense, useId } from "react";
 import { clamp } from "remeda";
-import { openFilesAtom, wrapLinesAtom } from "@/atoms/code-peek";
+import {
+  markdownPreviewAtom,
+  openFilesAtom,
+  wrapLinesAtom,
+} from "@/atoms/code-peek";
 import { sidebarShownAtom, sidebarWidthAtom } from "@/atoms/sidebar";
+import { isImageFile, isMarkdownFile } from "@/helper/config-files";
 import { breakpoints, sidebarWidth } from "@/styles/tokens.css";
 import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
@@ -19,7 +24,9 @@ import { CodePeek } from "@/ui/CodePeek";
 import { EmptyState } from "@/ui/EmptyState";
 import { FolderTree, filePaths } from "@/ui/FolderTree";
 import Icons from "@/ui/Icon";
+import { ImagePeek } from "@/ui/ImagePeek";
 import { SearchField } from "@/ui/SearchField";
+import { Skeleton } from "@/ui/Skeleton";
 import { Splitter } from "@/ui/Splitter";
 import { Tab, TabList, TabPanel, Tabs } from "@/ui/Tabs";
 import * as s from "./Home.css";
@@ -45,6 +52,13 @@ const hrefOf = (path: string) => serialize({ file: path });
 /** Every file of the repository tree, the only paths that can be open. */
 const FILES = new Set(filePaths(tree, ""));
 
+/** Loaded with the first markdown file opened, keeping the renderer out of the page chunk. */
+const MarkdownPeek = lazy(() =>
+  import("@/ui/MarkdownPeek").then((module) => ({
+    default: module.MarkdownPeek,
+  })),
+);
+
 const nameOf = (path: string) => path.slice(path.lastIndexOf("/") + 1);
 
 /** Pill label of an open file: its name, with its folder when another open file shares the name. */
@@ -60,9 +74,11 @@ export default function Home() {
   const [storedFiles, setOpenFiles] = useAtom(openFilesAtom);
   const [storedShown, setTreeShown] = useAtom(sidebarShownAtom);
   const [storedWrap, setWrap] = useAtom(wrapLinesAtom);
+  const [storedPreview, setPreview] = useAtom(markdownPreviewAtom);
   // Storage is editable by hand, so stored values are only trusted in the shape they are written.
   const treeShown = storedShown !== false;
   const wrap = storedWrap === true;
+  const preview = storedPreview !== false;
   // Stored tabs or a link may repeat a file or name one the repository no longer has; pills need
   // unique, existing paths. A file opened from a link also shows as a pill.
   const open = [
@@ -154,6 +170,11 @@ export default function Home() {
             onPress={() => setTreeShown(!treeShown)}
           />
           <span className={s.title}>{file}</span>
+          {file !== null && isMarkdownFile(file) && (
+            <Checkbox isSelected={preview} onChange={setPreview}>
+              preview
+            </Checkbox>
+          )}
           <Checkbox isSelected={wrap} onChange={setWrap}>
             wrap
           </Checkbox>
@@ -179,16 +200,25 @@ export default function Home() {
           </EmptyState>
         ) : FILES.has(file) ? (
           <TabPanel id={file}>
-            <CodePeek
-              path={file}
-              wrap={wrap}
-              hrefOf={hrefOf}
-              // Following a link is a step the back button undoes, unlike picking in the tree.
-              onOpen={(path) => {
-                setOpenFiles(withOpened(path));
-                setParams({ file: path }, { history: "push" });
-              }}
-            />
+            {isImageFile(file) ? (
+              <ImagePeek path={file} />
+            ) : isMarkdownFile(file) && preview ? (
+              // The renderer chunk loads behind the same skeleton the file does.
+              <Suspense fallback={<Skeleton />}>
+                <MarkdownPeek path={file} />
+              </Suspense>
+            ) : (
+              <CodePeek
+                path={file}
+                wrap={wrap}
+                hrefOf={hrefOf}
+                // Following a link is a step the back button undoes, unlike picking in the tree.
+                onOpen={(path) => {
+                  setOpenFiles(withOpened(path));
+                  setParams({ file: path }, { history: "push" });
+                }}
+              />
+            )}
           </TabPanel>
         ) : (
           <EmptyState icon={<Icons.UnknownFile />}>

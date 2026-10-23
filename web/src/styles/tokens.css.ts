@@ -49,6 +49,7 @@ const shared = {
     icon: "24px",
     iconSmall: "16px",
     iconLarge: "48px",
+    prose: "80ch",
     control: "40px",
     controlSmall: "32px",
     sidebar: `${sidebarWidth.initial}px`,

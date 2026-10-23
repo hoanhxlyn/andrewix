@@ -9,6 +9,14 @@ export const openFilesAtom = atomWithStorage<string[]>(
   { getOnInit: true },
 );
 
+// Whether markdown files show rendered instead of as source, remembered per browser.
+export const markdownPreviewAtom = atomWithStorage<boolean>(
+  "markdown-preview",
+  true,
+  undefined,
+  { getOnInit: true },
+);
+
 // Whether long lines wrap to the pane, remembered per browser as a reading preference.
 export const wrapLinesAtom = atomWithStorage<boolean>(
   "wrap-lines",

@@ -1,4 +1,4 @@
-import { globalStyle, keyframes, style } from "@vanilla-extract/css";
+import { globalStyle, style } from "@vanilla-extract/css";
 import { inComponents } from "@/styles/layers.css";
 import { vars } from "@/styles/tokens.css";
 
@@ -65,42 +65,6 @@ export const link = style(
       "&:focus-visible": {
         outline: `${vars.border.focusRing} solid ${vars.color.primary}`,
       },
-    },
-  }),
-);
-
-const pulse = keyframes({
-  "0%, 100%": { opacity: 1 },
-  "50%": { opacity: 0.4 },
-});
-
-/** Placeholder block standing in for the source while a file loads. */
-export const skeleton = style(
-  inComponents({
-    display: "flex",
-    flexDirection: "column",
-    gap: vars.space.sm,
-    paddingInline: vars.space.md,
-    "@media": {
-      "(prefers-reduced-motion: no-preference)": {
-        animation: `${pulse} 1.2s ${vars.motion.easing} infinite`,
-      },
-    },
-  }),
-);
-
-/** One placeholder line of the loading skeleton; widths vary by position to look like code. */
-export const skeletonLine = style(
-  inComponents({
-    // Bar plus gap add up to one code line, so the skeleton has the height of the source.
-    height: `calc(${vars.type.body.lineHeight} - ${vars.space.sm})`,
-    borderRadius: vars.shape.small,
-    background: vars.color.surfaceVariant,
-    selectors: {
-      "&:nth-child(4n+1)": { width: "60%" },
-      "&:nth-child(4n+2)": { width: "85%" },
-      "&:nth-child(4n+3)": { width: "40%" },
-      "&:nth-child(4n)": { width: "70%" },
     },
   }),
 );
