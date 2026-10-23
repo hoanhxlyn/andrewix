@@ -12,6 +12,7 @@ Bun is the runtime and package manager; do not use npm, node or `tsc` (`typescri
 bun install
 bun run dev        # react-router dev server (bunx --bun)
 bun run build      # SPA build into build/client
+bun run deploy     # build + deploy to Cloudflare Pages (andrewix.pages.dev)
 bun run preview    # serve build/client
 bun check          # Bun's built-in type checker
 bun run lint       # biome lint --write --unsafe . (rewrites files)

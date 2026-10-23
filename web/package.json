@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "bunx --bun react-router dev",
     "build": "bunx --bun react-router build",
+    "deploy": "bun run build && bunx wrangler pages deploy build/client --project-name=andrewix --branch=main --commit-dirty=true",
     "preview": "bunx --bun vite preview --outDir build/client",
     "lint": "biome lint --write --unsafe .",
     "format": "biome format --write ."
