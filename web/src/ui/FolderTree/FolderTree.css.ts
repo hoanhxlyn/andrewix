@@ -55,7 +55,8 @@ export const row = style([
 
 /** Spacer where the chevron sits on folder rows, keeping file icons aligned. */
 export const spacer = style(
-  inComponents({ width: vars.size.icon, flexShrink: 0 }),
+  // As wide as the chevron, an icon `Button`, not just its icon.
+  inComponents({ width: vars.size.control, flexShrink: 0 }),
 );
 
 /** Chevron of a folder row, turned down while the folder is open. */
