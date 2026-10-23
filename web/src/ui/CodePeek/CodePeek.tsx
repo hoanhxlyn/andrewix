@@ -5,6 +5,7 @@ import {
   type Highlighter,
 } from "shiki";
 import { isTextFile, languageOf, sourceOf } from "@/helper/config-files";
+import { Checkbox } from "@/ui/Checkbox";
 import * as s from "./CodePeek.css";
 
 /** Grammars the pane can highlight. Shiki builds them once on first use. */
@@ -67,11 +68,20 @@ function withIds(
 interface CodePeekProps {
   /** Repository path of the file to show, or null for the empty state. */
   path: string | null;
+  /** Whether long lines wrap to the pane instead of scrolling sideways. */
+  wrap: boolean;
+  /** Called when the wrap checkbox is toggled. */
+  onWrapChange: (wrap: boolean) => void;
   className?: string;
 }
 
 /** Shows the source of one repository file, highlighted for the current theme. */
-export function CodePeek({ path, className }: CodePeekProps) {
+export function CodePeek({
+  path,
+  wrap,
+  onWrapChange,
+  className,
+}: CodePeekProps) {
   const [lines, setLines] = useState<Line[] | null>(null);
   const [message, setMessage] = useState<string | null>(
     "Pick a file in the tree.",
@@ -116,24 +126,33 @@ export function CodePeek({ path, className }: CodePeekProps) {
     };
   }, [path]);
 
+  const source = lines?.map((line) => (
+    <div key={line.id}>
+      <span className={s.num} data-num>
+        {line.number}
+      </span>
+      <span className={s.content}>
+        {line.tokens.map((token) => (
+          <span key={token.id} style={token.htmlStyle}>
+            {token.content}
+          </span>
+        ))}
+        {"\n"}
+      </span>
+    </div>
+  ));
+
   return (
     <section className={[s.pane, className].filter(Boolean).join(" ")}>
-      <p className={s.header}>{path ?? "Source"}</p>
-      <pre className={s.code}>
-        {lines ? (
-          lines.map((line) => (
-            <div key={line.id}>
-              <span className={s.num} data-num>
-                {line.number}
-              </span>
-              {line.tokens.map((token) => (
-                <span key={token.id} style={token.htmlStyle}>
-                  {token.content}
-                </span>
-              ))}
-              {"\n"}
-            </div>
-          ))
+      <div className={s.header}>
+        <p className={s.title}>{path ?? "Source"}</p>
+        <Checkbox isSelected={wrap} onChange={onWrapChange}>
+          wrap
+        </Checkbox>
+      </div>
+      <pre className={wrap ? `${s.code} ${s.wrapped}` : s.code}>
+        {source ? (
+          source
         ) : message === null ? (
           <div className={s.skeleton} role="status" aria-label="Loading">
             {SKELETON_LINES.map((id) => (

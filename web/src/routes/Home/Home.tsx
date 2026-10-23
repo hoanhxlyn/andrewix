@@ -11,11 +11,13 @@ import * as s from "./Home.css";
 
 /** The repository config as a sidebar tree beside the source of the selected file. */
 export default function Home() {
-  // `file` and `search` share the page through the URL; `tree` is the sidebar toggle.
-  const [{ file, search, tree: treeShown }, setParams] = useQueryStates({
+  // `file` and `search` share the page through the URL; `tree` is the sidebar toggle and `wrap`
+  // the line wrapping of the source.
+  const [{ file, search, tree: treeShown, wrap }, setParams] = useQueryStates({
     file: parseAsString,
     search: parseAsString,
     tree: parseAsBoolean.withDefault(true),
+    wrap: parseAsBoolean.withDefault(false),
   });
 
   return (
@@ -59,7 +61,12 @@ export default function Home() {
           </div>
         )}
       </aside>
-      <CodePeek className={s.peek} path={file} />
+      <CodePeek
+        className={s.peek}
+        path={file}
+        wrap={wrap}
+        onWrapChange={(value) => setParams({ wrap: value || null })}
+      />
     </Card>
   );
 }

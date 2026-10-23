@@ -1,4 +1,5 @@
 import ShellFile from "~icons/mdi/bash";
+import Check from "~icons/mdi/check";
 import Chevron from "~icons/mdi/chevron-right";
 import Close from "~icons/mdi/close";
 import YamlFile from "~icons/mdi/code-braces";
@@ -21,6 +22,7 @@ import Light from "~icons/mdi/white-balance-sunny";
  * the icon pack is a change to this file only.
  */
 export default {
+  Check,
   Chevron,
   Close,
   Collapse,

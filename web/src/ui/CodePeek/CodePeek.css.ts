@@ -14,18 +14,30 @@ export const pane = style([
   }),
 ]);
 
-/** Path of the shown file, above the source. */
+/** Bar above the source with the file path and the view options. */
 export const header = style([
-  sprinkles({ color: "onSurfaceVariant", padding: "md" }),
+  sprinkles({
+    display: "flex",
+    alignItems: "center",
+    gap: "md",
+    color: "onSurfaceVariant",
+    padding: "md",
+  }),
+  inComponents({ background: vars.color.surfaceVariant }),
+]);
+
+/** Path of the shown file. */
+export const title = style(
   inComponents({
     ...text.label,
+    flex: 1,
+    minWidth: 0,
     margin: 0,
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
-    background: vars.color.surfaceVariant,
   }),
-]);
+);
 
 /** Scrollable source block. */
 export const code = style(
@@ -116,5 +128,25 @@ export const skeletonLine = style(
       "&:nth-child(4n+3)": { width: "40%" },
       "&:nth-child(4n)": { width: "70%" },
     },
+  }),
+);
+
+/** Source block whose long lines wrap to the pane instead of scrolling sideways. */
+export const wrapped = style({});
+
+/** Text of one source line, after its number. */
+export const content = style({});
+
+// Wrapped lines keep a hanging indent: the number stays in its column and the text wraps
+// beside it instead of under it.
+globalStyle(`${wrapped} > div`, inComponents({ display: "flex" }));
+
+globalStyle(
+  `${wrapped} ${content}`,
+  inComponents({
+    flex: 1,
+    minWidth: 0,
+    whiteSpace: "pre-wrap",
+    overflowWrap: "anywhere",
   }),
 );
