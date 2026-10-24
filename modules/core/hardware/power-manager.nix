@@ -1,5 +1,38 @@
 {
   core.hardware.power-manager = {
+    # This aspect is only included for laptops (modules/core/hardware/default.nix).
+    homeManager = {pkgs, ...}: let
+      tlp = "/run/current-system/sw/bin/tlp";
+      capacity = "${pkgs.coreutils}/bin/cat";
+      # Below this state of charge, discharging switches to power-saver once and
+      # nags for the charger. TLP restores the AC profile on plug-in by itself.
+      lowBattery = 40;
+      batteryLow = pkgs.writeShellScript "battery-low-profile" ''
+        while :; do
+          for bat in /sys/class/power_supply/BAT*; do
+            [ "$(${capacity} "$bat/status")" = Discharging ] || continue
+            cap=$(${capacity} "$bat/capacity")
+            [ "$cap" -le ${toString lowBattery} ] || continue
+            # Already throttled for this discharge; avoid a notification every minute.
+            ${tlp}-stat -m 2>/dev/null | ${pkgs.gnugrep}/bin/grep -q '^power-saver' && continue
+            /run/wrappers/bin/sudo -n ${tlp} power-saver \
+              && ${pkgs.libnotify}/bin/notify-send -u critical "Battery ''${cap}%" "Plug in the charger"
+          done
+          ${pkgs.coreutils}/bin/sleep 60
+        done
+      '';
+    in {
+      systemd.user.services.battery-low-profile = {
+        Unit.Description = "Switch TLP to power-saver at ${toString lowBattery}% battery";
+        Install.WantedBy = ["default.target"];
+        Service = {
+          ExecStart = "${batteryLow}";
+          Restart = "on-failure";
+          RestartSec = 30;
+        };
+      };
+    };
+
     nixos = {
       config,
       host,
