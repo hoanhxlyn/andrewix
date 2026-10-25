@@ -1,11 +1,11 @@
-local current_theme = {
-  bg = "#11121d",
-  fg = "#a0a8cd",
-}
+local f = io.open(vim.fn.expand("~/.config/stylix/palette.json"))
+if not f then return end
+local palette = vim.json.decode(f:read("*a"))
+f:close()
 
 require("mini.hues").setup({
-  background = current_theme.bg,
-  foreground = current_theme.fg,
+  background = "#" .. palette.base00,
+  foreground = "#" .. palette.base05,
   n_hues = 6,
   -- saturation = "medium",
   -- accent = "bg",

@@ -89,6 +89,13 @@
     };
     home-pc = mkHost {
       defaults.terminal = "rio";
+      appearance = {
+        scheme = "gruvbox-material-dark-medium"; # base16-schemes name
+        wallpaper = {
+          source = "gruvbox";
+          path = "wallpapers/brands/amdgruvorange.png";
+        };
+      };
       cpu = "amd";
       gpu = {
         vendor = "nvidia";
