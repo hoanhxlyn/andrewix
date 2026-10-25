@@ -316,15 +316,19 @@
                 };
 
                 # Screenshots & Recording
+                # repeat = false: one-shot commands, holding the key must not spam them
                 "Mod+S" = {
+                  repeat = false;
                   hotkey-overlay.title = "Screenshot annotate";
                   action.spawn = ["screenshot-annotate"];
                 };
                 "Mod+Shift+S" = {
+                  repeat = false;
                   hotkey-overlay.title = "Screenshot fullscreen";
                   action.spawn = ["screenshot-fullscreen"];
                 };
                 "Mod+Alt+S" = {
+                  repeat = false;
                   hotkey-overlay.title = "Record screen";
                   action.spawn = ["record-toggle"];
                 };
