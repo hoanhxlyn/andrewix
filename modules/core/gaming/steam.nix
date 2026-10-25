@@ -29,12 +29,6 @@
         extraCompatPackages = [inputs.dw-proton.packages.${pkgs.stdenv.hostPlatform.system}.dw-proton];
         remotePlay.openFirewall = true;
         dedicatedServer.openFirewall = true;
-        package = pkgs.steam.override {
-          extraEnv = {
-            MANGOHUD = true;
-            MANGOHUD_CONFIG = "position=top-right,fps";
-          };
-        };
       };
       programs.gamemode.enable = true;
       programs.gamescope = {
