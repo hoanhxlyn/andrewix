@@ -34,6 +34,7 @@
       web.enable = !isWsl;
       settings = {
         update = "disable";
+        websearch.provider = "exa";
         plugins = [
           "@dietrichgebert/ponytail"
         ];
@@ -100,11 +101,6 @@
             action = "edit";
             resource = "*";
             effect = "ask";
-          }
-          {
-            action = "webfetch";
-            resource = "*";
-            effect = "deny";
           }
           {
             action = "external_directory";
