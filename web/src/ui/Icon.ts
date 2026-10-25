@@ -11,6 +11,7 @@ import File from "~icons/mdi/file-outline";
 import UnknownFile from "~icons/mdi/file-question-outline";
 import Folder from "~icons/mdi/folder";
 import FolderOpen from "~icons/mdi/folder-open";
+import Image from "~icons/mdi/image-multiple-outline";
 import LuaFile from "~icons/mdi/language-lua";
 import MarkdownFile from "~icons/mdi/language-markdown";
 import Search from "~icons/mdi/magnify";
@@ -35,6 +36,7 @@ export default {
   File,
   Folder,
   FolderOpen,
+  Image,
   JsonFile,
   Light,
   LuaFile,

@@ -61,9 +61,9 @@ export function Splitter({
   };
 
   return (
-    // biome-ignore lint/a11y/useSemanticElements: an <hr> cannot take focus or be dragged.
-    <div
-      role="separator"
+    // A focusable separator is the window-splitter pattern: <hr> already carries the role, and it
+    // takes the ARIA values and the drag handlers like any other element.
+    <hr
       aria-orientation="vertical"
       aria-valuenow={value}
       aria-valuemin={min}

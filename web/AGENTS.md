@@ -14,6 +14,8 @@ bun run dev        # react-router dev server (bunx --bun)
 bun run build      # SPA build into build/client
 bun run deploy     # build + deploy to Cloudflare Pages (andrewix.pages.dev)
 bun run preview    # serve build/client
+bun run walls      # regenerate src/routes/Walls/walls.ts from the wallpaper flake inputs
+bun run e2e        # Playwright suite against build/client; needs the nixpkgs browsers from .envrc
 bun check          # Bun's built-in type checker
 bun run lint       # biome lint --write --unsafe . (rewrites files)
 bun run format     # biome format --write .
@@ -24,7 +26,7 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 
 ## Architecture
 
-**Routing.** React Router v8 framework mode as an SPA (`ssr: false`, `appDirectory: "src"`). Routes are declared in `src/routes.ts`; `layouts/AppShell.tsx` is the layout route and `root.tsx` holds the document shell. Route files are flat until a route needs a second file (`.css.ts`, hook, child component); then it gets a folder: `routes/<Name>/<Name>.tsx`, with no barrel because `routes.ts` imports the file by path. Route-local components stay in the route folder; only reusable primitives go in `ui/`.
+**Routing.** React Router v8 framework mode as an SPA (`ssr: false`, `appDirectory: "src"`). Routes are declared in `src/routes.ts`; `layouts/AppShell.tsx` is the layout route and `root.tsx` holds the document shell. A route folder holds the page and its `.css.ts` only; data and helpers live in `src/helper/` (generated data in `src/data/`). Route files are flat until a route needs a second file; then it gets a folder: `routes/<Name>/<Name>.tsx`, with no barrel because `routes.ts` imports the file by path. Route-local components stay in the route folder; only reusable primitives go in `ui/`.
 
 **Styling is vanilla-extract, split across a few files that only make sense together:**
 
@@ -45,6 +47,7 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 
 - Use tokens for every size, color and duration; no magic numbers and no `null` placeholder contracts.
 - Do not use `dangerouslySetInnerHTML`.
+- Do not silence lint rules (`biome-ignore`); fix the cause or restructure the code so the rule does not fire.
 - Every exported style class (`style`, recipe or sprinkles result in a `.css.ts` file) gets a JSDoc comment. It describes only what the class is for, never its styling (colors, sizes, variants), since those change.
 - Import across folders with the `@/` alias for `src/` (`@/styles/tokens.css`, `@/ui/Button`), set in `tsconfig.json` `paths` and enabled in Vite with `resolve.tsconfigPaths`. Use `./` only for files in the same folder.
 - Biome is the formatter and linter: double quotes, 2-space indent, organized imports.

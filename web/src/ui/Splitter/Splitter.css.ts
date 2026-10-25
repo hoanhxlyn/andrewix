@@ -8,6 +8,9 @@ export const splitter = style(
     position: "relative",
     flexShrink: 0,
     width: vars.space.md,
+    // An <hr> comes with a border and a margin of its own.
+    border: "none",
+    margin: 0,
     borderRadius: vars.shape.small,
     cursor: "col-resize",
     // Touch drags move the divider instead of scrolling the page.

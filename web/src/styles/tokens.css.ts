@@ -36,7 +36,12 @@ export const sidebarWidth = {
 } as const;
 
 // Transition length in milliseconds and its easing; a number too, for animations run from script.
-export const motion = { duration: 200, easing: "ease" } as const;
+// Emphasized is the M3 curve for motion the user is meant to notice: dialogs, picture reveals.
+export const motion = {
+  duration: 200,
+  easing: "ease",
+  emphasized: { duration: 300, easing: "cubic-bezier(0.2, 0, 0, 1)" },
+} as const;
 
 const shared = {
   space,
@@ -54,10 +59,21 @@ const shared = {
     controlSmall: "32px",
     sidebar: `${sidebarWidth.initial}px`,
   },
-  shape: { small: "8px", medium: "12px", large: "20px", full: "999px" },
+  shape: {
+    small: "8px",
+    medium: "12px",
+    large: "20px",
+    extraLarge: "28px",
+    full: "999px",
+  },
   border: { outline: "1px", focusRing: "2px", indicator: "2px" },
   layer: { raised: "1" },
-  motion: { duration: `${motion.duration}ms`, easing: motion.easing },
+  motion: {
+    duration: `${motion.duration}ms`,
+    easing: motion.easing,
+    emphasizedDuration: `${motion.emphasized.duration}ms`,
+    emphasizedEasing: motion.emphasized.easing,
+  },
   state: {
     hover: "0.08",
     focus: "0.1",

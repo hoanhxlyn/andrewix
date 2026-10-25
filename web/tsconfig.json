@@ -18,6 +18,9 @@
   },
   "include": [
     "vite",
+    "scripts",
+    "e2e",
+    "playwright.config.ts",
     "src",
     "vite.config.ts",
     "react-router.config.ts",

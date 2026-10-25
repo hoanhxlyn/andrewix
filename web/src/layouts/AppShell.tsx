@@ -7,10 +7,15 @@ export default function AppShell() {
   return (
     <div className={s.shell}>
       <header className={s.appBar}>
-        <Link to="/" className={s.title}>
+        <Link to="/" className={s.title} viewTransition>
           {APP_NAME}
         </Link>
-        <ThemeToggle />
+        <nav className={s.nav}>
+          <Link to="/walls" className={s.navLink} viewTransition>
+            Wallpapers
+          </Link>
+          <ThemeToggle />
+        </nav>
       </header>
       <main className={s.main}>
         <Outlet />

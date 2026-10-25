@@ -38,3 +38,21 @@ export const title = style([
 export const main = style(
   inComponents({ flex: 1, minHeight: 0, overflow: "auto" }),
 );
+
+/** Right side of the top bar: page links and the theme switch. */
+export const nav = style([
+  sprinkles({ display: "flex", alignItems: "center", gap: "md" }),
+]);
+
+/** Link to a page of the app, next to the title's brand link. */
+export const navLink = style([
+  sprinkles({ color: "onSurfaceVariant", borderRadius: "small" }),
+  inComponents({
+    ...text.label,
+    padding: `${vars.space.xs} ${vars.space.sm}`,
+    textDecoration: "none",
+    selectors: {
+      "&:hover": { color: vars.color.onSurface },
+    },
+  }),
+]);

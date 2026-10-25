@@ -74,8 +74,8 @@ export async function sourceOf(path: string): Promise<string | null> {
 }
 
 /**
- * Built URL of every image, eager since each is only a string. The image itself is fetched by the
- * browser when it is shown.
+ * Built URL of every config image, eager since each is only a string. The image itself is fetched by
+ * the browser when it is shown.
  */
 const imageUrls: Record<string, string> = Object.fromEntries(
   Object.entries(
@@ -85,6 +85,9 @@ const imageUrls: Record<string, string> = Object.fromEntries(
     ),
   ).map(([key, url]) => [key.slice(ROOT.length), url]),
 );
+
+/** Repository path of every config image. */
+export const imagePaths: string[] = Object.keys(imageUrls);
 
 /** Built URL of a config image, or null when the path is not one of its images. */
 export function imageUrlOf(path: string): string | null {

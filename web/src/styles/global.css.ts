@@ -73,3 +73,9 @@ globalStyle(
 );
 
 globalStyle("a", inBase({ color: vars.color.primary }));
+
+// Links that opt into a view transition cross-fade between routes over the shared duration token.
+globalStyle("::view-transition-old(root), ::view-transition-new(root)", {
+  animationDuration: vars.motion.duration,
+  animationTimingFunction: vars.motion.easing,
+});
