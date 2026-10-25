@@ -283,7 +283,7 @@
                   hotkey-overlay.title = "Toggle floating";
                   action = toggle-window-floating;
                 };
-                "Mod+Shift+V".action = switch-focus-between-floating-and-tiling;
+                "Mod+Ctrl+V".action = switch-focus-between-floating-and-tiling;
 
                 # Move column (Ctrl + hjkl)
                 "Mod+Shift+H".action = focus-monitor-left;
