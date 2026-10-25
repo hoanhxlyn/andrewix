@@ -153,6 +153,26 @@
         "type": "github"
       }
     },
+    "dw-proton": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792382233,
+        "narHash": "sha256-nhBcDNR2RNfYYoQKEGeLKYsBB7/n0erISciz/9mObPE=",
+        "owner": "imaviso",
+        "repo": "dwproton-flake",
+        "rev": "e8d2c69efb78e96cbf36be927e37fb9a73a3f501",
+        "type": "github"
+      },
+      "original": {
+        "owner": "imaviso",
+        "repo": "dwproton-flake",
+        "type": "github"
+      }
+    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
@@ -838,6 +858,7 @@
         "aic8800": "aic8800",
         "den": "den",
         "disko": "disko",
+        "dw-proton": "dw-proton",
         "flake-file": "flake-file",
         "flake-parts": "flake-parts",
         "gradient": "gradient",
