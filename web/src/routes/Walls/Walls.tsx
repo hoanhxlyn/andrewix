@@ -1,9 +1,11 @@
 import autoAnimate from "@formkit/auto-animate";
+import { useAtom, useAtomValue } from "jotai";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, Outlet } from "react-router";
+import { favoritesAtom } from "@/atoms/favorites";
 import { SORTS, SOURCES } from "@/constants";
 import { sorted } from "@/helper/sort-walls";
-import { ALL, nameOf, type Wall, wallHref } from "@/helper/wallpapers";
+import { ALL, nameOf, type Wall, wallHref, wallId } from "@/helper/wallpapers";
 import { serialize, useWallsState } from "@/hooks/use-walls-state";
 import {
   Badge,
@@ -19,6 +21,7 @@ import {
   Tag,
   TagGroup,
 } from "@/ui";
+import { Star } from "./Star";
 import * as s from "./Walls.css";
 
 const CHIPS = ["all", ...SOURCES] as const;
@@ -36,19 +39,22 @@ const LABELS: Record<(typeof CHIPS)[number], string> = {
   tokyonight: "Tokyo Night",
 };
 
+/** The one chip of the favorites filter, beside the source chips. */
+const FAVORITES_CHIP = [{ id: "favorites" }] as const;
+
 const ORDERS = ["default", ...SORTS] as const;
 
 const ORDER_LABELS: Record<(typeof ORDERS)[number], string> = {
   default: "Default",
-  az: "A–Z",
-  za: "Z–A",
+  asc: "A–Z",
+  desc: "Z–A",
 };
 
 /** Icon of the sort button, showing the order the grid is in. */
 const ORDER_ICONS: Record<(typeof ORDERS)[number], typeof Icons.Sort> = {
   default: Icons.Sort,
-  az: Icons.SortAscending,
-  za: Icons.SortDescending,
+  asc: Icons.SortAscending,
+  desc: Icons.SortDescending,
 };
 
 /** Keys that move the focus through the cards instead of scrolling the page. */
@@ -95,50 +101,67 @@ interface WallCardProps {
   href: string;
 }
 
-/** One wallpaper of the grid, with a skeleton until its picture is there. */
+/**
+ * One wallpaper of the grid, with a skeleton until its picture is there and a star in its corner.
+ * The star sits beside the link rather than inside it, since a button cannot live in a link.
+ */
 function WallCard({ wall, href }: WallCardProps) {
   const [loaded, setLoaded] = useState(false);
+  const [favorites, toggleFavorite] = useAtom(favoritesAtom);
+  const id = wallId(wall);
 
   return (
-    <Link
-      className={s.item}
-      to={href}
-      // The cards are the only focusable things in the grid, so the arrows are caught here and
-      // the grid above stays a plain element with no role of its own.
-      onKeyDown={(event) => {
-        if (!ARROWS.has(event.key) || event.metaKey || event.ctrlKey) return;
-        event.preventDefault();
-        const grid = event.currentTarget.parentElement;
-        if (grid !== null) moveFocus(grid, event.key);
-      }}
-    >
-      <span className={s.frame}>
-        {!loaded && <Skeleton variant="image" className={s.placeholder} />}
-        <img
-          className={s.image}
-          src={wall.url}
-          alt={nameOf(wall.path)}
-          loading="lazy"
-          decoding="async"
-          data-loaded={loaded || undefined}
-          onLoad={() => setLoaded(true)}
-          // A broken picture still ends the skeleton rather than pulsing forever.
-          onError={() => setLoaded(true)}
+    <div className={s.cell}>
+      <Link
+        className={s.item}
+        to={href}
+        // The cards are the only things in the grid the arrows move between, so the arrows are
+        // caught here and the grid above stays a plain element with no role of its own.
+        onKeyDown={(event) => {
+          if (!ARROWS.has(event.key) || event.metaKey || event.ctrlKey) return;
+          event.preventDefault();
+          const grid = event.currentTarget.parentElement?.parentElement;
+          if (grid) moveFocus(grid, event.key);
+        }}
+      >
+        <span className={s.frame}>
+          {!loaded && <Skeleton variant="image" className={s.placeholder} />}
+          <img
+            className={s.image}
+            src={wall.url}
+            alt={nameOf(wall.path)}
+            loading="lazy"
+            decoding="async"
+            data-loaded={loaded || undefined}
+            onLoad={() => setLoaded(true)}
+            // A broken picture still ends the skeleton rather than pulsing forever.
+            onError={() => setLoaded(true)}
+          />
+        </span>
+        <span className={s.caption}>
+          <span className={s.name} title={wall.path}>
+            {nameOf(wall.path)}
+          </span>
+          <Badge>{wall.source}</Badge>
+        </span>
+      </Link>
+      <span className={s.corner}>
+        <Star
+          variant="overlay"
+          aria-label="Favorite"
+          isSelected={favorites.has(id)}
+          onChange={() => toggleFavorite(id)}
         />
       </span>
-      <span className={s.caption}>
-        <span className={s.name} title={wall.path}>
-          {nameOf(wall.path)}
-        </span>
-        <Badge>{wall.source}</Badge>
-      </span>
-    </Link>
+    </div>
   );
 }
 
 /** Searchable grid of the wallpapers the repository's hosts can use. */
 export default function Walls() {
-  const [{ search, source, sort }, setParams] = useWallsState();
+  const [{ search, source, sort, favorites: onlyFavorites }, setParams] =
+    useWallsState();
+  const favorites = useAtomValue(favoritesAtom);
   const query = search ?? "";
   const active = source ?? "all";
   const order = sort ?? "default";
@@ -155,10 +178,11 @@ export default function Walls() {
     const matching = ALL.filter(
       (wall) =>
         (active === "all" || wall.source === active) &&
-        (needle === "" || wall.path.toLowerCase().includes(needle)),
+        (needle === "" || wall.path.toLowerCase().includes(needle)) &&
+        (!onlyFavorites || favorites.has(wallId(wall))),
     );
     return sorted(matching, sort);
-  }, [query, active, sort]);
+  }, [query, active, sort, onlyFavorites, favorites]);
 
   return (
     <Card variant="elevated" className={s.layout}>
@@ -196,6 +220,25 @@ export default function Walls() {
             ))}
           </Menu>
         </MenuTrigger>
+        {/* A filter chip of its own: it narrows any source, so it is not one of their choices. */}
+        <TagGroup
+          aria-label="Favorites filter"
+          items={FAVORITES_CHIP}
+          selectionMode="multiple"
+          selectedKeys={onlyFavorites ? ["favorites"] : []}
+          onSelectionChange={(keys) =>
+            setParams(
+              { favorites: keys !== "all" && keys.size > 0 ? true : null },
+              { history: "replace" },
+            )
+          }
+        >
+          {({ id }) => (
+            <Tag id={id} icon={<Icons.NotFavorite />}>
+              Favorites
+            </Tag>
+          )}
+        </TagGroup>
         <TagGroup
           aria-label="Wallpaper source"
           items={CHIP_ITEMS}
@@ -211,7 +254,11 @@ export default function Walls() {
           {({ id }) => <Tag id={id}>{LABELS[id]}</Tag>}
         </TagGroup>
       </div>
-      {shown.length === 0 ? (
+      {shown.length === 0 && onlyFavorites && favorites.size === 0 ? (
+        <EmptyState icon={<Icons.NotFavorite />}>
+          No favorite yet. Star a wallpaper to keep it here.
+        </EmptyState>
+      ) : shown.length === 0 ? (
         <EmptyState icon={<Icons.Search />}>No wallpaper matches.</EmptyState>
       ) : (
         <div className={s.grid} data-testid="wall-grid" ref={grid}>
@@ -220,7 +267,10 @@ export default function Walls() {
               key={wall.url}
               wall={wall}
               // The filter rides along, so the dialog route has it in its own URL.
-              href={wallHref(wall) + serialize({ search, source, sort })}
+              href={
+                wallHref(wall) +
+                serialize({ search, source, sort, favorites: onlyFavorites })
+              }
             />
           ))}
         </div>

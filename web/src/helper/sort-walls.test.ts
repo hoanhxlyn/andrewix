@@ -30,12 +30,12 @@ describe("sorted", () => {
   });
 
   test("orders names A to Z and Z to A", () => {
-    expect(names(sorted(walls, "az"))).toEqual([
+    expect(names(sorted(walls, "asc"))).toEqual([
       "Forest.jpg",
       "wall2.png",
       "wall10.png",
     ]);
-    expect(names(sorted(walls, "za"))).toEqual([
+    expect(names(sorted(walls, "desc"))).toEqual([
       "wall10.png",
       "wall2.png",
       "Forest.jpg",
@@ -44,7 +44,7 @@ describe("sorted", () => {
 
   test("leaves the given list untouched", () => {
     const before = [...walls];
-    sorted(walls, "za");
+    sorted(walls, "desc");
     expect(walls).toEqual(before);
   });
 });

@@ -21,6 +21,8 @@ import NixFile from "~icons/mdi/snowflake";
 import SortAscending from "~icons/mdi/sort-alphabetical-ascending";
 import SortDescending from "~icons/mdi/sort-alphabetical-descending";
 import Sort from "~icons/mdi/sort-alphabetical-variant";
+import Favorite from "~icons/mdi/star";
+import NotFavorite from "~icons/mdi/star-outline";
 import Dark from "~icons/mdi/weather-night";
 import Light from "~icons/mdi/white-balance-sunny";
 
@@ -36,6 +38,7 @@ export default {
   Collapse,
   Dark,
   Expand,
+  Favorite,
   File,
   Folder,
   FolderOpen,
@@ -45,6 +48,7 @@ export default {
   LuaFile,
   MarkdownFile,
   NixFile,
+  NotFavorite,
   Search,
   ShellFile,
   Sort,

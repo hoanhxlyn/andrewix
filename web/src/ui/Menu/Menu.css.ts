@@ -9,7 +9,7 @@ export const popover = style(
     // Material's narrowest menu, so short labels do not make a cramped list.
     minWidth: "112px",
     padding: vars.space.xs,
-    borderRadius: vars.shape.small,
+    borderRadius: vars.shape.extraSmall,
     background: vars.color.surface,
     boxShadow: vars.elevation.level2,
     outline: "none",
@@ -31,7 +31,7 @@ export const item = style([
     gap: vars.space.sm,
     height: vars.size.control,
     paddingInline: vars.space.md,
-    borderRadius: vars.shape.small,
+    borderRadius: vars.shape.extraSmall,
     color: vars.color.onSurface,
     whiteSpace: "nowrap",
     cursor: "pointer",

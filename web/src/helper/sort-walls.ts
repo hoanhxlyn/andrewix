@@ -13,5 +13,5 @@ export const byName = (a: Wall, b: Wall): number =>
 export function sorted(walls: Wall[], sort: Sort | null): Wall[] {
   if (sort === null) return walls;
   const ascending = [...walls].sort(byName);
-  return sort === "az" ? ascending : ascending.reverse();
+  return sort === "asc" ? ascending : ascending.reverse();
 }

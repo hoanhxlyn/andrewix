@@ -49,6 +49,12 @@ test("grid shows one column on mobile, three on tablet and six on desktop", asyn
 
   await page.setViewportSize(desktop);
   await expect.poll(columns).toBe(6);
+
+  // A long file name is cut rather than widening its column.
+  const widths = await page
+    .getByTestId("wall-grid")
+    .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(" "));
+  expect(new Set(widths).size).toBe(1);
 });
 
 test("wallpapers load lazily", async ({ page }) => {
@@ -64,6 +70,12 @@ test("a card shows a skeleton until its picture arrives", async ({ page }) => {
     await new Promise((resolve) => setTimeout(resolve, 500));
     await route.fulfill({ status: 200, contentType: "image/png", body: PNG });
   });
+  // The first cards are the local backgrounds, bundled with the site rather than fetched from
+  // GitHub; they need the same delay, or they can load before the skeleton is ever checked.
+  await page.route(/\/assets\/[^/]+\.(png|jpe?g|webp)$/, async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    await route.continue();
+  });
   await openWalls(page);
 
   const first = cards(page).first();
@@ -74,12 +86,18 @@ test("a card shows a skeleton until its picture arrives", async ({ page }) => {
   await expect(first.locator("img")).toHaveAttribute("data-loaded", "true");
 });
 
-test("cards lift on hover and pictures fade in", async ({ page }) => {
+test("cards rise on hover and pictures fade in", async ({ page }) => {
   await openWalls(page);
   const card = cards(page).first();
+  const cell = card.locator("..");
+  // The cell around the link casts the shadow, so the star in its corner sits on the same card.
   await expect
-    .poll(() => card.evaluate((el) => getComputedStyle(el).transitionProperty))
-    .toContain("transform");
+    .poll(() => cell.evaluate((el) => getComputedStyle(el).transitionProperty))
+    .toContain("box-shadow");
+  await card.hover();
+  await expect
+    .poll(() => cell.evaluate((el) => getComputedStyle(el).boxShadow))
+    .not.toBe("none");
   const image = card.locator("img");
   await expect
     .poll(() => image.evaluate((el) => getComputedStyle(el).transitionProperty))
@@ -202,21 +220,25 @@ test("the sort menu orders the grid by name and lives in the URL", async ({
   const unsorted = await first();
 
   await sortBy(page, "A–Z");
-  await expect.poll(() => new URL(page.url()).searchParams.get("o")).toBe("az");
+  await expect
+    .poll(() => new URL(page.url()).searchParams.get("o"))
+    .toBe("asc");
   await expect.poll(() => inOrder(1)).toBe(true);
   await expect(
     page.getByRole("button", { name: "Sort by name: A–Z" }),
   ).toBeVisible();
 
   await sortBy(page, "Z–A");
-  await expect.poll(() => new URL(page.url()).searchParams.get("o")).toBe("za");
+  await expect
+    .poll(() => new URL(page.url()).searchParams.get("o"))
+    .toBe("desc");
   await expect.poll(() => inOrder(-1)).toBe(true);
 
   // The order rides along into the dialog route and back.
   await cards(page).first().click();
-  await expect(page).toHaveURL(/o=za/);
+  await expect(page).toHaveURL(/o=desc/);
   await page.getByRole("button", { name: "Close" }).click();
-  await expect(page).toHaveURL(/\/walls\?o=za$/);
+  await expect(page).toHaveURL(/\/walls\?o=desc$/);
 
   await sortBy(page, "Default");
   await expect.poll(() => new URL(page.url()).searchParams.get("o")).toBeNull();
@@ -327,4 +349,136 @@ test("reduced motion turns the dialog animation off", async ({ page }) => {
       modalBox(page).evaluate((el) => getComputedStyle(el).animationName),
     )
     .toBe("none");
+});
+
+/** Star of one card, the toggle in its top-right corner. */
+const starOf = (page: Page, index: number) =>
+  cards(page)
+    .nth(index)
+    .locator("..")
+    .getByRole("button", { name: "Favorite" });
+
+test("a star in the corner of a card marks it as a favorite", async ({
+  page,
+}) => {
+  await openWalls(page);
+  const star = starOf(page, 0);
+  await expect(star).toHaveAttribute("aria-pressed", "false");
+
+  // The star sits in the top-right corner, over the picture.
+  const [cardBox, starBox] = await Promise.all([
+    cards(page).first().boundingBox(),
+    star.boundingBox(),
+  ]);
+  const cardRight = (cardBox?.x ?? 0) + (cardBox?.width ?? 0);
+  const starRight = (starBox?.x ?? 0) + (starBox?.width ?? 0);
+  expect(starRight).toBeLessThan(cardRight);
+  expect(starBox?.x).toBeGreaterThan(cardRight - (cardBox?.width ?? 0) / 4);
+  expect(starBox?.y).toBeLessThan(
+    (cardBox?.y ?? 0) + (cardBox?.height ?? 0) / 4,
+  );
+
+  // Pressing the star toggles it in place, without opening the dialog.
+  await star.click();
+  await expect(star).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await star.click();
+  await expect(star).toHaveAttribute("aria-pressed", "false");
+});
+
+test("favorites are kept in IndexedDB across reloads", async ({ page }) => {
+  await openWalls(page);
+  await starOf(page, 2).click();
+  await expect(starOf(page, 2)).toHaveAttribute("aria-pressed", "true");
+
+  await page.reload();
+  await expect(starOf(page, 2)).toHaveAttribute("aria-pressed", "true");
+  await expect(starOf(page, 0)).toHaveAttribute("aria-pressed", "false");
+
+  const stored = await page.evaluate(
+    () =>
+      new Promise<unknown>((resolve, reject) => {
+        const open = indexedDB.open("andrewix");
+        open.onerror = () => reject(open.error);
+        open.onsuccess = () => {
+          const read = open.result
+            .transaction("favorites")
+            .objectStore("favorites")
+            .get("walls");
+          read.onerror = () => reject(read.error);
+          read.onsuccess = () => resolve(read.result);
+        };
+      }),
+  );
+  expect(stored).toHaveLength(1);
+});
+
+test("the dialog star and the card star are the same favorite", async ({
+  page,
+}) => {
+  await openWalls(page);
+  await cards(page).first().click();
+  const dialogStar = page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Favorite" });
+  await expect(dialogStar).toHaveAttribute("aria-pressed", "false");
+  await dialogStar.click();
+  await expect(dialogStar).toHaveAttribute("aria-pressed", "true");
+
+  await page.getByRole("button", { name: "Close" }).click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(starOf(page, 0)).toHaveAttribute("aria-pressed", "true");
+});
+
+test("the favorites chip filters the grid and lives in the URL", async ({
+  page,
+}) => {
+  await openWalls(page);
+  const all = await cards(page).count();
+  const only = page
+    .getByRole("grid", { name: "Favorites filter" })
+    .getByRole("row", { name: "Favorites" });
+  await expect(only).toHaveAttribute("aria-selected", "false");
+
+  // Nothing starred yet: the filter says how to get favorites.
+  await only.click();
+  await expect(only).toHaveAttribute("aria-selected", "true");
+  await expect
+    .poll(() => new URL(page.url()).searchParams.get("f"))
+    .toBe("true");
+  await expect(page.getByText(/No favorite yet/)).toBeVisible();
+  await only.click();
+  await expect.poll(() => new URL(page.url()).searchParams.get("f")).toBeNull();
+
+  const names = cards(page).locator("span[title]");
+  const picked = [
+    await names.nth(1).textContent(),
+    await names.nth(4).textContent(),
+  ];
+  await starOf(page, 1).click();
+  await starOf(page, 4).click();
+
+  await only.click();
+  await expect.poll(() => cards(page).count()).toBe(2);
+  await expect(names).toHaveText(picked.map((name) => name ?? ""));
+
+  // The filter rides along into the dialog route and back.
+  await cards(page).first().click();
+  await expect(page).toHaveURL(/f=true/);
+  await page.getByRole("button", { name: "Close" }).click();
+  await expect(page).toHaveURL(/\/walls\?f=true$/);
+
+  // The chip narrows whichever source is picked, rather than replacing it.
+  await page.getByText("Local", { exact: true }).click();
+  await expect.poll(() => cards(page).count()).toBe(1);
+  await expect(only).toHaveAttribute("aria-selected", "true");
+  await page.getByText("All", { exact: true }).click();
+  await expect.poll(() => cards(page).count()).toBe(2);
+
+  // Unstarring a shown card takes it out of the filtered grid.
+  await starOf(page, 0).click();
+  await expect.poll(() => cards(page).count()).toBe(1);
+
+  await only.click();
+  await expect.poll(() => cards(page).count()).toBe(all);
 });

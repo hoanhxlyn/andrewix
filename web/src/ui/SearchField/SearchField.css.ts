@@ -3,20 +3,25 @@ import { inComponents } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
 import { text, vars } from "@/styles/tokens.css";
 
-/** Search row with a leading icon, the input and a clear button. */
+/** Material search bar: a filled pill with a leading icon, the input and a clear button. */
 export const field = style([
   sprinkles({
     display: "flex",
     alignItems: "center",
-    gap: "sm",
-    borderRadius: "small",
-    background: "surface",
+    gap: "md",
+    borderRadius: "full",
+    background: "surfaceContainerHigh",
   }),
   inComponents({
-    paddingInline: vars.space.sm,
-    border: `${vars.border.outline} solid ${vars.color.outline}`,
+    height: vars.size.controlLarge,
+    paddingInlineStart: vars.space.lg,
+    paddingInlineEnd: vars.space.sm,
     selectors: {
-      "&:focus-within": { borderColor: vars.color.primary },
+      // The bar has no outline to recolour, so keyboard focus gets the usual ring around it.
+      "&:has(input[data-focus-visible])": {
+        outline: `${vars.border.focusRing} solid ${vars.color.primary}`,
+        outlineOffset: vars.border.focusRing,
+      },
     },
   }),
 ]);

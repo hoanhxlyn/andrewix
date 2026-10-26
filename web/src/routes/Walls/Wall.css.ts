@@ -3,17 +3,21 @@ import { inComponents } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
 import { breakpoints, text, vars } from "@/styles/tokens.css";
 
-/** Box of one wallpaper: fullscreen on compact, 80% of the window beside it. */
+/**
+ * Box of one wallpaper: a full-screen dialog on the surface on compact, a raised dialog of 80% of
+ * the window beside it.
+ */
 export const modal = style(
   inComponents({
     width: "100vw",
     height: "100vh",
-    background: vars.color.surfaceVariant,
+    background: vars.color.surface,
     "@media": {
       [breakpoints.medium]: {
         width: "80vw",
         height: "80vh",
         borderRadius: vars.shape.extraLarge,
+        background: vars.color.surfaceContainerHigh,
       },
     },
   }),
@@ -26,6 +30,7 @@ export const frame = style(
     flex: 1,
     minHeight: 0,
     position: "relative",
+    padding: vars.space.md,
   }),
 );
 
@@ -50,16 +55,25 @@ export const image = style(
   }),
 );
 
-/** Bar over the wallpaper with its path, its source and the close button. */
+/**
+ * Bar over the wallpaper: the close button leading, then its path and source, then the star. The
+ * 56px header of a full-screen dialog on compact, the roomier padding of a dialog beside it.
+ */
 export const header = style([
   sprinkles({
     display: "flex",
     alignItems: "center",
     gap: "sm",
-    padding: "xl",
     color: "onSurface",
   }),
-  inComponents({ flexShrink: 0 }),
+  inComponents({
+    flexShrink: 0,
+    minHeight: vars.size.controlLarge,
+    paddingInline: vars.space.xs,
+    "@media": {
+      [breakpoints.medium]: { padding: vars.space.xl },
+    },
+  }),
 ]);
 
 /** Path of the wallpaper, cut when the dialog is narrow. */

@@ -39,6 +39,28 @@ export const grid = style([
   }),
 ]);
 
+/**
+ * Grid cell of one wallpaper: the card, with its star over the corner. Rises one elevation level
+ * on hover, as a Material filled card does.
+ */
+export const cell = style([
+  sprinkles({ borderRadius: "medium" }),
+  inComponents({
+    position: "relative",
+    // A grid item is as wide as its longest unbroken name otherwise, which widens its column.
+    minWidth: 0,
+    // Off-screen cards are skipped by layout and paint; the images are lazy anyway.
+    contentVisibility: "auto",
+    // Tall enough for a card of the single mobile column, so the scrollbar does not jump.
+    containIntrinsicSize: "auto 260px",
+    transition: `box-shadow ${vars.motion.duration} ${vars.motion.easing}`,
+    selectors: { "&:hover": { boxShadow: vars.elevation.level1 } },
+    "@media": {
+      "(prefers-reduced-motion: reduce)": { transition: "none" },
+    },
+  }),
+]);
+
 /** One wallpaper: its picture over the name and source. */
 export const item = style([
   sprinkles({ borderRadius: "medium" }),
@@ -48,28 +70,23 @@ export const item = style([
     background: vars.color.surfaceVariant,
     textDecoration: "none",
     color: vars.color.onSurface,
-    // Off-screen cards are skipped by layout and paint; the images are lazy anyway.
-    contentVisibility: "auto",
-    // Tall enough for a card of the single mobile column, so the scrollbar does not jump.
-    containIntrinsicSize: "auto 260px",
-    transition: `transform ${vars.motion.emphasizedDuration} ${vars.motion.emphasizedEasing}, box-shadow ${vars.motion.emphasizedDuration} ${vars.motion.emphasizedEasing}`,
     selectors: {
-      "&:hover": {
-        boxShadow: vars.elevation.level2,
-        transform: "scale(1.03)",
-      },
       "&:focus-visible": {
         outline: `${vars.border.focusRing} solid ${vars.color.primary}`,
       },
     },
-    "@media": {
-      "(prefers-reduced-motion: reduce)": {
-        transition: "none",
-        selectors: { "&:hover": { transform: "none" } },
-      },
-    },
   }),
 ]);
+
+/** Top-right corner of a card, holding its favorite star over the picture. */
+export const corner = style(
+  inComponents({
+    position: "absolute",
+    top: vars.space.sm,
+    right: vars.space.sm,
+    zIndex: vars.layer.raised,
+  }),
+);
 
 /** Box holding the picture and the skeleton that stands in for it. */
 export const frame = style(

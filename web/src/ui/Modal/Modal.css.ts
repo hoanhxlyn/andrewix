@@ -43,7 +43,7 @@ export const modal = style(
     flexDirection: "column",
     overflow: "hidden",
     background: vars.color.surface,
-    boxShadow: vars.elevation.level2,
+    boxShadow: vars.elevation.level3,
     selectors: {
       "&[data-entering]": {
         animation: `${growIn} ${timing}`,

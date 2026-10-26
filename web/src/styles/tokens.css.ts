@@ -7,6 +7,8 @@ const colors = (flavor: keyof typeof flavors) => {
     background: c.mantle.hex,
     surface: c.base.hex,
     surfaceVariant: c.surface0.hex,
+    // Between the surface and its variant: the fill of search bars and dialogs.
+    surfaceContainerHigh: `color-mix(in srgb, ${c.surface0.hex} 70%, ${c.base.hex})`,
     onSurface: c.text.hex,
     onSurfaceVariant: c.subtext1.hex,
     outline: c.overlay1.hex,
@@ -14,6 +16,9 @@ const colors = (flavor: keyof typeof flavors) => {
     onPrimary: c.base.hex,
     primaryContainer: `color-mix(in srgb, ${c.mauve.hex} 20%, ${c.base.hex})`,
     onPrimaryContainer: c.text.hex,
+    // The palette has no secondary hue, so a muted primary over the variant surface stands in.
+    secondaryContainer: `color-mix(in srgb, ${c.mauve.hex} 24%, ${c.surface0.hex})`,
+    onSecondaryContainer: c.text.hex,
   };
 };
 
@@ -53,13 +58,16 @@ const shared = {
   size: {
     icon: "24px",
     iconSmall: "16px",
+    iconChip: "18px",
     iconLarge: "48px",
     prose: "80ch",
     control: "40px",
     controlSmall: "32px",
+    controlLarge: "56px",
     sidebar: `${sidebarWidth.initial}px`,
   },
   shape: {
+    extraSmall: "4px",
     small: "8px",
     medium: "12px",
     large: "20px",
@@ -76,8 +84,8 @@ const shared = {
   },
   state: {
     hover: "0.08",
-    focus: "0.1",
-    pressed: "0.1",
+    focus: "0.12",
+    pressed: "0.12",
     disabledContainer: "0.12",
     disabledContent: "0.38",
   },
@@ -119,6 +127,7 @@ export const light = {
   elevation: {
     level1: "0 1px 2px rgb(0 0 0 / 0.3), 0 1px 3px 1px rgb(0 0 0 / 0.15)",
     level2: "0 1px 2px rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15)",
+    level3: "0 1px 3px rgb(0 0 0 / 0.3), 0 4px 8px 3px rgb(0 0 0 / 0.15)",
   },
 };
 
@@ -127,6 +136,7 @@ export const dark = {
   elevation: {
     level1: "0 1px 3px 1px rgb(0 0 0 / 0.5)",
     level2: "0 2px 6px 2px rgb(0 0 0 / 0.5)",
+    level3: "0 4px 8px 3px rgb(0 0 0 / 0.5)",
   },
 };
 

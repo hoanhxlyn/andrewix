@@ -8,7 +8,7 @@ export const SOURCES = ["local", "gruvbox", "tokyonight"] as const;
 export type Source = (typeof SOURCES)[number];
 
 /** Orders the gallery can sort by name in, besides the order of its sources. */
-export const SORTS = ["az", "za"] as const;
+export const SORTS = ["asc", "desc"] as const;
 
 /** One sort order of the gallery. */
 export type Sort = (typeof SORTS)[number];
