@@ -9,6 +9,8 @@ export const checkbox = style(
     display: "inline-flex",
     alignItems: "center",
     gap: vars.space.xs,
+    // The box is small, so the whole label is the touch target, at least as tall as a finger needs.
+    minHeight: vars.size.touchTarget,
     color: vars.color.onSurfaceVariant,
     cursor: "pointer",
     userSelect: "none",

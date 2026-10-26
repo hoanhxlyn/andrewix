@@ -1,6 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
 
 const desktop = { width: 1440, height: 900 };
+const mobile = { width: 390, height: 844 };
 
 /** Opens the config browser on a fixed viewport, at the given query string. */
 async function openHome(page: Page, search = ""): Promise<void> {
@@ -186,4 +187,28 @@ test("stored values in the wrong shape fall back to the defaults", async ({
   await expect(
     page.getByRole("button", { name: "Hide the tree" }),
   ).toBeVisible();
+});
+
+test.describe("on a touch screen", () => {
+  test.use({ hasTouch: true, isMobile: true, viewport: mobile });
+
+  test("a tap toggles the preview and wrap checkboxes, each a finger-sized target", async ({
+    page,
+  }) => {
+    await page.goto("/?f=modules/README.md");
+    for (const [name, initial] of [
+      ["preview", true],
+      ["wrap", false],
+    ] as const) {
+      const checkbox = page.getByRole("checkbox", { name });
+      const label = page.locator("label").filter({ has: checkbox });
+      await expect(checkbox).toBeChecked({ checked: initial });
+      const box = await label.boundingBox();
+      expect(box?.height).toBeGreaterThanOrEqual(48);
+      await label.tap();
+      await expect(checkbox).toBeChecked({ checked: !initial });
+      await label.tap();
+      await expect(checkbox).toBeChecked({ checked: initial });
+    }
+  });
 });

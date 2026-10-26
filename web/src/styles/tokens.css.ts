@@ -88,6 +88,8 @@ const shared = {
     control: "40px",
     controlSmall: "32px",
     controlLarge: "56px",
+    // Smallest area a finger can reliably hit, whatever the size of the control drawn in it.
+    touchTarget: "48px",
     progress: `${progress.size}px`,
     sidebar: `${sidebarWidth.initial}px`,
   },
