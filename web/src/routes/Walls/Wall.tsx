@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { favoritesAtom } from "@/atoms/favorites";
 import { ALL, nameOf, wallId } from "@/helper/wallpapers";
-import { Badge, Button, Icons, Modal, Skeleton } from "@/ui";
+import { Button, Icons, Modal, Pill, Skeleton } from "@/ui";
 import { Star } from "./Star";
 import * as s from "./Wall.css";
 
@@ -47,7 +47,7 @@ export default function Wall() {
         <span className={s.name} title={wall.path}>
           {wall.path}
         </span>
-        <Badge>{wall.source}</Badge>
+        <Pill>{wall.source}</Pill>
         <Star
           aria-label="Favorite"
           isSelected={favorites.has(id)}

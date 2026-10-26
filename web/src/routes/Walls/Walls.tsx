@@ -8,7 +8,6 @@ import { sorted } from "@/helper/sort-walls";
 import { ALL, nameOf, type Wall, wallHref, wallId } from "@/helper/wallpapers";
 import { serialize, useWallsState } from "@/hooks/use-walls-state";
 import {
-  Badge,
   Button,
   Card,
   EmptyState,
@@ -16,6 +15,7 @@ import {
   Menu,
   MenuItem,
   MenuTrigger,
+  Pill,
   SearchField,
   Skeleton,
   Tag,
@@ -142,7 +142,7 @@ function WallCard({ wall, href }: WallCardProps) {
           <span className={s.name} title={wall.path}>
             {nameOf(wall.path)}
           </span>
-          <Badge>{wall.source}</Badge>
+          <Pill>{wall.source}</Pill>
         </span>
       </Link>
       <span className={s.corner}>

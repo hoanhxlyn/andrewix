@@ -3,7 +3,7 @@ import { inComponents } from "@/styles/layers.css";
 import { text, vars } from "@/styles/tokens.css";
 
 /** Small label naming or categorising the thing it sits on. */
-export const badge = recipe({
+export const pill = recipe({
   base: inComponents({
     ...text.label,
     flexShrink: 0,
@@ -22,5 +22,5 @@ export const badge = recipe({
   defaultVariants: { variant: "primary" },
 });
 
-/** Variant props accepted by `badge`. */
-export type BadgeVariants = NonNullable<RecipeVariants<typeof badge>>;
+/** Variant props accepted by `pill`. */
+export type PillVariants = NonNullable<RecipeVariants<typeof pill>>;

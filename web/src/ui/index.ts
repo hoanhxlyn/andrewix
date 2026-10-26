@@ -1,7 +1,6 @@
 // Every component of the kit, for pages and hooks. Components inside `ui/` keep importing each
 // other by their own folder, so the kit never imports itself through this file. `MarkdownPeek` is
 // left out: pages load it lazily from its folder to keep the renderer out of their chunk.
-export * from "./Badge";
 export * from "./Button";
 export * from "./Card";
 export * from "./Checkbox";
@@ -13,6 +12,7 @@ export { default as Icons } from "./Icon";
 export * from "./ImagePeek";
 export * from "./Menu";
 export * from "./Modal";
+export * from "./Pill";
 export * from "./SearchField";
 export * from "./Skeleton";
 export * from "./Splitter";
