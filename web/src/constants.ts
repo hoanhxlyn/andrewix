@@ -12,3 +12,9 @@ export const SORTS = ["asc", "desc"] as const;
 
 /** One sort order of the gallery. */
 export type Sort = (typeof SORTS)[number];
+
+/** Ways the gallery can lay out its wallpapers. */
+export const WALL_LAYOUTS = ["grid", "table"] as const;
+
+/** One layout of the gallery. */
+export type WallLayout = (typeof WALL_LAYOUTS)[number];

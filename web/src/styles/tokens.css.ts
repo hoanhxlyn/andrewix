@@ -40,12 +40,36 @@ export const sidebarWidth = {
   step: 16,
 } as const;
 
+// M3 circular progress indicator, in pixels since they size its SVG: the diameter and the width
+// of its arc.
+export const progress = { size: 48, stroke: 4 } as const;
+
+// Wallpaper gallery, in pixels for the virtualized layouts that position its items from script:
+// cards per row in each window class, the narrowest card, the gap between cards, the heights and
+// fixed column widths of the table, the height of the row holding the loading indicator, and how
+// many wallpapers each batch adds to the list.
+export const gallery = {
+  cardsPerRow: { compact: 1, medium: 3, expanded: 6 },
+  minCardWidth: 112,
+  gap: Number.parseInt(space.md, 10),
+  rowHeight: 56,
+  headingHeight: 48,
+  pictureColumn: 96,
+  sourceColumn: 112,
+  favoriteColumn: 72,
+  loaderHeight: progress.size + 2 * Number.parseInt(space.sm, 10),
+  batchSize: 48,
+} as const;
+
 // Transition length in milliseconds and its easing; a number too, for animations run from script.
 // Emphasized is the M3 curve for motion the user is meant to notice: dialogs, picture reveals.
+// Progress is the M3 indeterminate circle: the time its arc takes to grow or shrink, the time of
+// one turn, and the curve of the arc.
 export const motion = {
   duration: 200,
   easing: "ease",
   emphasized: { duration: 300, easing: "cubic-bezier(0.2, 0, 0, 1)" },
+  progress: { arc: 1333, turn: 1568, easing: "cubic-bezier(0.4, 0, 0.2, 1)" },
 } as const;
 
 const shared = {
@@ -64,6 +88,7 @@ const shared = {
     control: "40px",
     controlSmall: "32px",
     controlLarge: "56px",
+    progress: `${progress.size}px`,
     sidebar: `${sidebarWidth.initial}px`,
   },
   shape: {
@@ -81,6 +106,9 @@ const shared = {
     easing: motion.easing,
     emphasizedDuration: `${motion.emphasized.duration}ms`,
     emphasizedEasing: motion.emphasized.easing,
+    progressArc: `${motion.progress.arc}ms`,
+    progressTurn: `${motion.progress.turn}ms`,
+    progressEasing: motion.progress.easing,
   },
   state: {
     hover: "0.08",

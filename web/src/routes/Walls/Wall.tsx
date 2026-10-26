@@ -3,8 +3,7 @@ import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { favoritesAtom } from "@/atoms/favorites";
 import { ALL, nameOf, wallId } from "@/helper/wallpapers";
-import { Button, Icons, Modal, Pill, Skeleton } from "@/ui";
-import { Star } from "./Star";
+import { Button, Icons, Modal, Pill, Skeleton, Star } from "@/ui";
 import * as s from "./Wall.css";
 
 /** One wallpaper as a dialog over the grid, addressed by its own route. */

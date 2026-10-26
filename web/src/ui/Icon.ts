@@ -23,6 +23,8 @@ import SortDescending from "~icons/mdi/sort-alphabetical-descending";
 import Sort from "~icons/mdi/sort-alphabetical-variant";
 import Favorite from "~icons/mdi/star";
 import NotFavorite from "~icons/mdi/star-outline";
+import Table from "~icons/mdi/table";
+import Grid from "~icons/mdi/view-grid-outline";
 import Dark from "~icons/mdi/weather-night";
 import Light from "~icons/mdi/white-balance-sunny";
 
@@ -42,6 +44,7 @@ export default {
   File,
   Folder,
   FolderOpen,
+  Grid,
   Image,
   JsonFile,
   Light,
@@ -54,6 +57,7 @@ export default {
   Sort,
   SortAscending,
   SortDescending,
+  Table,
   TomlFile,
   UnknownFile,
   UnsupportedFile,

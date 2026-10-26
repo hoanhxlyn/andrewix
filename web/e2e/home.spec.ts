@@ -144,20 +144,36 @@ test("tabs, wrapping and the hidden tree are remembered across a reload", async 
 test("stored values in the wrong shape fall back to the defaults", async ({
   page,
 }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem(
-      "open-files",
-      JSON.stringify([
+  // Seeded from a first visit, so the next load reads them at start-up like stored settings.
+  await page.goto("/");
+  await page.evaluate(
+    (settings) =>
+      new Promise<void>((resolve, reject) => {
+        const open = indexedDB.open("andrewix-settings");
+        open.onupgradeneeded = () => open.result.createObjectStore("settings");
+        open.onerror = () => reject(open.error);
+        open.onsuccess = () => {
+          const write = open.result.transaction("settings", "readwrite");
+          const store = write.objectStore("settings");
+          for (const [key, value] of Object.entries(settings)) {
+            store.put(value, key);
+          }
+          write.oncomplete = () => resolve();
+          write.onerror = () => reject(write.error);
+        };
+      }),
+    {
+      "open-files": [
         "modules/missing.nix",
         "modules/hosts.nix",
         "modules/hosts.nix",
-      ]),
-    );
-    localStorage.setItem("wrap-lines", JSON.stringify("yes"));
-    localStorage.setItem("markdown-preview", JSON.stringify(null));
-    localStorage.setItem("sidebar-width", JSON.stringify(9999));
-    localStorage.setItem("sidebar-shown", JSON.stringify(1));
-  });
+      ],
+      "wrap-lines": "yes",
+      "markdown-preview": null,
+      "sidebar-width": 9999,
+      "sidebar-shown": 1,
+    },
+  );
   await openHome(page, "?f=modules/README.md");
 
   // Missing and repeated paths are dropped; the file of the URL joins the stored tab.

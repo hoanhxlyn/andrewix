@@ -2,7 +2,7 @@ import {
   ToggleButton,
   type ToggleButtonProps,
 } from "react-aria-components/ToggleButton";
-import { Icons } from "@/ui";
+import Icons from "@/ui/Icon";
 import { type StarVariants, star } from "./Star.css";
 
 interface StarProps extends Omit<ToggleButtonProps, "className" | "children"> {
