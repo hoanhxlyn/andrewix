@@ -1,11 +1,23 @@
-import { atomWithStorage } from "jotai/utils";
+import {
+  atomWithStorage,
+  createJSONStorage,
+  unstable_withStorageValidator as withStorageValidator,
+} from "jotai/utils";
+import { isBoolean, isString } from "remeda";
+
+// Storage is editable by hand, so a stored value that is not in the shape written reads as the
+// initial value instead.
+const booleanStorage = withStorageValidator(isBoolean)(createJSONStorage());
+const pathsStorage = withStorageValidator(
+  (value): value is string[] => Array.isArray(value) && value.every(isString),
+)(createJSONStorage());
 
 // Repository paths of the files open as tabs, in tab order. Remembered per browser, not in the
 // URL: a shared link shows one file, not the tabs someone happened to have open.
 export const openFilesAtom = atomWithStorage<string[]>(
   "open-files",
   [],
-  undefined,
+  pathsStorage,
   { getOnInit: true },
 );
 
@@ -13,7 +25,7 @@ export const openFilesAtom = atomWithStorage<string[]>(
 export const markdownPreviewAtom = atomWithStorage<boolean>(
   "markdown-preview",
   true,
-  undefined,
+  booleanStorage,
   { getOnInit: true },
 );
 
@@ -21,6 +33,6 @@ export const markdownPreviewAtom = atomWithStorage<boolean>(
 export const wrapLinesAtom = atomWithStorage<boolean>(
   "wrap-lines",
   false,
-  undefined,
+  booleanStorage,
   { getOnInit: true },
 );

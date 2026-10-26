@@ -26,7 +26,7 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 
 ## Architecture
 
-**Routing.** React Router v8 framework mode as an SPA (`ssr: false`, `appDirectory: "src"`). Routes are declared in `src/routes.ts`; `layouts/AppShell.tsx` is the layout route and `root.tsx` holds the document shell. A route folder holds the page and its `.css.ts` only; data and helpers live in `src/helper/` (generated data in `src/data/`). Route files are flat until a route needs a second file; then it gets a folder: `routes/<Name>/<Name>.tsx`, with no barrel because `routes.ts` imports the file by path. Route-local components stay in the route folder; only reusable primitives go in `ui/`.
+**Routing.** React Router v8 framework mode as an SPA (`ssr: false`, `appDirectory: "src"`). Routes are declared in `src/routes.ts`; `layouts/AppShell.tsx` is the layout route and `root.tsx` holds the document shell. A route folder holds the page and its `.css.ts` only; data and helpers live in `src/helper/` (generated data in `src/data/`). A page's URL state (nuqs params, URL keys, serializer) and its actions live in a hook in `src/hooks/` (`use-home-state.ts`, `use-open-files.ts`, `use-walls-state.ts`), not in the route file. Route files are flat until a route needs a second file; then it gets a folder: `routes/<Name>/<Name>.tsx`, with no barrel because `routes.ts` imports the file by path. Route-local components stay in the route folder; only reusable primitives go in `ui/`.
 
 **Styling is vanilla-extract, split across a few files that only make sense together:**
 
@@ -34,7 +34,7 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 - `styles/global.css.ts`: applies the themes (`createGlobalTheme` on `:root[data-theme=...]` and nested `[data-theme=...]`, so a subtree can force a theme), the per-breakpoint layout variables, and element defaults.
 - `styles/layers.css.ts`: cascade order `base` < `components` < `utilities`, plus the `inBase` and `inComponents` wrappers. It also holds `stateLayer`, the hover, focus and pressed feedback with focus ring that interactive components compose. Sprinkles are the `utilities` layer, so they beat component rules. Unlayered CSS beats every layer; `routes/*.css.ts` are intentionally unlayered.
 - `styles/sprinkles.css.ts`: the utility allowlist. Only the listed properties and values exist, and values come from tokens. To use a property in `sprinkles({...})`, add it here first.
-- `ui/`: reusable primitives, one folder per component (`ui/Button/` holds `Button.tsx`, `Button.css.ts` and an `index.ts` that is the public entry, imported as `../ui/Button`). Recipes (`Button`, `Card`) compose sprinkles in `base` and `variants`. Interactive primitives wrap React Aria Components (import from `react-aria-components/<Name>`) for behavior and accessibility; style their states with the `data-hovered`, `data-pressed`, `data-focus-visible` and `data-disabled` attributes, not `:hover` or `:disabled`, and pass the recipe class through `className`. React Aria props replace the native ones (`onPress`, `isDisabled`).
+- `ui/`: reusable primitives, one folder per component (`ui/Button/` holds `Button.tsx`, `Button.css.ts` and an `index.ts` that is the folder's entry). `ui/index.ts` re-exports every folder, so code outside `ui/` imports from `@/ui` (`import { Button, Icons } from "@/ui"`). Inside `ui/`, components import each other by folder (`@/ui/Button`), never through `@/ui`, so the kit cannot import itself. `MarkdownPeek` is left out of the barrel because pages load it lazily from `@/ui/MarkdownPeek`; a new lazily loaded component stays out too. Recipes (`Button`, `Card`) compose sprinkles in `base` and `variants`. Interactive primitives wrap React Aria Components (import from `react-aria-components/<Name>`) for behavior and accessibility; style their states with the `data-hovered`, `data-pressed`, `data-focus-visible` and `data-disabled` attributes, not `:hover` or `:disabled`, and pass the recipe class through `className`. React Aria props replace the native ones (`onPress`, `isDisabled`).
 - `layouts/`: app-specific layout routes (`AppShell`) with their `.css.ts`.
 
 **Build constraint:** a `.css.ts` file imported at run time by a `.tsx` file cannot export functions. The build fails with "Invalid exports" or "Invalid function serialization params". Export plain objects, class strings, recipes or sprinkles results. Helper functions are fine when only other `.css.ts` files import them.
@@ -43,13 +43,16 @@ There is no test suite. Validate a change with `bun check`, `bunx biome check .`
 
 **Fonts and icons.** Fonts are Fontsource variable Roboto and Roboto Mono, injected by `unplugin-fonts` (`import "unfonts.css"` in `root.tsx`). Icons are imported as `~icons/mdi/<name>` through `unplugin-icons`.
 
+**Side effects and the barrel.** `package.json` `sideEffects` lists the only files that run code on import (`*.css`, `*.css.ts`, `src/atoms/theme.ts`, `src/root.tsx`). That lets the build drop the `ui/` components a route does not use; without it every route loads the whole kit. A new file that does work at module level (a store subscription, a global listener, a bare `import "x"` target) must be added to that list, or the build silently drops it.
+
 ## Conventions
 
 - Use tokens for every size, color and duration; no magic numbers and no `null` placeholder contracts.
 - Do not use `dangerouslySetInnerHTML`.
 - Do not silence lint rules (`biome-ignore`); fix the cause or restructure the code so the rule does not fire.
 - Every exported style class (`style`, recipe or sprinkles result in a `.css.ts` file) gets a JSDoc comment. It describes only what the class is for, never its styling (colors, sizes, variants), since those change.
-- Import across folders with the `@/` alias for `src/` (`@/styles/tokens.css`, `@/ui/Button`), set in `tsconfig.json` `paths` and enabled in Vite with `resolve.tsconfigPaths`. Use `./` only for files in the same folder.
+- Import across folders with the `@/` alias for `src/` (`@/styles/tokens.css`, `@/ui`), set in `tsconfig.json` `paths` and enabled in Vite with `resolve.tsconfigPaths`. Use `./` only for files in the same folder.
+- Join class names with `clsx` (`clsx(s.base, isOpen && s.open, className)`), not `[...].filter(Boolean).join(" ")`.
 - Biome is the formatter and linter: double quotes, 2-space indent, organized imports.
 - Ask before structural decisions such as new folders or how to split a module.
 

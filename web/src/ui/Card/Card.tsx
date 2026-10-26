@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import type { ComponentPropsWithoutRef } from "react";
 import { type CardVariants, card } from "./Card.css";
 
@@ -9,10 +10,5 @@ interface CardProps
 }
 
 export function Card({ variant, className, ...rest }: CardProps) {
-  return (
-    <div
-      className={[card({ variant }), className].filter(Boolean).join(" ")}
-      {...rest}
-    />
-  );
+  return <div className={clsx(card({ variant }), className)} {...rest} />;
 }

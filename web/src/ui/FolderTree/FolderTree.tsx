@@ -117,7 +117,6 @@ export function FolderTree({
               node={child}
               path={child.name}
               filter={filter}
-              opened={opened}
               onSelect={select}
             />
           ))}

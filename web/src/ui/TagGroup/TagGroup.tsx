@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { type ReactElement, useEffect, useRef } from "react";
 import {
   Tag as AriaTag,
@@ -37,10 +38,7 @@ export function TagGroup<T extends object>({
   }, [selected]);
 
   return (
-    <AriaTagGroup
-      className={[s.group, className].filter(Boolean).join(" ")}
-      {...rest}
-    >
+    <AriaTagGroup className={clsx(s.group, className)} {...rest}>
       <TagList ref={listRef} items={items} className={s.list}>
         {children}
       </TagList>

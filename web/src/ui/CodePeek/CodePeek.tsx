@@ -1,3 +1,5 @@
+import { clsx } from "clsx";
+import { useAtomValue } from "jotai";
 import {
   type ComponentProps,
   type CSSProperties,
@@ -8,6 +10,7 @@ import {
   useState,
 } from "react";
 import type { BundledLanguage } from "shiki";
+import { wrapLinesAtom } from "@/atoms/code-peek";
 import { aspectPath } from "@/helper/aspects";
 import { isTextFile, languageOf, sourceOf } from "@/helper/config-files";
 import { highlighter, THEMES } from "@/helper/highlighter";
@@ -64,8 +67,6 @@ function withIds(
 interface CodePeekProps {
   /** Repository path of the file to show. */
   path: string;
-  /** Whether long lines wrap to the pane instead of scrolling sideways. */
-  wrap: boolean;
   /** URL of a linked file, for opening it in a new tab. */
   hrefOf: (path: string) => string;
   /** Called with the repository path of a linked file when its link is clicked. */
@@ -74,15 +75,11 @@ interface CodePeekProps {
 }
 
 /** Shows the source of one repository file, highlighted for the current theme. */
-export function CodePeek({
-  path,
-  wrap,
-  hrefOf,
-  onOpen,
-  className,
-}: CodePeekProps) {
+export function CodePeek({ path, hrefOf, onOpen, className }: CodePeekProps) {
   const [lines, setLines] = useState<Line[] | null>(null);
   const [problem, setProblem] = useState<Problem | null>(null);
+  // Whether long lines wrap to the pane instead of scrolling sideways.
+  const wrap = useAtomValue(wrapLinesAtom);
 
   useEffect(() => {
     if (!isTextFile(path)) {
@@ -149,11 +146,7 @@ export function CodePeek({
   }
 
   return (
-    <pre
-      className={[s.code, wrap && s.wrapped, className]
-        .filter(Boolean)
-        .join(" ")}
-    >
+    <pre className={clsx(s.code, wrap && s.wrapped, className)}>
       <Source lines={lines} hrefOf={hrefOf} onFollow={follow} />
     </pre>
   );

@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "sideEffects": [
+    "*.css",
+    "*.css.ts",
+    "./src/atoms/theme.ts",
+    "./src/root.tsx"
+  ],
   "scripts": {
     "dev": "bunx --bun react-router dev",
     "build": "bunx --bun react-router build",
@@ -23,6 +29,7 @@
     "@vanilla-extract/dynamic": "^2.1.5",
     "@vanilla-extract/recipes": "^0.5.7",
     "@vanilla-extract/sprinkles": "^1.7.1",
+    "clsx": "^2.1.1",
     "isbot": "^5.2.2",
     "jotai": "^3.0.1",
     "nuqs": "^2.10.2",

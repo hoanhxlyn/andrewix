@@ -67,7 +67,7 @@ const shared = {
     full: "999px",
   },
   border: { outline: "1px", focusRing: "2px", indicator: "2px" },
-  layer: { raised: "1" },
+  layer: { raised: "1", overlay: "2" },
   motion: {
     duration: `${motion.duration}ms`,
     easing: motion.easing,

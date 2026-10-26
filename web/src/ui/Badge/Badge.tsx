@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import type { ComponentPropsWithoutRef } from "react";
 import { type BadgeVariants, badge } from "./Badge.css";
 
@@ -9,10 +10,5 @@ interface BadgeProps
 }
 
 export function Badge({ variant, className, ...rest }: BadgeProps) {
-  return (
-    <span
-      className={[badge({ variant }), className].filter(Boolean).join(" ")}
-      {...rest}
-    />
-  );
+  return <span className={clsx(badge({ variant }), className)} {...rest} />;
 }

@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import * as s from "./Skeleton.css";
 
 /** Placeholder lines; the pane clips the ones that do not fit. */
@@ -13,17 +14,12 @@ interface SkeletonProps {
 export function Skeleton({ className, variant = "text" }: SkeletonProps) {
   if (variant === "image") {
     // Hidden from assistive tech: a grid of these would announce itself once per picture.
-    return (
-      <div
-        className={[s.skeleton, s.image, className].filter(Boolean).join(" ")}
-        aria-hidden
-      />
-    );
+    return <div className={clsx(s.skeleton, s.image, className)} aria-hidden />;
   }
 
   return (
     <div
-      className={[s.skeleton, className].filter(Boolean).join(" ")}
+      className={clsx(s.skeleton, className)}
       role="status"
       aria-label="Loading"
     >

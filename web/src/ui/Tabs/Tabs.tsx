@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import {
   type ReactElement,
   useCallback,
@@ -31,12 +32,7 @@ interface TabsProps extends Omit<AriaTabsProps, "className"> {
  * so heavy content belongs in the panel.
  */
 export function Tabs({ className, ...rest }: TabsProps) {
-  return (
-    <AriaTabs
-      className={[s.tabs, className].filter(Boolean).join(" ")}
-      {...rest}
-    />
-  );
+  return <AriaTabs className={clsx(s.tabs, className)} {...rest} />;
 }
 
 interface TabListProps<T extends object>
@@ -62,11 +58,7 @@ export function TabList<T extends object>({
   }, [selected]);
 
   return (
-    <AriaTabList
-      ref={ref}
-      className={[s.list, className].filter(Boolean).join(" ")}
-      {...rest}
-    />
+    <AriaTabList ref={ref} className={clsx(s.list, className)} {...rest} />
   );
 }
 
@@ -140,10 +132,5 @@ interface TabPanelProps extends Omit<AriaTabPanelProps, "className"> {
 
 /** Content of the selected tab, filling the space under the tabs. */
 export function TabPanel({ className, ...rest }: TabPanelProps) {
-  return (
-    <AriaTabPanel
-      className={[s.panel, className].filter(Boolean).join(" ")}
-      {...rest}
-    />
-  );
+  return <AriaTabPanel className={clsx(s.panel, className)} {...rest} />;
 }

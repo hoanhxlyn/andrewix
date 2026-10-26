@@ -25,6 +25,12 @@ async function openWalls(page: Page, viewport = desktop): Promise<void> {
 
 const cards = (page: Page) => page.getByTestId("wall-grid").getByRole("link");
 
+/** Box of the modal around the dialog, which carries its size, corners and animation. */
+const modalBox = (page: Page) => page.getByRole("dialog").locator("..");
+
+/** Scrim over the page behind the modal box. */
+const scrim = (page: Page) => modalBox(page).locator("..");
+
 test("grid shows one column on mobile, three on tablet and six on desktop", async ({
   page,
 }) => {
@@ -186,23 +192,25 @@ test("a wallpaper opens as a dialog route with its own URL", async ({
 
   // The dialog is 80% of the window, rounded and over a blurred scrim. Computed sizes ignore the
   // entrance transform, unlike a bounding box taken mid-animation.
-  const size = await dialog.evaluate((el) => {
+  const size = await modalBox(page).evaluate((el) => {
     const style = getComputedStyle(el);
     return `${style.width} ${style.height} ${style.borderTopLeftRadius}`;
   });
   expect(size).toBe("1152px 720px 28px");
   await expect
     .poll(() =>
-      dialog.evaluate((el) => {
-        const scrim = getComputedStyle(el, "::backdrop");
-        return `${scrim.backdropFilter} ${scrim.backgroundColor}`;
+      scrim(page).evaluate((el) => {
+        const style = getComputedStyle(el);
+        return `${style.backdropFilter} ${style.backgroundColor}`;
       }),
     )
     .toBe("blur(8px) rgba(0, 0, 0, 0.32)");
 
   // Opening animates, unless the user asked for less motion.
   await expect
-    .poll(() => dialog.evaluate((el) => getComputedStyle(el).animationName))
+    .poll(() =>
+      modalBox(page).evaluate((el) => getComputedStyle(el).animationName),
+    )
     .not.toBe("none");
   // The picture fades in over its skeleton once it arrives.
   await expect
@@ -249,10 +257,9 @@ test("the dialog fills the screen on mobile", async ({ page }) => {
   await openWalls(page, mobile);
   await cards(page).first().click();
 
-  const dialog = page.getByRole("dialog");
   await expect
     .poll(() =>
-      dialog.evaluate((el) => {
+      modalBox(page).evaluate((el) => {
         const style = getComputedStyle(el);
         return `${style.width} ${style.height} ${style.borderTopLeftRadius}`;
       }),
@@ -266,9 +273,7 @@ test("reduced motion turns the dialog animation off", async ({ page }) => {
   await cards(page).first().click();
   await expect
     .poll(() =>
-      page
-        .getByRole("dialog")
-        .evaluate((el) => getComputedStyle(el).animationName),
+      modalBox(page).evaluate((el) => getComputedStyle(el).animationName),
     )
     .toBe("none");
 });

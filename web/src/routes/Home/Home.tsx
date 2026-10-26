@@ -1,56 +1,32 @@
 import { tree } from "virtual:repo-tree";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
+import { clsx } from "clsx";
 import { useAtom } from "jotai";
-import {
-  createSerializer,
-  parseAsString,
-  type UrlKeys,
-  useQueryStates,
-} from "nuqs";
 import { lazy, Suspense, useId } from "react";
-import { clamp } from "remeda";
-import {
-  markdownPreviewAtom,
-  openFilesAtom,
-  wrapLinesAtom,
-} from "@/atoms/code-peek";
+import { markdownPreviewAtom, wrapLinesAtom } from "@/atoms/code-peek";
 import { sidebarShownAtom, sidebarWidthAtom } from "@/atoms/sidebar";
 import { isImageFile, isMarkdownFile } from "@/helper/config-files";
+import { hrefOf, useHomeState } from "@/hooks/use-home-state";
+import { FILES, useOpenFiles } from "@/hooks/use-open-files";
 import { breakpoints, sidebarWidth } from "@/styles/tokens.css";
-import { Button } from "@/ui/Button";
-import { Card } from "@/ui/Card";
-import { Checkbox } from "@/ui/Checkbox";
-import { CodePeek } from "@/ui/CodePeek";
-import { EmptyState } from "@/ui/EmptyState";
-import { FolderTree, filePaths } from "@/ui/FolderTree";
-import Icons from "@/ui/Icon";
-import { ImagePeek } from "@/ui/ImagePeek";
-import { SearchField } from "@/ui/SearchField";
-import { Skeleton } from "@/ui/Skeleton";
-import { Splitter } from "@/ui/Splitter";
-import { Tab, TabList, TabPanel, Tabs } from "@/ui/Tabs";
+import {
+  Button,
+  Card,
+  Checkbox,
+  CodePeek,
+  EmptyState,
+  FolderTree,
+  Icons,
+  ImagePeek,
+  SearchField,
+  Skeleton,
+  Splitter,
+  Tab,
+  TabList,
+  TabPanel,
+  Tabs,
+} from "@/ui";
 import * as s from "./Home.css";
-
-// `file` and `search` share the page through the URL. The open tabs, the sidebar toggle and the
-// line wrapping are kept per browser in atoms.
-const params = {
-  file: parseAsString,
-  search: parseAsString,
-};
-
-/** One-letter keys keep the URL short; the code keeps the descriptive names. */
-const urlKeys: UrlKeys<typeof params> = {
-  file: "f",
-  search: "q",
-};
-
-const serialize = createSerializer(params, { urlKeys });
-
-/** URL of one file on its own, where a link opened in a new tab lands. */
-const hrefOf = (path: string) => serialize({ file: path });
-
-/** Every file of the repository tree, the only paths that can be open. */
-const FILES = new Set(filePaths(tree, ""));
 
 /** Loaded with the first markdown file opened, keeping the renderer out of the page chunk. */
 const MarkdownPeek = lazy(() =>
@@ -70,50 +46,21 @@ function labelOf(path: string, open: readonly string[]): string {
 
 /** The repository config as a sidebar tree beside the source of the selected file. */
 export default function Home() {
-  const [{ file, search }, setParams] = useQueryStates(params, { urlKeys });
-  const [storedFiles, setOpenFiles] = useAtom(openFilesAtom);
-  const [storedShown, setTreeShown] = useAtom(sidebarShownAtom);
-  const [storedWrap, setWrap] = useAtom(wrapLinesAtom);
-  const [storedPreview, setPreview] = useAtom(markdownPreviewAtom);
-  // Storage is editable by hand, so stored values are only trusted in the shape they are written.
-  const treeShown = storedShown !== false;
-  const wrap = storedWrap === true;
-  const preview = storedPreview !== false;
-  // Stored tabs or a link may repeat a file or name one the repository no longer has; pills need
-  // unique, existing paths. A file opened from a link also shows as a pill.
-  const open = [
-    ...new Set([
-      ...(Array.isArray(storedFiles) ? storedFiles : []),
-      ...(file === null ? [] : [file]),
-    ]),
-  ].filter((path) => FILES.has(path));
-  const withOpened = (path: string) =>
-    open.includes(path) ? open : [...open, path];
+  const [{ file, search }, setParams] = useHomeState();
+  const { open, select, follow, close } = useOpenFiles();
+  const [treeShown, setTreeShown] = useAtom(sidebarShownAtom);
+  const [wrap, setWrap] = useAtom(wrapLinesAtom);
+  const [preview, setPreview] = useAtom(markdownPreviewAtom);
 
   const paneId = useId();
-  const [stored, setWidth] = useAtom(sidebarWidthAtom);
-  // Storage is editable by hand, so a stored width is only trusted once it is a number in range.
-  const width = Number.isFinite(stored)
-    ? clamp(stored, sidebarWidth)
-    : sidebarWidth.initial;
-
-  const close = (path: string) => {
-    const rest = open.filter((other) => other !== path);
-    // Closing the shown file shows its right neighbour, else the new last one.
-    const next =
-      path === file ? (rest[open.indexOf(path)] ?? rest.at(-1) ?? null) : file;
-    setOpenFiles(rest);
-    setParams({ file: next });
-  };
+  const [width, setWidth] = useAtom(sidebarWidthAtom);
 
   return (
     <Card variant="elevated" className={s.layout}>
       {/* Hidden rather than unmounted, so the sidebar can slide out and back in. */}
       <aside
         id={paneId}
-        className={[s.pane, !treeShown && s.paneHidden]
-          .filter(Boolean)
-          .join(" ")}
+        className={clsx(s.pane, !treeShown && s.paneHidden)}
         style={assignInlineVars({ [s.sidebarWidth]: `${width}px` })}
       >
         <SearchField
@@ -129,8 +76,7 @@ export default function Home() {
             selected={file}
             query={search ?? ""}
             onSelect={(path) => {
-              setOpenFiles(withOpened(path));
-              setParams({ file: path });
+              select(path);
               // A picked file hides the overlay drawer on compact; desktop keeps the sidebar.
               if (!window.matchMedia(breakpoints.medium).matches) {
                 setTreeShown(false);
@@ -159,7 +105,7 @@ export default function Home() {
         className={s.peek}
         keyboardActivation="manual"
         selectedKey={file ?? ""}
-        onSelectionChange={(key) => setParams({ file: String(key) })}
+        onSelectionChange={(key) => select(String(key))}
       >
         <div className={s.bar}>
           <Button
@@ -208,16 +154,7 @@ export default function Home() {
                 <MarkdownPeek path={file} />
               </Suspense>
             ) : (
-              <CodePeek
-                path={file}
-                wrap={wrap}
-                hrefOf={hrefOf}
-                // Following a link is a step the back button undoes, unlike picking in the tree.
-                onOpen={(path) => {
-                  setOpenFiles(withOpened(path));
-                  setParams({ file: path }, { history: "push" });
-                }}
-              />
+              <CodePeek path={file} hrefOf={hrefOf} onOpen={follow} />
             )}
           </TabPanel>
         ) : (

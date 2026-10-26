@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import type { ComponentPropsWithoutRef } from "react";
 import { columns } from "@/styles/tokens.css";
 import * as s from "./GridItem.css";
@@ -21,12 +22,11 @@ const windowClasses = Object.keys(columns) as WindowClass[];
 
 /** Child of `Grid` that spans several columns. Without `span` it takes one column. */
 export function GridItem({ span = {}, ...rest }: GridItemProps) {
-  const className = windowClasses
-    .map((windowClass) => {
+  const className = clsx(
+    windowClasses.map((windowClass) => {
       const count = span[windowClass];
       return count && s.span[windowClass][count];
-    })
-    .filter(Boolean)
-    .join(" ");
+    }),
+  );
   return <div className={className || undefined} {...rest} />;
 }

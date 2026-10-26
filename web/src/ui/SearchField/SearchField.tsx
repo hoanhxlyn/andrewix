@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "react-aria-components/Input";
 import {
@@ -60,7 +61,7 @@ export function SearchField({
       value={draft}
       onChange={setDraft}
       aria-label="Search files"
-      className={[s.field, className].filter(Boolean).join(" ")}
+      className={clsx(s.field, className)}
       {...rest}
     >
       <Icons.Search aria-hidden />

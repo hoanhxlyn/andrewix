@@ -1,36 +1,20 @@
 import autoAnimate from "@formkit/auto-animate";
-import {
-  createSerializer,
-  parseAsString,
-  parseAsStringEnum,
-  type UrlKeys,
-  useQueryStates,
-} from "nuqs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, Outlet } from "react-router";
 import { SOURCES } from "@/constants";
 import { ALL, nameOf, type Wall, wallHref } from "@/helper/wallpapers";
-import { Badge } from "@/ui/Badge";
-import { Card } from "@/ui/Card";
-import { EmptyState } from "@/ui/EmptyState";
-import Icons from "@/ui/Icon";
-import { SearchField } from "@/ui/SearchField";
-import { Skeleton } from "@/ui/Skeleton";
-import { Tag, TagGroup } from "@/ui/TagGroup";
+import { serialize, useWallsState } from "@/hooks/use-walls-state";
+import {
+  Badge,
+  Card,
+  EmptyState,
+  Icons,
+  SearchField,
+  Skeleton,
+  Tag,
+  TagGroup,
+} from "@/ui";
 import * as s from "./Walls.css";
-
-// The filter lives in the URL, so opening a wallpaper's dialog and closing it again lands back on
-// the same selection, and a link carries both.
-const params = {
-  search: parseAsString,
-  source: parseAsStringEnum([...SOURCES]),
-};
-
-const urlKeys: UrlKeys<typeof params> = { search: "q", source: "s" };
-
-// Built from the filter values themselves: nuqs writes the URL without the router noticing, so
-// `useLocation()` would hand back a stale query.
-const serialize = createSerializer(params, { urlKeys });
 
 const CHIPS = ["all", ...SOURCES] as const;
 
@@ -134,7 +118,7 @@ function WallCard({ wall, href }: WallCardProps) {
 
 /** Searchable grid of the wallpapers the repository's hosts can use. */
 export default function Walls() {
-  const [{ search, source }, setParams] = useQueryStates(params, { urlKeys });
+  const [{ search, source }, setParams] = useWallsState();
   const query = search ?? "";
   const active = source ?? "all";
   const grid = useRef<HTMLDivElement>(null);
