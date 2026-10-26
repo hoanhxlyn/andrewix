@@ -34,13 +34,12 @@ export function Modal({
     <ModalOverlay
       isDismissable
       className={s.overlay}
-      // React Aria calls this as the exit starts and unmounts the overlay once the returned
-      // promise settles; the animations of the box and the scrim run on different elements.
-      onExit={(element) =>
-        Promise.all(
+      onExit={async (element) => {
+        await Promise.allSettled(
           element.getAnimations({ subtree: true }).map((a) => a.finished),
-        ).then(() => onClosed?.())
-      }
+        );
+        onClosed?.();
+      }}
       {...rest}
     >
       <AriaModal className={clsx(s.modal, className)}>
