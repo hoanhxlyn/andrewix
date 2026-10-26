@@ -15,7 +15,7 @@ export const toolbar = style([
   inComponents({ flexShrink: 0, flexWrap: "wrap" }),
 ]);
 
-/** The search box, a fixed comfortable width; the chips take the rest of the row. */
+/** The search box, a fixed comfortable width; the sort button and the chips follow it. */
 export const search = style(
   inComponents({ flex: "0 0 16rem", maxWidth: "100%" }),
 );

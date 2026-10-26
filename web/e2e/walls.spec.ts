@@ -172,6 +172,57 @@ test("source chips filter by source and live in the URL", async ({ page }) => {
   await expect.poll(() => cards(page).count()).toBe(all);
 });
 
+/** Picks an order in the sort menu of the toolbar. */
+async function sortBy(page: Page, label: string): Promise<void> {
+  await page.getByRole("button", { name: /^Sort by name/ }).click();
+  await page.getByRole("menuitemradio", { name: label }).click();
+}
+
+test("the sort menu orders the grid by name and lives in the URL", async ({
+  page,
+}) => {
+  await openWalls(page);
+  /** Names of the shown cards in grid order, and whether they follow the given direction. */
+  const inOrder = (direction: 1 | -1) =>
+    cards(page)
+      .locator("span[title]")
+      .evaluateAll((names, dir) => {
+        const text = names.map((name) => name.textContent ?? "");
+        return text.every(
+          (name, i) =>
+            i === 0 ||
+            dir *
+              (text[i - 1] ?? "").localeCompare(name, "en", {
+                numeric: true,
+              }) <=
+              0,
+        );
+      }, direction);
+  const first = () => cards(page).first().locator("span[title]").textContent();
+  const unsorted = await first();
+
+  await sortBy(page, "A–Z");
+  await expect.poll(() => new URL(page.url()).searchParams.get("o")).toBe("az");
+  await expect.poll(() => inOrder(1)).toBe(true);
+  await expect(
+    page.getByRole("button", { name: "Sort by name: A–Z" }),
+  ).toBeVisible();
+
+  await sortBy(page, "Z–A");
+  await expect.poll(() => new URL(page.url()).searchParams.get("o")).toBe("za");
+  await expect.poll(() => inOrder(-1)).toBe(true);
+
+  // The order rides along into the dialog route and back.
+  await cards(page).first().click();
+  await expect(page).toHaveURL(/o=za/);
+  await page.getByRole("button", { name: "Close" }).click();
+  await expect(page).toHaveURL(/\/walls\?o=za$/);
+
+  await sortBy(page, "Default");
+  await expect.poll(() => new URL(page.url()).searchParams.get("o")).toBeNull();
+  await expect.poll(first).toBe(unsorted);
+});
+
 test("a wallpaper opens as a dialog route with its own URL", async ({
   page,
 }) => {

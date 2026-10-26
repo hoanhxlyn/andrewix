@@ -1,14 +1,18 @@
 import autoAnimate from "@formkit/auto-animate";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, Outlet } from "react-router";
-import { SOURCES } from "@/constants";
+import { SORTS, SOURCES, type Sort } from "@/constants";
 import { ALL, nameOf, type Wall, wallHref } from "@/helper/wallpapers";
 import { serialize, useWallsState } from "@/hooks/use-walls-state";
 import {
   Badge,
+  Button,
   Card,
   EmptyState,
   Icons,
+  Menu,
+  MenuItem,
+  MenuTrigger,
   SearchField,
   Skeleton,
   Tag,
@@ -30,6 +34,32 @@ const LABELS: Record<(typeof CHIPS)[number], string> = {
   gruvbox: "Gruvbox",
   tokyonight: "Tokyo Night",
 };
+
+const ORDERS = ["default", ...SORTS] as const;
+
+const ORDER_LABELS: Record<(typeof ORDERS)[number], string> = {
+  default: "Default",
+  az: "A–Z",
+  za: "Z–A",
+};
+
+/** Icon of the sort button, showing the order the grid is in. */
+const ORDER_ICONS: Record<(typeof ORDERS)[number], typeof Icons.Sort> = {
+  default: Icons.Sort,
+  az: Icons.SortAscending,
+  za: Icons.SortDescending,
+};
+
+/** Compares wallpaper names as people read them, so `wall2` comes before `wall10`. */
+const byName = (a: Wall, b: Wall): number =>
+  nameOf(a.path).localeCompare(nameOf(b.path), "en", { numeric: true });
+
+/** The wallpapers in a sort order; without one they keep the order of their sources. */
+function sorted(walls: Wall[], sort: Sort | null): Wall[] {
+  if (sort === null) return walls;
+  const ascending = [...walls].sort(byName);
+  return sort === "az" ? ascending : ascending.reverse();
+}
 
 /** Keys that move the focus through the cards instead of scrolling the page. */
 const ARROWS = new Set([
@@ -118,9 +148,11 @@ function WallCard({ wall, href }: WallCardProps) {
 
 /** Searchable grid of the wallpapers the repository's hosts can use. */
 export default function Walls() {
-  const [{ search, source }, setParams] = useWallsState();
+  const [{ search, source, sort }, setParams] = useWallsState();
   const query = search ?? "";
   const active = source ?? "all";
+  const order = sort ?? "default";
+  const SortIcon = ORDER_ICONS[order];
   const grid = useRef<HTMLDivElement>(null);
 
   // Cards slide instead of jumping when the filter changes which ones are shown.
@@ -130,12 +162,13 @@ export default function Walls() {
 
   const shown = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    return ALL.filter(
+    const matching = ALL.filter(
       (wall) =>
         (active === "all" || wall.source === active) &&
         (needle === "" || wall.path.toLowerCase().includes(needle)),
     );
-  }, [query, active]);
+    return sorted(matching, sort);
+  }, [query, active, sort]);
 
   return (
     <Card variant="elevated" className={s.layout}>
@@ -149,6 +182,30 @@ export default function Walls() {
           placeholder="Search wallpapers"
           aria-label="Search wallpapers"
         />
+        <MenuTrigger>
+          <Button
+            variant="icon"
+            icon={<SortIcon />}
+            aria-label={`Sort by name: ${ORDER_LABELS[order]}`}
+          />
+          <Menu
+            aria-label="Sort by name"
+            selectionMode="single"
+            disallowEmptySelection
+            selectedKeys={[order]}
+            onSelectionChange={(keys) => {
+              const [key] = [...keys];
+              const picked = SORTS.find((name) => name === key) ?? null;
+              setParams({ sort: picked }, { history: "replace" });
+            }}
+          >
+            {ORDERS.map((id) => (
+              <MenuItem key={id} id={id}>
+                {ORDER_LABELS[id]}
+              </MenuItem>
+            ))}
+          </Menu>
+        </MenuTrigger>
         <TagGroup
           aria-label="Wallpaper source"
           items={CHIP_ITEMS}
@@ -173,7 +230,7 @@ export default function Walls() {
               key={wall.url}
               wall={wall}
               // The filter rides along, so the dialog route has it in its own URL.
-              href={wallHref(wall) + serialize({ search, source })}
+              href={wallHref(wall) + serialize({ search, source, sort })}
             />
           ))}
         </div>

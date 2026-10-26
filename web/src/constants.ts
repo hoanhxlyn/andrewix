@@ -6,3 +6,9 @@ export const SOURCES = ["local", "gruvbox", "tokyonight"] as const;
 
 /** One wallpaper source. */
 export type Source = (typeof SOURCES)[number];
+
+/** Orders the gallery can sort by name in, besides the order of its sources. */
+export const SORTS = ["az", "za"] as const;
+
+/** One sort order of the gallery. */
+export type Sort = (typeof SORTS)[number];

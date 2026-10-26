@@ -18,6 +18,9 @@ import Search from "~icons/mdi/magnify";
 import Expand from "~icons/mdi/menu";
 import Collapse from "~icons/mdi/menu-open";
 import NixFile from "~icons/mdi/snowflake";
+import SortAscending from "~icons/mdi/sort-alphabetical-ascending";
+import SortDescending from "~icons/mdi/sort-alphabetical-descending";
+import Sort from "~icons/mdi/sort-alphabetical-variant";
 import Dark from "~icons/mdi/weather-night";
 import Light from "~icons/mdi/white-balance-sunny";
 
@@ -44,6 +47,9 @@ export default {
   NixFile,
   Search,
   ShellFile,
+  Sort,
+  SortAscending,
+  SortDescending,
   TomlFile,
   UnknownFile,
   UnsupportedFile,

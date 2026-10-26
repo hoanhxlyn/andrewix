@@ -11,6 +11,7 @@ export * from "./FolderTree";
 export * from "./Grid";
 export { default as Icons } from "./Icon";
 export * from "./ImagePeek";
+export * from "./Menu";
 export * from "./Modal";
 export * from "./SearchField";
 export * from "./Skeleton";
