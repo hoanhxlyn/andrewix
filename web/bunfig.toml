@@ -1,0 +1,4 @@
+# `bun test` only looks under src/, so it runs the unit tests and leaves the Playwright specs in
+# e2e/ to `bun run e2e`.
+[test]
+root = "src"

@@ -16,13 +16,11 @@ const local: Wall[] = imagePaths
 /** One wallpaper, as generated from the flake inputs. */
 export type { Wall } from "@/data/walls";
 
+export { nameOf } from "@/helper/sort-walls";
+
 /** Every wallpaper the hosts can pick: local files and the two flake inputs. */
 export const ALL: readonly Wall[] = [...local, ...walls];
 
 /** Route of one wallpaper's dialog, showing it over the grid. */
 export const wallHref = (wall: Wall): string =>
   `/walls/${encodeURIComponent(`${wall.source}/${wall.path}`)}`;
-
-/** Name of a wallpaper, the last segment of its path. */
-export const nameOf = (path: string): string =>
-  path.slice(path.lastIndexOf("/") + 1);

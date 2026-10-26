@@ -1,7 +1,8 @@
 import autoAnimate from "@formkit/auto-animate";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, Outlet } from "react-router";
-import { SORTS, SOURCES, type Sort } from "@/constants";
+import { SORTS, SOURCES } from "@/constants";
+import { sorted } from "@/helper/sort-walls";
 import { ALL, nameOf, type Wall, wallHref } from "@/helper/wallpapers";
 import { serialize, useWallsState } from "@/hooks/use-walls-state";
 import {
@@ -49,17 +50,6 @@ const ORDER_ICONS: Record<(typeof ORDERS)[number], typeof Icons.Sort> = {
   az: Icons.SortAscending,
   za: Icons.SortDescending,
 };
-
-/** Compares wallpaper names as people read them, so `wall2` comes before `wall10`. */
-const byName = (a: Wall, b: Wall): number =>
-  nameOf(a.path).localeCompare(nameOf(b.path), "en", { numeric: true });
-
-/** The wallpapers in a sort order; without one they keep the order of their sources. */
-function sorted(walls: Wall[], sort: Sort | null): Wall[] {
-  if (sort === null) return walls;
-  const ascending = [...walls].sort(byName);
-  return sort === "az" ? ascending : ascending.reverse();
-}
 
 /** Keys that move the focus through the cards instead of scrolling the page. */
 const ARROWS = new Set([

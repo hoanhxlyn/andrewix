@@ -15,6 +15,7 @@ bun run build      # SPA build into build/client
 bun run deploy     # build + deploy to Cloudflare Pages (andrewix.pages.dev)
 bun run preview    # serve build/client
 bun run walls      # regenerate src/routes/Walls/walls.ts from the wallpaper flake inputs
+bun run test       # unit tests (bun test, src/ only, see bunfig.toml)
 bun run e2e        # Playwright suite against build/client; needs the nixpkgs browsers from .envrc
 bun check          # Bun's built-in type checker
 bun run lint       # biome lint --write --unsafe . (rewrites files)
@@ -22,7 +23,9 @@ bun run format     # biome format --write .
 bunx biome check <file>   # check one file without the --unsafe rewrites
 ```
 
-There is no test suite. Validate a change with `bun check`, `bunx biome check .` and `bun run build`.
+Validate a change with `bun check`, `bunx biome check .`, `bun run test` and `bun run build`; run `bun run e2e` too when the change shows in the page.
+
+**Tests.** Unit tests use `bun:test` and sit beside the file they cover as `<name>.test.ts`. `bunfig.toml` sets the test root to `src/`, so `bun test` never loads the Playwright specs in `e2e/`, and Playwright (`testDir: "e2e"`) never loads the unit tests. Bun runs the code without Vite, so a unit-tested module cannot import, even indirectly, `import.meta.glob` (`helper/config-files.ts`, `helper/wallpapers.ts`), a `virtual:` module or a `.css.ts` file. Keep the logic worth testing in a pure helper (`helper/file-kinds.ts`, `helper/open-files.ts`, `helper/sort-walls.ts`, `ui/FolderTree/tree-paths.ts`) and let the hook, route or Vite-only module call it; type-only imports are fine.
 
 ## Architecture
 

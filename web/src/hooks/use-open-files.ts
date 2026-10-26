@@ -1,6 +1,7 @@
 import { tree } from "virtual:repo-tree";
 import { useAtom } from "jotai";
 import { openFilesAtom } from "@/atoms/code-peek";
+import { openPaths, shownAfterClose } from "@/helper/open-files";
 import { filePaths } from "@/ui";
 import { useHomeState } from "./use-home-state";
 
@@ -11,11 +12,7 @@ export const FILES = new Set(filePaths(tree, ""));
 export function useOpenFiles() {
   const [{ file }, setParams] = useHomeState();
   const [storedFiles, setOpenFiles] = useAtom(openFilesAtom);
-  // Stored tabs or a link may repeat a file or name one the repository no longer has; pills need
-  // unique, existing paths. A file opened from a link also shows as a pill.
-  const open = [
-    ...new Set([...storedFiles, ...(file === null ? [] : [file])]),
-  ].filter((path) => FILES.has(path));
+  const open = openPaths(storedFiles, file, (path) => FILES.has(path));
   const withOpened = (path: string) =>
     open.includes(path) ? open : [...open, path];
 
@@ -36,11 +33,8 @@ export function useOpenFiles() {
 
   /** Closes a tab. Closing the shown file shows its right neighbour, else the new last one. */
   const close = (path: string) => {
-    const rest = open.filter((other) => other !== path);
-    const next =
-      path === file ? (rest[open.indexOf(path)] ?? rest.at(-1) ?? null) : file;
-    setOpenFiles(rest);
-    setParams({ file: next });
+    setOpenFiles(open.filter((other) => other !== path));
+    setParams({ file: shownAfterClose(open, path, file) });
   };
 
   return { open, select, follow, close };

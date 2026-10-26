@@ -6,6 +6,7 @@ import { lazy, Suspense, useId } from "react";
 import { markdownPreviewAtom, wrapLinesAtom } from "@/atoms/code-peek";
 import { sidebarShownAtom, sidebarWidthAtom } from "@/atoms/sidebar";
 import { isImageFile, isMarkdownFile } from "@/helper/config-files";
+import { labelOf } from "@/helper/open-files";
 import { hrefOf, useHomeState } from "@/hooks/use-home-state";
 import { FILES, useOpenFiles } from "@/hooks/use-open-files";
 import { breakpoints, sidebarWidth } from "@/styles/tokens.css";
@@ -34,15 +35,6 @@ const MarkdownPeek = lazy(() =>
     default: module.MarkdownPeek,
   })),
 );
-
-const nameOf = (path: string) => path.slice(path.lastIndexOf("/") + 1);
-
-/** Pill label of an open file: its name, with its folder when another open file shares the name. */
-function labelOf(path: string, open: readonly string[]): string {
-  const name = nameOf(path);
-  const shared = open.filter((other) => nameOf(other) === name).length > 1;
-  return shared ? path.split("/").slice(-2).join("/") : name;
-}
 
 /** The repository config as a sidebar tree beside the source of the selected file. */
 export default function Home() {
