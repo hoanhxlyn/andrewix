@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { labelOf, openPaths, shownAfterClose } from "./open-files";
+import { labelOf, openPaths, shownAfterClose } from "@/helper/open-files";
 
 describe("openPaths", () => {
   const exists = (path: string) => path !== "gone.nix";

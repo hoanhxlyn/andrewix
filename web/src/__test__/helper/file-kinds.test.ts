@@ -5,7 +5,7 @@ import {
   isMarkdownFile,
   isTextFile,
   languageOf,
-} from "./file-kinds";
+} from "@/helper/file-kinds";
 
 describe("extensionOf", () => {
   test("is the lowercase text after the last dot", () => {

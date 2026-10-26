@@ -1,12 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import type { FolderNode } from "./FolderTree";
+import type { FolderNode } from "@/ui/FolderTree/FolderTree";
 import {
   ancestorsOf,
   childPath,
   filePaths,
   matches,
   toggled,
-} from "./tree-paths";
+} from "@/ui/FolderTree/tree-paths";
 
 const tree: FolderNode = {
   kind: "folder",

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { parseFavorites, toggled, wallId } from "./favorites";
+import { parseFavorites, toggled, wallId } from "@/helper/favorites";
 
 describe("wallId", () => {
   test("joins the source and the path", () => {

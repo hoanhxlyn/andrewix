@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { Wall } from "@/data/walls";
-import { byName, nameOf, sorted } from "./sort-walls";
+import { byName, nameOf, sorted } from "@/helper/sort-walls";
 
 const wall = (path: string): Wall => ({ source: "local", path, url: "" });
 const names = (walls: Wall[]) => walls.map((w) => nameOf(w.path));
