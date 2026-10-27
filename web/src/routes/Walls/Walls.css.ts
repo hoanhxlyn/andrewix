@@ -1,6 +1,7 @@
 import { style } from "@vanilla-extract/css";
 import { inComponents } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
+import { vars } from "@/styles/tokens.css";
 
 /** Card holding the toolbar and the wallpapers. */
 export const layout = style([
@@ -14,25 +15,27 @@ export const toolbar = style([
   inComponents({ flexShrink: 0 }),
 ]);
 
-/** Search box with the sort button and the layout switch, kept on one line at every width. */
+/** Row of the toolbar holding the search box, the sort button and the layout switch. */
 export const actions = sprinkles({
   display: "flex",
   alignItems: "center",
   gap: "md",
 });
 
-/** Filter chips: favorites, then the sources, on one line whose source chips scroll sideways. */
+/** Row of the toolbar holding the filter chips: favorites, then the sources. */
 export const filters = sprinkles({
   display: "flex",
   alignItems: "center",
   gap: "md",
 });
 
-/** The favorites chip, kept whole at the start of the filter row while the sources scroll. */
+/** The favorites chip, which stays in reach while the source chips scroll. */
 export const favorites = style(inComponents({ flexShrink: 0 }));
 
-/** The search box, a comfortable width that narrows to leave room for the buttons beside it. */
-export const search = style(inComponents({ flex: "0 1 16rem", minWidth: 0 }));
+/** The search box of the wallpapers, sharing its row with the buttons. */
+export const search = style(
+  inComponents({ flex: `0 1 ${vars.size.search}`, minWidth: 0 }),
+);
 
-/** Grid or table switch, pushed to the end of the search row. */
+/** The switch between the grid and the table of wallpapers. */
 export const layoutSwitch = style(inComponents({ marginInlineStart: "auto" }));

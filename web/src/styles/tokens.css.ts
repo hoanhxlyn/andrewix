@@ -92,6 +92,8 @@ const shared = {
     touchTarget: "48px",
     progress: `${progress.size}px`,
     sidebar: `${sidebarWidth.initial}px`,
+    // Width a search box grows to when the row has room for it.
+    search: "16rem",
   },
   shape: {
     extraSmall: "4px",
