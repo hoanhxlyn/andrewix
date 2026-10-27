@@ -1,7 +1,5 @@
 {
-  core.services.sync.keepassxc = {host, ...}: let
-    path = host.rclone.path;
-  in {
+  core.services.sync.keepassxc = {
     nixos = {pkgs, ...}: {
       environment.etc."chromium/native-messaging-hosts/org.keepassxc.keepassxc_browser.json".text = builtins.toJSON {
         name = "org.keepassxc.keepassxc_browser";
@@ -14,11 +12,7 @@
         ];
       };
     };
-    homeManager = {
-      pkgs,
-      config,
-      ...
-    }: {
+    homeManager = {pkgs, ...}: {
       home.packages = with pkgs; [libsecret procps];
       programs.keepassxc = {
         enable = true;
@@ -27,7 +21,8 @@
             ConfigVersion = 2;
             UpdateCheckMessageShown = true;
             BackupBeforeSave = true;
-            BackupFilePathPattern = "${config.home.homeDirectory}/${path}/backups/Keepasx/{DB_FILENAME}.old.kdbx";
+            # Relative to the database path so Windows and Linux share one pattern
+            BackupFilePathPattern = "{DB_FILENAME}.old.kdbx";
           };
           GUI = {
             MonospaceNotes = true;
