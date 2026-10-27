@@ -17,6 +17,7 @@
     "walls": "bun scripts/gen-walls.ts",
     "test": "bun test",
     "e2e": "playwright test",
+    "review": "coderabbit review --base main",
     "lint": "biome lint --write --unsafe .",
     "format": "biome format --write ."
   },

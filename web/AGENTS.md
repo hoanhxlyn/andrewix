@@ -17,6 +17,7 @@ bun run preview    # serve build/client
 bun run walls      # regenerate src/routes/Walls/walls.ts from the wallpaper flake inputs
 bun run test       # unit tests (bun test, src/ only, see bunfig.toml)
 bun run e2e        # Playwright suite against build/client; needs the nixpkgs browsers from .envrc
+bun run review     # CodeRabbit review of this branch against main, with .coderabbit.yaml
 bun check          # Bun's built-in type checker
 bun run lint       # biome lint --write --unsafe . (rewrites files)
 bun run format     # biome format --write .
