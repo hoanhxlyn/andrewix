@@ -23,13 +23,16 @@ export const root = style(
   }),
 );
 
-/** The circle's drawing, turning while work goes on. */
+/** The circle's drawing, turning while work goes on unless the user asks for less motion. */
 export const svg = style(
   inComponents({
     width: "100%",
     height: "100%",
-    // Turning is what says "busy", so it stays even when the user asks for less motion.
-    animation: `${turn} ${vars.motion.progressTurn} linear infinite`,
+    "@media": {
+      "(prefers-reduced-motion: no-preference)": {
+        animation: `${turn} ${vars.motion.progressTurn} linear infinite`,
+      },
+    },
   }),
 );
 
