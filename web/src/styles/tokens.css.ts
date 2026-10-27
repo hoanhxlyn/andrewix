@@ -12,6 +12,8 @@ const colors = (flavor: keyof typeof flavors) => {
     onSurface: c.text.hex,
     onSurfaceVariant: c.subtext1.hex,
     outline: c.overlay1.hex,
+    // The hairline between rows and around a component: one step of contrast over the surface.
+    outlineVariant: c.surface1.hex,
     primary: c.mauve.hex,
     onPrimary: c.base.hex,
     primaryContainer: `color-mix(in srgb, ${c.mauve.hex} 20%, ${c.base.hex})`,
@@ -53,18 +55,19 @@ export const sidebarWidth = {
 export const progress = { size: 48, stroke: 4 } as const;
 
 // Wallpaper gallery, in pixels for the virtualized layouts that position its items from script:
-// cards per row in each window class, the narrowest card, the gap between cards, the heights and
-// fixed column widths of the table, the height of the row holding the loading indicator, and how
-// many wallpapers each batch adds to the list.
+// cards per row in each window class, the narrowest card, the gap between cards, the heights,
+// thumbnail and fixed column widths of the table, the height of the row holding the loading
+// indicator, and how many wallpapers each batch adds to the list.
 export const gallery = {
   cardsPerRow: { compact: 1, medium: 3, expanded: 6 },
   minCardWidth: 112,
   gap: Number.parseInt(space.md, 10),
-  rowHeight: 56,
-  headingHeight: 48,
-  pictureColumn: 96,
+  rowHeight: 72,
+  headingHeight: 56,
+  thumbHeight: 56,
+  pictureColumn: 124,
   sourceColumn: 112,
-  favoriteColumn: 72,
+  favoriteColumn: 96,
   loaderHeight: progress.size + 2 * Number.parseInt(space.sm, 10),
   batchSize: 48,
 } as const;

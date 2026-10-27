@@ -45,10 +45,10 @@
       chassis = "laptop";
       defaults.terminal = "rio";
       appearance = {
-        scheme = "gruvbox-material-dark-medium"; # base16-schemes name
+        scheme = "catppuccin-mocha"; # base16-schemes name
         wallpaper = {
-          source = "gruvbox";
-          path = "wallpapers/minimalistic/great-wave-of-kanagawa-gruvbox.png";
+          source = "catppuccin";
+          path = "sushi.jpg";
         };
       };
       # From `lspci -D -d ::03xx` on the GF63: Intel CometLake-H 0000:00:02.0,

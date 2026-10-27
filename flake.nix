@@ -1,7 +1,7 @@
 # DO-NOT-EDIT. This file was auto-generated using github:denful/flake-file.
 # Use `nix run .#write-flake` to regenerate it.
 {
-  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
     aic8800 = {
@@ -87,6 +87,7 @@
       url = "github:hoanhxlyn/tokyonight-wallpapers";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    walls-catppuccin-mocha.url = "github:hoanhxlyn/walls-catppuccin-mocha";
     waycalix.url = "github:hoanhxlyn/waycalix";
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";

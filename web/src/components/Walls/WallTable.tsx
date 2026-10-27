@@ -1,8 +1,10 @@
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { Collection } from "react-aria-components/Collection";
+import type { SortDescriptor } from "react-aria-components/Table";
 import { TableLayout, Virtualizer } from "react-aria-components/Virtualizer";
 import { favoritesAtom } from "@/atoms/favorites";
+import { SORT_COLUMNS, type Sort } from "@/constants";
 import { nameOf, type Wall, wallId } from "@/helper/wallpapers";
 import { gallery } from "@/styles/tokens.css";
 import {
@@ -20,6 +22,21 @@ import {
 } from "@/ui";
 import type { WallViewProps } from "./WallGrid";
 import * as s from "./WallTable.css";
+
+/** The column order as React Aria's descriptor, or none while the list keeps its source order. */
+function descriptorOf(sort: Sort | null): SortDescriptor | undefined {
+  if (sort === null) return undefined;
+  return {
+    column: sort.column,
+    direction: sort.order === "asc" ? "ascending" : "descending",
+  };
+}
+
+/** The order a pressed column heading asks for; its id is the column it heads. */
+const sortOf = ({ column, direction }: SortDescriptor): Sort => ({
+  column: SORT_COLUMNS.find((name) => name === column) ?? "name",
+  order: direction === "ascending" ? "asc" : "desc",
+});
 
 /** A row's thumbnail, with a skeleton until the picture is there. */
 function Thumbnail({ wall }: { wall: Wall }) {
@@ -63,7 +80,7 @@ function WallRow({ id, wall }: { id: string; wall: Wall }) {
       <Cell>
         <Pill>{wall.source}</Pill>
       </Cell>
-      <Cell>
+      <Cell className={s.center}>
         <Star
           aria-label="Favorite"
           isSelected={favorites.has(id)}
@@ -75,14 +92,16 @@ function WallRow({ id, wall }: { id: string; wall: Wall }) {
 }
 
 /**
- * The wallpapers as rows. Only the rows in view are rendered, their thumbnails load lazily, and a
- * progress circle ends the table while more remain.
+ * The wallpapers as rows, sorted by pressing a column heading. Only the rows in view are rendered,
+ * their thumbnails load lazily, and a progress circle ends the table while more remain.
  */
 export function WallTable({
   walls,
   hasMore,
   onLoadMore,
   onOpen,
+  sort,
+  onSort,
 }: WallViewProps) {
   return (
     <Virtualizer
@@ -97,13 +116,26 @@ export function WallTable({
         aria-label="Wallpapers"
         data-testid="wall-table"
         className={s.table}
+        sortDescriptor={descriptorOf(sort)}
+        onSortChange={(descriptor) => onSort(sortOf(descriptor))}
         onRowAction={(key) => onOpen(String(key))}
       >
         <TableHeader>
           <Column width={gallery.pictureColumn}>Picture</Column>
-          <Column isRowHeader>Name</Column>
-          <Column width={gallery.sourceColumn}>Source</Column>
-          <Column width={gallery.favoriteColumn}>Favorite</Column>
+          <Column id="name" isRowHeader allowsSorting>
+            Name
+          </Column>
+          <Column id="source" width={gallery.sourceColumn} allowsSorting>
+            Source
+          </Column>
+          <Column
+            id="favorite"
+            width={gallery.favoriteColumn}
+            allowsSorting
+            className={s.center}
+          >
+            Favorite
+          </Column>
         </TableHeader>
         <TableBody>
           {/* `Collection` keys each element by its `id` prop; without one it keys by position, and a

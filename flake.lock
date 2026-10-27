@@ -881,6 +881,7 @@
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "tokyonight-wallpapers": "tokyonight-wallpapers",
+        "walls-catppuccin-mocha": "walls-catppuccin-mocha",
         "waycalix": "waycalix",
         "zen-browser": "zen-browser"
       }
@@ -1102,6 +1103,21 @@
       "original": {
         "owner": "hoanhxlyn",
         "repo": "tokyonight-wallpapers",
+        "type": "github"
+      }
+    },
+    "walls-catppuccin-mocha": {
+      "locked": {
+        "lastModified": 1793088945,
+        "narHash": "sha256-okQhmA2jOfRh/XJ+5CY5qbm/iQzmRqymHeVFSOKGbXc=",
+        "owner": "hoanhxlyn",
+        "repo": "walls-catppuccin-mocha",
+        "rev": "5f46aa70515a2453974a497d954941fdd378a5ce",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hoanhxlyn",
+        "repo": "walls-catppuccin-mocha",
         "type": "github"
       }
     },

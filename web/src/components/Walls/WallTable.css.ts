@@ -1,10 +1,13 @@
 import { style } from "@vanilla-extract/css";
 import { inComponents } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
-import { vars } from "@/styles/tokens.css";
+import { gallery, vars } from "@/styles/tokens.css";
 
 /** Scrolling table of the wallpapers, filling the card under the toolbar. */
 export const table = style(inComponents({ flex: 1, minHeight: 0 }));
+
+/** Contents of the favorite column, heading and cell alike. */
+export const center = style(inComponents({ justifyContent: "center" }));
 
 /** Box of a row's thumbnail and the skeleton that stands in for it. */
 export const thumb = style([
@@ -12,7 +15,7 @@ export const thumb = style([
   inComponents({
     position: "relative",
     flexShrink: 0,
-    height: vars.size.control,
+    height: `${gallery.thumbHeight}px`,
     aspectRatio: "16 / 9",
     overflow: "hidden",
     background: vars.color.surfaceVariant,

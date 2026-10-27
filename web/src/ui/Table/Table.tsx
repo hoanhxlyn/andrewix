@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+import type { ReactNode } from "react";
 import {
   Cell as AriaCell,
   type CellProps as AriaCellProps,
@@ -15,6 +16,7 @@ import {
   type TableLoadMoreItemProps as AriaTableLoadMoreItemProps,
   type TableProps as AriaTableProps,
 } from "react-aria-components/Table";
+import Icons from "@/ui/Icon";
 import * as s from "./Table.css";
 
 interface TableProps extends Omit<AriaTableProps, "className"> {
@@ -36,9 +38,34 @@ export function TableHeader<T extends object>(
   return <AriaTableHeader {...props} />;
 }
 
-/** One column heading of a `Table`. */
-export function Column(props: Omit<AriaColumnProps, "className">) {
-  return <AriaColumn className={s.column} {...props} />;
+interface ColumnProps extends Omit<AriaColumnProps, "className" | "children"> {
+  className?: string;
+  children?: ReactNode;
+}
+
+/**
+ * One column heading of a `Table`. With `allowsSorting` it is pressable and shows the arrow of the
+ * order it is sorted in, while the `Table` of it holds the `sortDescriptor`.
+ */
+export function Column({ className, children, ...rest }: ColumnProps) {
+  return (
+    <AriaColumn className={clsx(s.column, className)} {...rest}>
+      {({ sortDirection }) => (
+        <>
+          <span className={s.heading}>{children}</span>
+          {sortDirection !== undefined && (
+            <Icons.Chevron
+              aria-hidden
+              className={clsx(
+                s.sortIndicator,
+                sortDirection === "descending" && s.sortIndicatorDescending,
+              )}
+            />
+          )}
+        </>
+      )}
+    </AriaColumn>
+  );
 }
 
 /** Body of a `Table`, holding its `Row`s. */
@@ -55,9 +82,13 @@ export function Row<T extends object>(
   return <AriaRow className={s.row} {...props} />;
 }
 
+interface CellProps extends Omit<AriaCellProps, "className"> {
+  className?: string;
+}
+
 /** One cell of a `Row`. */
-export function Cell(props: Omit<AriaCellProps, "className">) {
-  return <AriaCell className={s.cell} {...props} />;
+export function Cell({ className, ...rest }: CellProps) {
+  return <AriaCell className={clsx(s.cell, className)} {...rest} />;
 }
 
 /**

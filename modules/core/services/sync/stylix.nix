@@ -18,6 +18,10 @@
     url = "github:hoanhxlyn/tokyonight-wallpapers";
     inputs.nixpkgs.follows = "nixpkgs";
   };
+  flake-file.inputs.walls-catppuccin-mocha = {
+    # fork of orangci/walls-catppuccin-mocha (upstream ships no flake.nix), sync from upstream
+    url = "github:hoanhxlyn/walls-catppuccin-mocha";
+  };
   core.services.sync.stylix = {host, ...}: let
     inherit (host) appearance;
   in {
@@ -81,6 +85,7 @@
             local = "${self}/config/background/${bg.path or ""}";
             gruvbox = "${inputs.gruvbox-wallpapers}/${bg.path or ""}";
             tokyonight = "${inputs.tokyonight-wallpapers}/${bg.path or ""}";
+            catppuccin = "${inputs.walls-catppuccin-mocha}/${bg.path or ""}";
             remote = pkgs.fetchurl {inherit (bg) url hash;};
           }
           .${
