@@ -1,9 +1,8 @@
-import { memo } from "react";
-import {
-  type Key,
-  TreeItem,
-  TreeItemContent,
-} from "react-aria-components/Tree";
+import { useAtomValue } from "jotai";
+import { selectAtom } from "jotai/utils";
+import { memo, useMemo } from "react";
+import { TreeItem, TreeItemContent } from "react-aria-components/Tree";
+import { openedFoldersAtom } from "@/atoms/folder-tree";
 import { Button } from "@/ui/Button";
 import Icons from "@/ui/Icon";
 import type { FolderNode } from "./FolderTree";
@@ -35,8 +34,6 @@ interface BranchProps {
   node: FolderNode;
   path: string;
   filter: string;
-  /** Paths of the open folders; only their children are rendered. */
-  opened: ReadonlySet<Key>;
   onSelect: (path: string) => void;
 }
 
@@ -48,9 +45,17 @@ export const Branch = memo(function Branch({
   node,
   path,
   filter,
-  opened,
   onSelect,
 }: BranchProps) {
+  // Only this folder's own open state, so toggling one folder re-renders that row alone rather
+  // than every row of the tree. Files are never open.
+  const isOpen = useAtomValue(
+    useMemo(
+      () => selectAtom(openedFoldersAtom, (opened) => opened.has(path)),
+      [path],
+    ),
+  );
+
   if (node.kind === "file") {
     return (
       <TreeItem
@@ -81,7 +86,7 @@ export const Branch = memo(function Branch({
   // A closed folder renders no children: the tree builds its collection from every rendered
   // item, so rendering the whole repository made opening and filtering the tree slow.
   // `hasChildItems` still gives it a chevron.
-  const children = !opened.has(path)
+  const children = !isOpen
     ? []
     : filter
       ? node.children.filter((child) =>
@@ -131,7 +136,6 @@ export const Branch = memo(function Branch({
           node={child}
           path={childPath(path, child.name)}
           filter={filter}
-          opened={opened}
           onSelect={onSelect}
         />
       ))}

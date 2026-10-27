@@ -1,70 +1,56 @@
-import { useEffect, useRef, useState } from "react";
+import { useAtom } from "jotai";
+import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { ALL, nameOf } from "@/helper/wallpapers";
-import { motion } from "@/styles/tokens.css";
-import { Badge } from "@/ui/Badge";
-import { Button } from "@/ui/Button";
-import Icons from "@/ui/Icon";
-import { Skeleton } from "@/ui/Skeleton";
+import { favoritesAtom } from "@/atoms/favorites";
+import { ALL, nameOf, wallId } from "@/helper/wallpapers";
+import { Button, Icons, Modal, Pill, Skeleton, Star } from "@/ui";
 import * as s from "./Wall.css";
 
 /** One wallpaper as a dialog over the grid, addressed by its own route. */
 export default function Wall() {
   const { id = "" } = useParams();
   const navigate = useNavigate();
-  const ref = useRef<HTMLDialogElement>(null);
-  const [closing, setClosing] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const wall = ALL.find((other) => `${other.source}/${other.path}` === id);
-  // Back to the grid with the filter it was opened from, which the dialog route carries along.
-  const { search } = useLocation();
-
-  // The route only goes away once the closing animation has played.
-  useEffect(() => {
-    if (!closing) return;
-    const timer = setTimeout(() => {
-      ref.current?.close();
-      navigate(`/walls${search}`);
-    }, motion.emphasized.duration);
-    return () => clearTimeout(timer);
-  }, [closing, navigate, search]);
-
-  useEffect(() => {
-    ref.current?.showModal();
-    return () => ref.current?.close();
-  }, []);
+  // `search` leads back to the grid with the filter the dialog was opened from. The dialog is
+  // closed for one history entry, not for the component: a card pressed again before the grid's
+  // own render lands keeps this component mounted, and must still open a dialog.
+  const { key, search } = useLocation();
+  const [closedAt, setClosedAt] = useState<string | null>(null);
+  const isOpen = closedAt !== key;
+  // Per picture too, so another wallpaper shown in the same dialog gets its skeleton back.
+  const [loadedUrl, setLoadedUrl] = useState<string | null>(null);
+  const [favorites, toggleFavorite] = useAtom(favoritesAtom);
+  const wall = ALL.find((other) => wallId(other) === id);
 
   if (wall === undefined) {
     return null;
   }
+  const loaded = loadedUrl === wall.url;
 
   return (
-    <dialog
-      ref={ref}
-      className={s.dialog}
+    <Modal
       aria-label={nameOf(wall.path)}
-      data-closing={closing || undefined}
-      // On mousedown, not click: a card's click can land here once the dialog is already open,
-      // and that stray click must not close it again.
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) setClosing(true);
-      }}
-      // Esc would close the dialog at once; play the same animation the backdrop click does.
-      onCancel={(event) => {
-        event.preventDefault();
-        setClosing(true);
-      }}
+      className={s.modal}
+      isOpen={isOpen}
+      onOpenChange={(open) => setClosedAt(open ? null : key)}
+      // The route only goes away once the closing animation has played.
+      onClosed={() => navigate(`/walls${search}`)}
     >
+      {/* Close leads and the action trails, as in a Material full-screen dialog. */}
       <header className={s.header}>
-        <span className={s.name} title={wall.path}>
-          {wall.path}
-        </span>
-        <Badge>{wall.source}</Badge>
         <Button
           variant="icon"
           icon={<Icons.Close />}
           aria-label="Close"
-          onPress={() => setClosing(true)}
+          onPress={() => setClosedAt(key)}
+        />
+        <span className={s.name} title={wall.path}>
+          {wall.path}
+        </span>
+        <Pill>{wall.source}</Pill>
+        <Star
+          aria-label="Favorite"
+          isSelected={favorites.has(id)}
+          onChange={() => toggleFavorite(id)}
         />
       </header>
       <span className={s.frame}>
@@ -75,10 +61,10 @@ export default function Wall() {
           alt={nameOf(wall.path)}
           decoding="async"
           data-loaded={loaded || undefined}
-          onLoad={() => setLoaded(true)}
-          onError={() => setLoaded(true)}
+          onLoad={() => setLoadedUrl(wall.url)}
+          onError={() => setLoadedUrl(wall.url)}
         />
       </span>
-    </dialog>
+    </Modal>
   );
 }

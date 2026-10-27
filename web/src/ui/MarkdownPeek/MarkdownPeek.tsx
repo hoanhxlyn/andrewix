@@ -1,4 +1,5 @@
 import rehypeShikiFromHighlighter from "@shikijs/rehype/core";
+import { clsx } from "clsx";
 import { useEffect, useState } from "react";
 import Markdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -57,7 +58,7 @@ export function MarkdownPeek({ path, className }: MarkdownPeekProps) {
 
   // A result of the previous file is not shown while the next one loads.
   const current = result?.path === path ? result : null;
-  const frameClass = [s.frame, className].filter(Boolean).join(" ");
+  const frameClass = clsx(s.frame, className);
 
   if (current === null) {
     return <Skeleton className={className} />;

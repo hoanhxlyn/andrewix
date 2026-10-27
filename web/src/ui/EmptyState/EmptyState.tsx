@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { cloneElement, type ReactElement, type ReactNode } from "react";
 import * as s from "./EmptyState.css";
 
@@ -12,7 +13,7 @@ interface EmptyStateProps {
 /** Stands in for content that is missing or cannot be shown. */
 export function EmptyState({ icon, children, className }: EmptyStateProps) {
   return (
-    <div className={[s.empty, className].filter(Boolean).join(" ")}>
+    <div className={clsx(s.empty, className)}>
       {cloneElement(icon, { "aria-hidden": true })}
       <p className={s.message}>{children}</p>
     </div>

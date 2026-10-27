@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { type KeyboardEvent, useRef, useState } from "react";
 import { mergeProps } from "react-aria/mergeProps";
 import { useFocusRing } from "react-aria/useFocusRing";
@@ -69,7 +70,7 @@ export function Splitter({
       aria-valuemin={min}
       aria-valuemax={max}
       tabIndex={0}
-      className={[s.splitter, className].filter(Boolean).join(" ")}
+      className={clsx(s.splitter, className)}
       data-hovered={isHovered || undefined}
       data-dragging={isDragging || undefined}
       data-focus-visible={isFocusVisible || undefined}

@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useState } from "react";
 import { imageUrlOf } from "@/helper/config-files";
 import { EmptyState } from "@/ui/EmptyState";
@@ -32,7 +33,7 @@ export function ImagePeek({ path, className }: ImagePeekProps) {
   }
 
   return (
-    <div className={[s.frame, className].filter(Boolean).join(" ")}>
+    <div className={clsx(s.frame, className)}>
       <img
         className={s.image}
         src={url}

@@ -29,22 +29,27 @@ export const tag = style([
     flexShrink: 0,
     height: vars.size.controlSmall,
     paddingInline: vars.space.md,
-    borderRadius: vars.shape.full,
+    borderRadius: vars.shape.small,
     border: `${vars.border.outline} solid ${vars.color.outline}`,
     color: vars.color.onSurfaceVariant,
     whiteSpace: "nowrap",
     cursor: "pointer",
     outline: "none",
     selectors: {
-      // Filled in the primary colour: a container tint is too close to the header behind it.
+      // A Material filter chip: the selected one is filled and loses its outline.
       "&[data-selected]": {
-        background: vars.color.primary,
-        borderColor: vars.color.primary,
-        color: vars.color.onPrimary,
+        background: vars.color.secondaryContainer,
+        borderColor: vars.color.secondaryContainer,
+        color: vars.color.onSecondaryContainer,
       },
     },
   }),
 ]);
+
+globalStyle(
+  `${tag} > svg`,
+  inComponents({ width: vars.size.iconChip, height: vars.size.iconChip }),
+);
 
 /** Button inside a tag that removes it. */
 export const remove = style([

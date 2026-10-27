@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import {
   Tooltip as AriaTooltip,
   type TooltipProps as AriaTooltipProps,
@@ -14,7 +15,7 @@ interface TooltipProps extends Omit<AriaTooltipProps, "className"> {
  * and `isOpen` when the trigger is not focusable on its own.
  */
 export function Tooltip({ className, isOpen, ...rest }: TooltipProps) {
-  const classes = [s.tooltip, className].filter(Boolean).join(" ");
+  const classes = clsx(s.tooltip, className);
   if (!rest.triggerRef) return <AriaTooltip className={classes} {...rest} />;
   // React Aria 1.22.1 positions a tooltip from the trigger's state context even when it is used
   // standalone, and crashes without one; a controlled trigger supplies it.

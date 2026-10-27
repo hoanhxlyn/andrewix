@@ -1,6 +1,6 @@
 import { Link, Outlet } from "react-router";
 import { APP_NAME } from "@/constants";
-import { ThemeToggle } from "@/ui/ThemeToggle";
+import { ThemeToggle } from "@/ui";
 import * as s from "./AppShell.css";
 
 export default function AppShell() {

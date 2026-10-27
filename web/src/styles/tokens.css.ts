@@ -7,6 +7,8 @@ const colors = (flavor: keyof typeof flavors) => {
     background: c.mantle.hex,
     surface: c.base.hex,
     surfaceVariant: c.surface0.hex,
+    // Between the surface and its variant: the fill of search bars and dialogs.
+    surfaceContainerHigh: `color-mix(in srgb, ${c.surface0.hex} 70%, ${c.base.hex})`,
     onSurface: c.text.hex,
     onSurfaceVariant: c.subtext1.hex,
     outline: c.overlay1.hex,
@@ -14,10 +16,21 @@ const colors = (flavor: keyof typeof flavors) => {
     onPrimary: c.base.hex,
     primaryContainer: `color-mix(in srgb, ${c.mauve.hex} 20%, ${c.base.hex})`,
     onPrimaryContainer: c.text.hex,
+    // The palette has no secondary hue, so a muted primary over the variant surface stands in.
+    secondaryContainer: `color-mix(in srgb, ${c.mauve.hex} 24%, ${c.surface0.hex})`,
+    onSecondaryContainer: c.text.hex,
   };
 };
 
 const space = { xs: "4px", sm: "8px", md: "12px", lg: "16px", xl: "24px" };
+
+// Border widths, also plain strings for the properties Chrome drops unless given a plain length:
+// it computes `overflow-clip-margin` to 0 from a CSS variable and rejects a calc() there.
+export const border = {
+  outline: "1px",
+  focusRing: "2px",
+  indicator: "2px",
+} as const;
 
 export const breakpoints = {
   medium: "(min-width: 600px)",
@@ -35,12 +48,36 @@ export const sidebarWidth = {
   step: 16,
 } as const;
 
+// M3 circular progress indicator, in pixels since they size its SVG: the diameter and the width
+// of its arc.
+export const progress = { size: 48, stroke: 4 } as const;
+
+// Wallpaper gallery, in pixels for the virtualized layouts that position its items from script:
+// cards per row in each window class, the narrowest card, the gap between cards, the heights and
+// fixed column widths of the table, the height of the row holding the loading indicator, and how
+// many wallpapers each batch adds to the list.
+export const gallery = {
+  cardsPerRow: { compact: 1, medium: 3, expanded: 6 },
+  minCardWidth: 112,
+  gap: Number.parseInt(space.md, 10),
+  rowHeight: 56,
+  headingHeight: 48,
+  pictureColumn: 96,
+  sourceColumn: 112,
+  favoriteColumn: 72,
+  loaderHeight: progress.size + 2 * Number.parseInt(space.sm, 10),
+  batchSize: 48,
+} as const;
+
 // Transition length in milliseconds and its easing; a number too, for animations run from script.
 // Emphasized is the M3 curve for motion the user is meant to notice: dialogs, picture reveals.
+// Progress is the M3 indeterminate circle: the time its arc takes to grow or shrink, the time of
+// one turn, and the curve of the arc.
 export const motion = {
   duration: 200,
   easing: "ease",
   emphasized: { duration: 300, easing: "cubic-bezier(0.2, 0, 0, 1)" },
+  progress: { arc: 1333, turn: 1568, easing: "cubic-bezier(0.4, 0, 0.2, 1)" },
 } as const;
 
 const shared = {
@@ -53,31 +90,42 @@ const shared = {
   size: {
     icon: "24px",
     iconSmall: "16px",
+    iconChip: "18px",
     iconLarge: "48px",
     prose: "80ch",
     control: "40px",
     controlSmall: "32px",
+    controlLarge: "56px",
+    // Smallest area a finger can reliably hit, whatever the size of the control drawn in it.
+    touchTarget: "48px",
+    progress: `${progress.size}px`,
     sidebar: `${sidebarWidth.initial}px`,
+    // Width a search box grows to when the row has room for it: the M3 search bar minimum.
+    search: "360px",
   },
   shape: {
+    extraSmall: "4px",
     small: "8px",
     medium: "12px",
     large: "20px",
     extraLarge: "28px",
     full: "999px",
   },
-  border: { outline: "1px", focusRing: "2px", indicator: "2px" },
-  layer: { raised: "1" },
+  border,
+  layer: { raised: "1", overlay: "2" },
   motion: {
     duration: `${motion.duration}ms`,
     easing: motion.easing,
     emphasizedDuration: `${motion.emphasized.duration}ms`,
     emphasizedEasing: motion.emphasized.easing,
+    progressArc: `${motion.progress.arc}ms`,
+    progressTurn: `${motion.progress.turn}ms`,
+    progressEasing: motion.progress.easing,
   },
   state: {
     hover: "0.08",
-    focus: "0.1",
-    pressed: "0.1",
+    focus: "0.12",
+    pressed: "0.12",
     disabledContainer: "0.12",
     disabledContent: "0.38",
   },
@@ -119,6 +167,7 @@ export const light = {
   elevation: {
     level1: "0 1px 2px rgb(0 0 0 / 0.3), 0 1px 3px 1px rgb(0 0 0 / 0.15)",
     level2: "0 1px 2px rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15)",
+    level3: "0 1px 3px rgb(0 0 0 / 0.3), 0 4px 8px 3px rgb(0 0 0 / 0.15)",
   },
 };
 
@@ -127,6 +176,7 @@ export const dark = {
   elevation: {
     level1: "0 1px 3px 1px rgb(0 0 0 / 0.5)",
     level2: "0 2px 6px 2px rgb(0 0 0 / 0.5)",
+    level3: "0 4px 8px 3px rgb(0 0 0 / 0.5)",
   },
 };
 

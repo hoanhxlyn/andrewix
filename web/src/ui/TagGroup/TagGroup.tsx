@@ -1,4 +1,5 @@
-import { type ReactElement, useEffect, useRef } from "react";
+import { clsx } from "clsx";
+import { cloneElement, type ReactElement, useEffect, useRef } from "react";
 import {
   Tag as AriaTag,
   TagGroup as AriaTagGroup,
@@ -37,10 +38,7 @@ export function TagGroup<T extends object>({
   }, [selected]);
 
   return (
-    <AriaTagGroup
-      className={[s.group, className].filter(Boolean).join(" ")}
-      {...rest}
-    >
+    <AriaTagGroup className={clsx(s.group, className)} {...rest}>
       <TagList ref={listRef} items={items} className={s.list}>
         {children}
       </TagList>
@@ -50,18 +48,28 @@ export function TagGroup<T extends object>({
 
 interface TagProps extends Omit<AriaTagProps, "className" | "children"> {
   children: string;
+  /**
+   * Decorative icon before the label. A selected tag shows a check mark there instead, with or
+   * without an icon of its own, as on a Material filter chip.
+   */
+  icon?: ReactElement<{ "aria-hidden"?: boolean }>;
   /** Text shown in a tooltip while the tag is hovered or keyboard-focused. */
   tooltip?: string;
 }
 
 /** One tag of a `TagGroup`, with a remove button when the group handles `onRemove`. */
-export function Tag({ children, tooltip, ...rest }: TagProps) {
+export function Tag({ children, icon, tooltip, ...rest }: TagProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   return (
     <AriaTag ref={ref} textValue={children} className={s.tag} {...rest}>
-      {({ allowsRemoving, isHovered, isFocusVisible }) => (
+      {({ allowsRemoving, isHovered, isFocusVisible, isSelected }) => (
         <>
+          {isSelected ? (
+            <Icons.Check aria-hidden />
+          ) : (
+            icon && cloneElement(icon, { "aria-hidden": true })
+          )}
           {children}
           {allowsRemoving && (
             <Button slot="remove" className={s.remove}>

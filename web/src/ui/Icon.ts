@@ -18,6 +18,13 @@ import Search from "~icons/mdi/magnify";
 import Expand from "~icons/mdi/menu";
 import Collapse from "~icons/mdi/menu-open";
 import NixFile from "~icons/mdi/snowflake";
+import SortAscending from "~icons/mdi/sort-alphabetical-ascending";
+import SortDescending from "~icons/mdi/sort-alphabetical-descending";
+import Sort from "~icons/mdi/sort-alphabetical-variant";
+import Favorite from "~icons/mdi/star";
+import NotFavorite from "~icons/mdi/star-outline";
+import Table from "~icons/mdi/table";
+import Grid from "~icons/mdi/view-grid-outline";
 import Dark from "~icons/mdi/weather-night";
 import Light from "~icons/mdi/white-balance-sunny";
 
@@ -33,17 +40,24 @@ export default {
   Collapse,
   Dark,
   Expand,
+  Favorite,
   File,
   Folder,
   FolderOpen,
+  Grid,
   Image,
   JsonFile,
   Light,
   LuaFile,
   MarkdownFile,
   NixFile,
+  NotFavorite,
   Search,
   ShellFile,
+  Sort,
+  SortAscending,
+  SortDescending,
+  Table,
   TomlFile,
   UnknownFile,
   UnsupportedFile,

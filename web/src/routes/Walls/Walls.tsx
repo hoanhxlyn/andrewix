@@ -1,36 +1,29 @@
-import autoAnimate from "@formkit/auto-animate";
+import { useAtom, useAtomValue } from "jotai";
+import { useMemo, useState } from "react";
+import { Outlet, useNavigate } from "react-router";
+import { favoritesAtom } from "@/atoms/favorites";
+import { wallsLayoutAtom } from "@/atoms/walls";
+import { WallGrid } from "@/components/Walls/WallGrid";
+import { WallTable } from "@/components/Walls/WallTable";
+import { SORTS, SOURCES, WALL_LAYOUTS } from "@/constants";
+import { sorted } from "@/helper/sort-walls";
+import { ALL, wallHref, wallId } from "@/helper/wallpapers";
+import { serialize, useWallsState } from "@/hooks/use-walls-state";
+import { gallery } from "@/styles/tokens.css";
 import {
-  createSerializer,
-  parseAsString,
-  parseAsStringEnum,
-  type UrlKeys,
-  useQueryStates,
-} from "nuqs";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, Outlet } from "react-router";
-import { SOURCES } from "@/constants";
-import { ALL, nameOf, type Wall, wallHref } from "@/helper/wallpapers";
-import { Badge } from "@/ui/Badge";
-import { Card } from "@/ui/Card";
-import { EmptyState } from "@/ui/EmptyState";
-import Icons from "@/ui/Icon";
-import { SearchField } from "@/ui/SearchField";
-import { Skeleton } from "@/ui/Skeleton";
-import { Tag, TagGroup } from "@/ui/TagGroup";
+  Button,
+  EmptyState,
+  Icons,
+  Menu,
+  MenuItem,
+  MenuTrigger,
+  SearchField,
+  Segment,
+  SegmentedButton,
+  Tag,
+  TagGroup,
+} from "@/ui";
 import * as s from "./Walls.css";
-
-// The filter lives in the URL, so opening a wallpaper's dialog and closing it again lands back on
-// the same selection, and a link carries both.
-const params = {
-  search: parseAsString,
-  source: parseAsStringEnum([...SOURCES]),
-};
-
-const urlKeys: UrlKeys<typeof params> = { search: "q", source: "s" };
-
-// Built from the filter values themselves: nuqs writes the URL without the router noticing, so
-// `useLocation()` would hand back a stale query.
-const serialize = createSerializer(params, { urlKeys });
 
 const CHIPS = ["all", ...SOURCES] as const;
 
@@ -47,155 +40,173 @@ const LABELS: Record<(typeof CHIPS)[number], string> = {
   tokyonight: "Tokyo Night",
 };
 
-/** Keys that move the focus through the cards instead of scrolling the page. */
-const ARROWS = new Set([
-  "ArrowRight",
-  "ArrowLeft",
-  "ArrowDown",
-  "ArrowUp",
-  "Home",
-  "End",
-]);
+/** The one chip of the favorites filter, beside the source chips. */
+const FAVORITES_CHIP = [{ id: "favorites" }] as const;
 
-/**
- * Focuses the card the key leads to, one cell or one row away. The column count comes from the
- * cards themselves, so it follows the 4/6-column layout without knowing the breakpoints.
- */
-function moveFocus(grid: HTMLElement, key: string): void {
-  const cards = [...grid.querySelectorAll<HTMLElement>("a")];
-  const from = cards.indexOf(document.activeElement as HTMLElement);
-  if (from === -1) return;
+const ORDERS = ["default", ...SORTS] as const;
 
-  const rects = cards.map((card) => card.getBoundingClientRect());
-  const row = rects[from]?.top ?? 0;
-  const columns = rects.filter((rect) => Math.abs(rect.top - row) < 1).length;
-  const to = {
-    ArrowRight: from + 1,
-    ArrowLeft: from - 1,
-    ArrowDown: from + columns,
-    ArrowUp: from - columns,
-    Home: 0,
-    End: cards.length - 1,
-  }[key];
-  // Leaving the grid is not a move; the ends of the list and of a row just stay put.
-  if (to === undefined || to < 0 || to >= cards.length) return;
-  const sideways = key === "ArrowLeft" || key === "ArrowRight";
-  if (sideways && Math.abs((rects[to]?.top ?? 0) - row) > 1) return;
+const ORDER_LABELS: Record<(typeof ORDERS)[number], string> = {
+  default: "Default",
+  asc: "A–Z",
+  desc: "Z–A",
+};
 
-  cards[to]?.focus();
-}
+/** Icon of the sort button, showing the order the grid is in. */
+const ORDER_ICONS: Record<(typeof ORDERS)[number], typeof Icons.Sort> = {
+  default: Icons.Sort,
+  asc: Icons.SortAscending,
+  desc: Icons.SortDescending,
+};
 
-interface WallCardProps {
-  wall: Wall;
-  /** Where the card leads: the wallpaper's dialog, carrying the current filter. */
-  href: string;
-}
-
-/** One wallpaper of the grid, with a skeleton until its picture is there. */
-function WallCard({ wall, href }: WallCardProps) {
-  const [loaded, setLoaded] = useState(false);
-
-  return (
-    <Link
-      className={s.item}
-      to={href}
-      // The cards are the only focusable things in the grid, so the arrows are caught here and
-      // the grid above stays a plain element with no role of its own.
-      onKeyDown={(event) => {
-        if (!ARROWS.has(event.key) || event.metaKey || event.ctrlKey) return;
-        event.preventDefault();
-        const grid = event.currentTarget.parentElement;
-        if (grid !== null) moveFocus(grid, event.key);
-      }}
-    >
-      <span className={s.frame}>
-        {!loaded && <Skeleton variant="image" className={s.placeholder} />}
-        <img
-          className={s.image}
-          src={wall.url}
-          alt={nameOf(wall.path)}
-          loading="lazy"
-          decoding="async"
-          data-loaded={loaded || undefined}
-          onLoad={() => setLoaded(true)}
-          // A broken picture still ends the skeleton rather than pulsing forever.
-          onError={() => setLoaded(true)}
-        />
-      </span>
-      <span className={s.caption}>
-        <span className={s.name} title={wall.path}>
-          {nameOf(wall.path)}
-        </span>
-        <Badge>{wall.source}</Badge>
-      </span>
-    </Link>
-  );
-}
-
-/** Searchable grid of the wallpapers the repository's hosts can use. */
+/** Searchable gallery of the wallpapers the repository's hosts can use, as cards or as rows. */
 export default function Walls() {
-  const [{ search, source }, setParams] = useQueryStates(params, { urlKeys });
+  const [{ search, source, sort, favorites: onlyFavorites }, setParams] =
+    useWallsState();
+  const favorites = useAtomValue(favoritesAtom);
   const query = search ?? "";
   const active = source ?? "all";
-  const grid = useRef<HTMLDivElement>(null);
-
-  // Cards slide instead of jumping when the filter changes which ones are shown.
-  useEffect(() => {
-    if (grid.current !== null) autoAnimate(grid.current);
-  }, []);
+  const order = sort ?? "default";
+  const SortIcon = ORDER_ICONS[order];
+  const [layout, setLayout] = useAtom(wallsLayoutAtom);
+  const navigate = useNavigate();
 
   const shown = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    return ALL.filter(
+    const matching = ALL.filter(
       (wall) =>
         (active === "all" || wall.source === active) &&
-        (needle === "" || wall.path.toLowerCase().includes(needle)),
+        (needle === "" || wall.path.toLowerCase().includes(needle)) &&
+        (!onlyFavorites || favorites.has(wallId(wall))),
     );
-  }, [query, active]);
+    return sorted(matching, sort);
+  }, [query, active, sort, onlyFavorites, favorites]);
+
+  // The filter and order as a query string. It rides along to the dialog route, so that route has
+  // it in its own URL, and a new one starts the list again from its first batch.
+  const filter = serialize({ search, source, sort, favorites: onlyFavorites });
+  const [batch, setBatch] = useState<{ filter: string; size: number }>({
+    filter,
+    size: gallery.batchSize,
+  });
+  const size = batch.filter === filter ? batch.size : gallery.batchSize;
+  const loaded = useMemo(() => shown.slice(0, size), [shown, size]);
+  const loadMore = () => setBatch({ filter, size: size + gallery.batchSize });
+
+  const open = (id: string) => {
+    const wall = shown.find((other) => wallId(other) === id);
+    if (wall !== undefined) navigate(wallHref(wall) + filter);
+  };
+  const View = layout === "table" ? WallTable : WallGrid;
 
   return (
-    <Card variant="elevated" className={s.layout}>
+    <div className={s.layout}>
       <div className={s.toolbar}>
-        <SearchField
-          className={s.search}
-          value={query}
-          onChange={(value) =>
-            setParams({ search: value || null }, { history: "replace" })
-          }
-          placeholder="Search wallpapers"
-          aria-label="Search wallpapers"
-        />
-        <TagGroup
-          aria-label="Wallpaper source"
-          items={CHIP_ITEMS}
-          selectionMode="single"
-          disallowEmptySelection
-          selectedKeys={[active]}
-          onSelectionChange={(keys) => {
-            const [key] = [...keys];
-            const picked = SOURCES.find((name) => name === key) ?? null;
-            setParams({ source: picked }, { history: "replace" });
-          }}
-        >
-          {({ id }) => <Tag id={id}>{LABELS[id]}</Tag>}
-        </TagGroup>
+        <div className={s.actions}>
+          <SearchField
+            className={s.search}
+            value={query}
+            onChange={(value) =>
+              setParams({ search: value || null }, { history: "replace" })
+            }
+            placeholder="Search"
+            aria-label="Search wallpapers"
+          />
+          <MenuTrigger>
+            <Button
+              variant="icon"
+              icon={<SortIcon />}
+              aria-label={`Sort by name: ${ORDER_LABELS[order]}`}
+            />
+            <Menu
+              aria-label="Sort by name"
+              selectionMode="single"
+              disallowEmptySelection
+              selectedKeys={[order]}
+              onSelectionChange={(keys) => {
+                const [key] = [...keys];
+                const picked = SORTS.find((name) => name === key) ?? null;
+                setParams({ sort: picked }, { history: "replace" });
+              }}
+            >
+              {ORDERS.map((id) => (
+                <MenuItem key={id} id={id}>
+                  {ORDER_LABELS[id]}
+                </MenuItem>
+              ))}
+            </Menu>
+          </MenuTrigger>
+          <SegmentedButton
+            aria-label="Layout"
+            className={s.layoutSwitch}
+            selectionMode="single"
+            disallowEmptySelection
+            selectedKeys={[layout]}
+            onSelectionChange={(keys) => {
+              const [key] = [...keys];
+              const picked = WALL_LAYOUTS.find((name) => name === key);
+              if (picked !== undefined) setLayout(picked);
+            }}
+          >
+            <Segment id="grid" aria-label="Grid" icon={<Icons.Grid />} />
+            <Segment id="table" aria-label="Table" icon={<Icons.Table />} />
+          </SegmentedButton>
+        </div>
+        <div className={s.filters}>
+          {/* A filter chip of its own: it narrows any source, so it is not one of their choices. */}
+          <TagGroup
+            aria-label="Favorites filter"
+            className={s.favorites}
+            items={FAVORITES_CHIP}
+            selectionMode="multiple"
+            selectedKeys={onlyFavorites ? ["favorites"] : []}
+            onSelectionChange={(keys) =>
+              setParams(
+                { favorites: keys !== "all" && keys.size > 0 ? true : null },
+                { history: "replace" },
+              )
+            }
+          >
+            {({ id }) => (
+              <Tag id={id} icon={<Icons.NotFavorite />}>
+                Favorites
+              </Tag>
+            )}
+          </TagGroup>
+          <TagGroup
+            aria-label="Wallpaper source"
+            items={CHIP_ITEMS}
+            selectionMode="single"
+            disallowEmptySelection
+            selectedKeys={[active]}
+            onSelectionChange={(keys) => {
+              const [key] = [...keys];
+              const picked = SOURCES.find((name) => name === key) ?? null;
+              setParams({ source: picked }, { history: "replace" });
+            }}
+          >
+            {({ id }) => <Tag id={id}>{LABELS[id]}</Tag>}
+          </TagGroup>
+        </div>
       </div>
-      {shown.length === 0 ? (
+      {shown.length === 0 && onlyFavorites && favorites.size === 0 ? (
+        <EmptyState icon={<Icons.NotFavorite />}>
+          No favorite yet. Star a wallpaper to keep it here.
+        </EmptyState>
+      ) : shown.length === 0 ? (
         <EmptyState icon={<Icons.Search />}>No wallpaper matches.</EmptyState>
       ) : (
-        <div className={s.grid} data-testid="wall-grid" ref={grid}>
-          {shown.map((wall) => (
-            <WallCard
-              key={wall.url}
-              wall={wall}
-              // The filter rides along, so the dialog route has it in its own URL.
-              href={wallHref(wall) + serialize({ search, source })}
-            />
-          ))}
-        </div>
+        <View
+          // A new filter or order shows its list from the top, rather than at the old scroll
+          // position, where the end of its first batch could already be in view.
+          key={filter}
+          walls={loaded}
+          hasMore={loaded.length < shown.length}
+          onLoadMore={loadMore}
+          onOpen={open}
+        />
       )}
-      {/* The dialog of one wallpaper, over this grid. Empty unless that route is open. */}
+      {/* The dialog of one wallpaper, over this gallery. Empty unless that route is open. */}
       <Outlet />
-    </Card>
+    </div>
   );
 }
