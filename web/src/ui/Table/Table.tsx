@@ -49,7 +49,15 @@ interface ColumnProps extends Omit<AriaColumnProps, "className" | "children"> {
  */
 export function Column({ className, children, ...rest }: ColumnProps) {
   return (
-    <AriaColumn className={clsx(s.column, className)} {...rest}>
+    <AriaColumn
+      // The render-prop children hide the heading text from the collection, which builds the
+      // sort announcement ("Sorted by …") from the column's `textValue`; supply it ourselves.
+      textValue={
+        rest.textValue ?? (typeof children === "string" ? children : undefined)
+      }
+      className={clsx(s.column, className)}
+      {...rest}
+    >
       {({ sortDirection }) => (
         <>
           <span className={s.heading}>{children}</span>
