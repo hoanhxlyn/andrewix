@@ -66,6 +66,16 @@ in {
       };
     };
   };
+  # Ethernet MAC to clone, per host; null = leave the NIC's burned-in address.
+  # Consumed by core.hardware.network, which adds a `work` NM profile when set.
+  ethernet = mkOption {
+    default = {};
+    type = types.submodule {
+      options = {
+        clonedMac = nullable types.str;
+      };
+    };
+  };
   # Battery charge limits in %. Laptops default to stopping at 80% (start = stop - 10, the
   # step msi-ec derives); desktops and homelab hosts have no battery, so null = unmanaged. A laptop
   # opts out with `chargeThreshold = null`.

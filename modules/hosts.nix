@@ -70,6 +70,7 @@
         swap = "24G";
       };
       enableGaming = true;
+      ethernet.clonedMac = "A8:A1:59:86:D5:33";
       chargeThreshold = {
         msiEc = true;
       };
