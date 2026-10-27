@@ -49,4 +49,14 @@ describe("labelOf", () => {
     const open = ["modules/core/a/default.nix", "modules/core/b/default.nix"];
     expect(labelOf("modules/core/a/default.nix", open)).toBe("a/default.nix");
   });
+
+  test("adds folders until no other tab ends the same way", () => {
+    const open = ["modules/alpha/default.nix", "config/alpha/default.nix"];
+    expect(labelOf("modules/alpha/default.nix", open)).toBe(
+      "modules/alpha/default.nix",
+    );
+    expect(labelOf("config/alpha/default.nix", open)).toBe(
+      "config/alpha/default.nix",
+    );
+  });
 });

@@ -1,5 +1,3 @@
-const nameOf = (path: string) => path.slice(path.lastIndexOf("/") + 1);
-
 /**
  * The files to show as tabs: the stored ones, then the one in the link. Stored tabs or a link may
  * repeat a file or name one the repository no longer has; tabs need unique, existing paths.
@@ -25,9 +23,19 @@ export function shownAfterClose(
   return rest[open.indexOf(path)] ?? rest.at(-1) ?? null;
 }
 
-/** Pill label of an open file: its name, with its folder when another open file shares the name. */
+/**
+ * Pill label of an open file: the shortest end of its path that no other open file ends with, so
+ * two tabs never read the same.
+ */
 export function labelOf(path: string, open: readonly string[]): string {
-  const name = nameOf(path);
-  const shared = open.filter((other) => nameOf(other) === name).length > 1;
-  return shared ? path.split("/").slice(-2).join("/") : name;
+  const parts = path.split("/");
+  const others = open.filter((other) => other !== path);
+  for (let count = 1; count < parts.length; count++) {
+    const end = parts.slice(-count).join("/");
+    const shared = others.some(
+      (other) => other === end || other.endsWith(`/${end}`),
+    );
+    if (!shared) return end;
+  }
+  return path;
 }
