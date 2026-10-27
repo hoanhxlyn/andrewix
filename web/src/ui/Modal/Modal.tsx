@@ -35,9 +35,12 @@ export function Modal({
       isDismissable
       className={s.overlay}
       onExit={async (element) => {
-        await Promise.allSettled(
-          element.getAnimations({ subtree: true }).map((a) => a.finished),
-        );
+        // A looping animation in the content, such as a spinner, never finishes, so only the
+        // finite ones (the exit animations) are awaited.
+        const finite = element
+          .getAnimations({ subtree: true })
+          .filter((a) => a.effect?.getComputedTiming().endTime !== Infinity);
+        await Promise.allSettled(finite.map((a) => a.finished));
         onClosed?.();
       }}
       {...rest}
