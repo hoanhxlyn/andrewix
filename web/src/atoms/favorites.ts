@@ -1,6 +1,6 @@
 import { createStore, get, update } from "idb-keyval";
 import { atom } from "jotai";
-import { parseFavorites, toggled } from "@/helper/favorites";
+import { parseFavorites, withFavorite } from "@/helper/favorites";
 
 // Favorites stay in this browser's IndexedDB, as one list of wallpaper ids under one key. Like the
 // sidebar width they describe one person's taste rather than what a shared link shows.
@@ -26,16 +26,18 @@ stored.onMount = (setStored) => {
 export const favoritesAtom = atom(
   (read) => read(stored),
   (read, write, id: string) => {
-    // Shown at once, then written as a toggle of what is stored rather than a copy of the set in
-    // memory: a toggle made before the first read lands must not wipe the stored favorites.
-    write(stored, toggled(read(stored), id));
+    // The user adds or removes what they see. Shown at once, then that one change is applied to
+    // what is stored rather than a copy of the set in memory: a change made before the first read
+    // lands must not wipe the stored favorites, and another tab may have changed them since.
+    const favorite = !read(stored).has(id);
+    write(stored, withFavorite(read(stored), id, favorite));
     let saved: ReadonlySet<string> = new Set();
     Promise.resolve()
       .then(() =>
         update(
           KEY,
           (value) => {
-            saved = toggled(parseFavorites(value), id);
+            saved = withFavorite(parseFavorites(value), id, favorite);
             return [...saved];
           },
           db,

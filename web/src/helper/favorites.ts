@@ -12,12 +12,14 @@ export function parseFavorites(value: unknown): ReadonlySet<string> {
   return new Set(value.filter((id): id is string => typeof id === "string"));
 }
 
-/** The favorites with one id added, or removed if it was there. */
-export function toggled(
+/** The favorites with one id added, or removed when `favorite` is false. */
+export function withFavorite(
   favorites: ReadonlySet<string>,
   id: string,
+  favorite: boolean,
 ): ReadonlySet<string> {
   const next = new Set(favorites);
-  if (!next.delete(id)) next.add(id);
+  if (favorite) next.add(id);
+  else next.delete(id);
   return next;
 }

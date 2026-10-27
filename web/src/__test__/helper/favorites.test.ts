@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { parseFavorites, toggled, wallId } from "@/helper/favorites";
+import { parseFavorites, wallId, withFavorite } from "@/helper/favorites";
 
 describe("wallId", () => {
   test("joins the source and the path", () => {
@@ -30,16 +30,18 @@ describe("parseFavorites", () => {
   });
 });
 
-describe("toggled", () => {
-  test("adds a missing id and removes a present one", () => {
-    const added = toggled(new Set(["a"]), "b");
-    expect([...added]).toEqual(["a", "b"]);
-    expect([...toggled(added, "a")]).toEqual(["b"]);
+describe("withFavorite", () => {
+  test("adds or removes the id as asked, whatever the set holds", () => {
+    const favorites = new Set(["a"]);
+    expect([...withFavorite(favorites, "b", true)]).toEqual(["a", "b"]);
+    expect([...withFavorite(favorites, "a", true)]).toEqual(["a"]);
+    expect([...withFavorite(favorites, "a", false)]).toEqual([]);
+    expect([...withFavorite(favorites, "b", false)]).toEqual(["a"]);
   });
 
   test("leaves the given set untouched", () => {
     const favorites = new Set(["a"]);
-    toggled(favorites, "a");
+    withFavorite(favorites, "a", false);
     expect([...favorites]).toEqual(["a"]);
   });
 });
