@@ -465,7 +465,7 @@
                 {app-id = "^helium$";}
                 {app-id = "^zen$";}
                 {app-id = "^steam$";} # main window sizes itself, don't let niri shrink the column
-                {app-id = "^libreoffice";} # tile normally, don't self-maximize
+                {app-id = "^(onlyoffice-desktopeditors|ONLYOFFICE)$";} # tile normally, don't self-maximize
               ];
               open-maximized = false;
               default-column-width = {proportion = 1.0;};

@@ -87,9 +87,9 @@
         # csv is text/* → yazi defaults to $EDITOR; open in calc instead
         settings.opener.calc = [
           {
-            run = ''libreoffice --calc "$@"'';
+            run = ''onlyoffice-desktopeditors "$@"'';
             orphan = true;
-            desc = "LibreOffice Calc";
+            desc = "ONLYOFFICE";
           }
         ];
         settings.open.prepend_rules = [
