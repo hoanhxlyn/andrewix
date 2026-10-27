@@ -1,6 +1,7 @@
-import { createStore, get, update } from "idb-keyval";
+import { createStore, get, set, update } from "idb-keyval";
 import { atom } from "jotai";
 import { parseFavorites, withFavorite } from "@/helper/favorites";
+import { atomWithSetting } from "./settings";
 
 // Favorites stay in this browser's IndexedDB, as one list of wallpaper ids under one key. Like the
 // sidebar width they describe one person's taste rather than what a shared link shows.
@@ -48,4 +49,44 @@ export const favoritesAtom = atom(
         // Not persisted; still applied for this session.
       });
   },
+);
+
+/** What an imported file brings: its ids, and whether they replace the favorites or add to them. */
+interface Import {
+  ids: ReadonlySet<string>;
+  replace: boolean;
+}
+
+/** Applies an imported file to the favorites, in place of the one-by-one toggle. */
+export const importFavoritesAtom = atom(
+  null,
+  (get, write, { ids, replace }: Import) => {
+    const next = replace ? ids : new Set([...get(stored), ...ids]);
+    write(stored, next);
+    Promise.resolve()
+      .then(() => set(KEY, [...next], db))
+      .catch(() => {
+        // Not persisted; still applied for this session.
+      });
+  },
+);
+
+/** When the favorites were last written to a file, and how many the file held. */
+export interface LastExport {
+  at: number;
+  count: number;
+}
+
+const isLastExport = (value: unknown): value is LastExport | null =>
+  value === null ||
+  (typeof value === "object" &&
+    value !== null &&
+    typeof (value as LastExport).at === "number" &&
+    typeof (value as LastExport).count === "number");
+
+/** The last export, so the dialog can say when the file someone holds was written. */
+export const lastExportAtom = atomWithSetting<LastExport | null>(
+  "walls-favorites-export",
+  null,
+  isLastExport,
 );

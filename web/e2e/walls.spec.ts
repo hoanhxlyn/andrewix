@@ -1,3 +1,4 @@
+import { readFile, writeFile } from "node:fs/promises";
 import { expect, type Locator, type Page, test } from "@playwright/test";
 import { storedSetting } from "./settings";
 
@@ -498,6 +499,100 @@ test("favorites are kept in IndexedDB across reloads", async ({ page }) => {
       }),
   );
   expect(stored).toHaveLength(1);
+});
+
+test("favorites export as a file and import back", async ({ page }) => {
+  await openWalls(page);
+  await starOf(page, 0).click();
+  await page
+    .getByRole("button", { name: "Export and import favorites" })
+    .click();
+  const dialog = page.getByRole("dialog", { name: "Favorites" });
+  await expect(
+    dialog.getByRole("button", { name: "Export (1)" }),
+  ).toBeEnabled();
+
+  // Export hands the browser a JSON list of the starred ids.
+  const download = page.waitForEvent("download");
+  await dialog.getByRole("button", { name: "Export (1)" }).click();
+  const saved = await download;
+  // The file name comes from the dialog's form, not from a hard-coded one.
+  expect(saved.suggestedFilename()).toBe("my-favorite-themes.json");
+  const file = await saved.path();
+  const ids: unknown = JSON.parse(await readFile(file, "utf8"));
+  expect(ids).toHaveLength(1);
+  expect(ids).toEqual([expect.stringMatching(/^\w+\/.+\.\w+$/)]);
+
+  // The dialog remembers that a file was written, so its holder knows how old it is.
+  await expect(
+    dialog.getByText(/^Last exported .+, 1 favorite\.$/),
+  ).toBeVisible();
+
+  // Nothing starred: the dialog says so, and the file brings the star back.
+  await dialog.getByRole("button", { name: "Close" }).click();
+  await expect(dialog).toHaveCount(0);
+  await starOf(page, 0).click();
+  await expect(starOf(page, 0)).toHaveAttribute("aria-pressed", "false");
+  await page
+    .getByRole("button", { name: "Export and import favorites" })
+    .click();
+  await expect(
+    dialog.getByRole("button", { name: "Export (0)" }),
+  ).toBeDisabled();
+
+  await dialog.locator('input[type="file"]').setInputFiles(file);
+  await expect(
+    dialog.getByText("Adds 1, for 1 starred in this browser."),
+  ).toBeVisible();
+  await dialog.getByRole("button", { name: "Import" }).click();
+  await expect(page.getByText("Favorites imported")).toBeVisible();
+  await expect(starOf(page, 0)).toHaveAttribute("aria-pressed", "true");
+});
+
+test("a favorites file can replace the starred ones instead of adding", async ({
+  page,
+}, testInfo) => {
+  await openWalls(page);
+  await starOf(page, 0).click();
+  await starOf(page, 1).click();
+
+  const file = testInfo.outputPath("favorites.json");
+  await writeFile(file, JSON.stringify(["local/missing.png"]));
+
+  await page
+    .getByRole("button", { name: "Export and import favorites" })
+    .click();
+  const dialog = page.getByRole("dialog", { name: "Favorites" });
+  await dialog.locator('input[type="file"]').setInputFiles(file);
+  await dialog.getByRole("radio", { name: "Replace mine" }).click();
+  await expect(dialog.getByText("Replaces your 2 with 1.")).toBeVisible();
+  await dialog.getByRole("button", { name: "Import" }).click();
+
+  // Both old stars are gone, and the file's id has no card to show on.
+  await expect(starOf(page, 0)).toHaveAttribute("aria-pressed", "false");
+  await expect(starOf(page, 1)).toHaveAttribute("aria-pressed", "false");
+  await page
+    .getByRole("button", { name: "Export and import favorites" })
+    .click();
+  await expect(
+    dialog.getByRole("button", { name: "Export (1)" }),
+  ).toBeEnabled();
+});
+
+test("a file that is not a favorites list is refused", async ({
+  page,
+}, testInfo) => {
+  await openWalls(page);
+  const file = testInfo.outputPath("notes.json");
+  await writeFile(file, "not json");
+
+  await page
+    .getByRole("button", { name: "Export and import favorites" })
+    .click();
+  const dialog = page.getByRole("dialog", { name: "Favorites" });
+  await dialog.locator('input[type="file"]').setInputFiles(file);
+  await expect(dialog.getByText("Not a favorites file.")).toBeVisible();
+  await expect(dialog.getByRole("button", { name: "Import" })).toHaveCount(0);
 });
 
 test("the dialog star and the card star are the same favorite", async ({

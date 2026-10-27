@@ -1,5 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import { parseFavorites, wallId, withFavorite } from "@/helper/favorites";
+import {
+  favoriteFileName,
+  parseFavorites,
+  readFavoriteFile,
+  serializeFavorites,
+  wallId,
+  withFavorite,
+} from "@/helper/favorites";
 
 describe("wallId", () => {
   test("joins the source and the path", () => {
@@ -27,6 +34,49 @@ describe("parseFavorites", () => {
     expect([...parseFavorites(["local/a.png", 1, null])]).toEqual([
       "local/a.png",
     ]);
+  });
+});
+
+describe("serializeFavorites and readFavoriteFile", () => {
+  test("a written file reads back as the favorites it holds", () => {
+    const favorites = new Set(["local/a.png", "gruvbox/b.png"]);
+    expect([
+      ...(readFavoriteFile(serializeFavorites(favorites)) ?? []),
+    ]).toEqual(["local/a.png", "gruvbox/b.png"]);
+  });
+
+  test("writes an empty list when nothing is starred", () => {
+    expect(serializeFavorites(new Set())).toBe("[]\n");
+    expect(readFavoriteFile("[]\n")?.size).toBe(0);
+  });
+
+  test("reads anything that is not a list as no file", () => {
+    expect(readFavoriteFile("")).toBeNull();
+    expect(readFavoriteFile("{")).toBeNull();
+    expect(readFavoriteFile('{"favorites":[]}')).toBeNull();
+    expect(readFavoriteFile("null")).toBeNull();
+  });
+});
+
+describe("favoriteFileName", () => {
+  test("names the file after the words of the form", () => {
+    expect(favoriteFileName("My Favorite Themes")).toBe(
+      "my-favorite-themes.json",
+    );
+    expect(favoriteFileName("  Wallpapers 2026  ")).toBe(
+      "wallpapers-2026.json",
+    );
+  });
+
+  test("drops accents and punctuation, which a file name cannot keep", () => {
+    expect(favoriteFileName("Grüvbox / Tokyo Night!")).toBe(
+      "gruvbox-tokyo-night.json",
+    );
+  });
+
+  test("falls back to a plain name when nothing is left", () => {
+    expect(favoriteFileName("")).toBe("favorites.json");
+    expect(favoriteFileName("⭐")).toBe("favorites.json");
   });
 });
 

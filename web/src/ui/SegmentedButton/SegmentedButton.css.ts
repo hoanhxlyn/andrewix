@@ -22,7 +22,9 @@ export const segment = style([
     alignItems: "center",
     justifyContent: "center",
     gap: vars.space.sm,
-    minWidth: vars.size.controlLarge,
+    // Segments share their row evenly, as Material sizes them, whatever each one holds.
+    flex: 1,
+    minWidth: 0,
     paddingInline: vars.space.md,
     appearance: "none",
     border: "none",
