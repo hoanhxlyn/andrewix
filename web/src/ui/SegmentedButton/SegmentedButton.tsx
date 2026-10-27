@@ -2,11 +2,9 @@ import { clsx } from "clsx";
 import { cloneElement, type ReactElement } from "react";
 import {
   ToggleButton,
-  type ToggleButtonProps,
-} from "react-aria-components/ToggleButton";
-import {
   ToggleButtonGroup,
   type ToggleButtonGroupProps,
+  type ToggleButtonProps,
 } from "react-aria-components/ToggleButtonGroup";
 import Icons from "@/ui/Icon";
 import * as s from "./SegmentedButton.css";
