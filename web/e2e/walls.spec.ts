@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
+import { storedSetting } from "./settings";
 
 /** A 1×1 PNG, for the wallpaper pictures the page would otherwise fetch from GitHub. */
 const PNG = Buffer.from(
@@ -568,26 +569,6 @@ const table = (page: Page) => page.getByTestId("wall-table");
 /** Row of the table at this place, counted from 0 over every wallpaper shown; 0 is under the header. */
 const tableRow = (page: Page, index: number) =>
   table(page).locator(`[role="row"][aria-rowindex="${index + 2}"]`);
-
-/** Reads one value of the settings store, as the app keeps it in IndexedDB. */
-function storedSetting(page: Page, key: string): Promise<unknown> {
-  return page.evaluate(
-    (name) =>
-      new Promise<unknown>((resolve, reject) => {
-        const open = indexedDB.open("andrewix-settings");
-        open.onerror = () => reject(open.error);
-        open.onsuccess = () => {
-          const read = open.result
-            .transaction("settings")
-            .objectStore("settings")
-            .get(name);
-          read.onerror = () => reject(read.error);
-          read.onsuccess = () => resolve(read.result);
-        };
-      }),
-    key,
-  );
-}
 
 test("the layout switch shows the wallpapers as a table and keeps it", async ({
   page,

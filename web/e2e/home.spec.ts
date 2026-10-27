@@ -1,4 +1,5 @@
 import { expect, type Page, test } from "@playwright/test";
+import { storedSetting } from "./settings";
 
 const desktop = { width: 1440, height: 900 };
 const mobile = { width: 390, height: 844 };
@@ -132,6 +133,8 @@ test("tabs, wrapping and the hidden tree are remembered across a reload", async 
   await page.getByText("wrap", { exact: true }).click();
   await expect.poll(wrapped).toBe("flex");
   await page.getByRole("button", { name: "Hide the tree" }).click();
+  // The click writes to IndexedDB in the background; leaving before it lands would lose it.
+  await expect.poll(() => storedSetting(page, "sidebar-shown")).toBe(false);
 
   await page.goto("/?f=modules/schema.nix");
   await expect(tabs(page)).toHaveText(["hosts.nix", "schema.nix"]);
