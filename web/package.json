@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "bunx --bun react-router dev",
     "build": "bunx --bun react-router build",
-    "deploy": "bun run build && bunx wrangler pages deploy build/client --project-name=andrewix --branch=main --commit-dirty=true",
+    "deploy": "bun run build && bunx wrangler pages deploy",
     "preview": "bunx --bun vite preview --outDir build/client",
     "walls": "bun scripts/gen-walls.ts",
     "test": "bun test",
