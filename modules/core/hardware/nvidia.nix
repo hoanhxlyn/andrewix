@@ -3,7 +3,6 @@
     includes = [
       (<den.batteries.unfree> [
         "nvidia-x11"
-        "nvidia-settings"
         "nvidia-kernel-modules"
       ])
     ];
@@ -53,7 +52,8 @@
         };
         nvidia = {
           open = false;
-          nvidiaSettings = true;
+          # GUI is X11-only and duplicate of nvidia-smi on niri/Wayland.
+          nvidiaSettings = false;
           package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
           powerManagement.enable = true;
           powerManagement.finegrained = false;
