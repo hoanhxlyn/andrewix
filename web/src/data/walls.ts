@@ -11,6 +11,1671 @@ export interface Wall {
 /** Every wallpaper of the sources the hosts can use. */
 export const walls: readonly Wall[] = [
   {
+    source: "catppuccin",
+    path: "3d-model.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/3d-model.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "abandoned-trainstation.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/abandoned-trainstation.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "abstract-swirls.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/abstract-swirls.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "aesthetic.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/aesthetic.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "artificial-valley.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/artificial-valley.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "asian-village.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/asian-village.png",
+  },
+  {
+    source: "catppuccin",
+    path: "astronaut.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/astronaut.png",
+  },
+  {
+    source: "catppuccin",
+    path: "atlantis.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/atlantis.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "bars.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/bars.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "basement.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/basement.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "beach-path.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/beach-path.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "beach.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/beach.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "berries-1.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/berries-1.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "berries-2.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/berries-2.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "biking-sunset.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/biking-sunset.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "black-hole.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/black-hole.png",
+  },
+  {
+    source: "catppuccin",
+    path: "blue-flowers.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/blue-flowers.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "blue-kaiju.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/blue-kaiju.png",
+  },
+  {
+    source: "catppuccin",
+    path: "blue-landscape.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/blue-landscape.png",
+  },
+  {
+    source: "catppuccin",
+    path: "blueberries.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/blueberries.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "bluehour.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/bluehour.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "blueprint.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/blueprint.png",
+  },
+  {
+    source: "catppuccin",
+    path: "bsod.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/bsod.png",
+  },
+  {
+    source: "catppuccin",
+    path: "bunnies-road.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/bunnies-road.png",
+  },
+  {
+    source: "catppuccin",
+    path: "c4-spring-sakura-sky.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/c4-spring-sakura-sky.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "cabin-2.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cabin-2.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "cabin-3.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cabin-3.png",
+  },
+  {
+    source: "catppuccin",
+    path: "cabin-4.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cabin-4.png",
+  },
+  {
+    source: "catppuccin",
+    path: "cabin.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cabin.png",
+  },
+  {
+    source: "catppuccin",
+    path: "call-it-a-day.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/call-it-a-day.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "car-1.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/car-1.png",
+  },
+  {
+    source: "catppuccin",
+    path: "car-wreck.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/car-wreck.png",
+  },
+  {
+    source: "catppuccin",
+    path: "cartoon-castle.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cartoon-castle.png",
+  },
+  {
+    source: "catppuccin",
+    path: "castle.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/castle.png",
+  },
+  {
+    source: "catppuccin",
+    path: "cat-in-clouds.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cat-in-clouds.png",
+  },
+  {
+    source: "catppuccin",
+    path: "cat-street.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cat-street.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "cat-vibin.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cat-vibin.png",
+  },
+  {
+    source: "catppuccin",
+    path: "chess-gate.jpeg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/chess-gate.jpeg",
+  },
+  {
+    source: "catppuccin",
+    path: "city-harbor.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/city-harbor.png",
+  },
+  {
+    source: "catppuccin",
+    path: "city-horizon.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/city-horizon.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "city-on-water.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/city-on-water.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "city.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/city.png",
+  },
+  {
+    source: "catppuccin",
+    path: "clearing.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/clearing.png",
+  },
+  {
+    source: "catppuccin",
+    path: "cliff-path.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cliff-path.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "cloud-coffee.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cloud-coffee.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "clouds-2.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/clouds-2.png",
+  },
+  {
+    source: "catppuccin",
+    path: "clouds-3.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/clouds-3.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "clouds-3.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/clouds-3.png",
+  },
+  {
+    source: "catppuccin",
+    path: "clouds-5.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/clouds-5.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "clouds.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/clouds.png",
+  },
+  {
+    source: "catppuccin",
+    path: "coffee-shop.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/coffee-shop.png",
+  },
+  {
+    source: "catppuccin",
+    path: "cold-alley.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cold-alley.png",
+  },
+  {
+    source: "catppuccin",
+    path: "compass.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/compass.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "cool.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cool.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "corals-fish-underwater.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/corals-fish-underwater.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "cottages-river.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/cottages-river.png",
+  },
+  {
+    source: "catppuccin",
+    path: "crane.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/crane.png",
+  },
+  {
+    source: "catppuccin",
+    path: "danbo.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/danbo.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dark-forest.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dark-forest.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dark-star.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dark-star.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dark-waves.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dark-waves.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "day-forest-path.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/day-forest-path.png",
+  },
+  {
+    source: "catppuccin",
+    path: "deer-glade.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/deer-glade.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "degirled.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/degirled.png",
+  },
+  {
+    source: "catppuccin",
+    path: "desolate-city-2.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/desolate-city-2.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "desolate-city.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/desolate-city.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "diner-lonely-road.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/diner-lonely-road.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dino.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dino.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "disco.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/disco.png",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-1.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-1.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-2.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-2.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-4.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-4.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-5.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-5.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-6.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-6.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-7.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-7.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-8.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-8.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-9.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-9.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-10.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-10.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-11.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-11.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-12.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-12.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-13.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-13.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-14.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-14.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-15.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-15.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-16.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-16.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-17.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-17.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-18.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-18.png",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-19.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-19.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-20.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-20.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-21.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-21.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-22.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-22.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-23.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-23.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-24.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-24.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-25.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-25.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dominik-mayer-26.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dominik-mayer-26.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "dragon.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dragon.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "droplets.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/droplets.png",
+  },
+  {
+    source: "catppuccin",
+    path: "dwarf-saber.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/dwarf-saber.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "eclipse.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/eclipse.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "excalibur-lake.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/excalibur-lake.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "fantasy-city.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/fantasy-city.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "fight.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/fight.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "fishing.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/fishing.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flower-branch.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flower-branch.png",
+  },
+  {
+    source: "catppuccin",
+    path: "flower-field-2.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flower-field-2.png",
+  },
+  {
+    source: "catppuccin",
+    path: "flower-field-3.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flower-field-3.png",
+  },
+  {
+    source: "catppuccin",
+    path: "flower-field.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flower-field.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flower.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flower.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowering-rain.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowering-rain.png",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-1.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-1.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-2.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-2.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-3.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-3.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-4.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-4.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-5.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-5.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-6.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-6.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-7.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-7.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-8.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-8.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-9.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-9.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-10.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-10.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-11.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-11.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-12.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-12.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-13.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-13.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-14.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-14.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-15.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-15.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-16.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-16.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-17.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-17.png",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-18.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-18.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-19.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-19.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-20.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-20.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flowers-21.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flowers-21.png",
+  },
+  {
+    source: "catppuccin",
+    path: "flying-boat.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flying-boat.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "flying-comets-clouds.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/flying-comets-clouds.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "foggy-city.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/foggy-city.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "fox.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/fox.png",
+  },
+  {
+    source: "catppuccin",
+    path: "fumo-fumo.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/fumo-fumo.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "galaxy-waves.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/galaxy-waves.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "genshin-landscape.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/genshin-landscape.png",
+  },
+  {
+    source: "catppuccin",
+    path: "gentlemen-sunset.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/gentlemen-sunset.png",
+  },
+  {
+    source: "catppuccin",
+    path: "gingerbread-house.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/gingerbread-house.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "girl-stars.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/girl-stars.png",
+  },
+  {
+    source: "catppuccin",
+    path: "grandfather-tree.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/grandfather-tree.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "grassy-well.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/grassy-well.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "green-bridge.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/green-bridge.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "greenbus.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/greenbus.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "harbor-3.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/harbor-3.png",
+  },
+  {
+    source: "catppuccin",
+    path: "harbor.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/harbor.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "haunted-house.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/haunted-house.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "hollow-knight.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/hollow-knight.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "hollow-knight.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/hollow-knight.png",
+  },
+  {
+    source: "catppuccin",
+    path: "hollow.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/hollow.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "horizon-2.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/horizon-2.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "horizon.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/horizon.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "i-touch-this.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/i-touch-this.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "ice-cream.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/ice-cream.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "idk-tbh.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/idk-tbh.png",
+  },
+  {
+    source: "catppuccin",
+    path: "isekai.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/isekai.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "japan-alley.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/japan-alley.png",
+  },
+  {
+    source: "catppuccin",
+    path: "jellyfish.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/jellyfish.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "jupiter.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/jupiter.png",
+  },
+  {
+    source: "catppuccin",
+    path: "kaiju.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/kaiju.png",
+  },
+  {
+    source: "catppuccin",
+    path: "keyboard-2.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/keyboard-2.png",
+  },
+  {
+    source: "catppuccin",
+    path: "keyboard.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/keyboard.png",
+  },
+  {
+    source: "catppuccin",
+    path: "kfc.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/kfc.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "kitchen.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/kitchen.png",
+  },
+  {
+    source: "catppuccin",
+    path: "kitty.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/kitty.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "kiwis.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/kiwis.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "knight-building.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/knight-building.png",
+  },
+  {
+    source: "catppuccin",
+    path: "knight-sit.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/knight-sit.png",
+  },
+  {
+    source: "catppuccin",
+    path: "knight-templar.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/knight-templar.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "knights-radiant.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/knights-radiant.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "koi.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/koi.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "koishi.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/koishi.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "kusuriya.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/kusuriya.png",
+  },
+  {
+    source: "catppuccin",
+    path: "lantern-light-room.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/lantern-light-room.png",
+  },
+  {
+    source: "catppuccin",
+    path: "laundry.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/laundry.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "lightbulbs.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/lightbulbs.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "lighthouse-2.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/lighthouse-2.png",
+  },
+  {
+    source: "catppuccin",
+    path: "lighthouse.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/lighthouse.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "link-click-1.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/link-click-1.png",
+  },
+  {
+    source: "catppuccin",
+    path: "linux-communism.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/linux-communism.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "lit-up-sky.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/lit-up-sky.png",
+  },
+  {
+    source: "catppuccin",
+    path: "lovely-summer.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/lovely-summer.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "mage.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/mage.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "main-street.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/main-street.png",
+  },
+  {
+    source: "catppuccin",
+    path: "maji-no-tabitabi-2.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/maji-no-tabitabi-2.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "maji-no-tabitabi-3.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/maji-no-tabitabi-3.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "majo-no-tabitabi.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/majo-no-tabitabi.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "map.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/map.png",
+  },
+  {
+    source: "catppuccin",
+    path: "marine-tunnel.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/marine-tunnel.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "math.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/math.png",
+  },
+  {
+    source: "catppuccin",
+    path: "minimalist-black-hole.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/minimalist-black-hole.png",
+  },
+  {
+    source: "catppuccin",
+    path: "misty-boat.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/misty-boat.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "moon-beach.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/moon-beach.png",
+  },
+  {
+    source: "catppuccin",
+    path: "moscow.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/moscow.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "mountain-range.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/mountain-range.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "mushishi.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/mushishi.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "my-neighbor-totoro-sunflowers.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/my-neighbor-totoro-sunflowers.png",
+  },
+  {
+    source: "catppuccin",
+    path: "nature-valley-1.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/nature-valley-1.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "nature-valley-2.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/nature-valley-2.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "night-forest-path.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/night-forest-path.png",
+  },
+  {
+    source: "catppuccin",
+    path: "old-car.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/old-car.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "old-computer.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/old-computer.png",
+  },
+  {
+    source: "catppuccin",
+    path: "one-legged-herdazian.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/one-legged-herdazian.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "orange.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/orange.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "oranges.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/oranges.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "oversized-cat.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/oversized-cat.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "paint.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/paint.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "painting-standing.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/painting-standing.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "painting.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/painting.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "panes.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/panes.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "pine.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pine.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "pink-clouds.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pink-clouds.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "pistachio-tea.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pistachio-tea.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "pitstop.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pitstop.png",
+  },
+  {
+    source: "catppuccin",
+    path: "pixel-alley.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pixel-alley.png",
+  },
+  {
+    source: "catppuccin",
+    path: "pixel-car.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pixel-car.png",
+  },
+  {
+    source: "catppuccin",
+    path: "pixel-castle.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pixel-castle.png",
+  },
+  {
+    source: "catppuccin",
+    path: "pixel-earth.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pixel-earth.png",
+  },
+  {
+    source: "catppuccin",
+    path: "pixel-galaxy.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pixel-galaxy.png",
+  },
+  {
+    source: "catppuccin",
+    path: "pixel-napping.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pixel-napping.png",
+  },
+  {
+    source: "catppuccin",
+    path: "pixel-planet.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pixel-planet.png",
+  },
+  {
+    source: "catppuccin",
+    path: "pixel-prairie.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pixel-prairie.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "pixel-reading.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pixel-reading.png",
+  },
+  {
+    source: "catppuccin",
+    path: "pizza.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pizza.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "plane-purple.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/plane-purple.png",
+  },
+  {
+    source: "catppuccin",
+    path: "platform.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/platform.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "pompeii.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/pompeii.png",
+  },
+  {
+    source: "catppuccin",
+    path: "puffy-stars.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/puffy-stars.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "purple-horizon.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/purple-horizon.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "purpled-night.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/purpled-night.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "railroad-2.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/railroad-2.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "railroad-cat.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/railroad-cat.png",
+  },
+  {
+    source: "catppuccin",
+    path: "railroad-flowers.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/railroad-flowers.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "railroad-horizon.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/railroad-horizon.png",
+  },
+  {
+    source: "catppuccin",
+    path: "rainy-window.jpeg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/rainy-window.jpeg",
+  },
+  {
+    source: "catppuccin",
+    path: "red-city.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/red-city.png",
+  },
+  {
+    source: "catppuccin",
+    path: "river-city.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/river-city.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "road.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/road.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "rocket-launch.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/rocket-launch.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "rocket-schematics.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/rocket-schematics.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "rooftops.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/rooftops.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "ruins.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/ruins.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "sakura-aura.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/sakura-aura.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "sakura-gate.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/sakura-gate.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "sakura-trees-over-river.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/sakura-trees-over-river.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "salty-suburban.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/salty-suburban.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "samurai.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/samurai.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "satellite.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/satellite.png",
+  },
+  {
+    source: "catppuccin",
+    path: "scifi.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/scifi.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "serenity.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/serenity.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "shadow-shape-holo.jpeg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/shadow-shape-holo.jpeg",
+  },
+  {
+    source: "catppuccin",
+    path: "ship-2.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/ship-2.png",
+  },
+  {
+    source: "catppuccin",
+    path: "ship-3.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/ship-3.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "shrimp-fried-rice.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/shrimp-fried-rice.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "signal-enthusiast.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/signal-enthusiast.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "snowflakes.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/snowflakes.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "snowy-map.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/snowy-map.png",
+  },
+  {
+    source: "catppuccin",
+    path: "snowy-train.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/snowy-train.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "soaring-off.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/soaring-off.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "soft-rose.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/soft-rose.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "sousou-no-frieren-flowers.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/sousou-no-frieren-flowers.png",
+  },
+  {
+    source: "catppuccin",
+    path: "south-pole.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/south-pole.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "space-piano.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/space-piano.png",
+  },
+  {
+    source: "catppuccin",
+    path: "space.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/space.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "space.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/space.png",
+  },
+  {
+    source: "catppuccin",
+    path: "square-city.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/square-city.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "stall.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/stall.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "stay-vigil-by-pndora.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/stay-vigil-by-pndora.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "storm.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/storm.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "stormlight-archive.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/stormlight-archive.png",
+  },
+  {
+    source: "catppuccin",
+    path: "street-4.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/street-4.png",
+  },
+  {
+    source: "catppuccin",
+    path: "street.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/street.png",
+  },
+  {
+    source: "catppuccin",
+    path: "subway.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/subway.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "sunken-tower.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/sunken-tower.png",
+  },
+  {
+    source: "catppuccin",
+    path: "sunlit-ruins.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/sunlit-ruins.png",
+  },
+  {
+    source: "catppuccin",
+    path: "sunset.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/sunset.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "sushi.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/sushi.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "swirls.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/swirls.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "swirly-painting.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/swirly-painting.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "sword.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/sword.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "tank.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/tank.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "temple.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/temple.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "toast.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/toast.png",
+  },
+  {
+    source: "catppuccin",
+    path: "tora.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/tora.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "touhou-house.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/touhou-house.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "touhou-lake.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/touhou-lake.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "tower.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/tower.png",
+  },
+  {
+    source: "catppuccin",
+    path: "train-sideview.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/train-sideview.png",
+  },
+  {
+    source: "catppuccin",
+    path: "train-station.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/train-station.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "tree-stump.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/tree-stump.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "tree.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/tree.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "trippy-purple.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/trippy-purple.png",
+  },
+  {
+    source: "catppuccin",
+    path: "trolley.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/trolley.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "tux-socialism.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/tux-socialism.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "underwater-deep.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/underwater-deep.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "van-chilling.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/van-chilling.png",
+  },
+  {
+    source: "catppuccin",
+    path: "venice-market.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/venice-market.png",
+  },
+  {
+    source: "catppuccin",
+    path: "vibrant-gate.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/vibrant-gate.png",
+  },
+  {
+    source: "catppuccin",
+    path: "village-gate.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/village-gate.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voxel-city.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voxel-city.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voxel-houses-monochrome.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voxel-houses-monochrome.png",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-1.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-1.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-2.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-2.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-3.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-3.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-4.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-4.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-5.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-5.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-6.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-6.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-7.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-7.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-8.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-8.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-9.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-9.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-10.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-10.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-11.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-11.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-12.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-12.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-13.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-13.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-14.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-14.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-15.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-15.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-16.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-16.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-17.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-17.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-18.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-18.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-19.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-19.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-20.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-20.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-21.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-21.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "voyager-22.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/voyager-22.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "wall.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/wall.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "wallhaven-vqoo1p.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/wallhaven-vqoo1p.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "wanderer.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/wanderer.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "waterfall.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/waterfall.png",
+  },
+  {
+    source: "catppuccin",
+    path: "waves.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/waves.png",
+  },
+  {
+    source: "catppuccin",
+    path: "whale.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/whale.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "wheat.png",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/wheat.png",
+  },
+  {
+    source: "catppuccin",
+    path: "windows-xp.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/windows-xp.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "winter-flowers.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/winter-flowers.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "yohoho.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/yohoho.jpg",
+  },
+  {
+    source: "catppuccin",
+    path: "zuchold-archtecture.jpg",
+    url: "https://raw.githubusercontent.com/hoanhxlyn/walls-catppuccin-mocha/5f46aa70515a2453974a497d954941fdd378a5ce/zuchold-archtecture.jpg",
+  },
+  {
     source: "gruvbox",
     path: "wallpapers/anime/5m5kLI9.png",
     url: "https://raw.githubusercontent.com/AngelJumbo/gruvbox-wallpapers/293774acaa531ce106332f790c80301998066b25/wallpapers/anime/5m5kLI9.png",

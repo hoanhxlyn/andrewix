@@ -12,6 +12,7 @@ import {
   Virtualizer,
 } from "react-aria-components/Virtualizer";
 import { favoritesAtom } from "@/atoms/favorites";
+import type { Sort } from "@/constants";
 import { nameOf, type Wall, wallId } from "@/helper/wallpapers";
 import { breakpoints, gallery } from "@/styles/tokens.css";
 import { Pill, ProgressCircle, Skeleton, Star } from "@/ui";
@@ -48,6 +49,10 @@ export interface WallViewProps {
   onLoadMore: () => void;
   /** Opens the dialog of the wallpaper with this id. */
   onOpen: (id: string) => void;
+  /** The order of the list; the table picks it from its column headings, the grid by name. */
+  sort: Sort | null;
+  /** Sets the order of the list. */
+  onSort: (sort: Sort) => void;
 }
 
 /** A card's picture, with a skeleton until it is there. */

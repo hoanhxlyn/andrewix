@@ -306,6 +306,9 @@ test("the sort menu orders the grid by name and lives in the URL", async ({
 
   await sortBy(page, "A–Z");
   await expect
+    .poll(() => new URL(page.url()).searchParams.get("c"))
+    .toBe("name");
+  await expect
     .poll(() => new URL(page.url()).searchParams.get("o"))
     .toBe("asc");
   await expect.poll(() => inOrder(1)).toBe(true);
@@ -321,12 +324,13 @@ test("the sort menu orders the grid by name and lives in the URL", async ({
 
   // The order rides along into the dialog route and back.
   await card(page, 0).click();
-  await expect(page).toHaveURL(/o=desc/);
+  await expect(page).toHaveURL(/c=name&o=desc/);
   await page.getByRole("button", { name: "Close" }).click();
-  await expect(page).toHaveURL(/\/walls\?o=desc$/);
+  await expect(page).toHaveURL(/\/walls\?c=name&o=desc$/);
 
   await sortBy(page, "Default");
   await expect.poll(() => new URL(page.url()).searchParams.get("o")).toBeNull();
+  await expect.poll(() => new URL(page.url()).searchParams.get("c")).toBeNull();
   await expect.poll(first).toBe(unsorted);
 });
 
@@ -604,6 +608,43 @@ test("the layout switch shows the wallpapers as a table and keeps it", async ({
   await expect.poll(() => storedSetting(page, "walls-layout")).toBe("grid");
 });
 
+test("the table sorts by pressing a column heading", async ({ page }) => {
+  await openWalls(page);
+  await page.getByRole("radio", { name: "Table" }).click();
+  // The name order button belongs to the grid; the table sorts from its column headings.
+  await expect(page.getByRole("button", { name: /^Sort by name/ })).toHaveCount(
+    0,
+  );
+
+  const heading = (name: string) =>
+    table(page).getByRole("columnheader", { name });
+  const sortedBy = () => {
+    const params = new URL(page.url()).searchParams;
+    return `${params.get("c")}-${params.get("o")}`;
+  };
+
+  await heading("Name").click();
+  await expect(heading("Name")).toHaveAttribute("aria-sort", "ascending");
+  await expect.poll(sortedBy).toBe("name-asc");
+
+  await heading("Name").click();
+  await expect(heading("Name")).toHaveAttribute("aria-sort", "descending");
+  await expect.poll(sortedBy).toBe("name-desc");
+
+  // Sources run A to Z, so the first row is a catppuccin one rather than a local background.
+  await heading("Source").click();
+  await expect.poll(sortedBy).toBe("source-asc");
+  await expect(tableRow(page, 0).getByText("catppuccin")).toBeVisible();
+
+  // One starred row, brought to the top by the favorite column.
+  await tableRow(page, 3).getByRole("button", { name: "Favorite" }).click();
+  await heading("Favorite").click();
+  await expect.poll(sortedBy).toBe("favorite-asc");
+  await expect(
+    tableRow(page, 0).getByRole("button", { name: "Favorite" }),
+  ).toHaveAttribute("aria-pressed", "true");
+});
+
 test("on mobile the toolbar keeps its controls and chips on one line each", async ({
   page,
 }) => {
@@ -681,9 +722,9 @@ test("a row scrolled in shows its own picture, not the one of the row it replace
   // scroll in, so a new row must not keep the old row's loaded picture while its own is on hold.
   await page.route("https://raw.githubusercontent.com/**", () => undefined);
   await page.route(/\/assets\/[^/]+\.(png|jpe?g|webp)$/, () => undefined);
-  // Rows are 56 pixels high (`gallery.rowHeight`): this brings row 30 to the top, far below the
+  // Rows are 72 pixels high (`gallery.rowHeight`): this brings row 30 to the top, far below the
   // rows rendered at first.
-  await table(page).evaluate((el) => el.scrollTo(0, 30 * 56));
+  await table(page).evaluate((el) => el.scrollTo(0, 30 * 72));
 
   const thumbnail = tableRow(page, 30).locator("img");
   await expect(thumbnail).toBeVisible();

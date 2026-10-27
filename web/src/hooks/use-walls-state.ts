@@ -6,21 +6,24 @@ import {
   type UrlKeys,
   useQueryStates,
 } from "nuqs";
-import { SORTS, SOURCES } from "@/constants";
+import { SORT_COLUMNS, SORT_ORDERS, SOURCES } from "@/constants";
 
 // The filter and the sort order live in the URL, so opening a wallpaper's dialog and closing it
 // again lands back on the same grid, and a link carries them all.
 const params = {
   search: parseAsString,
   source: parseAsStringEnum([...SOURCES]),
-  sort: parseAsStringEnum([...SORTS]),
+  // The column and the order it runs in, apart: `o=asc` alone does not say what it orders.
+  sort: parseAsStringEnum([...SORT_COLUMNS]),
+  dir: parseAsStringEnum([...SORT_ORDERS]),
   favorites: parseAsBoolean,
 };
 
 const urlKeys: UrlKeys<typeof params> = {
   search: "q",
   source: "s",
-  sort: "o",
+  sort: "c",
+  dir: "o",
   favorites: "f",
 };
 

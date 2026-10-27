@@ -14,6 +14,7 @@ import { dirname } from "node:path";
 
 /** Flake inputs holding wallpapers, keyed by the source name the gallery shows. */
 const SOURCES = {
+  catppuccin: "walls-catppuccin-mocha",
   gruvbox: "gruvbox-wallpapers",
   tokyonight: "tokyonight-wallpapers",
 } as const;

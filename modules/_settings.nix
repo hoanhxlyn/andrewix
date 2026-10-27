@@ -81,6 +81,7 @@
     wallpaper = {
       # local (config/background/<path>) | gruvbox (AngelJumbo/gruvbox-wallpapers, <path> in repo)
       # | tokyonight (hoanhxlyn/tokyonight-wallpapers, <filename> in repo root)
+      # | catppuccin (orangci/walls-catppuccin-mocha, <filename> in repo root)
       # | remote ({url, hash} instead of path)
       source = "tokyonight";
       path = "neon-city.png";

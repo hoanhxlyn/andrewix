@@ -5,8 +5,9 @@ import { favoritesAtom } from "@/atoms/favorites";
 import { wallsLayoutAtom } from "@/atoms/walls";
 import { WallGrid } from "@/components/Walls/WallGrid";
 import { WallTable } from "@/components/Walls/WallTable";
-import { SORTS, SOURCES, WALL_LAYOUTS } from "@/constants";
-import { sorted } from "@/helper/sort-walls";
+import type { Sort } from "@/constants";
+import { SORT_ORDERS, SOURCES, WALL_LAYOUTS } from "@/constants";
+import { sorted, withoutExtension } from "@/helper/sort-walls";
 import { ALL, wallHref, wallId } from "@/helper/wallpapers";
 import { serialize, useWallsState } from "@/hooks/use-walls-state";
 import { gallery } from "@/styles/tokens.css";
@@ -36,6 +37,7 @@ const CHIP_ITEMS: readonly { id: (typeof CHIPS)[number] }[] = CHIPS.map(
 const LABELS: Record<(typeof CHIPS)[number], string> = {
   all: "All",
   local: "Local",
+  catppuccin: "Catppuccin",
   gruvbox: "Gruvbox",
   tokyonight: "Tokyo Night",
 };
@@ -43,7 +45,7 @@ const LABELS: Record<(typeof CHIPS)[number], string> = {
 /** The one chip of the favorites filter, beside the source chips. */
 const FAVORITES_CHIP = [{ id: "favorites" }] as const;
 
-const ORDERS = ["default", ...SORTS] as const;
+const ORDERS = ["default", ...SORT_ORDERS] as const;
 
 const ORDER_LABELS: Record<(typeof ORDERS)[number], string> = {
   default: "Default",
@@ -60,30 +62,47 @@ const ORDER_ICONS: Record<(typeof ORDERS)[number], typeof Icons.Sort> = {
 
 /** Searchable gallery of the wallpapers the repository's hosts can use, as cards or as rows. */
 export default function Walls() {
-  const [{ search, source, sort, favorites: onlyFavorites }, setParams] =
-    useWallsState();
+  const [
+    { search, source, sort: column, dir, favorites: onlyFavorites },
+    setParams,
+  ] = useWallsState();
   const favorites = useAtomValue(favoritesAtom);
   const query = search ?? "";
   const active = source ?? "all";
-  const order = sort ?? "default";
-  const SortIcon = ORDER_ICONS[order];
+  const sort = useMemo<Sort | null>(
+    () => (column === null || dir === null ? null : { column, order: dir }),
+    [column, dir],
+  );
+  const order = sort?.column === "name" ? sort.order : null;
+  const SortIcon = ORDER_ICONS[order ?? "default"];
   const [layout, setLayout] = useAtom(wallsLayoutAtom);
   const navigate = useNavigate();
+
+  // The grid's toolbar offers name orders only, so a column order picked in the table is the
+  // table's; the grid keeps the order of its sources until a name order is picked.
+  const appliedSort = layout === "table" || order !== null ? sort : null;
 
   const shown = useMemo(() => {
     const needle = query.trim().toLowerCase();
     const matching = ALL.filter(
       (wall) =>
         (active === "all" || wall.source === active) &&
-        (needle === "" || wall.path.toLowerCase().includes(needle)) &&
+        (needle === "" ||
+          withoutExtension(wall.path).toLowerCase().includes(needle)) &&
         (!onlyFavorites || favorites.has(wallId(wall))),
     );
-    return sorted(matching, sort);
-  }, [query, active, sort, onlyFavorites, favorites]);
+    return sorted(matching, appliedSort, favorites);
+  }, [query, active, appliedSort, onlyFavorites, favorites]);
 
   // The filter and order as a query string. It rides along to the dialog route, so that route has
   // it in its own URL, and a new one starts the list again from its first batch.
-  const filter = serialize({ search, source, sort, favorites: onlyFavorites });
+  const filter = serialize({
+    search,
+    source,
+    sort: column,
+    dir,
+    favorites: onlyFavorites,
+  });
   const [batch, setBatch] = useState<{ filter: string; size: number }>({
     filter,
     size: gallery.batchSize,
@@ -111,30 +130,39 @@ export default function Walls() {
             placeholder="Search"
             aria-label="Search wallpapers"
           />
-          <MenuTrigger>
-            <Button
-              variant="icon"
-              icon={<SortIcon />}
-              aria-label={`Sort by name: ${ORDER_LABELS[order]}`}
-            />
-            <Menu
-              aria-label="Sort by name"
-              selectionMode="single"
-              disallowEmptySelection
-              selectedKeys={[order]}
-              onSelectionChange={(keys) => {
-                const [key] = [...keys];
-                const picked = SORTS.find((name) => name === key) ?? null;
-                setParams({ sort: picked }, { history: "replace" });
-              }}
-            >
-              {ORDERS.map((id) => (
-                <MenuItem key={id} id={id}>
-                  {ORDER_LABELS[id]}
-                </MenuItem>
-              ))}
-            </Menu>
-          </MenuTrigger>
+          {/* The table sorts from its column headings, so the name order is the grid's alone. */}
+          {layout === "grid" && (
+            <MenuTrigger>
+              <Button
+                variant="icon"
+                icon={<SortIcon />}
+                aria-label={`Sort by name: ${ORDER_LABELS[order ?? "default"]}`}
+              />
+              <Menu
+                aria-label="Sort by name"
+                selectionMode="single"
+                disallowEmptySelection
+                selectedKeys={[order ?? "default"]}
+                onSelectionChange={(keys) => {
+                  const [key] = [...keys];
+                  const picked = SORT_ORDERS.find((name) => name === key);
+                  setParams(
+                    {
+                      sort: picked === undefined ? null : "name",
+                      dir: picked ?? null,
+                    },
+                    { history: "replace" },
+                  );
+                }}
+              >
+                {ORDERS.map((id) => (
+                  <MenuItem key={id} id={id}>
+                    {ORDER_LABELS[id]}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </MenuTrigger>
+          )}
           <SegmentedButton
             aria-label="Layout"
             className={s.layoutSwitch}
@@ -203,6 +231,13 @@ export default function Walls() {
           hasMore={loaded.length < shown.length}
           onLoadMore={loadMore}
           onOpen={open}
+          sort={sort}
+          onSort={(next) =>
+            setParams(
+              { sort: next.column, dir: next.order },
+              { history: "replace" },
+            )
+          }
         />
       )}
       {/* The dialog of one wallpaper, over this gallery. Empty unless that route is open. */}
