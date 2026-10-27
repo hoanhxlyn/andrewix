@@ -12,7 +12,6 @@ import { FILES, useOpenFiles } from "@/hooks/use-open-files";
 import { breakpoints, sidebarWidth } from "@/styles/tokens.css";
 import {
   Button,
-  Card,
   Checkbox,
   CodePeek,
   EmptyState,
@@ -48,7 +47,7 @@ export default function Home() {
   const [width, setWidth] = useAtom(sidebarWidthAtom);
 
   return (
-    <Card variant="elevated" className={s.layout}>
+    <div className={s.layout}>
       {/* Hidden rather than unmounted, so the sidebar can slide out and back in. */}
       <aside
         id={paneId}
@@ -155,6 +154,6 @@ export default function Home() {
           </EmptyState>
         )}
       </Tabs>
-    </Card>
+    </div>
   );
 }

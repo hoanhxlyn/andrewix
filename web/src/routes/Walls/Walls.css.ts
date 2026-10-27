@@ -1,12 +1,19 @@
 import { style } from "@vanilla-extract/css";
 import { inComponents } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
-import { vars } from "@/styles/tokens.css";
+import { text, vars } from "@/styles/tokens.css";
 
-/** Card holding the toolbar and the wallpapers. */
+/** Page surface holding the toolbar and the wallpapers, filling the area under the app bar. */
 export const layout = style([
-  sprinkles({ display: "flex", flexDirection: "column", gap: "md" }),
-  inComponents({ height: "100%", minHeight: 0 }),
+  sprinkles({
+    display: "flex",
+    flexDirection: "column",
+    gap: "md",
+    padding: "lg",
+    background: "surface",
+    color: "onSurface",
+  }),
+  inComponents({ ...text.body, height: "100%", minHeight: 0 }),
 ]);
 
 /** Toolbar above the wallpapers: the search row, then the filter chips. */

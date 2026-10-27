@@ -12,7 +12,6 @@ import { serialize, useWallsState } from "@/hooks/use-walls-state";
 import { gallery } from "@/styles/tokens.css";
 import {
   Button,
-  Card,
   EmptyState,
   Icons,
   Menu,
@@ -100,7 +99,7 @@ export default function Walls() {
   const View = layout === "table" ? WallTable : WallGrid;
 
   return (
-    <Card variant="elevated" className={s.layout}>
+    <div className={s.layout}>
       <div className={s.toolbar}>
         <div className={s.actions}>
           <SearchField
@@ -208,6 +207,6 @@ export default function Walls() {
       )}
       {/* The dialog of one wallpaper, over this gallery. Empty unless that route is open. */}
       <Outlet />
-    </Card>
+    </div>
   );
 }

@@ -25,8 +25,9 @@ interface SearchFieldProps
 }
 
 /**
- * Search input with a leading icon and a clear button. The text being typed lives here, so a
- * keystroke only re-renders the field; the page hears about it when typing pauses.
+ * Search input with a leading icon and, while it holds text, a clear button. The text being
+ * typed lives here, so a keystroke only re-renders the field; the page hears about it when typing
+ * pauses.
  */
 export function SearchField({
   value,
@@ -38,6 +39,7 @@ export function SearchField({
   const [draft, setDraft] = useState(value);
   // The last text reported to the page, to tell its echo from a change made elsewhere.
   const committed = useRef(value);
+  const input = useRef<HTMLInputElement>(null);
   const report = useRef(onChange);
   report.current = onChange;
 
@@ -65,16 +67,19 @@ export function SearchField({
       {...rest}
     >
       <Icons.Search aria-hidden />
-      <Input className={s.input} placeholder={placeholder} />
+      <Input ref={input} className={s.input} placeholder={placeholder} />
+      {/* Shown only while there is text to clear, as Material's search view does. It stays
+          mounted so it can fade out; the styles hide it from the tab order once it has. */}
       <Button
         variant="icon"
         icon={<Icons.Close />}
         aria-label="Clear search"
-        isDisabled={draft === ""}
         onPress={() => {
           committed.current = "";
           setDraft("");
           onChange("");
+          // The button leaves with the text; focus goes back to the input instead of the page.
+          input.current?.focus();
         }}
       />
     </AriaSearchField>

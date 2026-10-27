@@ -24,6 +24,14 @@ const colors = (flavor: keyof typeof flavors) => {
 
 const space = { xs: "4px", sm: "8px", md: "12px", lg: "16px", xl: "24px" };
 
+// Border widths, also plain strings for the properties Chrome drops unless given a plain length:
+// it computes `overflow-clip-margin` to 0 from a CSS variable and rejects a calc() there.
+export const border = {
+  outline: "1px",
+  focusRing: "2px",
+  indicator: "2px",
+} as const;
+
 export const breakpoints = {
   medium: "(min-width: 600px)",
   expanded: "(min-width: 840px)",
@@ -92,8 +100,8 @@ const shared = {
     touchTarget: "48px",
     progress: `${progress.size}px`,
     sidebar: `${sidebarWidth.initial}px`,
-    // Width a search box grows to when the row has room for it.
-    search: "16rem",
+    // Width a search box grows to when the row has room for it: the M3 search bar minimum.
+    search: "360px",
   },
   shape: {
     extraSmall: "4px",
@@ -103,7 +111,7 @@ const shared = {
     extraLarge: "28px",
     full: "999px",
   },
-  border: { outline: "1px", focusRing: "2px", indicator: "2px" },
+  border,
   layer: { raised: "1", overlay: "2" },
   motion: {
     duration: `${motion.duration}ms`,
