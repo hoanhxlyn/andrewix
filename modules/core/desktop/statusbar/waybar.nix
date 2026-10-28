@@ -85,24 +85,20 @@
         })
       ];
 
-      wrappers.waybar = {
-        enable = true;
-        package = pkgs.waybar;
-        runtimePkgs = with pkgs; [
-          playerctl
-          libnotify
-          procps
-          wireplumber
-          brightnessctl
-        ];
-      };
+      wrappers.waybar.enable = true;
+      wrappers.waybar.package = pkgs.waybar;
+      wrappers.waybar.runtimePkgs = with pkgs; [
+        playerctl
+        libnotify
+        procps
+        wireplumber
+        brightnessctl
+      ];
 
       home.packages = with pkgs; [playerctl] ++ [dndScript];
-      stylix.targets.waybar = {
-        enable = true;
-        enableLeftBackColors = false;
-        background = lib.mkForce "alpha(@base00, 0.55)";
-      };
+      stylix.targets.waybar.enable = true;
+      stylix.targets.waybar.enableLeftBackColors = false;
+      stylix.targets.waybar.background = lib.mkForce "alpha(@base00, 0.55)";
 
       programs.waybar = {
         enable = true;
@@ -147,185 +143,167 @@
             #mpris { margin:0 5px }
 
           '';
-        settings = {
-          mainBar = {
-            layer = "top";
-            position = "top";
-            height = 32;
-            spacing = 5;
+        settings.mainBar = {
+          layer = "top";
+          position = "top";
+          height = 32;
+          spacing = 5;
 
-            modules-left = [
-              "niri/workspaces"
-              "niri/window"
-              "group/mpris"
+          modules-left = [
+            "niri/workspaces"
+            "niri/window"
+            "group/mpris"
+          ];
+          modules-center = [
+            "clock"
+          ];
+          modules-right = builtins.filter (m: m != null) [
+            "tray"
+            "privacy"
+            "bluetooth"
+            "custom/gamepad"
+            "custom/dnd"
+            "custom/recording"
+            (
+              if host.isLaptop
+              then "battery"
+              else null
+            )
+            (
+              if host.isLaptop
+              then "backlight"
+              else null
+            )
+            "cpu"
+            "memory"
+            "wireplumber"
+          ];
+
+          "niri/workspaces" = {
+            all-outputs = false;
+            hide-empty = true;
+            on-click = "activate";
+            format = "{index}";
+          };
+
+          "niri/window" = {
+            max-length = 30;
+            icon = true;
+            icon-size = 16;
+            format = "{title}";
+          };
+
+          "group/mpris".orientation = "inherit";
+          "group/mpris".drawer.transition-duration = 300;
+          "group/mpris".drawer.transition-left-to-right = true;
+          "group/mpris".drawer.click-to-reveal = false;
+          "group/mpris".modules = ["mpris#icon" "mpris#info"];
+
+          "mpris#icon" = {
+            format = "{status_icon}";
+            format-paused = "{status_icon}";
+            status-icons.playing = "󰝚 ";
+            status-icons.paused = "󰏤";
+            status-icons.stopped = "󰓛";
+            on-click = "playerctl play-pause";
+            tooltip = false;
+          };
+
+          "mpris#info" = {
+            format = "{player_icon} {dynamic}";
+            format-paused = "{player_icon} {dynamic}";
+            dynamic-len = 25;
+            dynamic-order = ["title" "artist"];
+            tooltip = false;
+          };
+
+          cpu.format = "󰻠 {usage}%";
+          cpu.tooltip-format = "CPU: {usage}% | {avg_frequency}GHz";
+          cpu.interval = 3;
+
+          memory.format = "󰍛 {percentage}%";
+          memory.tooltip-format = "{used:0.1f}G / {total:0.1f}G";
+          memory.interval = 3;
+
+          wireplumber = {
+            format = "{icon} {volume}%";
+            format-muted = " Muted";
+            format-icons = ["" "" ""];
+            on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+            on-scroll-up = "soundctl up";
+            on-scroll-down = "soundctl down";
+          };
+
+          clock.format = "{:%m/%d %H:%M}";
+          clock.on-click = "waycal";
+
+          "custom/dnd" = {
+            exec = "${dndScript}/bin/waybar-dnd";
+            return-type = "json";
+            signal = 10;
+            on-click = "dnd-toggle";
+          };
+
+          "custom/gamepad" = {
+            exec = "${gamepad}/bin/waybar-gamepad";
+            return-type = "json";
+            interval = 2;
+            tooltip = true;
+          };
+
+          "custom/recording" = {
+            exec = "${recordingScript}/bin/waybar-recording";
+            return-type = "json";
+            signal = 11;
+            on-click = "record-toggle";
+          };
+
+          bluetooth = {
+            format = "󰂯 {status}";
+            format-no-controller = "";
+            format-connected = "󰂱 {device_alias}";
+            format-connected-battery = "󰂱 {device_alias} {device_battery_percentage}%";
+            on-click = "${host.defaults.terminal} -e bluetui";
+            tooltip-format = "{controller_alias}\t{controller_address}\n\n{num_connections} connected";
+            tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
+            tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
+          };
+
+          battery = {
+            states.warning = 40;
+            states.critical = 15;
+            format = "{icon} {capacity}%";
+            tooltip-format = "{capacity}% ({timeTo})";
+            format-icons.default = ["󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹"];
+            format-icons.charging = ["󰢟" "󰢜" "󰂆" "󰂇" "󰂈" "󰢝" "󰂉" "󰢞" "󰂊" "󰂋" "󰂅"];
+            on-click = "fuzzel-battery";
+          };
+
+          backlight = {
+            device = "intel_backlight";
+            format = "{icon} {percent}%";
+            format-icons = ["󰃝" "󰃞" "󰃟" "󰃠"];
+            tooltip-format = "{percent}%";
+            on-scroll-up = "brightnessctl set +5%";
+            on-scroll-down = "brightnessctl set 5%-";
+          };
+
+          tray.spacing = 8;
+
+          privacy = {
+            icon-spacing = 4;
+            icon-size = 14;
+            transition-duration = 250;
+            modules = [
+              {
+                type = "screenshare";
+                tooltip = true;
+              }
+              {
+                type = "audio-in";
+                tooltip = true;
+              }
             ];
-            modules-center = [
-              "clock"
-            ];
-            modules-right = builtins.filter (m: m != null) [
-              "tray"
-              "privacy"
-              "bluetooth"
-              "custom/gamepad"
-              "custom/dnd"
-              "custom/recording"
-              (
-                if host.isLaptop
-                then "battery"
-                else null
-              )
-              (
-                if host.isLaptop
-                then "backlight"
-                else null
-              )
-              "cpu"
-              "memory"
-              "wireplumber"
-            ];
-
-            "niri/workspaces" = {
-              all-outputs = false;
-              hide-empty = true;
-              on-click = "activate";
-              format = "{index}";
-            };
-
-            "niri/window" = {
-              max-length = 30;
-              icon = true;
-              icon-size = 16;
-              format = "{title}";
-            };
-
-            "group/mpris" = {
-              orientation = "inherit";
-              drawer = {
-                transition-duration = 300;
-                transition-left-to-right = true;
-                click-to-reveal = false;
-              };
-              modules = ["mpris#icon" "mpris#info"];
-            };
-
-            "mpris#icon" = {
-              format = "{status_icon}";
-              format-paused = "{status_icon}";
-              status-icons = {
-                playing = "󰝚 ";
-                paused = "󰏤";
-                stopped = "󰓛";
-              };
-              on-click = "playerctl play-pause";
-              tooltip = false;
-            };
-
-            "mpris#info" = {
-              format = "{player_icon} {dynamic}";
-              format-paused = "{player_icon} {dynamic}";
-              dynamic-len = 25;
-              dynamic-order = ["title" "artist"];
-              tooltip = false;
-            };
-
-            cpu = {
-              format = "󰻠 {usage}%";
-              tooltip-format = "CPU: {usage}% | {avg_frequency}GHz";
-              interval = 3;
-            };
-
-            memory = {
-              format = "󰍛 {percentage}%";
-              tooltip-format = "{used:0.1f}G / {total:0.1f}G";
-              interval = 3;
-            };
-
-            wireplumber = {
-              format = "{icon} {volume}%";
-              format-muted = " Muted";
-              format-icons = ["" "" ""];
-              on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-              on-scroll-up = "soundctl up";
-              on-scroll-down = "soundctl down";
-            };
-
-            clock = {
-              format = "{:%m/%d %H:%M}";
-              on-click = "waycal";
-            };
-
-            "custom/dnd" = {
-              exec = "${dndScript}/bin/waybar-dnd";
-              return-type = "json";
-              signal = 10;
-              on-click = "dnd-toggle";
-            };
-
-            "custom/gamepad" = {
-              exec = "${gamepad}/bin/waybar-gamepad";
-              return-type = "json";
-              interval = 2;
-              tooltip = true;
-            };
-
-            "custom/recording" = {
-              exec = "${recordingScript}/bin/waybar-recording";
-              return-type = "json";
-              signal = 11;
-              on-click = "record-toggle";
-            };
-
-            bluetooth = {
-              format = "󰂯 {status}";
-              format-no-controller = "";
-              format-connected = "󰂱 {device_alias}";
-              format-connected-battery = "󰂱 {device_alias} {device_battery_percentage}%";
-              on-click = "${host.defaults.terminal} -e bluetui";
-              tooltip-format = "{controller_alias}\t{controller_address}\n\n{num_connections} connected";
-              tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
-              tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
-            };
-
-            battery = {
-              states = {
-                warning = 40;
-                critical = 15;
-              };
-              format = "{icon} {capacity}%";
-              tooltip-format = "{capacity}% ({timeTo})";
-              format-icons = {
-                default = ["󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹"];
-                charging = ["󰢟" "󰢜" "󰂆" "󰂇" "󰂈" "󰢝" "󰂉" "󰢞" "󰂊" "󰂋" "󰂅"];
-              };
-              on-click = "fuzzel-battery";
-            };
-
-            backlight = {
-              device = "intel_backlight";
-              format = "{icon} {percent}%";
-              format-icons = ["󰃝" "󰃞" "󰃟" "󰃠"];
-              tooltip-format = "{percent}%";
-              on-scroll-up = "brightnessctl set +5%";
-              on-scroll-down = "brightnessctl set 5%-";
-            };
-
-            tray.spacing = 8;
-
-            privacy = {
-              icon-spacing = 4;
-              icon-size = 14;
-              transition-duration = 250;
-              modules = [
-                {
-                  type = "screenshare";
-                  tooltip = true;
-                }
-                {
-                  type = "audio-in";
-                  tooltip = true;
-                }
-              ];
-            };
           };
         };
       };

@@ -14,11 +14,9 @@
     renameSymbol = L "cr";
     signatureHelp = "<c-/>";
   };
-  presets = {
-    tailwindcss-language-server.enable = true;
-    vscode-css-language-server.enable = true;
-    typescript-go.enable = true;
-  };
+  presets.tailwindcss-language-server.enable = true;
+  presets.vscode-css-language-server.enable = true;
+  presets.typescript-go.enable = true;
   servers = {
     biome = {};
 
@@ -34,40 +32,30 @@
       "cx"
       "tv"
     ];
-    nil.settings = {
-      nil.nix.flake.autoArchive = true;
-    };
+    nil.settings.nil.nix.flake.autoArchive = true;
     vscode-css-language-server.settings.css.lint.unknownAtRules = "ignore";
-    vscode-json-language-server = {
-      filetypes = ["json" "jsonc" "bak"];
-      settings.json = {
-        format.enable = false;
-        schemas = lib.generators.mkLuaInline ''
-          require("schemastore").json.schemas({
-            extra = {
-              {
-                description = "Shadcn JSON schema",
-                fileMatch = { "components.json" },
-                name = "components.json",
-                url = "https://ui.shadcn.com/schema.json",
-              },
-              {
-                description = "Lua_ls JSON schema",
-                fileMatch = { ".luarc.json" },
-                name = ".luarc.json",
-                url = "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
-              },
-            },
-          })
-        '';
-      };
-    };
-    yaml-language-server.settings.yaml = {
-      schemaStore = {
-        enable = false;
-        url = "";
-      };
-      schemas = lib.generators.mkLuaInline ''require("schemastore").yaml.schemas()'';
-    };
+    vscode-json-language-server.filetypes = ["json" "jsonc" "bak"];
+    vscode-json-language-server.settings.json.format.enable = false;
+    vscode-json-language-server.settings.json.schemas = lib.generators.mkLuaInline ''
+      require("schemastore").json.schemas({
+        extra = {
+          {
+            description = "Shadcn JSON schema",
+            fileMatch = { "components.json" },
+            name = "components.json",
+            url = "https://ui.shadcn.com/schema.json",
+          },
+          {
+            description = "Lua_ls JSON schema",
+            fileMatch = { ".luarc.json" },
+            name = ".luarc.json",
+            url = "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+          },
+        },
+      })
+    '';
+    yaml-language-server.settings.yaml.schemaStore.enable = false;
+    yaml-language-server.settings.yaml.schemaStore.url = "";
+    yaml-language-server.settings.yaml.schemas = lib.generators.mkLuaInline ''require("schemastore").yaml.schemas()'';
   };
 }

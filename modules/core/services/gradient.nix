@@ -16,10 +16,8 @@
 
       # Gradient's prebuilt packages (Rust server): substitute instead of
       # compiling, same pattern as niri/herdr caches.
-      nix.settings = {
-        extra-substituters = ["https://public.gradient.ci/cache/main"];
-        extra-trusted-public-keys = ["public.gradient.ci-main:qmxRE+saUvhNa3jqaCMWje+feVU77TjABchZrPGf7A8="];
-      };
+      nix.settings.extra-substituters = ["https://public.gradient.ci/cache/main"];
+      nix.settings.extra-trusted-public-keys = ["public.gradient.ci-main:qmxRE+saUvhNa3jqaCMWje+feVU77TjABchZrPGf7A8="];
 
       services.gradient = {
         enable = true;
@@ -29,10 +27,8 @@
         serveUrl = "http://andrewix:1998";
         useTls = false;
 
-        secrets = {
-          jwtFile = config.sops.secrets.GRADIENT_SECRETS_JWT.path;
-          cryptFile = config.sops.secrets.GRADIENT_SECRETS_CRYPT.path;
-        };
+        secrets.jwtFile = config.sops.secrets.GRADIENT_SECRETS_JWT.path;
+        secrets.cryptFile = config.sops.secrets.GRADIENT_SECRETS_CRYPT.path;
 
         postgres.enable = true;
         # Self-registering local worker; the module joins it to team "server",
@@ -40,23 +36,19 @@
         worker.enable = true;
 
         state = {
-          users.andrew = {
-            email = "hoanhxlyn@users.noreply.github.com";
-            superuser = true;
-            password_file = config.sops.secrets.GRADIENT_USER_PASSWORD_HASH.path;
-          };
+          users.andrew.email = "hoanhxlyn@users.noreply.github.com";
+          users.andrew.superuser = true;
+          users.andrew.password_file = config.sops.secrets.GRADIENT_USER_PASSWORD_HASH.path;
 
-          projects.andrewix = {
-            created_by = "andrew";
-            private_key_file = config.sops.secrets.GRADIENT_PROJECT_SSH_KEY.path;
-            teams = [
-              {
-                team = "server";
-                users = false;
-                workers = true;
-              }
-            ];
-          };
+          projects.andrewix.created_by = "andrew";
+          projects.andrewix.private_key_file = config.sops.secrets.GRADIENT_PROJECT_SSH_KEY.path;
+          projects.andrewix.teams = [
+            {
+              team = "server";
+              users = false;
+              workers = true;
+            }
+          ];
 
           caches.andrewix = {
             created_by = "andrew";
@@ -78,7 +70,7 @@
             triggers = [
               {
                 type = "polling";
-                config = {interval_secs = 300;};
+                config.interval_secs = 300;
               }
             ];
           };

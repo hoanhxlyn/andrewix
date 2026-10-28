@@ -14,38 +14,34 @@
         "video/ogg"
       ];
     in {
-      programs.mpv = {
-        enable = true;
-        scripts = with pkgs.mpvScripts; [
-          uosc
-          thumbfast
-          sponsorblock
-          mpv-playlistmanager
-          memo
-          quality-menu
-        ];
-        config = {
-          osc = false;
-          border = false;
-          hwdec = "auto-safe";
-          save-position-on-quit = true;
-          screenshot-format = "png";
-          screenshot-directory = "~/Pictures/Screenshots/Mpv";
-          sub-auto = "fuzzy";
-          ytdl-format = "bestvideo[height<=?1080]+bestaudio/best";
-        };
+      programs.mpv.enable = true;
+      programs.mpv.scripts = with pkgs.mpvScripts; [
+        uosc
+        thumbfast
+        sponsorblock
+        mpv-playlistmanager
+        memo
+        quality-menu
+      ];
+      programs.mpv.config = {
+        osc = false;
+        border = false;
+        hwdec = "auto-safe";
+        save-position-on-quit = true;
+        screenshot-format = "png";
+        screenshot-directory = "~/Pictures/Screenshots/Mpv";
+        sub-auto = "fuzzy";
+        ytdl-format = "bestvideo[height<=?1080]+bestaudio/best";
       };
 
-      xdg.mimeApps = {
-        enable = true;
-        defaultApplications = builtins.listToAttrs (
-          map (mime: {
-            name = mime;
-            value = "mpv.desktop";
-          })
-          videoMimeTypes
-        );
-      };
+      xdg.mimeApps.enable = true;
+      xdg.mimeApps.defaultApplications = builtins.listToAttrs (
+        map (mime: {
+          name = mime;
+          value = "mpv.desktop";
+        })
+        videoMimeTypes
+      );
     };
   };
 }

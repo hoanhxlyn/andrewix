@@ -21,28 +21,22 @@
     );
   in {
     homeManager = {pkgs, ...}: {
-      programs.fuzzel = {
-        enable = true;
-        settings = {
-          main = {
-            terminal = "${host.defaults.terminal} -e";
-            show-actions = true;
-            width = 50;
-            lines = 10;
-            horizontal-pad = builtins.mul terminal.padding 2;
-            inner-pad = builtins.mul terminal.padding 2;
-            vertical-pad = builtins.mul terminal.padding 2;
-            line-height = 30;
-            image-size-ratio = 1.0;
-            # icon-theme = "Papirus-Dark";
-            scaling-filter = "lanczos3";
-          };
-          border = {
-            width = 1;
-            radius = 15;
-          };
-        };
+      programs.fuzzel.enable = true;
+      programs.fuzzel.settings.main = {
+        terminal = "${host.defaults.terminal} -e";
+        show-actions = true;
+        width = 50;
+        lines = 10;
+        horizontal-pad = builtins.mul terminal.padding 2;
+        inner-pad = builtins.mul terminal.padding 2;
+        vertical-pad = builtins.mul terminal.padding 2;
+        line-height = 30;
+        image-size-ratio = 1.0;
+        # icon-theme = "Papirus-Dark";
+        scaling-filter = "lanczos3";
       };
+      programs.fuzzel.settings.border.width = 1;
+      programs.fuzzel.settings.border.radius = 15;
 
       home.file.".local/share/icons/hicolor/48x48/apps/yazi.png".source = "${pkgs.yazi}/share/pixmaps/yazi.png";
 

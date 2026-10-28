@@ -4,14 +4,10 @@
       (<den/batteries/unfree> ["obsidian"])
     ];
     homeManager = {
-      programs.obsidian = {
-        enable = true;
-        defaultSettings = {
-          appearance.nativeMenus = true;
-          app.readableLineLength = false;
-          app.strictLineBreaks = true;
-        };
-      };
+      programs.obsidian.enable = true;
+      programs.obsidian.defaultSettings.appearance.nativeMenus = true;
+      programs.obsidian.defaultSettings.app.readableLineLength = false;
+      programs.obsidian.defaultSettings.app.strictLineBreaks = true;
     };
   };
 }

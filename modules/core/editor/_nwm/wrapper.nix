@@ -11,10 +11,8 @@
 
   wrappers.nvim = {config, ...}: {
     enable = true;
-    settings = {
-      aliases = ["vim" "vi"];
-      config_directory = "${self}/config/nvim";
-    };
+    settings.aliases = ["vim" "vi"];
+    settings.config_directory = "${self}/config/nvim";
     specs.general = with pkgs.vimPlugins; [
       lz-n
       (config.nvim-lib.mkPlugin "mini-nvim" inputs.mini-nvim)
@@ -26,30 +24,28 @@
       SchemaStore-nvim
       scope-nvim
     ];
-    specs.lazy = {
-      lazy = true;
-      data = with pkgs.vimPlugins; [
-        nvim-lspconfig
-        lazydev-nvim
-        blink-cmp
-        friendly-snippets
-        nvim-lint
-        conform-nvim
-        nvim-dap
-        nvim-nio
-        nvim-dap-ui
-        nvim-dap-virtual-text
-        nvim-navic
-        nvim-ufo
-        promise-async
-        markview-nvim
-        nvim-colorizer-lua
-        nvim-ts-autotag
-        bufferline-nvim
-        lualine-nvim
-        which-key-nvim
-      ];
-    };
+    specs.lazy.lazy = true;
+    specs.lazy.data = with pkgs.vimPlugins; [
+      nvim-lspconfig
+      lazydev-nvim
+      blink-cmp
+      friendly-snippets
+      nvim-lint
+      conform-nvim
+      nvim-dap
+      nvim-nio
+      nvim-dap-ui
+      nvim-dap-virtual-text
+      nvim-navic
+      nvim-ufo
+      promise-async
+      markview-nvim
+      nvim-colorizer-lua
+      nvim-ts-autotag
+      bufferline-nvim
+      lualine-nvim
+      which-key-nvim
+    ];
     runtimePkgs = with pkgs; [
       # LSPs
       nil

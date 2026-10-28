@@ -7,3 +7,4 @@ result
 !/.*code/taste
 node_modules/
 dist/
+__pycache__/

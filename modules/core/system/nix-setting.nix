@@ -16,30 +16,28 @@ in {
       # turns that churn into a permanent `start-limit-hit`. Allow enough starts
       # to ride it out. See the nss targets in `journalctl -b -u nscd`.
       systemd.services.nscd.startLimitBurst = 50;
-      nix = {
-        settings =
-          {
-            auto-optimise-store = true;
-            experimental-features = [
-              "nix-command"
-              "flakes"
-            ];
-            trusted-users = [
-              "root"
-              "@wheel"
-            ];
+      nix.settings =
+        {
+          auto-optimise-store = true;
+          experimental-features = [
+            "nix-command"
+            "flakes"
+          ];
+          trusted-users = [
+            "root"
+            "@wheel"
+          ];
+        }
+        // (
+          if isLaptop
+          then {
+            max-jobs = 4;
+            cores = 2;
+            http-connections = 12;
+            max-substitution-jobs = 8;
           }
-          // (
-            if isLaptop
-            then {
-              max-jobs = 4;
-              cores = 2;
-              http-connections = 12;
-              max-substitution-jobs = 8;
-            }
-            else {}
-          );
-      };
+          else {}
+        );
     };
   };
 }

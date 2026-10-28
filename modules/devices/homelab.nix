@@ -23,10 +23,8 @@
       # Register with the tailnet as "andrewix": the clients' substituter URL
       # (core.services.gradient-client) hardcodes http://andrewix:1998.
       services.tailscale.extraUpFlags = ["--hostname=andrewix"];
-      services.openssh = {
-        enable = true;
-        openFirewall = false;
-      };
+      services.openssh.enable = true;
+      services.openssh.openFirewall = false;
       networking.firewall.interfaces.${config.services.tailscale.interfaceName}.allowedTCPPorts = [22];
     };
   };

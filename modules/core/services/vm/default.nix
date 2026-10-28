@@ -6,30 +6,22 @@
         user,
         ...
       }: {
-        virtualisation = {
-          containers = {
-            enable = true;
-            containersConf.settings.engine.compose_warning_logs = false;
-            registries.settings = {
-              registry = [{location = "docker.io";}];
-            };
-          };
-          podman = {
-            enable = true;
-            dockerCompat = true;
-            defaultNetwork.settings.dns_enabled = true;
-            dockerSocket.enable = true;
-          };
+        virtualisation.containers.enable = true;
+        virtualisation.containers.containersConf.settings.engine.compose_warning_logs = false;
+        virtualisation.containers.registries.settings.registry = [{location = "docker.io";}];
+        virtualisation.podman = {
+          enable = true;
+          dockerCompat = true;
+          defaultNetwork.settings.dns_enabled = true;
+          dockerSocket.enable = true;
         };
         boot.kernel.sysctl."vm.max_map_count" = 524288;
 
         users.users.${user.userName}.extraGroups = ["podman"];
 
-        services.cockpit = {
-          enable = false;
-          plugins = [pkgs.cockpit-podman];
-          openFirewall = false;
-        };
+        services.cockpit.enable = false;
+        services.cockpit.plugins = [pkgs.cockpit-podman];
+        services.cockpit.openFirewall = false;
       };
 
       homeManager = {pkgs, ...}: {

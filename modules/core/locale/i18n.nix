@@ -48,9 +48,7 @@
         ];
         fcitx5.waylandFrontend = true;
         fcitx5.settings = {
-          addons.classicui.globalSection = {
-            UseDarkTheme = true;
-          };
+          addons.classicui.globalSection.UseDarkTheme = true;
           addons.lotus.globalSection = {
             AutoNonVnRestore = false;
             EnableMacro = false;
@@ -72,17 +70,13 @@
           # fcitx5 stores KeyLists as numbered sub-sections, not flat keys.
           globalOptions."Hotkey/TriggerKeys"."0" = "Control+Shift_L";
           globalOptions."Hotkey/AltTriggerKeys" = {};
-          globalOptions.Behavior = {
-            ShareInputState = "All";
-            ResetStateWhenFocusIn = false;
-            ShowInputMethodInformation = true;
-          };
+          globalOptions.Behavior.ShareInputState = "All";
+          globalOptions.Behavior.ResetStateWhenFocusIn = false;
+          globalOptions.Behavior.ShowInputMethodInformation = true;
           inputMethod.GroupOrder."0" = "Default";
-          inputMethod."Groups/0" = {
-            Name = "Default";
-            "Default Layout" = host.input.keyboard.layout;
-            DefaultIM = "keyboard-${host.input.keyboard.layout}";
-          };
+          inputMethod."Groups/0".Name = "Default";
+          inputMethod."Groups/0"."Default Layout" = host.input.keyboard.layout;
+          inputMethod."Groups/0".DefaultIM = "keyboard-${host.input.keyboard.layout}";
           inputMethod."Groups/0/Items/0".Name = "keyboard-${host.input.keyboard.layout}";
           inputMethod."Groups/0/Items/1".Name = "lotus";
         };

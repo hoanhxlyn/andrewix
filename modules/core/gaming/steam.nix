@@ -17,12 +17,10 @@
       ])
     ];
     nixos = {pkgs, ...}: {
-      hardware.graphics = {
-        enable32Bit = true;
-        extraPackages = with pkgs; [
-          vulkan-tools
-        ];
-      };
+      hardware.graphics.enable32Bit = true;
+      hardware.graphics.extraPackages = with pkgs; [
+        vulkan-tools
+      ];
       programs.steam = {
         enable = true;
         protontricks.enable = true;
@@ -31,10 +29,8 @@
         dedicatedServer.openFirewall = true;
       };
       programs.gamemode.enable = true;
-      programs.gamescope = {
-        enable = true;
-        enableWsi = true;
-      };
+      programs.gamescope.enable = true;
+      programs.gamescope.enableWsi = true;
       environment.systemPackages = with pkgs; [mangohud];
     };
   };

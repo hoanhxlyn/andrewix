@@ -2,13 +2,9 @@
   core.hardware.logitech = {
     nixos = {
       hardware.logitech.wireless.enable = true;
-      programs.solaar = {
-        enable = true;
-        userService = {
-          enable = true;
-          window = "hide";
-        };
-      };
+      programs.solaar.enable = true;
+      programs.solaar.userService.enable = true;
+      programs.solaar.userService.window = "hide";
     };
     homeManager = {lib, ...}: {
       # G703 stores 800 DPI in onboard Profile 1, which Solaar cannot rewrite. Keep the profile off and
