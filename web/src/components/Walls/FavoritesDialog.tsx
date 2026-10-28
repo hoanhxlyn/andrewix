@@ -55,6 +55,10 @@ export function FavoritesDialog() {
   const added =
     file === null ? 0 : [...file].filter((id) => !favorites.has(id)).length;
   const total = replace ? (file?.size ?? 0) : favorites.size + added;
+  // How many of the stars this browser holds the file does not, so an overwrite can say what it
+  // takes away rather than only what it leaves.
+  const dropped =
+    file === null ? 0 : [...favorites].filter((id) => !file.has(id)).length;
 
   const apply = () => {
     if (file === null) return;
@@ -69,6 +73,20 @@ export function FavoritesDialog() {
   const exportFavorites = () => {
     download(favorites, favoriteFileName(name));
     setLastExport({ at: Date.now(), count: favorites.size });
+  };
+
+  /** What picking the file would change, in the mode the segments are set to. */
+  const preview = (): string => {
+    if (file === null) return "";
+    if (replace) {
+      const overwrite = `Overwrites your ${favorites.size} with ${file.size}`;
+      return dropped === 0
+        ? `${overwrite}.`
+        : `${overwrite}: ${dropped} dropped.`;
+    }
+    return added === 0
+      ? "Nothing new: every wallpaper in the file is already starred."
+      : `Adds ${added}, for ${total} starred in this browser.`;
   };
 
   return (
@@ -124,14 +142,10 @@ export function FavoritesDialog() {
               selectedKeys={[replace ? "replace" : "merge"]}
               onSelectionChange={(keys) => setReplace(keys.has("replace"))}
             >
-              <Segment id="merge">Add to mine</Segment>
-              <Segment id="replace">Replace mine</Segment>
+              <Segment id="merge">Merge</Segment>
+              <Segment id="replace">Overwrite</Segment>
             </SegmentedButton>
-            <p className={s.line}>
-              {replace
-                ? `Replaces your ${favorites.size} with ${file.size}.`
-                : `Adds ${added}, for ${total} starred in this browser.`}
-            </p>
+            <p className={s.line}>{preview()}</p>
           </>
         )}
       </div>

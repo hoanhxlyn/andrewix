@@ -547,6 +547,17 @@ test("favorites export as a file and import back", async ({ page }) => {
   await dialog.getByRole("button", { name: "Import" }).click();
   await expect(page.getByText("Favorites imported")).toBeVisible();
   await expect(starOf(page, 0)).toHaveAttribute("aria-pressed", "true");
+
+  // The same file again changes nothing, and the dialog says so instead of "Adds 0".
+  await page
+    .getByRole("button", { name: "Export and import favorites" })
+    .click();
+  await dialog.locator('input[type="file"]').setInputFiles(file);
+  await expect(
+    dialog.getByText(
+      "Nothing new: every wallpaper in the file is already starred.",
+    ),
+  ).toBeVisible();
 });
 
 test("a favorites file can replace the starred ones instead of adding", async ({
@@ -564,8 +575,10 @@ test("a favorites file can replace the starred ones instead of adding", async ({
     .click();
   const dialog = page.getByRole("dialog", { name: "Favorites" });
   await dialog.locator('input[type="file"]').setInputFiles(file);
-  await dialog.getByRole("radio", { name: "Replace mine" }).click();
-  await expect(dialog.getByText("Replaces your 2 with 1.")).toBeVisible();
+  await dialog.getByRole("radio", { name: "Overwrite" }).click();
+  await expect(
+    dialog.getByText("Overwrites your 2 with 1: 2 dropped."),
+  ).toBeVisible();
   await dialog.getByRole("button", { name: "Import" }).click();
 
   // Both old stars are gone, and the file's id has no card to show on.
