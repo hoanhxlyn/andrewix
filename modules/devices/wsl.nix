@@ -17,16 +17,14 @@
 
       nixos = {user, ...}: {
         imports = [inputs.nixos-wsl.nixosModules.default];
-        wsl = {
-          enable = true;
-          # otherwise WSL logs in as the module's default `nixos` user
-          defaultUser = user.userName;
-          # Windows PATH entries live on a 9P/DrvFs mount, so appending them to
-          # $PATH makes every command lookup (completions, prompt hooks, etc.)
-          # stat across that slow mount. Interop itself stays on; only PATH
-          # search is disabled, so .exe's must be invoked by absolute path.
-          interop.includePath = false;
-        };
+        wsl.enable = true;
+        # otherwise WSL logs in as the module's default `nixos` user
+        wsl.defaultUser = user.userName;
+        # Windows PATH entries live on a 9P/DrvFs mount, so appending them to
+        # $PATH makes every command lookup (completions, prompt hooks, etc.)
+        # stat across that slow mount. Interop itself stays on; only PATH
+        # search is disabled, so .exe's must be invoked by absolute path.
+        wsl.interop.includePath = false;
       };
 
       homeManager = {pkgs, ...}: {

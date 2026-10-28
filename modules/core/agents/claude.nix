@@ -39,11 +39,9 @@
             SubagentStart = [(ponytailHook "ponytail-subagent.js" "Loading ponytail mode...")];
             UserPromptSubmit = [(ponytailHook "ponytail-mode-tracker.js" "Tracking ponytail mode...")];
           };
-          statusLine = {
-            type = "command";
-            command = "oh-my-posh claude --config ${self}/config/omp/claude.omp.json";
-            padding = 0;
-          };
+          statusLine.type = "command";
+          statusLine.command = "oh-my-posh claude --config ${self}/config/omp/claude.omp.json";
+          statusLine.padding = 0;
         };
       };
     };

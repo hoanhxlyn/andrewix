@@ -1,368 +1,186 @@
 {
   file = {
-    Brewfile = {
-      glyph = "󰂘";
-      hl = "MiniIconsYellow";
-    };
-    ".chezmoiignore" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".chezmoiremove" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".chezmoiroot" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".chezmoiversion" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".zshrc" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".zprofile" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".zshenv" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".zlogin" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".zlogout" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    "zsh.tmpl" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".bashrc" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".bash_profile" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".bash_aliases" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".bash_logout" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    "bash.tmpl" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    ".json" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    ".jsonc" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    ".bak" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    ".eslintrc.js" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    ".eslintrc.json" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    ".eslintrc.yaml" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    ".eslintrc.yml" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    ".eslintrc.cjs" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    ".eslintrc.mjs" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    ".eslintrc.ts" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    ".eslintrc" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    "eslint.config.js" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    "eslint.config.json" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    "eslint.config.yaml" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    "eslint.config.yml" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    "eslint.config.cjs" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    "eslint.config.mjs" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    "eslint.config.ts" = {
-      glyph = "󰱺";
-      hl = "MiniIconsPurple";
-    };
-    ".prettierrc" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    ".prettierrc.json" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    ".prettierrc.yaml" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    ".prettierrc.yml" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    ".prettierrc.json5" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    ".prettierrc.js" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    ".prettierrc.cjs" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    ".prettierrc.mjs" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    ".prettierrc.ts" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    "prettier.config.js" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    "prettier.config.cjs" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    "prettier.config.mjs" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    "prettier.config.ts" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    "yarn.lock" = {
-      glyph = "";
-      hl = "MiniIconsBlue";
-    };
-    ".yarnrc.yml" = {
-      glyph = "";
-      hl = "MiniIconsBlue";
-    };
-    ".yarnrc.yaml" = {
-      glyph = "";
-      hl = "MiniIconsBlue";
-    };
-    "tsconfig.json" = {
-      glyph = "";
-      hl = "MiniIconsAzure";
-    };
-    "tsconfig.build.json" = {
-      glyph = "";
-      hl = "MiniIconsAzure";
-    };
-    "tsconfig.app.json" = {
-      glyph = "";
-      hl = "MiniIconsAzure";
-    };
-    "tsconfig.server.json" = {
-      glyph = "";
-      hl = "MiniIconsAzure";
-    };
-    "tsconfig.web.json" = {
-      glyph = "";
-      hl = "MiniIconsAzure";
-    };
-    "tsconfig.client.json" = {
-      glyph = "";
-      hl = "MiniIconsAzure";
-    };
-    ".node-version" = {
-      glyph = "";
-      hl = "MiniIconsGreen";
-    };
-    "package.json" = {
-      glyph = "";
-      hl = "MiniIconsGreen";
-    };
-    ".npmrc" = {
-      glyph = "";
-      hl = "MiniIconsGreen";
-    };
-    "vite.config.ts" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    "vite.config.js" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    "pnpm-lock.yaml" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    "pnpm-workspace.yaml" = {
-      glyph = "";
-      hl = "MiniIconsYellow";
-    };
-    ".dockerignore" = {
-      glyph = "󰡨";
-      hl = "MiniIconsBlue";
-    };
-    "react-router.config.ts" = {
-      glyph = "";
-      hl = "MiniIconsRed";
-    };
-    "react-router.config.js" = {
-      glyph = "";
-      hl = "MiniIconsRed";
-    };
-    "bun.lockb" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    "bun.lock" = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    "agents.md" = {
-      glyph = "󰚩";
-      hl = "MiniIconsGrey";
-    };
-    "AGENTS.md" = {
-      glyph = "󰚩";
-      hl = "MiniIconsGrey";
-    };
+    Brewfile.glyph = "󰂘";
+    Brewfile.hl = "MiniIconsYellow";
+    ".chezmoiignore".glyph = "";
+    ".chezmoiignore".hl = "MiniIconsGrey";
+    ".chezmoiremove".glyph = "";
+    ".chezmoiremove".hl = "MiniIconsGrey";
+    ".chezmoiroot".glyph = "";
+    ".chezmoiroot".hl = "MiniIconsGrey";
+    ".chezmoiversion".glyph = "";
+    ".chezmoiversion".hl = "MiniIconsGrey";
+    ".zshrc".glyph = "";
+    ".zshrc".hl = "MiniIconsGrey";
+    ".zprofile".glyph = "";
+    ".zprofile".hl = "MiniIconsGrey";
+    ".zshenv".glyph = "";
+    ".zshenv".hl = "MiniIconsGrey";
+    ".zlogin".glyph = "";
+    ".zlogin".hl = "MiniIconsGrey";
+    ".zlogout".glyph = "";
+    ".zlogout".hl = "MiniIconsGrey";
+    "zsh.tmpl".glyph = "";
+    "zsh.tmpl".hl = "MiniIconsGrey";
+    ".bashrc".glyph = "";
+    ".bashrc".hl = "MiniIconsGrey";
+    ".bash_profile".glyph = "";
+    ".bash_profile".hl = "MiniIconsGrey";
+    ".bash_aliases".glyph = "";
+    ".bash_aliases".hl = "MiniIconsGrey";
+    ".bash_logout".glyph = "";
+    ".bash_logout".hl = "MiniIconsGrey";
+    "bash.tmpl".glyph = "";
+    "bash.tmpl".hl = "MiniIconsGrey";
+    ".json".glyph = "";
+    ".json".hl = "MiniIconsYellow";
+    ".jsonc".glyph = "";
+    ".jsonc".hl = "MiniIconsYellow";
+    ".bak".glyph = "";
+    ".bak".hl = "MiniIconsYellow";
+    ".eslintrc.js".glyph = "󰱺";
+    ".eslintrc.js".hl = "MiniIconsPurple";
+    ".eslintrc.json".glyph = "󰱺";
+    ".eslintrc.json".hl = "MiniIconsPurple";
+    ".eslintrc.yaml".glyph = "󰱺";
+    ".eslintrc.yaml".hl = "MiniIconsPurple";
+    ".eslintrc.yml".glyph = "󰱺";
+    ".eslintrc.yml".hl = "MiniIconsPurple";
+    ".eslintrc.cjs".glyph = "󰱺";
+    ".eslintrc.cjs".hl = "MiniIconsPurple";
+    ".eslintrc.mjs".glyph = "󰱺";
+    ".eslintrc.mjs".hl = "MiniIconsPurple";
+    ".eslintrc.ts".glyph = "󰱺";
+    ".eslintrc.ts".hl = "MiniIconsPurple";
+    ".eslintrc".glyph = "󰱺";
+    ".eslintrc".hl = "MiniIconsPurple";
+    "eslint.config.js".glyph = "󰱺";
+    "eslint.config.js".hl = "MiniIconsPurple";
+    "eslint.config.json".glyph = "󰱺";
+    "eslint.config.json".hl = "MiniIconsPurple";
+    "eslint.config.yaml".glyph = "󰱺";
+    "eslint.config.yaml".hl = "MiniIconsPurple";
+    "eslint.config.yml".glyph = "󰱺";
+    "eslint.config.yml".hl = "MiniIconsPurple";
+    "eslint.config.cjs".glyph = "󰱺";
+    "eslint.config.cjs".hl = "MiniIconsPurple";
+    "eslint.config.mjs".glyph = "󰱺";
+    "eslint.config.mjs".hl = "MiniIconsPurple";
+    "eslint.config.ts".glyph = "󰱺";
+    "eslint.config.ts".hl = "MiniIconsPurple";
+    ".prettierrc".glyph = "";
+    ".prettierrc".hl = "MiniIconsYellow";
+    ".prettierrc.json".glyph = "";
+    ".prettierrc.json".hl = "MiniIconsYellow";
+    ".prettierrc.yaml".glyph = "";
+    ".prettierrc.yaml".hl = "MiniIconsYellow";
+    ".prettierrc.yml".glyph = "";
+    ".prettierrc.yml".hl = "MiniIconsYellow";
+    ".prettierrc.json5".glyph = "";
+    ".prettierrc.json5".hl = "MiniIconsYellow";
+    ".prettierrc.js".glyph = "";
+    ".prettierrc.js".hl = "MiniIconsYellow";
+    ".prettierrc.cjs".glyph = "";
+    ".prettierrc.cjs".hl = "MiniIconsYellow";
+    ".prettierrc.mjs".glyph = "";
+    ".prettierrc.mjs".hl = "MiniIconsYellow";
+    ".prettierrc.ts".glyph = "";
+    ".prettierrc.ts".hl = "MiniIconsYellow";
+    "prettier.config.js".glyph = "";
+    "prettier.config.js".hl = "MiniIconsYellow";
+    "prettier.config.cjs".glyph = "";
+    "prettier.config.cjs".hl = "MiniIconsYellow";
+    "prettier.config.mjs".glyph = "";
+    "prettier.config.mjs".hl = "MiniIconsYellow";
+    "prettier.config.ts".glyph = "";
+    "prettier.config.ts".hl = "MiniIconsYellow";
+    "yarn.lock".glyph = "";
+    "yarn.lock".hl = "MiniIconsBlue";
+    ".yarnrc.yml".glyph = "";
+    ".yarnrc.yml".hl = "MiniIconsBlue";
+    ".yarnrc.yaml".glyph = "";
+    ".yarnrc.yaml".hl = "MiniIconsBlue";
+    "tsconfig.json".glyph = "";
+    "tsconfig.json".hl = "MiniIconsAzure";
+    "tsconfig.build.json".glyph = "";
+    "tsconfig.build.json".hl = "MiniIconsAzure";
+    "tsconfig.app.json".glyph = "";
+    "tsconfig.app.json".hl = "MiniIconsAzure";
+    "tsconfig.server.json".glyph = "";
+    "tsconfig.server.json".hl = "MiniIconsAzure";
+    "tsconfig.web.json".glyph = "";
+    "tsconfig.web.json".hl = "MiniIconsAzure";
+    "tsconfig.client.json".glyph = "";
+    "tsconfig.client.json".hl = "MiniIconsAzure";
+    ".node-version".glyph = "";
+    ".node-version".hl = "MiniIconsGreen";
+    "package.json".glyph = "";
+    "package.json".hl = "MiniIconsGreen";
+    ".npmrc".glyph = "";
+    ".npmrc".hl = "MiniIconsGreen";
+    "vite.config.ts".glyph = "";
+    "vite.config.ts".hl = "MiniIconsYellow";
+    "vite.config.js".glyph = "";
+    "vite.config.js".hl = "MiniIconsYellow";
+    "pnpm-lock.yaml".glyph = "";
+    "pnpm-lock.yaml".hl = "MiniIconsYellow";
+    "pnpm-workspace.yaml".glyph = "";
+    "pnpm-workspace.yaml".hl = "MiniIconsYellow";
+    ".dockerignore".glyph = "󰡨";
+    ".dockerignore".hl = "MiniIconsBlue";
+    "react-router.config.ts".glyph = "";
+    "react-router.config.ts".hl = "MiniIconsRed";
+    "react-router.config.js".glyph = "";
+    "react-router.config.js".hl = "MiniIconsRed";
+    "bun.lockb".glyph = "";
+    "bun.lockb".hl = "MiniIconsGrey";
+    "bun.lock".glyph = "";
+    "bun.lock".hl = "MiniIconsGrey";
+    "agents.md".glyph = "󰚩";
+    "agents.md".hl = "MiniIconsGrey";
+    "AGENTS.md".glyph = "󰚩";
+    "AGENTS.md".hl = "MiniIconsGrey";
   };
   directory = {
-    ".vscode" = {
-      glyph = "";
-      hl = "MiniIconsBlue";
-    };
-    cspell = {
-      glyph = "󰓆";
-      hl = "MiniIconsPurple";
-    };
-    config = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    configs = {
-      glyph = "";
-      hl = "MiniIconsGrey";
-    };
-    app = {
-      glyph = "󰀻";
-      hl = "MiniIconsRed";
-    };
-    application = {
-      glyph = "󰀻";
-      hl = "MiniIconsRed";
-    };
-    routes = {
-      glyph = "󰑪";
-      hl = "MiniIconsGreen";
-    };
-    route = {
-      glyph = "󰑪";
-      hl = "MiniIconsGreen";
-    };
-    router = {
-      glyph = "󰑪";
-      hl = "MiniIconsGreen";
-    };
-    routers = {
-      glyph = "󰑪";
-      hl = "MiniIconsGreen";
-    };
-    server = {
-      glyph = "󰒋";
-      hl = "MiniIconsCyan";
-    };
-    servers = {
-      glyph = "󰒋";
-      hl = "MiniIconsCyan";
-    };
-    api = {
-      glyph = "󰒋";
-      hl = "MiniIconsCyan";
-    };
-    web = {
-      glyph = "󰖟";
-      hl = "MiniIconsBlue";
-    };
-    client = {
-      glyph = "󰖟";
-      hl = "MiniIconsBlue";
-    };
-    frontend = {
-      glyph = "󰖟";
-      hl = "MiniIconsBlue";
-    };
-    database = {
-      glyph = "󰆼";
-      hl = "MiniIconsOrange";
-    };
-    db = {
-      glyph = "󰆼";
-      hl = "MiniIconsOrange";
-    };
-    databases = {
-      glyph = "󰆼";
-      hl = "MiniIconsOrange";
-    };
+    ".vscode".glyph = "";
+    ".vscode".hl = "MiniIconsBlue";
+    cspell.glyph = "󰓆";
+    cspell.hl = "MiniIconsPurple";
+    config.glyph = "";
+    config.hl = "MiniIconsGrey";
+    configs.glyph = "";
+    configs.hl = "MiniIconsGrey";
+    app.glyph = "󰀻";
+    app.hl = "MiniIconsRed";
+    application.glyph = "󰀻";
+    application.hl = "MiniIconsRed";
+    routes.glyph = "󰑪";
+    routes.hl = "MiniIconsGreen";
+    route.glyph = "󰑪";
+    route.hl = "MiniIconsGreen";
+    router.glyph = "󰑪";
+    router.hl = "MiniIconsGreen";
+    routers.glyph = "󰑪";
+    routers.hl = "MiniIconsGreen";
+    server.glyph = "󰒋";
+    server.hl = "MiniIconsCyan";
+    servers.glyph = "󰒋";
+    servers.hl = "MiniIconsCyan";
+    api.glyph = "󰒋";
+    api.hl = "MiniIconsCyan";
+    web.glyph = "󰖟";
+    web.hl = "MiniIconsBlue";
+    client.glyph = "󰖟";
+    client.hl = "MiniIconsBlue";
+    frontend.glyph = "󰖟";
+    frontend.hl = "MiniIconsBlue";
+    database.glyph = "󰆼";
+    database.hl = "MiniIconsOrange";
+    db.glyph = "󰆼";
+    db.hl = "MiniIconsOrange";
+    databases.glyph = "󰆼";
+    databases.hl = "MiniIconsOrange";
   };
-  lsp = {
-    copilot = {
-      glyph = "";
-      hl = "MiniIconsBlue";
-    };
-  };
+  lsp.copilot.glyph = "";
+  lsp.copilot.hl = "MiniIconsBlue";
 }

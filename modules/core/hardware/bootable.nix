@@ -28,10 +28,8 @@
         loader.systemd-boot.enable = host.bootLoader == "systemd-boot";
         # kernels + initrd get copied onto the ESP (limine can't read XFS root);
         # maxGenerations null = unbounded, which fills the 512M ESP.
-        loader.limine = {
-          enable = host.bootLoader == "limine";
-          maxGenerations = 4;
-        };
+        loader.limine.enable = host.bootLoader == "limine";
+        loader.limine.maxGenerations = 4;
         loader.efi.canTouchEfiVariables = true;
 
         # loglevel=3: keep kernel err/warn (e.g. usb 1-10 enum failures) off the
@@ -42,12 +40,8 @@
         kernelPackages = pkgs.linuxPackages_latest;
         plymouth.enable = true;
       };
-      hardware.cpu = {
-        intel.updateMicrocode =
-          lib.mkDefault (host.cpu == "intel" && config.hardware.enableRedistributableFirmware);
-        amd.updateMicrocode =
-          lib.mkDefault (host.cpu == "amd" && config.hardware.enableRedistributableFirmware);
-      };
+      hardware.cpu.intel.updateMicrocode = lib.mkDefault (host.cpu == "intel" && config.hardware.enableRedistributableFirmware);
+      hardware.cpu.amd.updateMicrocode = lib.mkDefault (host.cpu == "amd" && config.hardware.enableRedistributableFirmware);
     };
   };
 }

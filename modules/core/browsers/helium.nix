@@ -9,27 +9,25 @@
         inputs.helium.nixosModules.default
       ];
       stylix.targets.chromium.enable = false;
-      programs.helium = {
-        enable = true;
-        flags = [
-          "--enable-features=TouchpadOverscrollHistoryNavigation,VerticalTabs"
+      programs.helium.enable = true;
+      programs.helium.flags = [
+        "--enable-features=TouchpadOverscrollHistoryNavigation,VerticalTabs"
+      ];
+      programs.helium.policies = {
+        "BrowserSignin" = 0;
+        "PasswordManagerEnabled" = false;
+        "SyncDisabled" = true;
+        "SpellcheckEnabled" = true;
+        "SpellcheckLanguage" = ["en-US"];
+        # "DefaultSearchProviderEnabled" = true;
+        # "DefaultSearchProviderSearchURL" = "https://search.nixos.org/?q={searchTerms}";
+        "ShowHomeButton" = true;
+        "ExtensionInstallForcelist" = [
+          # Pre-install extensions
+          "oboonakemofpalcgghocfoadofidjkkk"
+          "fmkadmapgofadopljbjfkapdkoienihi"
+          "ponfpcnoihfmfllpaingbgckeeldkhle" # Enhancer for YouTube
         ];
-        policies = {
-          "BrowserSignin" = 0;
-          "PasswordManagerEnabled" = false;
-          "SyncDisabled" = true;
-          "SpellcheckEnabled" = true;
-          "SpellcheckLanguage" = ["en-US"];
-          # "DefaultSearchProviderEnabled" = true;
-          # "DefaultSearchProviderSearchURL" = "https://search.nixos.org/?q={searchTerms}";
-          "ShowHomeButton" = true;
-          "ExtensionInstallForcelist" = [
-            # Pre-install extensions
-            "oboonakemofpalcgghocfoadofidjkkk"
-            "fmkadmapgofadopljbjfkapdkoienihi"
-            "ponfpcnoihfmfllpaingbgckeeldkhle" # Enhancer for YouTube
-          ];
-        };
       };
     };
     homeManager = {

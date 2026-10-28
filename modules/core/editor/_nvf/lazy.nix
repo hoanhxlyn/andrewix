@@ -71,11 +71,9 @@ in {
       setupModule = "nvim-navic";
       lazy = true;
       event = ["LspAttach"];
-      setupOpts = {
-        highlight = true;
-        depth_limit = 4;
-        lsp.auto_attach = true;
-      };
+      setupOpts.highlight = true;
+      setupOpts.depth_limit = 4;
+      setupOpts.lsp.auto_attach = true;
       after = ''
         vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}";
       '';
@@ -130,9 +128,7 @@ in {
     ${nvim-ts-context-commentstring.pname} = {
       package = nvim-ts-context-commentstring;
       lazy = true;
-      setupOpts = {
-        enable_autocmd = false;
-      };
+      setupOpts.enable_autocmd = false;
     };
     ${diffview-nvim.pname} = {
       package = diffview-nvim;

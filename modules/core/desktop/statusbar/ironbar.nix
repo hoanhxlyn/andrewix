@@ -65,13 +65,11 @@
       mkBatteryProfiles = prefix: charging: icons:
         lib.listToAttrs (lib.imap0 (i: icon: {
             name = "${prefix}${toString i}";
-            value = {
-              when = {
-                percent = lib.elemAt batteryThresholds i;
-                inherit charging;
-              };
-              format = "${icon} {percentage}%";
+            value.when = {
+              percent = lib.elemAt batteryThresholds i;
+              inherit charging;
             };
+            value.format = "${icon} {percentage}%";
           })
           icons);
     in {
@@ -105,10 +103,8 @@
               show_icon = true;
               icon_size = 16;
               show_title = true;
-              truncate = {
-                mode = "end";
-                max_length = 20;
-              };
+              truncate.mode = "end";
+              truncate.max_length = 20;
             }
           ];
           center = [
@@ -117,15 +113,11 @@
               player_type = "mpris";
               show_status_icon = true;
               format = "{artist} - {title}";
-              truncate = {
-                mode = "end";
-                max_length = 20;
-              };
-              icons = {
-                play = "󰝚";
-                pause = "󰏤";
-                stopped = "󰓛";
-              };
+              truncate.mode = "end";
+              truncate.max_length = 20;
+              icons.play = "󰝚";
+              icons.pause = "󰏤";
+              icons.stopped = "󰓛";
               show_if = "playerctl status 2>/dev/null | ${pkgs.gnugrep}/bin/grep -qE 'Playing|Paused'";
               on_click_left = "playerctl play-pause";
             }
@@ -156,15 +148,11 @@
                   connected = "󰂱 {device_alias}";
                   connected_battery = "󰂱 {device_alias} {device_battery_percent}%";
                 };
-                popup = {
-                  max_height.devices = 6;
-                  header = "󰂯 Bluetooth";
-                  device = {
-                    header = "{device_alias}";
-                    header_battery = "{device_alias} 󰂁 {device_battery_percent}%";
-                    footer = "{device_status}";
-                  };
-                };
+                popup.max_height.devices = 6;
+                popup.header = "󰂯 Bluetooth";
+                popup.device.header = "{device_alias}";
+                popup.device.header_battery = "{device_alias} 󰂁 {device_battery_percent}%";
+                popup.device.footer = "{device_status}";
               }
             ]
             [
@@ -192,30 +180,20 @@
                 type = "brightness";
                 name = "brightness";
                 format = "{percentage}%";
-                mode = {
-                  type = "systemd";
-                  subsystem = "backlight";
-                  name = "intel_backlight";
-                };
+                mode.type = "systemd";
+                mode.subsystem = "backlight";
+                mode.name = "intel_backlight";
                 smooth_scroll_speed = 5.0;
                 use_default_profiles = false;
                 profiles = {
-                  level25 = {
-                    when = 25;
-                    icon_label = "󰃝";
-                  };
-                  level50 = {
-                    when = 50;
-                    icon_label = "󰃞";
-                  };
-                  level75 = {
-                    when = 75;
-                    icon_label = "󰃟";
-                  };
-                  level100 = {
-                    when = 100;
-                    icon_label = "󰃠";
-                  };
+                  level25.when = 25;
+                  level25.icon_label = "󰃝";
+                  level50.when = 50;
+                  level50.icon_label = "󰃞";
+                  level75.when = 75;
+                  level75.icon_label = "󰃟";
+                  level100.when = 100;
+                  level100.icon_label = "󰃠";
                 };
               }
             ])
@@ -244,7 +222,7 @@
                 type = "sys_info";
                 name = "cpu";
                 format = ["󰻠 {cpu_percent:1.0}%"];
-                interval = {cpu = 3;};
+                interval.cpu = 3;
               }
             ]
             [
@@ -252,7 +230,7 @@
                 type = "sys_info";
                 name = "memory";
                 format = ["󰍛 {memory_percent:1.0}%"];
-                interval = {memory = 3;};
+                interval.memory = 3;
               }
             ]
             [

@@ -19,10 +19,8 @@
       lib,
       ...
     }: {
-      xdg.portal = {
-        extraPortals = [pkgs.xdg-desktop-portal-termfilechooser];
-        config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
-      };
+      xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-termfilechooser];
+      xdg.portal.config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
     };
 
     homeManager = {pkgs, ...}: let
@@ -78,12 +76,10 @@
       programs.yazi = {
         enable = true;
         package = yazi-rar;
-        settings.mgr = {
-          show_hidden = true;
-          # sort_by = "mtime";
-          # sort_reverse = true;
-          linemode = "size";
-        };
+        settings.mgr.show_hidden = true;
+        # sort_by = "mtime";
+        # sort_reverse = true;
+        settings.mgr.linemode = "size";
         # csv is text/* → yazi defaults to $EDITOR; open in calc instead
         settings.opener.calc = [
           {

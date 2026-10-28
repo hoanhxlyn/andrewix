@@ -40,34 +40,24 @@
         fd.enable = true;
         fzf.enable = true;
         zoxide.enable = true;
-        direnv = {
-          enable = true;
-          nix-direnv.enable = true; # cache + GC-root the flake devShell
-          config.whitelist.prefix = ["${config.home.homeDirectory}/andrewix"]; # auto-trust, skip `direnv allow`
-        };
+        direnv.enable = true;
+        direnv.nix-direnv.enable = true; # cache + GC-root the flake devShell
+        direnv.config.whitelist.prefix = ["${config.home.homeDirectory}/andrewix"]; # auto-trust, skip `direnv allow`
         bat.enable = true;
-        ripgrep = {
-          enable = true;
-          arguments = [
-            "--hidden"
-            "--glob=!.git"
-          ];
-        };
-        tealdeer = {
-          enable = true;
-          enableAutoUpdates = true;
-          settings.display = {
-            compact = false;
-            use_pager = true;
-            show_title = true;
-          };
-        };
+        ripgrep.enable = true;
+        ripgrep.arguments = [
+          "--hidden"
+          "--glob=!.git"
+        ];
+        tealdeer.enable = true;
+        tealdeer.enableAutoUpdates = true;
+        tealdeer.settings.display.compact = false;
+        tealdeer.settings.display.use_pager = true;
+        tealdeer.settings.display.show_title = true;
       };
 
-      services = {
-        wl-clip-persist.enable = true;
-        cliphist.enable = true;
-      };
+      services.wl-clip-persist.enable = true;
+      services.cliphist.enable = true;
     };
   };
 }

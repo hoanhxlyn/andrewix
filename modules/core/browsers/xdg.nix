@@ -21,16 +21,14 @@
     ];
   in {
     homeManager = {
-      xdg.mimeApps = {
-        enable = true;
-        defaultApplications = builtins.listToAttrs (
-          map (mime: {
-            name = mime;
-            value = browserDesktops.${host.defaults.browser};
-          })
-          mimeTypes
-        );
-      };
+      xdg.mimeApps.enable = true;
+      xdg.mimeApps.defaultApplications = builtins.listToAttrs (
+        map (mime: {
+          name = mime;
+          value = browserDesktops.${host.defaults.browser};
+        })
+        mimeTypes
+      );
       home.sessionVariables.BROWSER = browserExecs.${host.defaults.browser};
     };
   };

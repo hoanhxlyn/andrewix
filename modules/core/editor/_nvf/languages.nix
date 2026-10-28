@@ -16,22 +16,14 @@
   jq.enable = true;
   json.enable = true;
   just.enable = true;
-  lua = {
-    enable = true;
-    extraDiagnostics.types = ["selene"];
-  };
+  lua.enable = true;
+  lua.extraDiagnostics.types = ["selene"];
   markdown = {
     enable = true;
-    extensions.markview-nvim = {
-      enable = true;
-      setupOpts = {
-        experimental = {
-          fancy_comments = false;
-          prefer_nvim = true;
-          linewise_ignore_org_indent = true;
-        };
-      };
-    };
+    extensions.markview-nvim.enable = true;
+    extensions.markview-nvim.setupOpts.experimental.fancy_comments = false;
+    extensions.markview-nvim.setupOpts.experimental.prefer_nvim = true;
+    extensions.markview-nvim.setupOpts.experimental.linewise_ignore_org_indent = true;
     lsp.servers = [
       "markdown-oxide"
     ];

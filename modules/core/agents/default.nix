@@ -6,28 +6,16 @@
       <core.agents.claude>
     ];
     homeManager = {
-      programs = {
-        mcp = {
-          enable = true;
-          servers = {
-            context7 = {
-              enabled = true;
-              url = "https://mcp.context7.com/mcp";
-              headers.CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
-            };
-            deepwiki.url = "https://mcp.deepwiki.com/mcp";
-            exa = {
-              enabled = true;
-              url = "https://mcp.exa.ai/mcp";
-              headers."x-api-key" = "{env:EXA_API_KEY}";
-            };
-          };
-        };
-        antigravity-cli = {
-          enable = false;
-          enableMcpIntegration = true;
-        };
-      };
+      programs.mcp.enable = true;
+      programs.mcp.servers.context7.enabled = true;
+      programs.mcp.servers.context7.url = "https://mcp.context7.com/mcp";
+      programs.mcp.servers.context7.headers.CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
+      programs.mcp.servers.deepwiki.url = "https://mcp.deepwiki.com/mcp";
+      programs.mcp.servers.exa.enabled = true;
+      programs.mcp.servers.exa.url = "https://mcp.exa.ai/mcp";
+      programs.mcp.servers.exa.headers."x-api-key" = "{env:EXA_API_KEY}";
+      programs.antigravity-cli.enable = false;
+      programs.antigravity-cli.enableMcpIntegration = true;
     };
   };
 }

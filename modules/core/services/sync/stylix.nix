@@ -38,11 +38,9 @@
         autoEnable = true;
         base16Scheme = "${pkgs.base16-schemes}/share/themes/${appearance.scheme}.yaml";
         inherit (appearance) polarity;
-        cursor = {
-          package = pkgs.capitaine-cursors-themed;
-          name = "Capitaine Cursors - White";
-          size = host.accessibility.cursorSize;
-        };
+        cursor.package = pkgs.capitaine-cursors-themed;
+        cursor.name = "Capitaine Cursors - White";
+        cursor.size = host.accessibility.cursorSize;
         fonts = let
           # appearance.font.<role>.pkg is a pkgs attribute path; a bad path fails at eval.
           mkFont = f: {
@@ -61,22 +59,18 @@
             popups = appearance.font.size;
           };
         };
-        icons = {
-          enable = true;
-          package = pkgs.papirus-icon-theme;
-          dark = "Papirus-Dark";
-        };
+        icons.enable = true;
+        icons.package = pkgs.papirus-icon-theme;
+        icons.dark = "Papirus-Dark";
         opacity = {
           terminal = appearance.opacity;
           desktop = appearance.opacity;
           popups = appearance.opacity;
           applications = appearance.opacity;
         };
-        targets = {
-          plymouth.enable = true;
-          kmscon.enable = true;
-          fontconfig.enable = false;
-        };
+        targets.plymouth.enable = true;
+        targets.kmscon.enable = true;
+        targets.fontconfig.enable = false;
         # see appearance.wallpaper in modules/_settings.nix
         image = let
           bg = appearance.wallpaper;
@@ -93,17 +87,15 @@
           };
         imageScalingMode = appearance.wallpaper.scaling;
       };
-      fonts = {
-        packages = with pkgs; [
-          font-awesome
-          inter
-        ];
-        fontconfig.defaultFonts = {
-          serif = [config.stylix.fonts.serif.name];
-          sansSerif = [config.stylix.fonts.sansSerif.name];
-          monospace = [config.stylix.fonts.monospace.name];
-          emoji = [config.stylix.fonts.emoji.name];
-        };
+      fonts.packages = with pkgs; [
+        font-awesome
+        inter
+      ];
+      fonts.fontconfig.defaultFonts = {
+        serif = [config.stylix.fonts.serif.name];
+        sansSerif = [config.stylix.fonts.sansSerif.name];
+        monospace = [config.stylix.fonts.monospace.name];
+        emoji = [config.stylix.fonts.emoji.name];
       };
     };
     homeManager = {

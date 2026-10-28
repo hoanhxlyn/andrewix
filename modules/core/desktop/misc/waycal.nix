@@ -15,21 +15,19 @@
     in {
       imports = [inputs.waycalix.homeManagerModules.default];
 
-      programs.waycal = {
-        enable = true;
-        css = ''
-          @define-color waycal_bg #${colors.base00};
-          @define-color waycal_fg #${colors.base05};
-          @define-color waycal_dim #${colors.base03};
-          @define-color waycal_accent #${colors.base0D};
-          @define-color waycal_accent_fg #${colors.base00};
+      programs.waycal.enable = true;
+      programs.waycal.css = ''
+        @define-color waycal_bg #${colors.base00};
+        @define-color waycal_fg #${colors.base05};
+        @define-color waycal_dim #${colors.base03};
+        @define-color waycal_accent #${colors.base0D};
+        @define-color waycal_accent_fg #${colors.base00};
 
-          .waycal-root {
-            font-family: "${fonts.monospace.name}";
-            font-size: ${toString fonts.sizes.popups}pt;
-          }
-        '';
-      };
+        .waycal-root {
+          font-family: "${fonts.monospace.name}";
+          font-size: ${toString fonts.sizes.popups}pt;
+        }
+      '';
     };
   };
 }

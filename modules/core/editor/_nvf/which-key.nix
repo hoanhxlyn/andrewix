@@ -5,10 +5,8 @@
 }:
 lib.optionalAttrs (!mini.clues) {
   enable = true;
-  setupOpts = {
-    preset = "helix";
-    win.col = 0;
-  };
+  setupOpts.preset = "helix";
+  setupOpts.win.col = 0;
   register = lib.listToAttrs (
     map (key: {
       name = "<leader>${key}";

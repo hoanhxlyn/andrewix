@@ -14,76 +14,62 @@
     };
     homeManager = {pkgs, ...}: {
       home.packages = with pkgs; [libsecret procps];
-      programs.keepassxc = {
-        enable = true;
-        settings = {
-          General = {
-            ConfigVersion = 2;
-            UpdateCheckMessageShown = true;
-            BackupBeforeSave = true;
-            # Relative to the database path so Windows and Linux share one pattern
-            BackupFilePathPattern = "{DB_FILENAME}.old.kdbx";
-          };
-          GUI = {
-            MonospaceNotes = true;
-            ColorPasswords = true;
-            ShowTrayIcon = true;
-            TrayIconAppearance = "colorful";
-            MinimizeOnClose = true;
-            MinimizeToTray = false;
-            CompactMode = false;
-            ShowExpiredEntriesOnDatabaseUnlock = false;
-            HidePasswords = false;
-          };
-          Browser = {
-            Enabled = true;
-            Browser_AllowLocalhostWithPasskeys = true;
-            UpdateBinaryPath = false;
-          };
-          PasswordGenerator = {
-            Length = 18;
-          };
-          Security = {
-            LockDatabaseScreenLock = false;
-            IconDownloadFallback = true;
-            PasswordHidden = false;
-            HidePasswordPreviewPanel = false;
-            PasswordEmptyPlaceholder = false;
-            PasswordRepeatVisible = false;
-            HideTotpPreviewPanel = true;
-            LockDatabaseIdle = false;
-          };
-          FdoSecrets = {
-            Enabled = false;
-            ConfirmAccessItem = false;
-          };
+      programs.keepassxc.enable = true;
+      programs.keepassxc.settings = {
+        General = {
+          ConfigVersion = 2;
+          UpdateCheckMessageShown = true;
+          BackupBeforeSave = true;
+          # Relative to the database path so Windows and Linux share one pattern
+          BackupFilePathPattern = "{DB_FILENAME}.old.kdbx";
         };
+        GUI = {
+          MonospaceNotes = true;
+          ColorPasswords = true;
+          ShowTrayIcon = true;
+          TrayIconAppearance = "colorful";
+          MinimizeOnClose = true;
+          MinimizeToTray = false;
+          CompactMode = false;
+          ShowExpiredEntriesOnDatabaseUnlock = false;
+          HidePasswords = false;
+        };
+        Browser.Enabled = true;
+        Browser.Browser_AllowLocalhostWithPasskeys = true;
+        Browser.UpdateBinaryPath = false;
+        PasswordGenerator.Length = 18;
+        Security = {
+          LockDatabaseScreenLock = false;
+          IconDownloadFallback = true;
+          PasswordHidden = false;
+          HidePasswordPreviewPanel = false;
+          PasswordEmptyPlaceholder = false;
+          PasswordRepeatVisible = false;
+          HideTotpPreviewPanel = true;
+          LockDatabaseIdle = false;
+        };
+        FdoSecrets.Enabled = false;
+        FdoSecrets.ConfirmAccessItem = false;
       };
-      systemd.user.services.keepassxc-autostart = {
-        Unit = {
-          Description = "Keepassxc";
-          After = [
-            "graphical-session.target"
-            "rclone-gdrive.service"
-          ];
-          Requires = ["rclone-gdrive.service"];
-        };
-        Install = {
-          WantedBy = ["graphical-session.target"];
-        };
-        Service = {
-          Type = "simple";
-          # Kill lingering gnome-keyring-daemon so KeePassXC can own Secret Service
-          ExecStartPre = [
-            "-${pkgs.procps}/bin/pkill -9 gnome-keyring-daemon"
-            "${pkgs.coreutils}/bin/sleep 3"
-          ];
-          ExecStart = "${pkgs.keepassxc}/bin/keepassxc";
-          Restart = "on-failure";
-          RestartSec = "10s";
-          # Ensure D-Bus session is available for Secret Service
-          Environment = ["DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus"];
-        };
+      systemd.user.services.keepassxc-autostart.Unit.Description = "Keepassxc";
+      systemd.user.services.keepassxc-autostart.Unit.After = [
+        "graphical-session.target"
+        "rclone-gdrive.service"
+      ];
+      systemd.user.services.keepassxc-autostart.Unit.Requires = ["rclone-gdrive.service"];
+      systemd.user.services.keepassxc-autostart.Install.WantedBy = ["graphical-session.target"];
+      systemd.user.services.keepassxc-autostart.Service = {
+        Type = "simple";
+        # Kill lingering gnome-keyring-daemon so KeePassXC can own Secret Service
+        ExecStartPre = [
+          "-${pkgs.procps}/bin/pkill -9 gnome-keyring-daemon"
+          "${pkgs.coreutils}/bin/sleep 3"
+        ];
+        ExecStart = "${pkgs.keepassxc}/bin/keepassxc";
+        Restart = "on-failure";
+        RestartSec = "10s";
+        # Ensure D-Bus session is available for Secret Service
+        Environment = ["DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus"];
       };
     };
   };
