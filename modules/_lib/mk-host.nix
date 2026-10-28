@@ -8,28 +8,53 @@
 # definition (host-facts.nix).
 {lib, ...}: let
   settings = import ../_settings.nix;
-  layoutMonitors = monitors:
-    builtins.mapAttrs (_: m: let
-      extraKeys = builtins.removeAttrs m ["resolution" "refresh-rate" "is-primary" "scale"];
-      baseOutput = {
-        mode = {
-          inherit (m.resolution) width height;
-          refresh = m.refresh-rate;
-        };
-        scale = m.scale or 1;
-      };
-      position =
-        if m.is-primary or false
-        then {
-          position = {
-            x = 0;
-            y = 0;
-          };
-        }
-        else {};
+  # Flat monitor attrs -> niri outputs. Monitors sit left -> right in `order`
+  # (default: connector name order); x is in logical pixels, rounded like niri
+  # rounds output_size, so neighbouring outputs stay exactly adjacent.
+  # `is-primary` only picks the output niri focuses at startup, not where it sits.
+  layoutMonitors = monitors: let
+    order = monitors.order or (builtins.attrNames (builtins.removeAttrs monitors ["order"]));
+    outputs = builtins.removeAttrs monitors ["order"];
+    logicalWidth = conn: let
+      m = outputs.${conn};
     in
-      baseOutput // position // extraKeys)
-    monitors;
+      builtins.floor (m.resolution.width / (m.scale or 1) + 0.5);
+    placed =
+      builtins.foldl'
+      (acc: conn: {
+        positions =
+          acc.positions
+          // {
+            ${conn} = {
+              x = acc.end;
+              y = 0;
+            };
+          };
+        end = acc.end + logicalWidth conn;
+      }) {
+        positions = {};
+        end = 0;
+      }
+      order;
+    unknown = builtins.filter (conn: !(outputs ? ${conn})) order;
+    unplaced = builtins.filter (conn: !(builtins.elem conn order)) (builtins.attrNames outputs);
+  in
+    assert lib.assertMsg (unknown == []) "mkHost: monitors.order has unknown connector(s): ${toString unknown}";
+    assert lib.assertMsg (unplaced == []) "mkHost: monitors.order is missing: ${toString unplaced}";
+      builtins.mapAttrs (conn: m: let
+        extraKeys = builtins.removeAttrs m ["resolution" "refresh-rate" "is-primary" "scale" "position"];
+      in
+        {
+          mode = {
+            inherit (m.resolution) width height;
+            refresh = m.refresh-rate;
+          };
+          scale = m.scale or 1;
+          position = m.position or placed.positions.${conn};
+          focus-at-startup = m.is-primary or false;
+        }
+        // extraKeys)
+      outputs;
   # attrNames never forces the option values, so `config` is not needed here.
   knownFacts = builtins.attrNames (import ./host-facts.nix {
     inherit lib;
