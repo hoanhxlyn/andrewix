@@ -76,7 +76,7 @@
               follow_mouse = 0;
               touchpad = {
                 natural_scroll = input.touchpad.naturalScroll;
-                tap-to-click = input.touchpad.tap;
+                tap_to_click = input.touchpad.tap;
                 disable_while_typing = input.touchpad.disableWhileTyping;
               };
             };
