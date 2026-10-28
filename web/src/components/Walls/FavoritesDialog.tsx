@@ -91,7 +91,7 @@ export function FavoritesDialog() {
     try {
       await importFavorites({ ids: file, replace: overwrite });
     } catch {
-      // The write failed; the stars stay for this session. The dialog stays open to retry.
+      // The write failed; the favorites and selected mode stay as they were for a retry.
       notify({
         title: "Favorites not saved",
         description: "The browser refused the write.",

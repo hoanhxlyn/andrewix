@@ -597,6 +597,103 @@ test("a favorites file can replace the starred ones instead of adding", async ({
   ).toBeEnabled();
 });
 
+for (const remount of [false, true]) {
+  test(`overwrite stays unavailable after a failed favorites read${remount ? " on remount" : ""}`, async ({
+    page,
+  }) => {
+    const refuseRead = () => {
+      const get = IDBObjectStore.prototype.get;
+      IDBObjectStore.prototype.get = function (key) {
+        if (this.name === "favorites") {
+          throw new DOMException("Read refused", "UnknownError");
+        }
+        return get.call(this, key);
+      };
+    };
+    const dialog = page.getByRole("dialog", { name: "Favorites" });
+    const file = {
+      name: "favorites.json",
+      mimeType: "application/json",
+      buffer: Buffer.from('["local/missing.png"]'),
+    };
+
+    if (remount) {
+      await openWalls(page);
+      await page
+        .getByRole("button", { name: "Export and import favorites" })
+        .click();
+      await dialog.locator('input[type="file"]').setInputFiles(file);
+      await expect(
+        dialog.getByRole("radio", { name: "Overwrite" }),
+      ).toBeEnabled();
+      await dialog.getByRole("button", { name: "Close" }).click();
+      await page.locator('a[href="/"]').click();
+      await expect(grid(page)).toHaveCount(0);
+      await page.evaluate(refuseRead);
+      await page.getByRole("link", { name: "Wallpapers", exact: true }).click();
+    } else {
+      await page.addInitScript(refuseRead);
+      await openWalls(page);
+    }
+
+    await page
+      .getByRole("button", { name: "Export and import favorites" })
+      .click();
+    await dialog.locator('input[type="file"]').setInputFiles(file);
+    await expect(
+      dialog.getByRole("radio", { name: "Overwrite" }),
+    ).toBeDisabled();
+    await expect(dialog.getByRole("radio", { name: "Merge" })).toBeChecked();
+    await expect(
+      dialog.getByRole("button", { name: "Import", exact: true }),
+    ).toBeVisible();
+  });
+}
+
+test("a failed overwrite keeps the favorites and mode for a retry", async ({
+  page,
+}) => {
+  await openWalls(page);
+  await starOf(page, 0).click();
+  await page.reload();
+  await expect(starOf(page, 0)).toHaveAttribute("aria-pressed", "true");
+
+  await page.evaluate(() => {
+    const put = IDBObjectStore.prototype.put;
+    let refuse = true;
+    IDBObjectStore.prototype.put = function (value, key) {
+      if (this.name === "favorites" && refuse) {
+        refuse = false;
+        throw new DOMException("Write refused", "QuotaExceededError");
+      }
+      return put.call(this, value, key);
+    };
+  });
+  await page
+    .getByRole("button", { name: "Export and import favorites" })
+    .click();
+  const dialog = page.getByRole("dialog", { name: "Favorites" });
+  await dialog.locator('input[type="file"]').setInputFiles({
+    name: "favorites.json",
+    mimeType: "application/json",
+    buffer: Buffer.from('["local/missing.png"]'),
+  });
+  await dialog.getByRole("radio", { name: "Overwrite" }).click();
+  await dialog.getByRole("button", { name: "Overwrite" }).click();
+  await expect(page.getByText("Favorites not saved")).toBeVisible();
+  await expect(dialog.getByRole("radio", { name: "Overwrite" })).toBeChecked();
+  await expect(
+    dialog.getByText("Overwrites your 1 with 1, dropping 1."),
+  ).toBeVisible();
+  await expect(starOf(page, 0)).toHaveAttribute("aria-pressed", "true");
+
+  await dialog.getByRole("button", { name: "Overwrite" }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByText("Favorites imported")).toBeVisible();
+  await page.reload();
+  await expect(starOf(page, 0)).toHaveAttribute("aria-pressed", "false");
+});
+
 test("a file that is not a favorites list is refused", async ({
   page,
 }, testInfo) => {

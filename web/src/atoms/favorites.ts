@@ -10,17 +10,17 @@ const KEY = "walls";
 
 const stored = atom<ReadonlySet<string>>(new Set<string>());
 
-// The first read of what is stored has landed, either way. Until it has, the dialog cannot show
+// The latest read of what is stored succeeded. Until it does, the dialog cannot show
 // the favorites a replace would drop, so it offers none.
 let readDone = false;
 let notifyReady: (() => void) | undefined;
 
-/** Set once the first read of the stored favorites has landed. */
+/** Whether the latest read of the stored favorites succeeded. */
 export const favoritesReadyAtom = atom(false);
 favoritesReadyAtom.onMount = (setReady) => {
-  const bump = () => setReady(true);
-  if (readDone) bump();
-  else notifyReady = bump;
+  const bump = () => setReady(readDone);
+  bump();
+  notifyReady = bump;
   return () => {
     if (notifyReady === bump) notifyReady = undefined;
   };
@@ -31,15 +31,17 @@ favoritesReadyAtom.onMount = (setReady) => {
 // idb-keyval opens the database inside the call, so a missing `indexedDB` throws instead of
 // rejecting; starting from a resolved promise turns both into a rejection.
 stored.onMount = (setStored) => {
+  readDone = false;
+  notifyReady?.();
   Promise.resolve()
     .then(() => get(KEY, db))
-    .then((value) => setStored(parseFavorites(value)))
-    .catch(() => {
-      // Nothing stored to show.
-    })
-    .finally(() => {
+    .then((value) => {
+      setStored(parseFavorites(value));
       readDone = true;
       notifyReady?.();
+    })
+    .catch(() => {
+      // Stored favorites are unknown, so overwrite stays unavailable.
     });
 };
 
@@ -78,21 +80,21 @@ interface Import {
 }
 
 /**
- * Applies an imported file to the favorites, in place of the one-by-one toggle. Shown at once,
- * then written; the write is awaited, and its failure reaches the caller, so nothing reports a
+ * Applies an imported file to the favorites, in place of the one-by-one toggle. Shown only after
+ * the write succeeds; its failure reaches the caller, so nothing reports a
  * save that did not happen. The read is taken fresh rather than from memory: the dialog can be
  * open before the first read lands, and another tab may have starred since.
  */
 export const importFavoritesAtom = atom(
   null,
-  async (get, write, { ids, replace }: Import) => {
+  async (read, write, { ids, replace }: Import) => {
     const current = await Promise.resolve()
       .then(() => get(KEY, db))
       .then(parseFavorites)
-      .catch(() => get(stored));
+      .catch(() => read(stored));
     const next = replace ? ids : new Set([...current, ...ids]);
-    write(stored, next);
     await set(KEY, [...next], db);
+    write(stored, next);
   },
 );
 
