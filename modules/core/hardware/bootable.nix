@@ -25,9 +25,10 @@
           "sd_mod"
         ];
         kernelModules = ["kvm-${host.cpu}"];
-        loader.systemd-boot.enable = host.bootLoader == "systemd-boot";
         # kernels + initrd get copied onto the ESP (limine can't read XFS root);
-        # maxGenerations null = unbounded, which fills the 512M ESP.
+        # both loaders default to unbounded, which fills the 512M ESP.
+        loader.systemd-boot.enable = host.bootLoader == "systemd-boot";
+        loader.systemd-boot.configurationLimit = 10;
         loader.limine.enable = host.bootLoader == "limine";
         loader.limine.maxGenerations = 4;
         loader.efi.canTouchEfiVariables = true;
