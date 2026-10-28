@@ -27,8 +27,12 @@ export const input = style(
     caretColor: vars.color.primary,
     outline: "none",
     selectors: {
+      // The border alone is not enough where the browser forces its own colors on it, so focus
+      // also draws the usual ring outside.
       "&:focus-visible, &[data-focus-visible]": {
         borderColor: vars.color.primary,
+        outline: `${vars.border.focusRing} solid ${vars.color.primary}`,
+        outlineOffset: vars.border.focusRing,
       },
       "&::placeholder": { color: vars.color.onSurfaceVariant, opacity: 1 },
     },

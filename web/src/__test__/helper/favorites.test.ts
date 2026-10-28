@@ -3,6 +3,7 @@ import {
   favoriteFileName,
   parseFavorites,
   readFavoriteFile,
+  sameFavorites,
   serializeFavorites,
   wallId,
   withFavorite,
@@ -55,6 +56,24 @@ describe("serializeFavorites and readFavoriteFile", () => {
     expect(readFavoriteFile("{")).toBeNull();
     expect(readFavoriteFile('{"favorites":[]}')).toBeNull();
     expect(readFavoriteFile("null")).toBeNull();
+  });
+
+  test("refuses the whole file when an entry is not an id", () => {
+    expect(readFavoriteFile("[1, 2]")).toBeNull();
+    expect(readFavoriteFile('["local/a.png", 1]')).toBeNull();
+    expect(readFavoriteFile('["local/a.png", ""]')).toBeNull();
+  });
+});
+
+describe("sameFavorites", () => {
+  test("holds whatever the order of the ids", () => {
+    expect(sameFavorites(new Set(["b", "a"]), new Set(["a", "b"]))).toBe(true);
+  });
+
+  test("tells sets of other ids, or other sizes, apart", () => {
+    expect(sameFavorites(new Set(["a"]), new Set(["b"]))).toBe(false);
+    expect(sameFavorites(new Set(["a"]), new Set(["a", "b"]))).toBe(false);
+    expect(sameFavorites(new Set(), new Set())).toBe(true);
   });
 });
 

@@ -3,15 +3,15 @@ import { inComponents } from "@/styles/layers.css";
 import { sprinkles } from "@/styles/sprinkles.css";
 import { text, vars } from "@/styles/tokens.css";
 
-/** Box of the favorites dialog: as wide as its two buttons and their text need. */
+/** Box of the favorites dialog. */
 export const modal = style(
   inComponents({
-    width: "min(100%, 480px)",
+    width: `min(100%, ${vars.size.dialog})`,
     borderRadius: vars.shape.extraLarge,
   }),
 );
 
-/** Bar of the dialog: its heading, inset as a Material dialog title, then the close button. */
+/** Bar of the dialog, holding its heading and the button that closes it. */
 export const header = style([
   sprinkles({ display: "flex", alignItems: "center", gap: "sm" }),
   inComponents({
@@ -60,5 +60,5 @@ export const footer = style([
   }),
 ]);
 
-/** The merge-or-replace choice, as wide as the dialog so its segments split evenly. */
+/** The choice between merging the file and overwriting with it. */
 export const modes = style(inComponents({ width: "100%" }));

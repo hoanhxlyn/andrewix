@@ -541,11 +541,13 @@ test("favorites export as a file and import back", async ({ page }) => {
   ).toBeDisabled();
 
   await dialog.locator('input[type="file"]').setInputFiles(file);
-  await expect(
-    dialog.getByText("Adds 1, for 1 starred in this browser."),
-  ).toBeVisible();
+  await expect(dialog.getByText("Adds 1 new, for 1 starred.")).toBeVisible();
   await dialog.getByRole("button", { name: "Import" }).click();
   await expect(page.getByText("Favorites imported")).toBeVisible();
+  await expect(starOf(page, 0)).toHaveAttribute("aria-pressed", "true");
+
+  // The import is stored, not only shown: the star is there after a reload.
+  await page.reload();
   await expect(starOf(page, 0)).toHaveAttribute("aria-pressed", "true");
 
   // The same file again changes nothing, and the dialog says so instead of "Adds 0".
@@ -555,7 +557,7 @@ test("favorites export as a file and import back", async ({ page }) => {
   await dialog.locator('input[type="file"]').setInputFiles(file);
   await expect(
     dialog.getByText(
-      "Nothing new: every wallpaper in the file is already starred.",
+      "Nothing to change: every wallpaper in the file is already starred.",
     ),
   ).toBeVisible();
   // Overwriting with the same stars would change nothing, so it is not offered.
@@ -579,9 +581,10 @@ test("a favorites file can replace the starred ones instead of adding", async ({
   await dialog.locator('input[type="file"]').setInputFiles(file);
   await dialog.getByRole("radio", { name: "Overwrite" }).click();
   await expect(
-    dialog.getByText("Overwrites your 2 with 1: 2 dropped."),
+    dialog.getByText("Overwrites your 2 with 1, dropping 2."),
   ).toBeVisible();
-  await dialog.getByRole("button", { name: "Import" }).click();
+  // The button names the consequence, as Material's destructive dialogs do.
+  await dialog.getByRole("button", { name: "Overwrite" }).click();
 
   // Both old stars are gone, and the file's id has no card to show on.
   await expect(starOf(page, 0)).toHaveAttribute("aria-pressed", "false");
@@ -605,6 +608,13 @@ test("a file that is not a favorites list is refused", async ({
     .getByRole("button", { name: "Export and import favorites" })
     .click();
   const dialog = page.getByRole("dialog", { name: "Favorites" });
+  await dialog.locator('input[type="file"]').setInputFiles(file);
+  await expect(dialog.getByText("Not a favorites file.")).toBeVisible();
+  await expect(dialog.getByRole("button", { name: "Import" })).toHaveCount(0);
+
+  // A list with anything but ids in it is not a file either: read as an empty list, it would
+  // overwrite the favorites with nothing.
+  await writeFile(file, "[1, 2]");
   await dialog.locator('input[type="file"]').setInputFiles(file);
   await expect(dialog.getByText("Not a favorites file.")).toBeVisible();
   await expect(dialog.getByRole("button", { name: "Import" })).toHaveCount(0);

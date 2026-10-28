@@ -19,14 +19,29 @@ export function serializeFavorites(favorites: ReadonlySet<string>): string {
   return `${JSON.stringify([...favorites], null, 2)}\n`;
 }
 
-/** The ids in the text of a favorites file, or null when it is not one. */
+const isId = (value: unknown): value is string =>
+  typeof value === "string" && value !== "";
+
+/**
+ * The ids in the text of a favorites file, or null when it is not one. A file is refused whole
+ * rather than read in part: an id a file gets wrong must not pass for an empty list, which an
+ * overwrite would then take as the favorites to keep.
+ */
 export function readFavoriteFile(text: string): ReadonlySet<string> | null {
   try {
     const value: unknown = JSON.parse(text);
-    return Array.isArray(value) ? parseFavorites(value) : null;
+    return Array.isArray(value) && value.every(isId) ? new Set(value) : null;
   } catch {
     return null;
   }
+}
+
+/** Whether both sets hold the same ids, in any order. */
+export function sameFavorites(
+  a: ReadonlySet<string>,
+  b: ReadonlySet<string>,
+): boolean {
+  return a.size === b.size && [...a].every((id) => b.has(id));
 }
 
 /** A name as a file name: lowercase words joined by dashes, ending in `.json`. */

@@ -1,5 +1,5 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FileTrigger } from "react-aria-components/FileTrigger";
 import {
   favoritesAtom,
@@ -10,6 +10,7 @@ import { favoritesDialogAtom } from "@/atoms/walls";
 import {
   favoriteFileName,
   readFavoriteFile,
+  sameFavorites,
   serializeFavorites,
 } from "@/helper/favorites";
 import {
@@ -36,8 +37,12 @@ export function FavoritesDialog() {
   const [file, setFile] = useState<ReadonlySet<string> | null>(null);
   const [error, setError] = useState(false);
   const [replace, setReplace] = useState(false);
+  // Which pick is the current one. A file is read asynchronously, so a slower earlier read must
+  // not land on top of a newer one, or bring a selection back after the dialog closed.
+  const pickCount = useRef(0);
 
   const close = () => {
+    pickCount.current += 1;
     setFile(null);
     setError(false);
     setReplace(false);
@@ -47,33 +52,34 @@ export function FavoritesDialog() {
   const pick = async (files: FileList | null) => {
     const picked = files?.[0];
     if (picked === undefined) return;
+    const pick = ++pickCount.current;
     const ids = readFavoriteFile(await picked.text());
+    if (pick !== pickCount.current) return;
     setFile(ids);
     setError(ids === null);
-    // A file that is the favorites already leaves overwrite nothing to do, so a mode picked for
-    // the file before it does not stick.
-    if (
-      ids !== null &&
-      ids.size === favorites.size &&
-      [...ids].every((id) => favorites.has(id))
-    ) {
-      setReplace(false);
-    }
   };
 
   const added =
     file === null ? 0 : [...file].filter((id) => !favorites.has(id)).length;
-  const total = replace ? (file?.size ?? 0) : favorites.size + added;
   // How many of the stars this browser holds the file does not, so an overwrite can say what it
   // takes away rather than only what it leaves.
   const dropped =
     file === null ? 0 : [...favorites].filter((id) => !file.has(id)).length;
   // Nothing either way: an overwrite would leave exactly what is there.
-  const same = file !== null && added === 0 && dropped === 0;
+  const same = file !== null && sameFavorites(file, favorites);
+
+  // The favorites can change after the file was picked. Once they match it, overwriting has
+  // nothing left to do, so a mode picked earlier does not stick to the next file either.
+  useEffect(() => {
+    if (same) setReplace(false);
+  }, [same]);
+
+  const overwrite = replace && !same;
+  const total = overwrite ? (file?.size ?? 0) : favorites.size + added;
 
   const apply = () => {
     if (file === null) return;
-    importFavorites({ ids: file, replace });
+    importFavorites({ ids: file, replace: overwrite });
     close();
     notify({
       title: "Favorites imported",
@@ -89,15 +95,18 @@ export function FavoritesDialog() {
   /** What picking the file would change, in the mode the segments are set to. */
   const preview = (): string => {
     if (file === null) return "";
-    if (replace) {
-      const overwrite = `Overwrites your ${favorites.size} with ${file.size}`;
+    if (same) {
+      return "Nothing to change: every wallpaper in the file is already starred.";
+    }
+    if (overwrite) {
+      const overwriteLine = `Overwrites your ${favorites.size} with ${file.size}`;
       return dropped === 0
-        ? `${overwrite}.`
-        : `${overwrite}: ${dropped} dropped.`;
+        ? `${overwriteLine}.`
+        : `${overwriteLine}, dropping ${dropped}.`;
     }
     return added === 0
       ? "Nothing new: every wallpaper in the file is already starred."
-      : `Adds ${added}, for ${total} starred in this browser.`;
+      : `Adds ${added} new, for ${total} starred.`;
   };
 
   return (
@@ -150,7 +159,7 @@ export function FavoritesDialog() {
               className={s.modes}
               selectionMode="single"
               disallowEmptySelection
-              selectedKeys={[replace ? "replace" : "merge"]}
+              selectedKeys={[overwrite ? "replace" : "merge"]}
               onSelectionChange={(keys) => setReplace(keys.has("replace"))}
             >
               <Segment id="merge">Merge</Segment>
@@ -168,7 +177,7 @@ export function FavoritesDialog() {
           <Button variant="text" onPress={close}>
             Cancel
           </Button>
-          <Button onPress={apply}>Import</Button>
+          <Button onPress={apply}>{overwrite ? "Overwrite" : "Import"}</Button>
         </footer>
       )}
     </Modal>

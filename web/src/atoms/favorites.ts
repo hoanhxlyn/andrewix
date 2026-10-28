@@ -61,10 +61,28 @@ interface Import {
 export const importFavoritesAtom = atom(
   null,
   (get, write, { ids, replace }: Import) => {
-    const next = replace ? ids : new Set([...get(stored), ...ids]);
-    write(stored, next);
+    // Shown at once, then the file is applied to what is stored rather than to a copy in memory:
+    // another tab may have starred something since this one read.
+    const optimistic = replace ? ids : new Set([...get(stored), ...ids]);
+    write(stored, optimistic);
     Promise.resolve()
-      .then(() => set(KEY, [...next], db))
+      .then(async () => {
+        if (replace) {
+          await set(KEY, [...ids], db);
+          return ids;
+        }
+        let merged: ReadonlySet<string> = optimistic;
+        await update(
+          KEY,
+          (value) => {
+            merged = new Set([...parseFavorites(value), ...ids]);
+            return [...merged];
+          },
+          db,
+        );
+        return merged;
+      })
+      .then((saved) => write(stored, saved))
       .catch(() => {
         // Not persisted; still applied for this session.
       });
