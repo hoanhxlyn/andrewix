@@ -601,23 +601,32 @@ test("a file that is not a favorites list is refused", async ({
   page,
 }, testInfo) => {
   await openWalls(page);
-  const file = testInfo.outputPath("notes.json");
-  await writeFile(file, "not json");
+  // Each pick needs its own path: a file input fires change again only for a different path.
+  const first = testInfo.outputPath("notes.json");
+  const second = testInfo.outputPath("numbers.json");
+  const third = testInfo.outputPath("favorites.json");
+  await writeFile(first, "not json");
 
   await page
     .getByRole("button", { name: "Export and import favorites" })
     .click();
   const dialog = page.getByRole("dialog", { name: "Favorites" });
-  await dialog.locator('input[type="file"]').setInputFiles(file);
+  const input = dialog.locator('input[type="file"]');
+  await input.setInputFiles(first);
   await expect(dialog.getByText("Not a favorites file.")).toBeVisible();
   await expect(dialog.getByRole("button", { name: "Import" })).toHaveCount(0);
 
   // A list with anything but ids in it is not a file either: read as an empty list, it would
   // overwrite the favorites with nothing.
-  await writeFile(file, "[1, 2]");
-  await dialog.locator('input[type="file"]').setInputFiles(file);
+  await writeFile(second, "[1, 2]");
+  await input.setInputFiles(second);
   await expect(dialog.getByText("Not a favorites file.")).toBeVisible();
   await expect(dialog.getByRole("button", { name: "Import" })).toHaveCount(0);
+
+  // Picking again recovers: the refused file does not stick.
+  await writeFile(third, JSON.stringify(["local/a.png"]));
+  await input.setInputFiles(third);
+  await expect(dialog.getByText("Adds 1 new, for 1 starred.")).toBeVisible();
 });
 
 test("the dialog star and the card star are the same favorite", async ({

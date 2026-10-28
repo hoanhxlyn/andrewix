@@ -10,6 +10,22 @@ const KEY = "walls";
 
 const stored = atom<ReadonlySet<string>>(new Set<string>());
 
+// The first read of what is stored has landed, either way. Until it has, the dialog cannot show
+// the favorites a replace would drop, so it offers none.
+let readDone = false;
+let notifyReady: (() => void) | undefined;
+
+/** Set once the first read of the stored favorites has landed. */
+export const favoritesReadyAtom = atom(false);
+favoritesReadyAtom.onMount = (setReady) => {
+  const bump = () => setReady(true);
+  if (readDone) bump();
+  else notifyReady = bump;
+  return () => {
+    if (notifyReady === bump) notifyReady = undefined;
+  };
+};
+
 // Read once the first component that shows favorites mounts. IndexedDB can be blocked (private
 // windows, cleared site data), in which case favorites still work for this session only.
 // idb-keyval opens the database inside the call, so a missing `indexedDB` throws instead of
@@ -20,6 +36,10 @@ stored.onMount = (setStored) => {
     .then((value) => setStored(parseFavorites(value)))
     .catch(() => {
       // Nothing stored to show.
+    })
+    .finally(() => {
+      readDone = true;
+      notifyReady?.();
     });
 };
 
@@ -57,35 +77,22 @@ interface Import {
   replace: boolean;
 }
 
-/** Applies an imported file to the favorites, in place of the one-by-one toggle. */
+/**
+ * Applies an imported file to the favorites, in place of the one-by-one toggle. Shown at once,
+ * then written; the write is awaited, and its failure reaches the caller, so nothing reports a
+ * save that did not happen. The read is taken fresh rather than from memory: the dialog can be
+ * open before the first read lands, and another tab may have starred since.
+ */
 export const importFavoritesAtom = atom(
   null,
-  (get, write, { ids, replace }: Import) => {
-    // Shown at once, then the file is applied to what is stored rather than to a copy in memory:
-    // another tab may have starred something since this one read.
-    const optimistic = replace ? ids : new Set([...get(stored), ...ids]);
-    write(stored, optimistic);
-    Promise.resolve()
-      .then(async () => {
-        if (replace) {
-          await set(KEY, [...ids], db);
-          return ids;
-        }
-        let merged: ReadonlySet<string> = optimistic;
-        await update(
-          KEY,
-          (value) => {
-            merged = new Set([...parseFavorites(value), ...ids]);
-            return [...merged];
-          },
-          db,
-        );
-        return merged;
-      })
-      .then((saved) => write(stored, saved))
-      .catch(() => {
-        // Not persisted; still applied for this session.
-      });
+  async (get, write, { ids, replace }: Import) => {
+    const current = await Promise.resolve()
+      .then(() => get(KEY, db))
+      .then(parseFavorites)
+      .catch(() => get(stored));
+    const next = replace ? ids : new Set([...current, ...ids]);
+    write(stored, next);
+    await set(KEY, [...next], db);
   },
 );
 

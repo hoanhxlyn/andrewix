@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { FileTrigger } from "react-aria-components/FileTrigger";
 import {
   favoritesAtom,
+  favoritesReadyAtom,
   importFavoritesAtom,
   lastExportAtom,
 } from "@/atoms/favorites";
@@ -31,6 +32,9 @@ const DEFAULT_NAME = "My Favorite Themes";
 export function FavoritesDialog() {
   const [isOpen, setOpen] = useAtom(favoritesDialogAtom);
   const favorites = useAtomValue(favoritesAtom);
+  // Before the first read of storage lands, the favorites shown are not what is stored: an
+  // overwrite then could not show what it drops, so it waits for it.
+  const ready = useAtomValue(favoritesReadyAtom);
   const importFavorites = useSetAtom(importFavoritesAtom);
   const [lastExport, setLastExport] = useAtom(lastExportAtom);
   const [name, setName] = useState(DEFAULT_NAME);
@@ -53,7 +57,12 @@ export function FavoritesDialog() {
     const picked = files?.[0];
     if (picked === undefined) return;
     const pick = ++pickCount.current;
-    const ids = readFavoriteFile(await picked.text());
+    // The file on screen is not the one being read, so no button can act on it while the read
+    // runs. A file the browser cannot read counts as not a favorites file.
+    setFile(null);
+    setError(false);
+    const text = await picked.text().catch(() => null);
+    const ids = text === null ? null : readFavoriteFile(text);
     if (pick !== pickCount.current) return;
     setFile(ids);
     setError(ids === null);
@@ -67,6 +76,9 @@ export function FavoritesDialog() {
     file === null ? 0 : [...favorites].filter((id) => !file.has(id)).length;
   // Nothing either way: an overwrite would leave exactly what is there.
   const same = file !== null && sameFavorites(file, favorites);
+  // Replacing also waits for the first read, so the dialog can show what it drops.
+  const overwrite = replace && !same && ready;
+  const total = overwrite ? (file?.size ?? 0) : favorites.size + added;
 
   // The favorites can change after the file was picked. Once they match it, overwriting has
   // nothing left to do, so a mode picked earlier does not stick to the next file either.
@@ -74,12 +86,18 @@ export function FavoritesDialog() {
     if (same) setReplace(false);
   }, [same]);
 
-  const overwrite = replace && !same;
-  const total = overwrite ? (file?.size ?? 0) : favorites.size + added;
-
-  const apply = () => {
+  const apply = async () => {
     if (file === null) return;
-    importFavorites({ ids: file, replace: overwrite });
+    try {
+      await importFavorites({ ids: file, replace: overwrite });
+    } catch {
+      // The write failed; the stars stay for this session. The dialog stays open to retry.
+      notify({
+        title: "Favorites not saved",
+        description: "The browser refused the write.",
+      });
+      return;
+    }
     close();
     notify({
       title: "Favorites imported",
@@ -163,7 +181,7 @@ export function FavoritesDialog() {
               onSelectionChange={(keys) => setReplace(keys.has("replace"))}
             >
               <Segment id="merge">Merge</Segment>
-              <Segment id="replace" isDisabled={same}>
+              <Segment id="replace" isDisabled={same || !ready}>
                 Overwrite
               </Segment>
             </SegmentedButton>
