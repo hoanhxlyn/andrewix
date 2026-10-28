@@ -85,6 +85,10 @@ generated in `hosts.nix` via `provides.to-users`.
 nothing else: `install.fish` reads `flake.installableHosts` (all non-WSL hosts). No other file should mention the
 hostname.
 
+`monitors` takes an optional `order = ["eDP-1" "HDMI-A-1"]` for left→right placement (positions are computed in logical
+pixels; without it, connector name order). `is-primary` only marks the output niri focuses at startup, never where it
+sits.
+
 ## Conventions
 
 - **Namespace:** `core.<name>` = all aspects (NixOS + Home Manager).

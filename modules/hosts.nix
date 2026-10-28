@@ -11,24 +11,27 @@
         vendor = "intel";
         kind = "integrated";
       };
-      monitors."eDP-1" = {
-        resolution = {
-          width = 2880;
-          height = 1800;
+      monitors = {
+        # panel left, external right; niri focuses the external at startup
+        order = ["eDP-1" "HDMI-A-1"];
+        "eDP-1" = {
+          resolution = {
+            width = 2880;
+            height = 1800;
+          };
+          refresh-rate = 90.0;
+          is-primary = false;
+          scale = 1.85;
         };
-        refresh-rate = 90.0;
-        is-primary = true;
-        scale = 1.85;
-      };
-      monitors."HDMI-A-1" = {
-        resolution = {
-          width = 1920;
-          height = 1080;
+        "HDMI-A-1" = {
+          resolution = {
+            width = 1920;
+            height = 1080;
+          };
+          refresh-rate = 100.0;
+          is-primary = true;
+          scale = 1;
         };
-        refresh-rate = 100.0;
-        is-primary = false;
-        scale = 1;
-        focus-at-startup = true;
       };
     };
     asus-rog-gl552vx = mkHost {
@@ -74,23 +77,27 @@
       chargeThreshold = {
         msiEc = true;
       };
-      monitors."eDP-1" = {
-        resolution = {
-          width = 1920;
-          height = 1080;
+      monitors = {
+        # laptop panel left, external right; niri focuses the external at startup
+        order = ["eDP-1" "HDMI-A-2"];
+        "eDP-1" = {
+          resolution = {
+            width = 1920;
+            height = 1080;
+          };
+          refresh-rate = 144.0;
+          is-primary = false;
+          scale = 1;
         };
-        refresh-rate = 144.0;
-        is-primary = false;
-        scale = 1;
-      };
-      monitors."HDMI-A-2" = {
-        resolution = {
-          width = 1920;
-          height = 1080;
+        "HDMI-A-2" = {
+          resolution = {
+            width = 1920;
+            height = 1080;
+          };
+          refresh-rate = 74.973;
+          is-primary = true;
+          scale = 1;
         };
-        refresh-rate = 74.973;
-        is-primary = true;
-        scale = 1;
       };
       refreshThrottle."eDP-1" = {
         power-saver = 60.002;
