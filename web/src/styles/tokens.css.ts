@@ -105,6 +105,8 @@ const shared = {
     sidebar: `${sidebarWidth.initial}px`,
     // Width a search box grows to when the row has room for it: the M3 search bar minimum.
     search: "360px",
+    // Widest a dialog grows, so its supporting text keeps a readable line.
+    dialog: "480px",
   },
   shape: {
     extraSmall: "4px",

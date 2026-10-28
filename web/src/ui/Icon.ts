@@ -23,6 +23,7 @@ import SortDescending from "~icons/mdi/sort-alphabetical-descending";
 import Sort from "~icons/mdi/sort-alphabetical-variant";
 import Favorite from "~icons/mdi/star";
 import NotFavorite from "~icons/mdi/star-outline";
+import ImportExport from "~icons/mdi/swap-vertical";
 import Table from "~icons/mdi/table";
 import Grid from "~icons/mdi/view-grid-outline";
 import Dark from "~icons/mdi/weather-night";
@@ -46,6 +47,7 @@ export default {
   FolderOpen,
   Grid,
   Image,
+  ImportExport,
   JsonFile,
   Light,
   LuaFile,

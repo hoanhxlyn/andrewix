@@ -1,8 +1,9 @@
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useMemo, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import { favoritesAtom } from "@/atoms/favorites";
-import { wallsLayoutAtom } from "@/atoms/walls";
+import { favoritesDialogAtom, wallsLayoutAtom } from "@/atoms/walls";
+import { FavoritesDialog } from "@/components/Walls/FavoritesDialog";
 import { WallGrid } from "@/components/Walls/WallGrid";
 import { WallTable } from "@/components/Walls/WallTable";
 import type { Sort } from "@/constants";
@@ -76,6 +77,7 @@ export default function Walls() {
   const order = sort?.column === "name" ? sort.order : null;
   const SortIcon = ORDER_ICONS[order ?? "default"];
   const [layout, setLayout] = useAtom(wallsLayoutAtom);
+  const openFavorites = useSetAtom(favoritesDialogAtom);
   const navigate = useNavigate();
 
   // The grid's toolbar offers name orders only, so a column order picked in the table is the
@@ -163,6 +165,12 @@ export default function Walls() {
               </Menu>
             </MenuTrigger>
           )}
+          <Button
+            variant="icon"
+            icon={<Icons.ImportExport />}
+            aria-label="Export and import favorites"
+            onPress={() => openFavorites(true)}
+          />
           <SegmentedButton
             aria-label="Layout"
             className={s.layoutSwitch}
@@ -242,6 +250,7 @@ export default function Walls() {
       )}
       {/* The dialog of one wallpaper, over this gallery. Empty unless that route is open. */}
       <Outlet />
+      <FavoritesDialog />
     </div>
   );
 }

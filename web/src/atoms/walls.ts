@@ -1,3 +1,4 @@
+import { atom } from "jotai";
 import { WALL_LAYOUTS, type WallLayout } from "@/constants";
 import { atomWithSetting } from "./settings";
 
@@ -11,3 +12,6 @@ export const wallsLayoutAtom = atomWithSetting<WallLayout>(
   "grid",
   isLayout,
 );
+
+/** Whether the dialog that exports and imports the favorites is over the gallery. */
+export const favoritesDialogAtom = atom(false);

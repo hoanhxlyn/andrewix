@@ -1,6 +1,6 @@
 import { Link, Outlet } from "react-router";
 import { APP_NAME } from "@/constants";
-import { ThemeToggle } from "@/ui";
+import { ThemeToggle, Toaster } from "@/ui";
 import * as s from "./AppShell.css";
 
 export default function AppShell() {
@@ -20,6 +20,7 @@ export default function AppShell() {
       <main className={s.main}>
         <Outlet />
       </main>
+      <Toaster />
     </div>
   );
 }
