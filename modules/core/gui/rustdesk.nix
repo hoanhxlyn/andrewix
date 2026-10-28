@@ -3,7 +3,7 @@
     # libsciter: unfree proprietary UI toolkit that rustdesk links against
     includes = [(<den.batteries.unfree> ["libsciter"])];
     homeManager = {pkgs, ...}: {
-      # shortcut: Flutter settings windows never render under Wayland (niri),
+      # TODO: Flutter settings windows never render under Wayland (niri),
       # XWayland fixes them; drop the wrapper once upstream supports Wayland
       home.packages = [
         (pkgs.symlinkJoin {

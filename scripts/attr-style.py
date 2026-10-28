@@ -39,7 +39,7 @@ SKIP_FILES = {
 LANG = Language(tree_sitter_nix.language())
 PARSER = Parser(LANG)
 
-# shortcut: tree-sitter-nix 0.1.0 rejects alejandra's trailing comma in formals
+# TODO: tree-sitter-nix 0.1.0 rejects alejandra's trailing comma in formals
 # (`{ lib, mini, }:`); blank the comma for parsing, same byte length so offsets hold.
 # Upgrade once the grammar parses `{ a, }:`.
 TRAILING_FORMAL_COMMA = re.compile(rb",(?=\s*\}:)")

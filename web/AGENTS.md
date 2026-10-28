@@ -59,6 +59,8 @@ Validate a change with `bun check`, `bunx biome check .`, `bun run test` and `bu
 - Import across folders with the `@/` alias for `src/` (`@/styles/tokens.css`, `@/ui`), set in `tsconfig.json` `paths` and enabled in Vite with `resolve.tsconfigPaths`. Use `./` only for files in the same folder.
 - Join class names with `clsx` (`clsx(s.base, isOpen && s.open, className)`), not `[...].filter(Boolean).join(" ")`.
 - Biome is the formatter and linter: double quotes, 2-space indent, organized imports.
+- Comment markers are `TODO:`, `NOTE:` or `README:` only (`just lint` at the repo root rejects any other marker
+  word); plain prose explaining *why* is fine.
 - Ask before structural decisions such as new folders or how to split a module.
 
 ### Sprinkles or `inComponents`

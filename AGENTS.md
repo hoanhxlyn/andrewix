@@ -6,7 +6,7 @@ Use Justfile shortcuts (preferred). Default host = `hostname -s` (auto-detected)
 
 ```bash
 just fmt          # alejandra .
-just lint         # statix check + deadnix --no-underscore --fail
+just lint         # statix + deadnix + comment markers
 just build <h>    # nix run .#<h> -- build
 just boot <h>     # boot new build at next restart
 just switch <h>   # nix run .#<h> -- switch
@@ -108,6 +108,9 @@ sits.
   `home.file."<dest>".source = "${self}/config/<tool>/<file>"` (see `modules/core/editor/cursor.nix`).
 - **Booleans:** prefix with `enable`/`disable`. **Override defaults:** `lib.mkDefault`.
 - **Formatter:** `alejandra`, 2-space indent, ≤100 chars.
+- **Comments:** a marker-tagged comment uses exactly `TODO:` (actionable, or waiting on upstream — name the trigger),
+  `NOTE:` (explanation) or `README:` (reference link). Never invent a marker (`FIXME`, `HACK`, `XXX`, `shortcut:`, …);
+  `just lint` rejects those. Plain prose explaining *why* is fine.
 - **Attribute nesting:** nest an option group only when it has ≥4 children; with 1–3 children write dotted paths
   (`services.pipewire.enable = true;`, not `services.pipewire = { enable = true; };`). Only binding values count:
   the `core`/`den`/`flake-file` skeletons keep their shape, and so do an aspect's `nixos`/`homeManager` body
