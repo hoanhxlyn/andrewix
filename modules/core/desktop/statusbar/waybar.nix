@@ -30,18 +30,6 @@
           fi
         '';
       };
-      recordToggle = pkgs.writeShellApplication {
-        name = "record-toggle";
-        runtimeInputs = [pkgs.coreutils pkgs.procps pkgs.wl-screenrec];
-        text = ''
-          if pgrep -x wl-screenrec > /dev/null; then
-            pkill -SIGINT wl-screenrec || true
-          else
-            wl-screenrec -f "$HOME/Videos/recording_$(date +%Y%m%d_%H%M%S).mp4" &
-          fi
-          pkill --signal RTMIN+11 waybar || true
-        '';
-      };
       # xpad exposes no battery, and the pad's radio sleep never reaches the
       # kernel (the USB device and input node stay), so the bar keys off real
       # input with a grace window: it clears after 60s of silence.
@@ -109,7 +97,7 @@
         ];
       };
 
-      home.packages = with pkgs; [playerctl] ++ [dndScript recordToggle];
+      home.packages = with pkgs; [playerctl] ++ [dndScript];
       stylix.targets.waybar = {
         enable = true;
         enableLeftBackColors = false;
