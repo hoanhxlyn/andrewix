@@ -1,9 +1,14 @@
 {__findFile, ...}: {
-  core.desktop.includes = [
-    <core.desktop.xserver>
-    <core.desktop.login>
-    <core.desktop.wm.niri>
-    <core.desktop.misc>
-    # <core.desktop.de.gnome>
-  ];
+  core.desktop = {host, ...}: {
+    includes = [
+      <core.desktop.xserver>
+      <core.desktop.login>
+      <core.desktop.misc>
+      (
+        if host.wm == "hyprland"
+        then <core.desktop.wm.hyprland>
+        else <core.desktop.wm.niri>
+      )
+    ];
+  };
 }

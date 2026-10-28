@@ -72,6 +72,11 @@
           fi
         '';
       };
+      # waybar names its bar modules after the compositor (niri/*, hyprland/*)
+      wm =
+        if host.wm == "hyprland"
+        then "hyprland"
+        else "niri";
     in {
       # wrap waybar so the bar's own on-click/exec tools are declared deps,
       # not whatever happens to be on the session PATH
@@ -150,8 +155,8 @@
           spacing = 5;
 
           modules-left = [
-            "niri/workspaces"
-            "niri/window"
+            "${wm}/workspaces"
+            "${wm}/window"
             "group/mpris"
           ];
           modules-center = [
@@ -179,14 +184,21 @@
             "wireplumber"
           ];
 
-          "niri/workspaces" = {
-            all-outputs = false;
-            hide-empty = true;
-            on-click = "activate";
-            format = "{index}";
-          };
+          "${wm}/workspaces" =
+            {
+              on-click = "activate";
+            }
+            // (
+              if wm == "hyprland"
+              then {format = "{id}";}
+              else {
+                all-outputs = false;
+                hide-empty = true;
+                format = "{index}";
+              }
+            );
 
-          "niri/window" = {
+          "${wm}/window" = {
             max-length = 30;
             icon = true;
             icon-size = 16;

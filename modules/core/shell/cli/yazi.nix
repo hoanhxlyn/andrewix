@@ -20,7 +20,7 @@
       ...
     }: {
       xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-termfilechooser];
-      xdg.portal.config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
+      xdg.portal.config.${host.wm}."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
     };
 
     homeManager = {pkgs, ...}: let

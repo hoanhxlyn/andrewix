@@ -10,7 +10,9 @@
     }: let
       lockCmd = "${pkgs.swaylock-effects}/bin/swaylock -f";
       display = status:
-        if status == "off"
+        if host.wm == "hyprland"
+        then "${pkgs.hyprland}/bin/hyprctl dispatch dpms ${status}"
+        else if status == "off"
         then "${pkgs.niri-stable}/bin/niri msg action power-off-monitors"
         else ":";
       cat = "${pkgs.coreutils}/bin/cat";
