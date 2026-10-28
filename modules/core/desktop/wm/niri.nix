@@ -14,11 +14,7 @@
       <core.desktop.screenshot>
     ];
 
-    nixos = {pkgs, ...}: let
-      record-screen = pkgs.writeShellScriptBin "record-screen" ''
-        wl-screenrec -f ~/Videos/recording_$(date +%Y%m%d_%H%M%S).mp4
-      '';
-    in {
+    nixos = {pkgs, ...}: {
       nixpkgs.overlays = [inputs.niri.overlays.niri];
       nix.settings = {
         substituters = ["https://niri-epireyn.cachix.org"];
@@ -29,7 +25,6 @@
         wl-screenrec
         xwayland-satellite
         networkmanagerapplet
-        record-screen
       ];
       programs.niri = {
         enable = true;
@@ -327,7 +322,7 @@
                   hotkey-overlay.title = "Screenshot fullscreen";
                   action.spawn = ["screenshot-fullscreen"];
                 };
-                "Mod+Alt+S" = {
+                "Mod+Ctrl+S" = {
                   repeat = false;
                   hotkey-overlay.title = "Record screen";
                   action.spawn = ["record-toggle"];

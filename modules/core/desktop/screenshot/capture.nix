@@ -25,6 +25,38 @@
       mkdir -p ~/Pictures/Screenshots
       grim -o "$(niri msg --json focused-output | jq -r .name)" - | satty -f -
     '';
+    # toggle recording; the instance that started it waits, so the "saved"
+    # notification only fires once wl-screenrec finalized the mp4
+    record-toggle = pkgs.writeShellApplication {
+      name = "record-toggle";
+      runtimeInputs = [
+        pkgs.coreutils
+        pkgs.libnotify
+        pkgs.procps
+        pkgs.wl-screenrec
+      ];
+      text = ''
+        if pgrep -x wl-screenrec > /dev/null; then
+          pkill -SIGINT wl-screenrec || true
+          exit 0
+        fi
+        # wl-screenrec opens the output via ffmpeg and does not create the dir
+        mkdir -p "$HOME/Videos"
+        file="$HOME/Videos/recording_$(date +%Y%m%d_%H%M%S).mp4"
+        # several outputs -> wl-screenrec bails unless one is picked
+        output=$(niri msg --json focused-output | jq -r .name)
+        notify-send "Screen recording" "Started" || true
+        wl-screenrec -f "$file" --output "$output" &
+        pid=$!
+        pkill --signal RTMIN+11 waybar || true
+        if wait "$pid"; then
+          notify-send "Screen recording" "Saved to $file" || true
+        else
+          notify-send "Screen recording" "Recording failed" || true
+        fi
+        pkill --signal RTMIN+11 waybar || true
+      '';
+    };
   in {
     home.packages = with pkgs; [
       grim
@@ -32,6 +64,7 @@
       jq
       screenshot-annotate
       screenshot-fullscreen
+      record-toggle
     ];
   };
 }
