@@ -87,6 +87,7 @@
         };
 
         tlp.enable = true;
+        tlp.pd.enable = true;
         tlp.settings =
           {
             # CPU
