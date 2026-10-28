@@ -10,11 +10,17 @@ l:
 fmt:
   alejandra .
 
-# Statix + deadnix check
+# Statix + deadnix + comment marker check
 [group('validate')]
 lint:
   statix check
   deadnix --no-underscore --fail
+  just comments
+
+# Reject invented comment markers: use TODO:/NOTE:/README: (AGENTS.md)
+[group('validate')]
+comments:
+  @git grep --no-index --exclude-standard -nE '(#|//)[ \t]*(FIXME|HACK|XXX|WORKAROUND|shortcut|ponytail):' && { echo 'error: use TODO:/NOTE:/README: instead'; exit 1; } || true
 
 # Flatten option groups with <4 children to dotted paths (AGENTS.md)
 [group('validate')]

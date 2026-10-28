@@ -5,8 +5,8 @@
   ...
 }: {
   flake-file.inputs.stylix = {
-    # fork = master + stylix#2501 (rofi settings.font rename), revert khi merge
-    # https://github.com/nix-community/stylix/pull/2501
+    # TODO: fork = master + stylix#2501 (rofi settings.font rename), revert when merged
+    # README: https://github.com/nix-community/stylix/pull/2501
     url = "github:adomixaszvers/stylix/merged-rofi-settings-font";
     inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -19,7 +19,7 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
   flake-file.inputs.walls-catppuccin-mocha = {
-    # fork of orangci/walls-catppuccin-mocha (upstream ships no flake.nix), sync from upstream
+    # NOTE: fork of orangci/walls-catppuccin-mocha (upstream ships no flake.nix), sync from upstream
     url = "github:hoanhxlyn/walls-catppuccin-mocha";
   };
   core.services.sync.stylix = {host, ...}: let

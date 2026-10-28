@@ -6,7 +6,7 @@
   snacks-nvim.enable = true;
   snacks-nvim.setupOpts = {
     dashboard.enabled = !mini.starter;
-    # header = builtins.readFile "${self}/config/arts/andrewix.txt"; #ponytail: doesn't render header correctly
+    # header = builtins.readFile "${self}/config/arts/andrewix.txt"; # TODO: doesn't render header correctly
     dashboard.preset.keys = [
       {
         icon = " ";

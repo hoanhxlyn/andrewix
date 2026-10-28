@@ -24,7 +24,7 @@
 
     programs.opencode = {
       enable = true;
-      # shortcut: stylix still targets OpenCode 1's tui.json (ignored by v2 + warns);
+      # TODO: stylix still targets OpenCode 1's tui.json (ignored by v2 + warns);
       # drop this mkForce when stylix migrates to programs.opencode.cli
       tui = lib.mkForce {};
       package =

@@ -40,7 +40,7 @@ export const num = style(
     display: "inline-block",
     // Content box, so the width is the digits alone and the padding and divider come on top.
     boxSizing: "content-box",
-    width: "3ch", // shortcut: clips past 999 lines, widen to 4ch when a config file outgrows it
+    width: "3ch", // TODO: clips past 999 lines, widen to 4ch when a config file outgrows it
     paddingInlineStart: vars.space.md,
     paddingInlineEnd: vars.space.sm,
     marginInlineEnd: vars.space.md,
