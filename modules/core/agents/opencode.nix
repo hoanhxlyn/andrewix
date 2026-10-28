@@ -20,6 +20,7 @@
     opencodePkgs = inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system};
   in {
     home.file.".config/opencode/cli.json".source = "${self}/config/opencode/cli.json";
+    home.file.".config/opencode/commands/gh.md".source = "${self}/config/opencode/gh.md";
 
     programs.opencode = {
       enable = true;
