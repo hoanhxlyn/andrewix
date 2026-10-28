@@ -50,6 +50,15 @@ export function FavoritesDialog() {
     const ids = readFavoriteFile(await picked.text());
     setFile(ids);
     setError(ids === null);
+    // A file that is the favorites already leaves overwrite nothing to do, so a mode picked for
+    // the file before it does not stick.
+    if (
+      ids !== null &&
+      ids.size === favorites.size &&
+      [...ids].every((id) => favorites.has(id))
+    ) {
+      setReplace(false);
+    }
   };
 
   const added =
@@ -59,6 +68,8 @@ export function FavoritesDialog() {
   // takes away rather than only what it leaves.
   const dropped =
     file === null ? 0 : [...favorites].filter((id) => !file.has(id)).length;
+  // Nothing either way: an overwrite would leave exactly what is there.
+  const same = file !== null && added === 0 && dropped === 0;
 
   const apply = () => {
     if (file === null) return;
@@ -143,7 +154,9 @@ export function FavoritesDialog() {
               onSelectionChange={(keys) => setReplace(keys.has("replace"))}
             >
               <Segment id="merge">Merge</Segment>
-              <Segment id="replace">Overwrite</Segment>
+              <Segment id="replace" isDisabled={same}>
+                Overwrite
+              </Segment>
             </SegmentedButton>
             <p className={s.line}>{preview()}</p>
           </>

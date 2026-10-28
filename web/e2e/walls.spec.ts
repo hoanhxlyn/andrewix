@@ -558,6 +558,8 @@ test("favorites export as a file and import back", async ({ page }) => {
       "Nothing new: every wallpaper in the file is already starred.",
     ),
   ).toBeVisible();
+  // Overwriting with the same stars would change nothing, so it is not offered.
+  await expect(dialog.getByRole("radio", { name: "Overwrite" })).toBeDisabled();
 });
 
 test("a favorites file can replace the starred ones instead of adding", async ({
