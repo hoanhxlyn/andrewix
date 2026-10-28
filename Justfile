@@ -16,6 +16,11 @@ lint:
   statix check
   deadnix --no-underscore --fail
 
+# Flatten option groups with <4 children to dotted paths (AGENTS.md)
+[group('validate')]
+attr *args:
+  uv run --quiet --with tree-sitter --with tree-sitter-nix scripts/attr-style.py {{ args }}
+
 # Build system config
 [group('nixos')]
 build h=host *args:

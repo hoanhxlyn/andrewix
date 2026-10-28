@@ -108,6 +108,13 @@ sits.
   `home.file."<dest>".source = "${self}/config/<tool>/<file>"` (see `modules/core/editor/cursor.nix`).
 - **Booleans:** prefix with `enable`/`disable`. **Override defaults:** `lib.mkDefault`.
 - **Formatter:** `alejandra`, 2-space indent, ≤100 chars.
+- **Attribute nesting:** nest an option group only when it has ≥4 children; with 1–3 children write dotted paths
+  (`services.pipewire.enable = true;`, not `services.pipewire = { enable = true; };`). Only binding values count:
+  the `core`/`den`/`flake-file` skeletons keep their shape, and so do an aspect's `nixos`/`homeManager` body
+  itself, `let` bindings (no dotted names there), function arguments (`mkOption { … }`), host data
+  (`modules/hosts.nix`, `_lib/*-facts.nix`) and sets with `inherit`/`rec`/`${…}` names — everything inside a
+  module body follows the rule. `x = { a = 1; };` and `x.a = 1;` are the same path, so this is spelling only;
+  enforce with `just attr` (`just attr --check` to fail instead of rewrite).
 
 ### Module patterns
 
