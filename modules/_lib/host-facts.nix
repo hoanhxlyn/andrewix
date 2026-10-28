@@ -118,6 +118,12 @@ in {
     });
     default = {};
   };
+  # Wayland compositor aspect. Both stay in the tree; core.desktop includes only the selected
+  # one, and the shared helpers (waybar modules, screenshots, focus commands) branch on this.
+  wm = mkOption {
+    type = types.enum ["niri" "hyprland"];
+    default = "niri";
+  };
   enableGaming = mkEnableOption "the gaming aspects";
 
   powerManagement = mkOption {

@@ -2,20 +2,25 @@
   core.desktop.menu-launcher.fuzzel = {host, ...}: let
     inherit (host) terminal;
     isLaptop = host.isLaptop or false;
-    # After a TLP profile switch, set niri's output mode to the throttled rate
+    # After a TLP profile switch, set the output mode to the throttled rate
     # (host.refreshThrottle). `performance` keeps the declared refresh-rate.
     # Only fires from this menu; a manual `sudo tlp <mode>` does not re-throttle.
     throttleRefresh = lib.concatStringsSep "\n" (
       lib.mapAttrsToList (
         conn: rates: let
           mode = host.monitors.${conn}.mode;
+          position = host.monitors.${conn}.position;
+          setMode =
+            if host.wm == "hyprland"
+            then ''hyprctl keyword monitor "${conn},${toString mode.width}x${toString mode.height}@$_hz,${toString position.x}x${toString position.y},auto"''
+            else "niri msg output ${conn} mode ${toString mode.width}x${toString mode.height}@$_hz";
         in ''
           case "$profile_cmd" in
             ${lib.optionalString (rates.balanced != null) "balanced) _hz=${toString rates.balanced} ;;"}
             ${lib.optionalString (rates.power-saver != null) "power-saver) _hz=${toString rates.power-saver} ;;"}
             *) _hz=${toString mode.refresh} ;;
           esac
-          niri msg output ${conn} mode ${toString mode.width}x${toString mode.height}@$_hz || true
+          ${setMode} || true
         ''
       ) (host.refreshThrottle or {})
     );
@@ -213,7 +218,11 @@
               *Shutdown) systemctl poweroff ;;
               *Reboot)   systemctl reboot ;;
               *Sleep)    systemctl hibernate ;;
-              *Logout)   niri msg action quit ;;
+              *Logout)   ${
+              if host.wm == "hyprland"
+              then "hyprctl dispatch exit"
+              else "niri msg action quit"
+            } ;;
               *Lock)     ${pkgs.swaylock-effects}/bin/swaylock -f ;;
             esac
           '')
@@ -251,15 +260,16 @@
         ++ lib.optionals isLaptop [
           (pkgs.writeShellApplication {
             name = "fuzzel-battery";
-            runtimeInputs = with pkgs; [
-              upower
-              libnotify
-              fuzzel
-              brightnessctl
-              gawk
-              less
-              niri-stable
-            ];
+            runtimeInputs =
+              (with pkgs; [
+                upower
+                libnotify
+                fuzzel
+                brightnessctl
+                gawk
+                less
+              ])
+              ++ lib.optional (host.wm == "niri") pkgs.niri-stable;
             text = ''
               terminal="${host.defaults.terminal}"
               battery_dev=$(upower -e | grep -i battery | head -1)
