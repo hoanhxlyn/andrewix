@@ -21,6 +21,7 @@
   in {
     home.file.".config/opencode/cli.json".source = "${self}/config/opencode/cli.json";
     home.file.".config/opencode/commands/gh.md".source = "${self}/config/opencode/gh.md";
+    home.file.".config/opencode/plugins/caveman.js".source = "${self}/config/opencode/plugins/caveman.js";
 
     programs.opencode = {
       enable = true;
