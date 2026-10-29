@@ -36,6 +36,7 @@
       settings = {
         update = "disable";
         websearch.provider = "exa";
+        plugins = ["@dietrichgebert/ponytail"];
         formatter = {
           nixfmt = {
             disabled = true;

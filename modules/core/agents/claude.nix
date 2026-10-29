@@ -1,5 +1,6 @@
 {
   self,
+  inputs,
   __findFile,
   ...
 }: {
@@ -11,7 +12,7 @@
       programs.claude-code = {
         enable = true;
         enableMcpIntegration = true;
-        # plugins.ponytail = inputs.ponytail;
+        plugins.ponytail = inputs.ponytail;
         settings = {
           model = "sonnet";
           attribution.commit = "";
