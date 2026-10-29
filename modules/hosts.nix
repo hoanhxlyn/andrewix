@@ -46,7 +46,6 @@
     };
     msi-gf63 = mkHost {
       chassis = "laptop";
-      wm = "hyprland";
       defaults.terminal = "rio";
       appearance = {
         scheme = "catppuccin-mocha"; # base16-schemes name
