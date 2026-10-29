@@ -2,7 +2,7 @@
 
 ## Quick Commands
 
-Use Justfile shortcuts (preferred). Default host = `hostname -s` (auto-detected).
+Use Justfile shortcuts. Best way. Default host = `hostname -s` (auto-detect).
 
 ```bash
 just fmt          # alejandra .
@@ -19,8 +19,7 @@ just gc           # wipe old system gens + store gc
 just clean-up     # user+system GC, keep 7d (sudo)
 ```
 
-Hosts: `asus-vivo14`, `asus-rog-gl552vx`, `msi-gf63`, `home-pc`, `home-wsl`, `work-wsl`. Only non-WSL
-hosts are installable (WSL hosts have no disk layout).
+Hosts: `asus-vivo14`, `asus-rog-gl552vx`, `msi-gf63`, `home-pc`, `home-wsl`, `work-wsl`. Only non-WSL hosts installable — WSL hosts have no disk layout.
 
 ### No Justfile?
 
@@ -38,12 +37,11 @@ nix flake update         # no commit
 just fmt && just lint && just test <host>
 ```
 
-`just test` needs sudo and validates the running system. Build with `just build <host>` to catch eval errors without
-sudo (slower than the deprecated `just check`, but accurate).
+`just test` need sudo, check running system. Build with `just build <host>` to catch eval error without sudo (slower than old `just check`, but accurate).
 
 ## Architecture
 
-NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto module discovery via `vic/import-tree`.
+NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Module auto-found via `vic/import-tree`.
 
 | Path                    | Purpose                                           |
 | ----------------------- | ------------------------------------------------- |
@@ -59,13 +57,9 @@ NixOS + Home Manager via **flake-parts** + **vic/den** dendritic framework. Auto
 | `config/`               | Non-Nix app configs (symlinked into `~/.config`)  |
 | `flake.nix`             | **Auto-generated. DO NOT EDIT.**                  |
 
-Host builder: `mkHost` in `modules/_lib/mk-host.nix` composes `_settings.nix` with per-host data and the
-workstation/homelab/wsl variant. Layout translates flat monitor attrs into niri's nested shape and sets the variant flag
-(`homelab.enable` for homelab hosts, `wsl.enable` for WSL hosts).
+Host builder: `mkHost` in `modules/_lib/mk-host.nix` compose `_settings.nix` + per-host data + workstation/homelab/wsl variant. Layout turn flat monitor attrs into niri nested shape, set variant flag (`homelab.enable` for homelab hosts, `wsl.enable` for WSL hosts).
 
-**Host facts** (set in `modules/hosts.nix`). The single definition is `modules/_lib/host-facts.nix`; `modules/schema.nix`
-feeds it to `den.schema.host` (types, defaults), `mkHost` rejects unknown fact names against it, and cross-fact checks
-are `assertions` in `modules/core/hardware/default.nix`:
+**Host facts** (set in `modules/hosts.nix`). One definition live in `modules/_lib/host-facts.nix`; `modules/schema.nix` feed it to `den.schema.host` (types, defaults), `mkHost` reject unknown fact names against it, and cross-fact checks be `assertions` in `modules/core/hardware/default.nix`:
 
 | Fact              | Values / meaning                                                                 |
 | ----------------- | -------------------------------------------------------------------------------- |
@@ -77,47 +71,26 @@ are `assertions` in `modules/core/hardware/default.nix`:
 | `chargeThreshold` | `{start, stop, msiEc}` battery limits; laptops default to 70/80, others `null` = unmanaged |
 | `enableGaming`    | include `<core.gaming>`                                                          |
 
-Aspects are chosen from facts, **never from a hostname**: hardware aspects in `modules/core/hardware/default.nix`
-(`power-manager`, `intel-gpu`, `nvidia`), gaming in `modules/devices/workstation.nix`. The variant per host is
-generated in `hosts.nix` via `provides.to-users`.
+Aspects come from facts, **never from hostname**: hardware aspects in `modules/core/hardware/default.nix` (`power-manager`, `intel-gpu`, `nvidia`), gaming in `modules/devices/workstation.nix`. Variant per host generated in `hosts.nix` via `provides.to-users`.
 
-**Adding a device:** add one `mkHost` entry in `hosts.nix` with its facts and monitors (keyed by connector name), and
-nothing else: `install.fish` reads `flake.installableHosts` (all non-WSL hosts). No other file should mention the
-hostname.
+**Adding a device:** add one `mkHost` entry in `hosts.nix` with facts and monitors (keyed by connector name), nothing else: `install.fish` read `flake.installableHosts` (all non-WSL hosts). No other file mention hostname.
 
-`monitors` takes an optional `order = ["eDP-1" "HDMI-A-1"]` for left→right placement (positions are computed in logical
-pixels; without it, connector name order). `is-primary` only marks the output niri focuses at startup, never where it
-sits.
+`monitors` take optional `order = ["eDP-1" "HDMI-A-1"]` for left→right placement (positions computed in logical pixels; without it, connector name order). `is-primary` only mark output niri focus at startup, never where it sit.
 
 ## Conventions
 
 - **Namespace:** `core.<name>` = all aspects (NixOS + Home Manager).
 - **Composition:** `den.aspects.<name>.includes` with angle-bracket imports (`<core/sound>`, `<core/editor/nvf>`,
-  `<workstation>`). Compose with `includes`, **not** `imports`, inside this repo.
-- **No dead top-level args.** If a module needs nothing from the module system, write a bare attrset
-  (`{ core.x = ...; }`). Only take args you actually use (`{__findFile, ...}:`, `{lib, inputs, self, ...}:`). Same for
-  an aspect's `nixos`/`homeManager` fn — omit the fn wrapper when no args are used.
+  `<workstation>`). Compose with `includes`, **not** `imports`, in this repo.
+- **No dead top-level args.** Module need nothing from module system → write bare attrset (`{ core.x = ...; }`). Only take args actually used (`{__findFile, ...}:`, `{lib, inputs, self, ...}:`). Same for aspect's `nixos`/`homeManager` fn — omit fn wrapper when no args used.
 - **Files:** `kebab-case.nix`, **options:** `camelCase`.
-- **No relative-path imports.** Take `{self, ...}` and use `import "${self}/modules/_lib/foo.nix"`. **Exception:**
-  `hosts.nix`, `schema.nix` and `_lib/mk-host.nix` run while the flake outputs are being computed, so `${self}`
-  there is infinite recursion — those three use relative imports.
-- **Underscore dirs = not aspects.** `_nvf/`, `_nwm/`, `_lib/` are path-imported, **not** auto-discovered. Split a big
-  aspect into `_<name>/*.nix` sub-configs and `import "${self}/..."` them from the aspect file (see
-  `modules/core/editor/nwm.nix`).
-- **`config/<tool>/`:** non-Nix app configs, one subfolder per tool (not per format). Symlink via
-  `home.file."<dest>".source = "${self}/config/<tool>/<file>"` (see `modules/core/editor/cursor.nix`).
+- **No relative-path imports.** Take `{self, ...}` and use `import "${self}/modules/_lib/foo.nix"`. **Exception:** `hosts.nix`, `schema.nix` and `_lib/mk-host.nix` run while flake outputs being computed, so `${self}` there = infinite recursion — those three use relative imports.
+- **Underscore dirs = not aspects.** `_nvf/`, `_nwm/`, `_lib/` path-imported, **not** auto-discovered. Split big aspect into `_<name>/*.nix` sub-configs and `import "${self}/..."` them from aspect file (see `modules/core/editor/nwm.nix`).
+- **`config/<tool>/`:** non-Nix app configs, one subfolder per tool (not per format). Symlink via `home.file."<dest>".source = "${self}/config/<tool>/<file>"` (see `modules/core/editor/cursor.nix`).
 - **Booleans:** prefix with `enable`/`disable`. **Override defaults:** `lib.mkDefault`.
 - **Formatter:** `alejandra`, 2-space indent, ≤100 chars.
-- **Comments:** a marker-tagged comment uses exactly `TODO:` (actionable, or waiting on upstream — name the trigger),
-  `NOTE:` (explanation) or `README:` (reference link). Never invent a marker (`FIXME`, `HACK`, `XXX`, `shortcut:`, …);
-  `just lint` rejects those. Plain prose explaining *why* is fine.
-- **Attribute nesting:** nest an option group only when it has ≥4 children; with 1–3 children write dotted paths
-  (`services.pipewire.enable = true;`, not `services.pipewire = { enable = true; };`). Only binding values count:
-  the `core`/`den`/`flake-file` skeletons keep their shape, and so do an aspect's `nixos`/`homeManager` body
-  itself, `let` bindings (no dotted names there), function arguments (`mkOption { … }`), host data
-  (`modules/hosts.nix`, `_lib/*-facts.nix`) and sets with `inherit`/`rec`/`${…}` names — everything inside a
-  module body follows the rule. `x = { a = 1; };` and `x.a = 1;` are the same path, so this is spelling only;
-  enforce with `just attr` (`just attr --check` to fail instead of rewrite).
+- **Comments:** marker-tagged comment use exactly `TODO:` (actionable, or waiting on upstream — name trigger), `NOTE:` (explanation) or `README:` (reference link). Never invent marker (`FIXME`, `HACK`, `XXX`, `shortcut:`, …); `just lint` reject those. Plain prose explaining *why* fine.
+- **Attribute nesting:** nest option group only when it have ≥4 children; 1–3 children → write dotted paths (`services.pipewire.enable = true;`, not `services.pipewire = { enable = true; };`). Only binding values count: `core`/`den`/`flake-file` skeletons keep shape, and so do aspect's `nixos`/`homeManager` body itself, `let` bindings (no dotted names there), function arguments (`mkOption { … }`), host data (`modules/hosts.nix`, `_lib/*-facts.nix`) and sets with `inherit`/`rec`/`${…}` names — everything inside module body follow rule. `x = { a = 1; };` and `x.a = 1;` be same path, so this spelling only; enforce with `just attr` (`just attr --check` to fail instead of rewrite).
 
 ### Module patterns
 
@@ -143,7 +116,7 @@ With includes + nixos + homeManager:
 }
 ```
 
-Flake input (declared from the aspect that needs it):
+Flake input (declared from aspect that need it):
 
 ```nix
 {inputs, ...}: {
@@ -156,15 +129,14 @@ Flake input (declared from the aspect that needs it):
 
 ## Adding new aspects
 
-`git add` the new file **before** building — nix flakes only see git-tracked files. A staged but uncommitted new aspect
-produces: `error: Namespace 'core' has no aspect 'new-aspect'`.
+`git add` new file **before** build — nix flakes only see git-tracked files. Staged but uncommitted new aspect make: `error: Namespace 'core' has no aspect 'new-aspect'`.
 
 ```bash
 git add modules/core/new-aspect.nix
 just build <host>
 ```
 
-After adding inputs or editing `flake-file.*`, regenerate:
+After add inputs or edit `flake-file.*`, regenerate:
 
 ```bash
 nix run .#write-flake    # rewrites flake.nix
@@ -178,38 +150,19 @@ nix run .#write-flake    # rewrites flake.nix
 4. **User: `andrew`, system: `x86_64-linux`.**
 5. **No unit tests** — validate via `just build` + `just test <host>`.
 6. **Tools installed via Nix** (`modules/core/`) — no pre-commit hooks.
-7. **Never rely on memory.** Verify every factual claim (options, flags, config keys) before asserting it, using the combo: `deepwiki` (source-level) + `context7` (docs) + web search (`exa`). Cross-check between them — they contradict each other; raw source (`curl` + `grep` the exact packaged rev) beats any summary.
-8. **No system Python** — machine has no `python`/`python3`. Run Python via `uv run` (e.g. `uv run python script.py`,
-   `uv run --with <pkg> ...`).
+7. **Never trust memory.** Verify every factual claim (options, flags, config keys) before assert, use combo: `deepwiki` (source-level) + `context7` (docs) + web search (`exa`). Cross-check between them — they contradict each other; raw source (`curl` + `grep` exact packaged rev) beat any summary.
+8. **No system Python** — machine have no `python`/`python3`. Run Python via `uv run` (e.g. `uv run python script.py`, `uv run --with <pkg> ...`).
 
 ## Operational gotchas
 
-- **Disko owns the layout:** `disko.enableConfig = true` in `modules/core/hardware/disko.nix` — disko provides
-  `fileSystems`/`swapDevices`/`boot.resumeDevice` (xfs root, dedicated swap partition, hibernate resume) for all
-  physical hosts; layout and swap size come from the `storage` fact. The per-host `hosts/<host>/_nixos/` configs are
-  gone; hardware boot bits (initrd `vmd`/`ahci`/`nvme`, kvm, microcode) live in `modules/core/hardware/bootable.nix`,
-  shared by the Intel workstations; the loader comes from the `bootLoader` fact. Target disks are picked at install time
-  by `install.fish`, so the `/dev/nvme0n1` in `disko.nix` is only a default.
-- **Hybrid GPU (`msi-gf63`, GTX 1650 Mobile):** the `gpu` entries' `busId`s are filled in from `lspci -D -d ::03xx` (see
-  `hosts.nix`); a hybrid host without them gets PRIME off and a build warning. niri runs on the Intel iGPU; games use the
-  nvidia dGPU via PRIME offload (`nvidia-offload <cmd>`, e.g. as a Steam launch option). PRIME sync is X11-only and is
-  not used. Verify connector names with `niri msg outputs`; HDMI ports wired to the nvidia GPU may behave differently.
-- **Charge limit:** `core.hardware.power-manager` sets TLP thresholds and the asus_wmi workaround for any laptop
-  (default 70/80; `asus-vivo14` and the others override it) unless the host sets `chargeThreshold = null`. Hosts whose firmware is missing from the in-tree msi-ec
-  allowlist (GF63 Thin 10SC, `msi-gf63`) set `msiEc = true`: the aspect then pulls the out-of-tree
-  `boot.kernelPackages.msi-ec` and writes the threshold to `BAT1/charge_control_end_threshold`.
-- **First-boot password:** the installer (`install.fish`) prompts for it and sets it with `nixos-enter` before you
-  reboot; no default password ships in the repo. A known `admin123` survives only inside `virtualisation.vmVariant`
-  (`modules/core/hardware/disko.nix`) for `just vm`. Machines installed before this still hold the old bootstrap
-  password — check with `sudo passwd -S andrew` and run `passwd` if it shows `P`.
-- **WSL PATH:** `modules/devices/wsl.nix` disables WSL interop `$PATH` because Windows PATH lives on a slow 9P/DrvFs
-  mount. Invoke `.exe`s by absolute path; `wsl-open` wrapper handles explorer.exe's spurious non-zero exit.
-- **Secrets:** the sops aspect is included on every workstation (via `<core.services>`), homelab and WSL host. Decrypt
-  with the shared age key at `~/.config/sops-nix/keys.txt`, which must be present on each host. Edit via `sops secrets/secrets.yaml`; declare new secrets in
-  `modules/core/services/sync/sops.nix` under `sops.secrets`.
-- **GC is manual:** there is no `nix.gc` timer; run `just gc` (wipe old system generations + store gc, needs sudo).
+- **Disko own the layout:** `disko.enableConfig = true` in `modules/core/hardware/disko.nix` — disko provide `fileSystems`/`swapDevices`/`boot.resumeDevice` (xfs root, dedicated swap partition, hibernate resume) for all physical hosts; layout and swap size come from `storage` fact. Per-host `hosts/<host>/_nixos/` configs gone; hardware boot bits (initrd `vmd`/`ahci`/`nvme`, kvm, microcode) live in `modules/core/hardware/bootable.nix`, shared by Intel workstations; loader come from `bootLoader` fact. Target disks picked at install time by `install.fish`, so `/dev/nvme0n1` in `disko.nix` only be default.
+- **Hybrid GPU (`msi-gf63`, GTX 1650 Mobile):** `gpu` entries' `busId`s filled in from `lspci -D -d ::03xx` (see `hosts.nix`); hybrid host without them get PRIME off + build warning. niri run on Intel iGPU; games use nvidia dGPU via PRIME offload (`nvidia-offload <cmd>`, e.g. as Steam launch option). PRIME sync X11-only, not used. Verify connector names with `niri msg outputs`; HDMI ports wired to nvidia GPU may behave different.
+- **Charge limit:** `core.hardware.power-manager` set TLP thresholds and asus_wmi workaround for any laptop (default 70/80; `asus-vivo14` and others override it) unless host set `chargeThreshold = null`. Hosts whose firmware missing from in-tree msi-ec allowlist (GF63 Thin 10SC, `msi-gf63`) set `msiEc = true`: aspect then pull out-of-tree `boot.kernelPackages.msi-ec` and write threshold to `BAT1/charge_control_end_threshold`.
+- **First-boot password:** installer (`install.fish`) prompt for it and set with `nixos-enter` before reboot; no default password in repo. Known `admin123` survive only inside `virtualisation.vmVariant` (`modules/core/hardware/disko.nix`) for `just vm`. Machines installed before this still hold old bootstrap password — check with `sudo passwd -S andrew` and run `passwd` if it show `P`.
+- **WSL PATH:** `modules/devices/wsl.nix` disable WSL interop `$PATH` because Windows PATH live on slow 9P/DrvFs mount. Invoke `.exe`s by absolute path; `wsl-open` wrapper handle explorer.exe's spurious non-zero exit.
+- **Secrets:** sops aspect included on every workstation (via `<core.services>`), homelab and WSL host. Decrypt with shared age key at `~/.config/sops-nix/keys.txt`, which must be present on each host. Edit via `sops secrets/secrets.yaml`; declare new secrets in `modules/core/services/sync/sops.nix` under `sops.secrets`.
+- **GC manual:** no `nix.gc` timer; run `just gc` (wipe old system gens + store gc, need sudo).
 
 ## Dev shell
 
-`.envrc` runs `use flake` (direnv). Auto-loads via `.direnv/`. The dev shell (`just`-style `nix develop`) provides:
-`gh`, `alejandra`, `statix`, `deadnix`, `just`.
+`.envrc` run `use flake` (direnv). Auto-load via `.direnv/`. Dev shell (`just`-style `nix develop`) provide: `gh`, `alejandra`, `statix`, `deadnix`, `just`.
