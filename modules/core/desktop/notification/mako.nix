@@ -59,6 +59,10 @@
           # ignore it so default-timeout applies instead of hanging forever
           "app-name=wezterm".ignore-timeout = true;
           "app-name=wezterm".default-timeout = 3000;
+          # a mode is only a label; dnd-toggle gets no silencing without criteria
+          "mode=do-not-disturb".invisible = true;
+          # hardware warnings (battery, MSI) still punch through
+          "mode=do-not-disturb urgency=critical".invisible = false;
         };
       };
   };
