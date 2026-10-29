@@ -65,8 +65,9 @@
         opacity = {
           terminal = appearance.opacity;
           desktop = appearance.opacity;
-          popups = appearance.opacity;
           applications = appearance.opacity;
+          # Fuzzel (and mako) look washed out at 0.8; popups stay opaque.
+          popups = 1.0;
         };
         targets.plymouth.enable = true;
         targets.kmscon.enable = true;
