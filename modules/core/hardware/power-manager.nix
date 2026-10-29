@@ -33,6 +33,7 @@
       config,
       host,
       lib,
+      pkgs,
       ...
     }: let
       ct = host.chargeThreshold;
@@ -40,22 +41,64 @@
       # allowlist, so pull the out-of-tree driver from nixpkgs. Its ACPI battery
       # hook registers the standard charge_control sysfs on the battery (BAT1).
       msiEc = ct != null && ct.msiEc;
+      msiEcCtl = "/run/current-system/sw/bin/msi-ec-ctl";
+      fanModes = ["auto" "silent" "basic" "advanced"];
+      shiftModes = ["eco" "comfort" "sport" "turbo"];
     in {
       boot.extraModulePackages = lib.optional msiEc config.boot.kernelPackages.msi-ec;
       boot.kernelModules = lib.optional msiEc "msi-ec";
 
+      # fuzzel-msi writes fan/shift/boost modes through this; values are checked
+      # again below so the sudo whitelist and the driver agree.
+      environment.systemPackages = lib.optional msiEc (pkgs.writeShellScriptBin "msi-ec-ctl" ''
+        set -eu
+        dir=/sys/devices/platform/msi-ec
+        usage() {
+          echo "usage: msi-ec-ctl fan-mode <m> | shift-mode <m> | cooler-boost <on|off>" >&2
+          exit 2
+        }
+        [ "$#" -eq 2 ] || usage
+        [ -d "$dir" ] || { echo "msi-ec: driver not loaded" >&2; exit 1; }
+        case "$1" in
+          fan-mode) file=fan_mode; avail=$dir/available_fan_modes ;;
+          shift-mode) file=shift_mode; avail=$dir/available_shift_modes ;;
+          cooler-boost) file=cooler_boost; avail= ;;
+          *) usage ;;
+        esac
+        if [ -n "$avail" ]; then
+          ${pkgs.gnugrep}/bin/grep -qxF -- "$2" "$avail" || { echo "msi-ec: unsupported $1 $2" >&2; exit 2; }
+        else
+          [ "$2" = on ] || [ "$2" = off ] || usage
+        fi
+        printf '%s\n' "$2" | ${pkgs.coreutils}/bin/tee "$dir/$file" >/dev/null
+        ${pkgs.coreutils}/bin/cat "$dir/$file"
+      '');
+
       # Allow wheel to flip TLP power profiles without a password. Scoped to the
       # exact three subcommands; sudo already has a working setuid wrapper here
       # (pkexec does not), so this is the reliable escalation path.
-      security.sudo.extraRules = [
-        {
-          groups = ["wheel"];
-          commands = map (p: {
-            command = "/run/current-system/sw/bin/tlp ${p}";
-            options = ["NOPASSWD"];
-          }) ["performance" "balanced" "power-saver"];
-        }
-      ];
+      security.sudo.extraRules =
+        [
+          {
+            groups = ["wheel"];
+            commands = map (p: {
+              command = "/run/current-system/sw/bin/tlp ${p}";
+              options = ["NOPASSWD"];
+            }) ["performance" "balanced" "power-saver"];
+          }
+        ]
+        ++ lib.optionals msiEc [
+          {
+            groups = ["wheel"];
+            commands =
+              map (c: {
+                command = "${msiEcCtl} ${c}";
+                options = ["NOPASSWD"];
+              }) (map (m: "fan-mode ${m}") fanModes
+                ++ map (m: "shift-mode ${m}") shiftModes
+                ++ ["cooler-boost on" "cooler-boost off"]);
+          }
+        ];
 
       # asus_wmi registers charge_control_end_threshold but its WMI GET returns
       # ENODATA on X1405VA, causing TLP's readable_sysf check to fail and skip
