@@ -54,88 +54,89 @@
       ]) [1 2 3 4 5]);
     in {
       wayland.windowManager.hyprland.enable = true;
-wayland.windowManager.hyprland.settings.monitor = builtins.attrValues (builtins.mapAttrs monitorLine (host.monitors or {}));
-wayland.windowManager.hyprland.settings.config = {
-            general = {
-              gaps_in = 5;
-              gaps_out = 10;
-              border_size = 3;
-              layout = "dwindle";
-            };
-            decoration.rounding = 3;
-            animations.enabled = host.accessibility.animations.enable;
+      wayland.windowManager.hyprland.settings.monitor = builtins.attrValues (builtins.mapAttrs monitorLine (host.monitors or {}));
+      wayland.windowManager.hyprland.settings.config = {
+        general = {
+          gaps_in = 5;
+          gaps_out = 10;
+          border_size = 3;
+          layout = "dwindle";
+        };
+        decoration.rounding = 3;
+        animations.enabled = host.accessibility.animations.enable;
 
-            input = {
-              kb_layout = input.keyboard.layout;
-              repeat_rate = input.keyboard.repeatRate;
-              repeat_delay = input.keyboard.repeatDelay;
-              accel_profile = input.mouse.accelProfile;
-              follow_mouse = 0;
-              touchpad.natural_scroll = input.touchpad.naturalScroll;
-touchpad.tap_to_click = input.touchpad.tap;
-touchpad.disable_while_typing = input.touchpad.disableWhileTyping;
-            };
+        input = {
+          kb_layout = input.keyboard.layout;
+          repeat_rate = input.keyboard.repeatRate;
+          repeat_delay = input.keyboard.repeatDelay;
+          accel_profile = input.mouse.accelProfile;
+          follow_mouse = 0;
+          touchpad.natural_scroll = input.touchpad.naturalScroll;
+          touchpad.tap_to_click = input.touchpad.tap;
+          touchpad.disable_while_typing = input.touchpad.disableWhileTyping;
+        };
 
-            misc.disable_hyprland_logo = true;
-misc.force_default_wallpaper = 0;
-          };
-wayland.windowManager.hyprland.settings.bind = [
-              # App launchers
-              (bind (super "space") ''hl.dsp.exec_cmd("fuzzel")'')
-              (bind (super "T") ''hl.dsp.exec_cmd("${terminal}")'')
-              (bind (super "B") ''hl.dsp.exec_cmd("${browser}")'')
-              (bind (super "C") ''hl.dsp.exec_cmd("waycal")'')
-              (bind (super "N") ''hl.dsp.exec_cmd("nm-connection-editor")'')
-              (bind (super "CTRL + B") ''hl.dsp.exec_cmd("${terminal} -e bluetui")'')
-              (bind (super "Y") ''hl.dsp.exec_cmd("fuzzel-clipboard")'')
-              (bind (super "CTRL + space") ''hl.dsp.exec_cmd("fuzzel-hub")'')
-              (bind (super "A") ''hl.dsp.exec_cmd("fuzzel-audio")'')
-              (bind (super "E") ''hl.dsp.exec_cmd("fuzzel-emoji")'')
-              (bind (super "X") ''hl.dsp.exec_cmd("fuzzel-power")'')
-              (bind (super "CTRL + D") ''hl.dsp.exec_cmd("makoctl dismiss")'')
-              (bind (super "CTRL + N") ''hl.dsp.exec_cmd("dnd-toggle")'')
-              # Windows
-              (bind (super "Q") "hl.dsp.window.close()")
-              (bind (super "F") ''hl.dsp.window.fullscreen({ mode = "maximized" })'')
-              (bind (super "SHIFT + F") "hl.dsp.window.fullscreen()")
-              (bind (super "V") ''hl.dsp.window.float({ action = "toggle" })'')
-              (bind (super "H") ''hl.dsp.focus({ direction = "left" })'')
-              (bind (super "J") ''hl.dsp.focus({ direction = "down" })'')
-              (bind (super "K") ''hl.dsp.focus({ direction = "up" })'')
-              (bind (super "L") ''hl.dsp.focus({ direction = "right" })'')
-              (bind (super "CTRL + H") ''hl.dsp.window.move({ direction = "left" })'')
-              (bind (super "CTRL + J") ''hl.dsp.window.move({ direction = "down" })'')
-              (bind (super "CTRL + K") ''hl.dsp.window.move({ direction = "up" })'')
-              (bind (super "CTRL + L") ''hl.dsp.window.move({ direction = "right" })'')
-              # Screenshots & recording
-              (bind (super "S") ''hl.dsp.exec_cmd("screenshot-annotate")'')
-              (bind (super "SHIFT + S") ''hl.dsp.exec_cmd("screenshot-fullscreen")'')
-              (bind (super "CTRL + S") ''hl.dsp.exec_cmd("record-toggle")'')
-              # Audio
-              (bind (super "M") ''hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle")'')
-              (bind (super "Page_Up") ''hl.dsp.exec_cmd("soundctl up")'')
-              (bind (super "Page_Down") ''hl.dsp.exec_cmd("soundctl down")'')
-              # Mouse
-              (bindMouse (super "mouse:272") "hl.dsp.window.drag()")
-              (bindMouse (super "mouse:273") "hl.dsp.window.resize()")
-              # Media keys, allowed on the lock screen and repeating like niri's
-              # allow-when-locked
-              (bindLocked "XF86AudioRaiseVolume" ''hl.dsp.exec_cmd("soundctl up")'')
-              (bindLocked "XF86AudioLowerVolume" ''hl.dsp.exec_cmd("soundctl down")'')
-              (bindLocked "XF86AudioMute" ''hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle")'')
-              (bindLocked "XF86AudioMicMute" ''hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_SOURCE@ toggle")'')
-              (bindLocked "XF86AudioPlay" ''hl.dsp.exec_cmd("playerctl play-pause")'')
-              (bindLocked "XF86AudioStop" ''hl.dsp.exec_cmd("playerctl stop")'')
-              (bindLocked "XF86AudioPrev" ''hl.dsp.exec_cmd("playerctl previous")'')
-              (bindLocked "XF86AudioNext" ''hl.dsp.exec_cmd("playerctl next")'')
-              (bindLocked "XF86MonBrightnessUp" ''hl.dsp.exec_cmd("xbacklight -inc 5")'')
-              (bindLocked "XF86MonBrightnessDown" ''hl.dsp.exec_cmd("xbacklight -dec 5")'')
-            ]
-            ++ workspaces
-            ++ lib.optionals isLaptop [
-              (bind (super "G") ''hl.dsp.exec_cmd("fuzzel-battery")'')
-              (bindLocked "switch:on:Lid Switch" ''hl.dsp.dpms({ action = "off" })'')
-            ];
+        misc.disable_hyprland_logo = true;
+        misc.force_default_wallpaper = 0;
+      };
+      wayland.windowManager.hyprland.settings.bind =
+        [
+          # App launchers
+          (bind (super "space") ''hl.dsp.exec_cmd("fuzzel")'')
+          (bind (super "T") ''hl.dsp.exec_cmd("${terminal}")'')
+          (bind (super "B") ''hl.dsp.exec_cmd("${browser}")'')
+          (bind (super "C") ''hl.dsp.exec_cmd("waycal")'')
+          (bind (super "N") ''hl.dsp.exec_cmd("nm-connection-editor")'')
+          (bind (super "CTRL + B") ''hl.dsp.exec_cmd("${terminal} -e bluetui")'')
+          (bind (super "Y") ''hl.dsp.exec_cmd("fuzzel-clipboard")'')
+          (bind (super "CTRL + space") ''hl.dsp.exec_cmd("fuzzel-hub")'')
+          (bind (super "A") ''hl.dsp.exec_cmd("fuzzel-audio")'')
+          (bind (super "E") ''hl.dsp.exec_cmd("fuzzel-emoji")'')
+          (bind (super "X") ''hl.dsp.exec_cmd("fuzzel-power")'')
+          (bind (super "CTRL + D") ''hl.dsp.exec_cmd("makoctl dismiss")'')
+          (bind (super "CTRL + N") ''hl.dsp.exec_cmd("dnd-toggle")'')
+          # Windows
+          (bind (super "Q") "hl.dsp.window.close()")
+          (bind (super "F") ''hl.dsp.window.fullscreen({ mode = "maximized" })'')
+          (bind (super "SHIFT + F") "hl.dsp.window.fullscreen()")
+          (bind (super "V") ''hl.dsp.window.float({ action = "toggle" })'')
+          (bind (super "H") ''hl.dsp.focus({ direction = "left" })'')
+          (bind (super "J") ''hl.dsp.focus({ direction = "down" })'')
+          (bind (super "K") ''hl.dsp.focus({ direction = "up" })'')
+          (bind (super "L") ''hl.dsp.focus({ direction = "right" })'')
+          (bind (super "CTRL + H") ''hl.dsp.window.move({ direction = "left" })'')
+          (bind (super "CTRL + J") ''hl.dsp.window.move({ direction = "down" })'')
+          (bind (super "CTRL + K") ''hl.dsp.window.move({ direction = "up" })'')
+          (bind (super "CTRL + L") ''hl.dsp.window.move({ direction = "right" })'')
+          # Screenshots & recording
+          (bind (super "S") ''hl.dsp.exec_cmd("screenshot-annotate")'')
+          (bind (super "SHIFT + S") ''hl.dsp.exec_cmd("screenshot-fullscreen")'')
+          (bind (super "CTRL + S") ''hl.dsp.exec_cmd("record-toggle")'')
+          # Audio
+          (bind (super "M") ''hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle")'')
+          (bind (super "Page_Up") ''hl.dsp.exec_cmd("soundctl up")'')
+          (bind (super "Page_Down") ''hl.dsp.exec_cmd("soundctl down")'')
+          # Mouse
+          (bindMouse (super "mouse:272") "hl.dsp.window.drag()")
+          (bindMouse (super "mouse:273") "hl.dsp.window.resize()")
+          # Media keys, allowed on the lock screen and repeating like niri's
+          # allow-when-locked
+          (bindLocked "XF86AudioRaiseVolume" ''hl.dsp.exec_cmd("soundctl up")'')
+          (bindLocked "XF86AudioLowerVolume" ''hl.dsp.exec_cmd("soundctl down")'')
+          (bindLocked "XF86AudioMute" ''hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle")'')
+          (bindLocked "XF86AudioMicMute" ''hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_SOURCE@ toggle")'')
+          (bindLocked "XF86AudioPlay" ''hl.dsp.exec_cmd("playerctl play-pause")'')
+          (bindLocked "XF86AudioStop" ''hl.dsp.exec_cmd("playerctl stop")'')
+          (bindLocked "XF86AudioPrev" ''hl.dsp.exec_cmd("playerctl previous")'')
+          (bindLocked "XF86AudioNext" ''hl.dsp.exec_cmd("playerctl next")'')
+          (bindLocked "XF86MonBrightnessUp" ''hl.dsp.exec_cmd("xbacklight -inc 5")'')
+          (bindLocked "XF86MonBrightnessDown" ''hl.dsp.exec_cmd("xbacklight -dec 5")'')
+        ]
+        ++ workspaces
+        ++ lib.optionals isLaptop [
+          (bind (super "G") ''hl.dsp.exec_cmd("fuzzel-battery")'')
+          (bindLocked "switch:on:Lid Switch" ''hl.dsp.dpms({ action = "off" })'')
+        ];
     };
   };
 }

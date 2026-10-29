@@ -48,6 +48,10 @@
       url = "github:nvim-mini/mini.nvim";
       flake = false;
     };
+    msi-tui = {
+      url = "github:hoanhxlyn/msi-tui";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     niri.url = "github:epireyn/niri-flake";
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
