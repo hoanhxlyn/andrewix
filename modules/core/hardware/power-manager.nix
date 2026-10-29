@@ -1,4 +1,9 @@
-{
+{inputs, ...}: {
+  flake-file.inputs.msi-tui = {
+    url = "github:hoanhxlyn/msi-tui";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
   core.hardware.power-manager = {
     # This aspect is only included for laptops (modules/core/hardware/default.nix).
     homeManager = {pkgs, ...}: let
@@ -48,31 +53,34 @@
       boot.extraModulePackages = lib.optional msiEc config.boot.kernelPackages.msi-ec;
       boot.kernelModules = lib.optional msiEc "msi-ec";
 
-      # fuzzel-msi writes fan/shift/boost modes through this; values are checked
+      # msi-tui writes fan/shift/boost modes through this; values are checked
       # again below so the sudo whitelist and the driver agree.
-      environment.systemPackages = lib.optional msiEc (pkgs.writeShellScriptBin "msi-ec-ctl" ''
-        set -eu
-        dir=/sys/devices/platform/msi-ec
-        usage() {
-          echo "usage: msi-ec-ctl fan-mode <m> | shift-mode <m> | cooler-boost <on|off>" >&2
-          exit 2
-        }
-        [ "$#" -eq 2 ] || usage
-        [ -d "$dir" ] || { echo "msi-ec: driver not loaded" >&2; exit 1; }
-        case "$1" in
-          fan-mode) file=fan_mode; avail=$dir/available_fan_modes ;;
-          shift-mode) file=shift_mode; avail=$dir/available_shift_modes ;;
-          cooler-boost) file=cooler_boost; avail= ;;
-          *) usage ;;
-        esac
-        if [ -n "$avail" ]; then
-          ${pkgs.gnugrep}/bin/grep -qxF -- "$2" "$avail" || { echo "msi-ec: unsupported $1 $2" >&2; exit 2; }
-        else
-          [ "$2" = on ] || [ "$2" = off ] || usage
-        fi
-        printf '%s\n' "$2" | ${pkgs.coreutils}/bin/tee "$dir/$file" >/dev/null
-        ${pkgs.coreutils}/bin/cat "$dir/$file"
-      '');
+      environment.systemPackages = lib.optionals msiEc [
+        (pkgs.writeShellScriptBin "msi-ec-ctl" ''
+          set -eu
+          dir=/sys/devices/platform/msi-ec
+          usage() {
+            echo "usage: msi-ec-ctl fan-mode <m> | shift-mode <m> | cooler-boost <on|off>" >&2
+            exit 2
+          }
+          [ "$#" -eq 2 ] || usage
+          [ -d "$dir" ] || { echo "msi-ec: driver not loaded" >&2; exit 1; }
+          case "$1" in
+            fan-mode) file=fan_mode; avail=$dir/available_fan_modes ;;
+            shift-mode) file=shift_mode; avail=$dir/available_shift_modes ;;
+            cooler-boost) file=cooler_boost; avail= ;;
+            *) usage ;;
+          esac
+          if [ -n "$avail" ]; then
+            ${pkgs.gnugrep}/bin/grep -qxF -- "$2" "$avail" || { echo "msi-ec: unsupported $1 $2" >&2; exit 2; }
+          else
+            [ "$2" = on ] || [ "$2" = off ] || usage
+          fi
+          printf '%s\n' "$2" | ${pkgs.coreutils}/bin/tee "$dir/$file" >/dev/null
+          ${pkgs.coreutils}/bin/cat "$dir/$file"
+        '')
+        inputs.msi-tui.packages.${pkgs.stdenv.hostPlatform.system}.default
+      ];
 
       # Allow wheel to flip TLP power profiles without a password. Scoped to the
       # exact three subcommands; sudo already has a working setuid wrapper here

@@ -5,9 +5,7 @@
 }: {
   flake-file.inputs.niri.url = "github:epireyn/niri-flake";
 
-  core.desktop.wm.niri = {host, ...}: let
-    msiEc = (host.chargeThreshold or {}).msiEc or false;
-  in {
+  core.desktop.wm.niri = {host, ...}: {
     includes = [
       <core.desktop.statusbar.waybar>
       <core.desktop.notification.mako>
@@ -296,10 +294,6 @@
             (lib.mkIf (host.isLaptop or false) {
               "Mod+G".hotkey-overlay.title = "Battery";
               "Mod+G".action.spawn = ["fuzzel-battery"];
-            })
-            (lib.mkIf msiEc {
-              "Mod+Ctrl+M".hotkey-overlay.title = "Fans (MSI)";
-              "Mod+Ctrl+M".action.spawn = ["fuzzel-msi"];
             })
           ];
         layer-rules = [
