@@ -2,6 +2,7 @@
   core.desktop.menu-launcher.fuzzel = {host, ...}: let
     inherit (host) terminal;
     isLaptop = host.isLaptop or false;
+    msiEc = (host.chargeThreshold or {}).msiEc or false;
     # After a TLP profile switch, set the output mode to the throttled rate
     # (host.refreshThrottle). `performance` keeps the declared refresh-rate.
     # Only fires from this menu; a manual `sudo tlp <mode>` does not re-throttle.
@@ -240,6 +241,7 @@
                 dmenu_line "Font" "preferences-desktop-font"
                 dmenu_line "Bluetooth" "bluetooth"
                 ${lib.optionalString isLaptop ''dmenu_line "Battery" "battery"''}
+                ${lib.optionalString msiEc ''dmenu_line "Fans (MSI)" "temperature-normal"''}
                 dmenu_line "Notification" "preferences-desktop-notification"
                 dmenu_line "Power" "system-shutdown"
               } | fuzzel --dmenu --prompt="Hub: "
@@ -252,6 +254,7 @@
               *Font)      fuzzel-font ;;
               *Bluetooth) ${host.defaults.terminal} -e bluetui ;;
               ${lib.optionalString isLaptop ''*Battery) fuzzel-battery ;;''}
+              ${lib.optionalString msiEc ''*Fans\ \(MSI\)) fuzzel-msi ;;''}
               *Notification) fuzzel-notifications ;;
               *Power)     fuzzel-power ;;
             esac
@@ -390,6 +393,97 @@
                   *Notify*) notify_details ;;
                   *Close*|"") break ;;
                 esac
+              done
+            '';
+          })
+        ]
+        ++ lib.optionals msiEc [
+          (pkgs.writeShellApplication {
+            name = "fuzzel-msi";
+            runtimeInputs = with pkgs; [fuzzel libnotify gnugrep coreutils];
+            text = ''
+              dir=/sys/devices/platform/msi-ec
+              [ -d "$dir" ] || exit 0
+              ctl=/run/current-system/sw/bin/msi-ec-ctl
+
+              status() {
+                local fan shift boost
+                fan=$(cat "$dir/fan_mode")
+                shift=$(cat "$dir/shift_mode")
+                boost=$(cat "$dir/cooler_boost")
+                [ "$shift" = unspecified ] && shift=-
+                printf 'F:%s S:%s B:%s | cpu %s° gpu %s°' \
+                  "$fan" "$shift" "$boost" \
+                  "$(cat "$dir/cpu/realtime_temperature")" \
+                  "$(cat "$dir/gpu/realtime_temperature")"
+              }
+
+              # labels/payload/icons stay index-aligned; fuzzel --index picks one.
+              build_menu() {
+                local mode cur
+                labels=()
+                payload=()
+                icons=()
+                cur=$(cat "$dir/shift_mode")
+                if [ "$cur" = unspecified ]; then
+                  labels+=("Shift: unspecified (EC default)")
+                  payload+=("noop")
+                  icons+=("")
+                fi
+                while read -r mode; do
+                  labels+=("Shift: $mode")
+                  payload+=("shift-mode $mode")
+                  if [ "$mode" = "$cur" ]; then icons+=("object-select"); else icons+=(""); fi
+                done < "$dir/available_shift_modes"
+                cur=$(cat "$dir/fan_mode")
+                while read -r mode; do
+                  labels+=("Fan: $mode")
+                  payload+=("fan-mode $mode")
+                  if [ "$mode" = "$cur" ]; then icons+=("object-select"); else icons+=(""); fi
+                done < "$dir/available_fan_modes"
+                if [ "$(cat "$dir/cooler_boost")" = on ]; then
+                  labels+=("Cooler Boost: on → OFF")
+                else
+                  labels+=("Cooler Boost: off → ON")
+                fi
+                payload+=("cooler-boost toggle")
+                icons+=("")
+                labels+=("Close")
+                payload+=("")
+                icons+=("")
+              }
+
+              render_menu() {
+                local i
+                for i in "''${!labels[@]}"; do
+                  if [ -n "''${icons[$i]}" ]; then
+                    printf '%s\0icon\x1f%s\n' "''${labels[$i]}" "''${icons[$i]}"
+                  else
+                    printf '%s\n' "''${labels[$i]}"
+                  fi
+                done
+              }
+
+              apply() {
+                local cmd=$1 val=''${2:-}
+                [ "$cmd" = noop ] && return 0
+                if [ "$cmd" = cooler-boost ]; then
+                  if [ "$(cat "$dir/cooler_boost")" = on ]; then val=off; else val=on; fi
+                fi
+                if sudo -n "$ctl" "$cmd" "$val" >/dev/null; then
+                  notify-send "MSI" "$cmd $val"
+                else
+                  notify-send -u critical "MSI" "Failed: $cmd $val"
+                fi
+              }
+
+              while true; do
+                build_menu
+                selection=$(render_menu | fuzzel --dmenu --index --prompt="$(status) | ") || break
+                [ -n "$selection" ] || break
+                read -r action value <<< "''${payload[$selection]}"
+                [ -n "$action" ] || break
+                apply "$action" "$value"
               done
             '';
           })

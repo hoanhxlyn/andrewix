@@ -18,12 +18,14 @@
         if [ -f "$STATE_FILE" ] && [ "$(cat "$STATE_FILE")" = "1" ]; then
           echo "0" > "$STATE_FILE"
           makoctl mode -s default
-          notify-send "DND" "Notifications enabled" -i stock_bell
+          notify-send -u critical "DND" "Notifications enabled" -i stock_bell
         else
           echo "1" > "$STATE_FILE"
           makoctl mode -s do-not-disturb
-          notify-send "DND" "Do Not Disturb enabled" -i notification-disabled
+          notify-send -u critical "DND" "Do Not Disturb enabled" -i notification-disabled
         fi
+        # waybar's dnd module runs once per signal, not on an interval
+        pkill --signal RTMIN+10 waybar || true
       '';
     in
       assert builtins.elem host.appearance.toast.position anchors
@@ -59,6 +61,10 @@
           # ignore it so default-timeout applies instead of hanging forever
           "app-name=wezterm".ignore-timeout = true;
           "app-name=wezterm".default-timeout = 3000;
+          # a mode is only a label; dnd-toggle gets no silencing without criteria
+          "mode=do-not-disturb".invisible = true;
+          # hardware warnings (battery, MSI) still punch through
+          "mode=do-not-disturb urgency=critical".invisible = false;
         };
       };
   };
