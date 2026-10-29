@@ -53,12 +53,9 @@
         (bind (super "CTRL + ${toString n}") "hl.dsp.window.move({ workspace = ${toString n} })")
       ]) [1 2 3 4 5]);
     in {
-      wayland.windowManager.hyprland = {
-        enable = true;
-        settings = {
-          monitor = builtins.attrValues (builtins.mapAttrs monitorLine (host.monitors or {}));
-
-          config = {
+      wayland.windowManager.hyprland.enable = true;
+wayland.windowManager.hyprland.settings.monitor = builtins.attrValues (builtins.mapAttrs monitorLine (host.monitors or {}));
+wayland.windowManager.hyprland.settings.config = {
             general = {
               gaps_in = 5;
               gaps_out = 10;
@@ -74,21 +71,15 @@
               repeat_delay = input.keyboard.repeatDelay;
               accel_profile = input.mouse.accelProfile;
               follow_mouse = 0;
-              touchpad = {
-                natural_scroll = input.touchpad.naturalScroll;
-                tap_to_click = input.touchpad.tap;
-                disable_while_typing = input.touchpad.disableWhileTyping;
-              };
+              touchpad.natural_scroll = input.touchpad.naturalScroll;
+touchpad.tap_to_click = input.touchpad.tap;
+touchpad.disable_while_typing = input.touchpad.disableWhileTyping;
             };
 
-            misc = {
-              disable_hyprland_logo = true;
-              force_default_wallpaper = 0;
-            };
+            misc.disable_hyprland_logo = true;
+misc.force_default_wallpaper = 0;
           };
-
-          bind =
-            [
+wayland.windowManager.hyprland.settings.bind = [
               # App launchers
               (bind (super "space") ''hl.dsp.exec_cmd("fuzzel")'')
               (bind (super "T") ''hl.dsp.exec_cmd("${terminal}")'')
@@ -145,8 +136,6 @@
               (bind (super "G") ''hl.dsp.exec_cmd("fuzzel-battery")'')
               (bindLocked "switch:on:Lid Switch" ''hl.dsp.dpms({ action = "off" })'')
             ];
-        };
-      };
     };
   };
 }

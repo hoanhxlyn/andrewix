@@ -15,6 +15,8 @@ import path from "node:path";
 const SKILL = "ultracave";
 const ON = "ultra";
 const OFF = "off";
+// Auto-on: a missing flag file means active. Deactivation persists "off".
+const DEFAULT = ON;
 
 // Deactivation wins over activation: "/caveman off" also matches the bare
 // "/caveman" activation pattern.
@@ -49,9 +51,9 @@ function statePath() {
 
 function readMode() {
   try {
-    return fs.readFileSync(statePath(), "utf8").trim() === ON ? ON : OFF;
+    return fs.readFileSync(statePath(), "utf8").trim() === OFF ? OFF : ON;
   } catch {
-    return OFF;
+    return DEFAULT;
   }
 }
 
@@ -74,6 +76,10 @@ export default {
   id: "caveman",
 
   async setup(ctx) {
+    // Auto-on: persist the default so `cat ~/.config/opencode/.caveman-active`
+    // reflects the mode. A missing file also means on.
+    if (!fs.existsSync(statePath())) writeMode(DEFAULT);
+
     // "prompt" fires on every submitted prompt and the mutated value is the one
     // the session sends. Attaching the skill is how V2 injects its body: core
     // resolves it through Skill.prepare and pastes the content into the message.

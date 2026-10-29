@@ -61,25 +61,22 @@ async function setup(skills = [{ id: "ultracave" }]) {
   return { hooks, commands };
 }
 
-test("prompt hook attaches the skill on activation and every turn while on", async () => {
+test("prompt hook auto-attaches the skill when no flag exists", async () => {
   const { hooks } = await setup();
-  const activating = { text: "/ultracave", skills: [] };
-  await hooks.prompt({ prompt: activating });
-  expect(activating.skills).toEqual([{ id: "ultracave", name: "ultracave" }]);
-  expect(fs.readFileSync(flag, "utf8")).toBe("ultra");
-
   const ordinary = { text: "refactor the parser" };
   await hooks.prompt({ prompt: ordinary });
   expect(ordinary.skills).toEqual([{ id: "ultracave", name: "ultracave" }]);
+  expect(fs.readFileSync(flag, "utf8")).toBe("ultra");
 });
 
 test("prompt hook stays silent when off and clears on deactivation", async () => {
   const { hooks } = await setup();
+  fs.mkdirSync(path.dirname(flag), { recursive: true });
+  fs.writeFileSync(flag, "off");
   const idle = { text: "refactor the parser" };
   await hooks.prompt({ prompt: idle });
   expect(idle.skills).toBeUndefined();
 
-  fs.mkdirSync(path.dirname(flag), { recursive: true });
   fs.writeFileSync(flag, "ultra");
   const stopping = { text: "stop caveman" };
   await hooks.prompt({ prompt: stopping });
