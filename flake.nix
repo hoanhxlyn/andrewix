@@ -75,10 +75,6 @@
       url = "github:anomalyco/opencode/v2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    ponytail = {
-      url = "github:DietrichGebert/ponytail";
-      flake = false;
-    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";

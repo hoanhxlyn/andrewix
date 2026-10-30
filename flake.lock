@@ -390,11 +390,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793238437,
-        "narHash": "sha256-CKfyQw+UxXhPTXS9LKC3PQvCaWRp8iDSOVH7i5vSHjA=",
+        "lastModified": 1793318432,
+        "narHash": "sha256-7PydVGlwLgctbecvQCRl/IMvkmGwpWnWVI4ExFO11Y4=",
         "owner": "wavelens",
         "repo": "gradient",
-        "rev": "ba5b298138e1d725ad1b56cce896fefa3196fcc7",
+        "rev": "a2c44984ed7252688d6e045d6fc5fc6034222c5a",
         "type": "github"
       },
       "original": {
@@ -430,11 +430,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792675705,
-        "narHash": "sha256-vpXmfb8qlS8LBySH713mg/kj707/VOKF737ixag351A=",
+        "lastModified": 1793285847,
+        "narHash": "sha256-yy/fjT0bPM7Qi1q1Y+xov+Igd2AxvtgJFBzJ/PI/cFE=",
         "owner": "oxcl",
         "repo": "nix-flake-helium-browser",
-        "rev": "fe59343ee1fb7c25964ed3853bad3ddca10f65fe",
+        "rev": "c9f74b5dd1dabf2d6a6c5c5a0c6fa1d9af7ddf73",
         "type": "github"
       },
       "original": {
@@ -580,11 +580,11 @@
         "xwayland-satellite-unstable": "xwayland-satellite-unstable"
       },
       "locked": {
-        "lastModified": 1793228752,
-        "narHash": "sha256-uqWptX0JgM4D/ORHVKTLxjXXRVaWRPkdpzoWk9G76xQ=",
+        "lastModified": 1793269891,
+        "narHash": "sha256-9WRPWsiJMTvi9UllV3Z/12O1nX2ESd21SgrhaCLVJc0=",
         "owner": "epireyn",
         "repo": "niri-flake",
-        "rev": "ca7f5ef3bf2d0c3a0bc9bb1030c8db54ff3f11fb",
+        "rev": "6e7bac78c209e27037f711998c6a6e901edffee7",
         "type": "github"
       },
       "original": {
@@ -742,11 +742,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793239480,
-        "narHash": "sha256-A4kvKDRsOW2zdLCHjRwJgzOKrpOg9XJgxsDdKG2jr90=",
+        "lastModified": 1793322240,
+        "narHash": "sha256-mhL6QSXKYvJTb1l3fGx4UsAiM38F7XkmhMJbWc9L7R4=",
         "owner": "noctalia-dev",
         "repo": "noctalia-shell",
-        "rev": "e4390429240b7c761c948289a87463ff9d5b18c4",
+        "rev": "2956045c624a3cb55c66cf608287baac9f809e2d",
         "type": "github"
       },
       "original": {
@@ -857,22 +857,6 @@
         "type": "github"
       }
     },
-    "ponytail": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1793243094,
-        "narHash": "sha256-CY0EifTY0UVc6/FPGVJjEfYEf/8QLsINQmoYYKZYh98=",
-        "owner": "DietrichGebert",
-        "repo": "ponytail",
-        "rev": "7801d061243d7b753bad0e0b3c057cd250b11755",
-        "type": "github"
-      },
-      "original": {
-        "owner": "DietrichGebert",
-        "repo": "ponytail",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "aic8800": "aic8800",
@@ -898,7 +882,6 @@
         "nwm": "nwm",
         "omp-yazi": "omp-yazi",
         "opencode": "opencode",
-        "ponytail": "ponytail",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "tokyonight-wallpapers": "tokyonight-wallpapers",
@@ -1205,11 +1188,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793144002,
-        "narHash": "sha256-YDtNVswt0oYB7LNEzZWmFmo57MME8EVS9VxAdqWm/Co=",
+        "lastModified": 1793309674,
+        "narHash": "sha256-d1Tvbgn//HQ3f1PDh/iIMEpvuUu9Lc4lJqiwGl18cY8=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "4434539379bc839480edb8b919de9b67f70cb520",
+        "rev": "2656d974602749ca5594b133e3022a241ab5d4e0",
         "type": "github"
       },
       "original": {
