@@ -50,16 +50,16 @@
           };
         };
         default_agent = "plan";
-        agents = {
-          plan = {
-            color = colors.base0E;
-            model = "opencode-go/glm-5.3-flash";
-          };
-          build = {
-            color = colors.base0B;
-            model = "opencode-go/deepseek-v4.1-flash";
-          };
-        };
+        # agents = {
+        #   plan = {
+        #     color = colors.base0E;
+        #     model = "opencode-go/glm-5.3-flash";
+        #   };
+        #   build = {
+        #     color = colors.base0B;
+        #     model = "opencode-go/deepseek-v4.1-flash";
+        #   };
+        # };
         permissions = [
           {
             action = "shell";
