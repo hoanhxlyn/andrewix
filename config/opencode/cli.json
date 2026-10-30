@@ -5,7 +5,7 @@
   },
   "animations": true,
   "session": {
-    "permissions": "autoaccept",
+    "permissions": "prompt",
     "sidebar": "auto",
     "image_preview": true,
     "scrollbar": true,
