@@ -31,7 +31,6 @@
       programs.gamemode.enable = true;
       programs.gamescope.enable = true;
       programs.gamescope.enableWsi = true;
-      environment.systemPackages = with pkgs; [mangohud];
     };
   };
 }
