@@ -360,12 +360,21 @@
             open-maximized = false;
             default-column-width.proportion = 1.0;
           }
-          # Steam auxiliary windows (properties, friends list, ...) float;
-          # keep the main "Steam" window tiled
           {
             matches = [{app-id = "^steam$";}];
-            excludes = [{title = "^Steam$";}];
+            excludes = [{title = "^(Steam|Steam Big Picture Mode)$";}];
             open-floating = true;
+          }
+          {
+            matches = [
+              {
+                app-id = "^steam$";
+                title = "^Steam Settings$";
+              }
+            ];
+            open-floating = true;
+            default-column-width.proportion = 0.8;
+            default-window-height.proportion = 0.8;
           }
           {
             matches = [{}];
