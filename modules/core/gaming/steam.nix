@@ -24,6 +24,7 @@
       programs.steam = {
         enable = true;
         protontricks.enable = true;
+        gamescopeSession.enable = true;
         extraCompatPackages = [inputs.dw-proton.packages.${pkgs.stdenv.hostPlatform.system}.dw-proton];
         remotePlay.openFirewall = true;
         dedicatedServer.openFirewall = true;

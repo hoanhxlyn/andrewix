@@ -10,13 +10,11 @@
   };
 
   core.agents.opencode.homeManager = {
-    config,
     pkgs,
     osConfig,
     ...
   }: let
     isWsl = osConfig.wsl.enable or false;
-    colors = config.lib.stylix.colors.withHashtag;
     opencodePkgs = inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system};
   in {
     home.file.".config/opencode/cli.json".source = "${self}/config/opencode/cli.json";
