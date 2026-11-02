@@ -14,7 +14,7 @@ bun run dev        # react-router dev server (bunx --bun)
 bun run build      # SPA build into build/client
 bun run deploy     # build + deploy to Cloudflare Pages (andrewix.pages.dev)
 bun run preview    # serve build/client
-bun run walls      # regenerate src/routes/Walls/walls.ts from the wallpaper flake inputs
+bun run walls      # regenerate src/data/walls.ts from the wallpaper flake inputs
 bun run test       # unit tests (bun test, src/ only, see bunfig.toml)
 bun run e2e        # Playwright suite against build/client; needs the nixpkgs browsers from .envrc
 bun check          # Bun's built-in type checker
