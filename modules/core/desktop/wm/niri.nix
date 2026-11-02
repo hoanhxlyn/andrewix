@@ -306,7 +306,6 @@
           }
         ];
         window-rules = [
-          # Floatting windows
           {
             matches = [
               {

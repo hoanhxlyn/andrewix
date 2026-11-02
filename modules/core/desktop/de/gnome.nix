@@ -19,12 +19,11 @@
       services.desktopManager.gnome.enable = true;
       services.gnome.gnome-keyring.enable = lib.mkForce false;
       services.displayManager.gdm.enable = true;
-      # Exclude default Gnome applications
       environment.gnome.excludePackages = with pkgs; [
         gnome-tour
-        epiphany # web
-        yelp # help
-        rhythmbox # music
+        epiphany
+        yelp
+        rhythmbox
         gnome-contacts
         gnome-maps
         gnome-user-docs
