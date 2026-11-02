@@ -32,8 +32,9 @@ export default function Wall() {
       className={s.modal}
       isOpen={isOpen}
       onOpenChange={(open) => setClosedAt(open ? null : key)}
-      // The route only goes away once the closing animation has played.
-      onClosed={() => navigate(`/walls${search}`)}
+      // The route only goes away once the closing animation has played. A replace, not a push:
+      // closing is the way out of the dialog, so Back must not land on it and reopen it.
+      onClosed={() => navigate(`/walls${search}`, { replace: true })}
     >
       {/* Close leads and the action trails, as in a Material full-screen dialog. */}
       <header className={s.header}>
