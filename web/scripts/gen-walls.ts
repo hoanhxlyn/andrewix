@@ -1,12 +1,12 @@
 /**
- * Regenerates `src/routes/Walls/walls.ts` from the wallpaper flake inputs of the repository, so the
+ * Regenerates `src/data/walls.ts` from the wallpaper flake inputs of the repository, so the
  * deployed gallery links to the exact revisions the hosts use. Run after the inputs change:
  *
  *   bun run walls
  *
- * Paths come from the inputs nix already has in the store, so this works offline and needs no
- * GitHub API. Images stay on GitHub: only their paths are baked here, and the browser fetches each
- * one lazily.
+ * Paths come from the inputs nix already has in the store, so only a revision that is not there yet
+ * has to be fetched; nothing goes through the GitHub API. Images stay on GitHub: only their paths
+ * are baked here, and the browser fetches each one lazily.
  */
 import { execFileSync } from "node:child_process";
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
