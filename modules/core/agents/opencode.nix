@@ -1,7 +1,6 @@
 {
   inputs,
   self,
-  lib,
   ...
 }: {
   flake-file.inputs.opencode = {
@@ -11,14 +10,21 @@
 
   core.agents.opencode.homeManager = {
     pkgs,
+    lib,
     osConfig,
     ...
   }: let
     isWsl = osConfig.wsl.enable or false;
     opencodePkgs = inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system};
   in {
-    home.file.".config/opencode/cli.json".source = "${self}/config/opencode/cli.json";
     home.file.".config/opencode/commands/gh.md".source = "${self}/config/opencode/gh.md";
+
+    home.activation.opencodeCliSeed = lib.hm.dag.entryAfter ["linkGeneration"] ''
+      if [ ! -e "$HOME/.config/opencode/cli.json" ]; then
+        run ${pkgs.coreutils}/bin/install -Dm600 ${self}/config/opencode/cli.json \
+          "$HOME/.config/opencode/cli.json"
+      fi
+    '';
 
     programs.opencode = {
       enable = true;
