@@ -1,4 +1,8 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   core.desktop.statusbar.waybar = {
     homeManager = {
       pkgs,
@@ -10,67 +14,22 @@
       dndScript = pkgs.writeShellApplication {
         name = "waybar-dnd";
         runtimeInputs = [pkgs.coreutils];
-        text = ''
-          STATE_FILE="''${XDG_RUNTIME_DIR:-/tmp}/dnd-state"
-          if [ -f "$STATE_FILE" ] && [ "$(cat "$STATE_FILE")" = "1" ]; then
-            echo '{"text": "󰂛", "tooltip": "DND: On"}'
-          else
-            echo '{"text": "󰂟", "tooltip": "DND: Off"}'
-          fi
-        '';
+        text = builtins.readFile "${self}/scripts/waybar/dnd.sh";
       };
       recordingScript = pkgs.writeShellApplication {
         name = "waybar-recording";
         runtimeInputs = [pkgs.procps];
-        text = ''
-          if pgrep -x wl-screenrec > /dev/null; then
-            echo '{"text": "󰑊", "tooltip": "Recording", "class": "recording"}'
-          else
-            echo '{"text": "", "tooltip": "Not recording"}'
-          fi
-        '';
+        text = builtins.readFile "${self}/scripts/waybar/recording.sh";
       };
-      # xpad exposes no battery, and the pad's radio sleep never reaches the
-      # kernel (the USB device and input node stay), so the bar keys off real
-      # input with a grace window: it clears after 60s of silence.
       gamepad = pkgs.writeShellApplication {
         name = "waybar-gamepad";
         runtimeInputs = [pkgs.coreutils pkgs.libnotify];
-        text = ''
-          STATE="''${XDG_RUNTIME_DIR:-/tmp}/waybar-gamepad"
-          ACTIVE="$STATE.last"
-          pad=""
-          ev=""
-          for js in /sys/class/input/js*; do
-            [ -r "$js/device/name" ] || continue
-            name=$(cat "$js/device/name")
-            case "$name" in
-              *[Xx]box* | *[Xx]-[Bb]ox*) pad="$name"; ev=/dev/input/$(basename "$js"/device/event*); break ;;
-            esac
-          done
-          # notify only on real plug/unplug (radio sleep is invisible here)
-          prev=$(cat "$STATE" 2>/dev/null || true)
-          if [ ! -e "$STATE" ]; then
-            printf '%s' "$pad" > "$STATE"
-          elif [ "$pad" != "$prev" ]; then
-            if [ -n "$pad" ]; then
-              notify-send "Controller" "$pad connected"
-            else
-              notify-send "Controller" "$prev disconnected"
-            fi
-            printf '%s' "$pad" > "$STATE"
-          fi
-          now=$(date +%s)
-          if [ -n "$ev" ] && [ "$( { timeout 2 cat "$ev" 2>/dev/null || true; } | wc -c )" -gt 0 ]; then
-            printf '%s' "$now" > "$ACTIVE"
-          fi
-          last=$(cat "$ACTIVE" 2>/dev/null || true)
-          if [ -n "$pad" ] && [ -n "$last" ] && [ "$((now - last))" -le 60 ]; then
-            printf '{"text":"󰊗","tooltip":"%s"}\n' "$pad"
-          else
-            printf '{"text":""}\n'
-          fi
-        '';
+        text = builtins.readFile "${self}/scripts/waybar/gamepad.sh";
+      };
+      mouseScript = pkgs.writeShellApplication {
+        name = "waybar-mouse";
+        runtimeInputs = [pkgs.coreutils pkgs.gawk (pkgs.callPackage "${self}/modules/_lib/sharkx11.nix" {})];
+        text = builtins.readFile "${self}/scripts/waybar/mouse.sh";
       };
       # waybar names its bar modules after the compositor (niri/*, hyprland/*)
       wm =
@@ -138,6 +97,7 @@
             #bluetooth {border-bottom: 3px solid @base0D;}
             #custom-dnd {padding: 0 5px; min-width: 18px; border-bottom: 3px solid @base04;}
             #custom-gamepad {padding: 0 5px; border-bottom: 3px solid @base0E;}
+            #custom-mouse-logitech, #custom-mouse-attackshark {padding: 0 5px; border-bottom: 3px solid @base0F;}
             #custom-recording {padding: 0 5px; min-width: 18px; border-bottom: 3px solid @base08;}
             #custom-recording.recording {color: @base08; border-bottom-color: @base08;}
             #tray {border-bottom: 3px solid @base0C;}
@@ -166,6 +126,8 @@
             "tray"
             "privacy"
             "bluetooth"
+            "custom/mouse-logitech"
+            "custom/mouse-attackshark"
             "custom/gamepad"
             "custom/dnd"
             "custom/recording"
@@ -260,6 +222,20 @@
             exec = "${gamepad}/bin/waybar-gamepad";
             return-type = "json";
             interval = 2;
+            tooltip = true;
+          };
+
+          "custom/mouse-logitech" = {
+            exec = "${mouseScript}/bin/waybar-mouse logitech";
+            return-type = "json";
+            interval = 60;
+            tooltip = true;
+          };
+
+          "custom/mouse-attackshark" = {
+            exec = "${mouseScript}/bin/waybar-mouse attackshark";
+            return-type = "json";
+            interval = 60;
             tooltip = true;
           };
 

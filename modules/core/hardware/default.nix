@@ -21,6 +21,7 @@
       ]
       # Selected from host facts (see modules/_lib), never from the hostname.
       ++ lib.optional host.isLaptop <core.hardware.power-manager>
+      ++ lib.optional (!(host.wsl.enable or false)) <core.hardware.attack-shark>
       ++ lib.optional (hasGpuVendor "intel") <core.hardware.intel-gpu>
       ++ lib.optional (hasGpuVendor "nvidia") <core.hardware.nvidia>;
 
