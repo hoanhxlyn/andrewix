@@ -21,7 +21,7 @@ import * as s from "./CodePeek.css";
 import { type Line, Source } from "./Source";
 
 /** Shortest time the skeleton shows, so a fast load does not flash. */
-const MIN_LOADING_MS = 1000;
+const MIN_LOADING_MS = 200;
 
 /** Lines of every file shown before, so switching back to one shows it at once. */
 const loaded = new Map<string, Line[]>();
