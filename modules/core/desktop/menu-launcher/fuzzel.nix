@@ -1,4 +1,8 @@
-{lib, ...}: {
+{
+  lib,
+  self,
+  ...
+}: {
   core.desktop.menu-launcher.fuzzel = {host, ...}: let
     inherit (host) terminal;
     isLaptop = host.isLaptop or false;
@@ -50,147 +54,20 @@
       home.packages =
         [
           pkgs.libnotify
-          (pkgs.writeShellScriptBin "fuzzel-clipboard" ''
-            CACHE="$HOME/.cache/cliphist-previews"
-            mkdir -p "$CACHE"
+          (pkgs.writeShellScriptBin "fuzzel-clipboard" (builtins.readFile "${self}/scripts/fuzzel/clipboard.sh"))
 
-            dmenu_line() {
-              printf '%s\0icon\x1f%s\n' "$1" "$2"
-            }
-
-            selection=$(
-              {
-                dmenu_line "Clear History" "edit-clear"
-                cliphist list | head -n 20 | while IFS=$'\t' read -r id display; do
-                  if [[ "$display" == "[[ binary data"* ]]; then
-                    img="$CACHE/$id.png"
-                    if [[ ! -f "$img" ]]; then
-                      printf '%s\t%s' "$id" "$display" | cliphist decode > "$img" 2>/dev/null
-                    fi
-                    printf '%s\t%s\0icon\x1f%s\n' "$id" "$display" "$img"
-                  else
-                    printf '%s\t%s\n' "$id" "$display"
-                  fi
-                done
-              } | fuzzel --dmenu --prompt="Clipboard: "
-            )
-
-            if [ -n "$selection" ]; then
-              if [ "$selection" = "Clear History" ]; then
-                cliphist wipe
-                rm -f "$CACHE"/*.png
-                rm -f "$HOME/.cache/cliphist/db"
-                notify-send "Clipboard history cleared! (history + cache purged)"
-              else
-                printf '%s' "$selection" | cliphist decode | wl-copy
-                notify-send "Copied to clipboard!"
-              fi
-            fi
-          '')
-
-          (pkgs.writeShellScriptBin "fuzzel-audio" ''
-            mapfile -t sink_lines < <(
-              wpctl status | awk '
-                /Sinks:/ { in_sinks=1; next }
-                in_sinks && /Sources:/ { in_sinks=0 }
-                in_sinks && /[0-9]+\..*\[vol:/ {
-                  is_def = ($0 ~ /\*/) ? 1 : 0
-                  match($0, /[0-9]+/, m); id = m[0]
-                  desc = $0; sub(/.*[0-9]+\. /, "", desc); sub(/[[:space:]]+\[vol:.*/, "", desc)
-                  gsub(/^[[:space:]]+|[[:space:]]+$/, "", desc)
-                  print id "\t" desc "\t" is_def
-                }
-              '
-            )
-            if [ "''${#sink_lines[@]}" -eq 0 ]; then
-              notify-send "Audio" "No sinks found"
-              exit 1
-            fi
-            mapfile -t ids   < <(printf '%s\n' "''${sink_lines[@]}" | cut -f1)
-            mapfile -t descs < <(printf '%s\n' "''${sink_lines[@]}" | cut -f2)
-            mapfile -t defs  < <(printf '%s\n' "''${sink_lines[@]}" | cut -f3)
-            dmenu_line() {
-              printf '%s\0icon\x1f%s\n' "$1" "$2"
-            }
-            selection=$(for i in "''${!ids[@]}"; do
-              if [ "''${defs[$i]}" = "1" ]; then
-                dmenu_line "''${descs[$i]}" "object-select"
-              else
-                printf '%s\n' "''${descs[$i]}"
-              fi
-            done | fuzzel --dmenu --prompt="Audio: " --index)
-            if [ -n "$selection" ]; then
-              wpctl set-default "''${ids[$selection]}"
-              notify-send "Audio" "Switched to ''${descs[$selection]}"
-            fi
-          '')
+          (pkgs.writeShellScriptBin "fuzzel-audio" (builtins.readFile "${self}/scripts/fuzzel/audio.sh"))
 
           (pkgs.writeShellApplication {
             name = "fuzzel-notifications";
             runtimeInputs = with pkgs; [jq libnotify fuzzel mako];
-            text = ''
-              history=$(makoctl history -j 2>/dev/null)
-
-              if [ -z "$history" ] || [ "$history" = "[]" ]; then
-                notify-send "Notification History" "No history"
-                exit 0
-              fi
-
-              count=$(echo "$history" | jq 'length')
-              if [ "$count" -eq 0 ]; then
-                notify-send "Notification History" "No history"
-                exit 0
-              fi
-
-              dmenu_line() {
-                printf '%s\0icon\x1f%s\n' "$1" "$2"
-              }
-
-              selection=$(
-                {
-                  dmenu_line "Restore Most Recent" "preferences-desktop-notification"
-                  echo "$history" | jq -r '.[:5] | .[] | "\(.app_name // "Unknown") | \(.summary)"' | while IFS= read -r line; do
-                    dmenu_line "$line" "preferences-desktop-notification"
-                  done
-                } | fuzzel --dmenu --prompt="History: "
-              )
-
-              if [ "$selection" = "Restore Most Recent" ]; then
-                makoctl restore
-              elif [ -n "$selection" ]; then
-                app_name=''${selection%% | *}
-                summary=''${selection#* | }
-
-                body=$(echo "$history" | jq -r --arg app "$app_name" --arg sum "$summary" '.[] | select(.app_name == $app and .summary == $sum) | .body // "No body" | tostring' | head -1)
-                urgency=$(echo "$history" | jq -r --arg app "$app_name" --arg sum "$summary" '.[] | select(.app_name == $app and .summary == $sum) | .urgency // "normal" | tostring' | head -1)
-
-                if [ "$body" != "null" ] && [ -n "$body" ]; then
-                  notify-send -u "$urgency" "$app_name: $summary" "$body"
-                else
-                  notify-send "$app_name: $summary"
-                fi
-              fi
-            '';
+            text = builtins.readFile "${self}/scripts/fuzzel/notifications.sh";
           })
 
           (pkgs.writeShellApplication {
             name = "fuzzel-emoji";
             runtimeInputs = with pkgs; [curl jq wl-clipboard libnotify fuzzel];
-            text = ''
-              EMOJI_FILE="$HOME/.cache/emoji_list.txt"
-              if [ ! -f "$EMOJI_FILE" ] || [ ! -s "$EMOJI_FILE" ]; then
-                notify-send "Fuzzel" "Downloading emoji list..."
-                mkdir -p "$(dirname "$EMOJI_FILE")"
-                curl -sf https://raw.githubusercontent.com/muan/emojilib/main/dist/emoji-en-US.json \
-                  | jq -r 'to_entries | .[] | "\(.key) \(.value[0])"' > "$EMOJI_FILE"
-              fi
-              selection=$(fuzzel --dmenu --prompt="Emoji: " < "$EMOJI_FILE")
-              if [ -n "$selection" ]; then
-                emoji=$(echo "$selection" | awk '{print $1}')
-                echo -n "$emoji" | wl-copy
-                notify-send "Emoji" "Copied $emoji to clipboard"
-              fi
-            '';
+            text = builtins.readFile "${self}/scripts/fuzzel/emoji.sh";
           })
 
           (pkgs.writeShellScriptBin "fuzzel-font" ''
