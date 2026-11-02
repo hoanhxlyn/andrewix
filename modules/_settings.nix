@@ -44,8 +44,8 @@
       mono.name = "CaskaydiaCove Nerd Font";
       sans.pkg = "noto-fonts";
       sans.name = "Noto Sans";
-      emoji.pkg = "noto-fonts-color-emoji";
-      emoji.name = "Noto Color Emoji";
+      emoji.pkg = "noto-fonts-monochrome-emoji";
+      emoji.name = "Noto Emoji";
     };
     opacity = 0.8;
     # local (config/background/<path>) | gruvbox (AngelJumbo/gruvbox-wallpapers, <path> in repo)
