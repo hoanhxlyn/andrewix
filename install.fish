@@ -11,7 +11,7 @@ set -g accent 212
 set -g danger 1
 set -g warn 3
 set -g success 10
-set -g root_disk ""
+set -g root_chain
 set -g args
 set confirm_default true
 
@@ -79,9 +79,12 @@ gum style --foreground $warn --bold "Pick a target disk for each role (chosen di
 # The disk we're booted from: disko can't unmount/erase a live root, and
 # sgdisk --zap-all on it would destroy the running system. (On the ISO, / is an
 # overlay with no parent disk, so this stays empty and the guard is a no-op.)
+# The chain holds every device under the running root — its own node and each
+# parent up to the physical disk — because an LVM or LUKS root sits one or more
+# levels down, where a single PKNAME lookup names a dm node, not the disk.
 set root_src (findmnt -no SOURCE / 2>/dev/null; or true)
 if string match -q '/dev/*' -- "$root_src"
-    set -g root_disk "/dev/"(lsblk -ndo PKNAME "$root_src" 2>/dev/null | head -n1)
+    set -g root_chain (lsblk -rsno NAME "$root_src" 2>/dev/null | string replace -r '^/dev/' '')
 end
 
 for name in $DISKS
@@ -90,7 +93,7 @@ for name in $DISKS
     if test -z "$dev"
         exit 0
     end
-    if test -n "$root_disk"; and test "$dev" = "$root_disk"
+    if contains (string replace -r '^/dev/' '' -- "$dev") $root_chain
         gum style --foreground $danger --bold "ERROR: $dev is the disk you are running from."
         gum style --italic "Boot the installer ISO and run ./install from there."
         exit 1
