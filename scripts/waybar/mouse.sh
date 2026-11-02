@@ -16,8 +16,8 @@ case "$1" in
     name="Logitech G703"
     ;;
   *)
-    # x11ctl exits non-zero when the mouse is asleep: that is "absent", not an error
-    p=$(timeout 5 x11ctl info 2>/dev/null | awk '/^battery/ {print $2}' || true)
+    # shark-battery exits non-zero when the mouse is asleep: that is "absent", not an error
+    p=$(timeout 8 shark-battery 2>/dev/null || true)
     [ -n "$p" ] || { printf '{"text":""}\n'; exit 0; }
     s=""
     name="ATTACK SHARK X11SE"

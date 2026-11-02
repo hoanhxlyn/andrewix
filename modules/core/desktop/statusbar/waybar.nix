@@ -28,7 +28,10 @@
       };
       mouseScript = pkgs.writeShellApplication {
         name = "waybar-mouse";
-        runtimeInputs = [pkgs.coreutils pkgs.gawk (pkgs.callPackage "${self}/modules/_lib/sharkx11.nix" {})];
+        runtimeInputs = [
+          pkgs.coreutils
+          inputs.shark-nix.packages.${pkgs.stdenv.hostPlatform.system}.shark-battery
+        ];
         text = builtins.readFile "${self}/scripts/waybar/mouse.sh";
       };
       # waybar names its bar modules after the compositor (niri/*, hyprland/*)

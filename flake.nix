@@ -75,6 +75,10 @@
       url = "github:anomalyco/opencode/v2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    shark-nix = {
+      url = "github:hoanhxlyn/shark-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
