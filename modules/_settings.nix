@@ -23,8 +23,8 @@
   windows.tools.gitCredentialManager = "scoop/root/apps/git/current/mingw64/bin/git-credential-manager.exe";
   windows.tools.win32yank = "scoop/root/apps/win32yank/current/win32yank.exe";
   input.keyboard.layout = "us";
-  input.keyboard.repeatDelay = 250; # ms before repeat starts
-  input.keyboard.repeatRate = 50; # keys per second
+  input.keyboard.repeatDelay = 250;
+  input.keyboard.repeatRate = 50;
   input.touchpad.tap = true;
   input.touchpad.naturalScroll = true;
   input.touchpad.disableWhileTyping = true;
@@ -32,13 +32,13 @@
   accessibility.cursorSize = 24;
   accessibility.hideCursorWhenTyping = true;
   accessibility.animations.enable = true;
-  accessibility.animations.slowdown = 1.5; # >1 = slower
+  accessibility.animations.slowdown = 1.5;
   # Look & feel (pure data; packages stay in modules/core/services/sync/stylix.nix).
   appearance = {
     scheme = "tokyodark"; # base16-schemes name
     polarity = "dark"; # light | dark
     font = {
-      size = 12; # pt; terminal/applications/desktop derive from it
+      size = 12; # terminal/applications/desktop derive from it
       # pkg = attribute path into pkgs (resolved in stylix.nix); name = family the pkg provides.
       mono.pkg = "nerd-fonts.caskaydia-cove";
       mono.name = "CaskaydiaCove Nerd Font";
@@ -47,7 +47,7 @@
       emoji.pkg = "noto-fonts-color-emoji";
       emoji.name = "Noto Color Emoji";
     };
-    opacity = 0.8; # 1.0 = opaque; <1 enables blur/transparent bg
+    opacity = 0.8;
     # local (config/background/<path>) | gruvbox (AngelJumbo/gruvbox-wallpapers, <path> in repo)
     # | tokyonight (hoanhxlyn/tokyonight-wallpapers, <filename> in repo root)
     # | catppuccin (orangci/walls-catppuccin-mocha, <filename> in repo root)

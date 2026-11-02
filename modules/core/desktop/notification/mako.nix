@@ -30,7 +30,6 @@
             x = builtins.mul host.terminal.padding host.appearance.toast.padding.x;
             y = builtins.mul host.terminal.padding host.appearance.toast.padding.y;
           in "${toString x},${toString y}";
-          # icons
           max-icon-size = builtins.mul host.appearance.font.size 2;
           icon-border-radius = 6;
           icons = true;

@@ -18,7 +18,7 @@
   nvimBufferline.setupOpts.options = {
     mode = "buffers";
     numbers = "none";
-    sort_by = "id"; # mini.tabline orders by buffer id
+    sort_by = "id";
     always_show_bufferline = true;
     show_buffer_close_icons = false;
     show_close_icon = false;

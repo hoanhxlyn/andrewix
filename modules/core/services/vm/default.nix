@@ -25,10 +25,9 @@
       };
 
       homeManager = {pkgs, ...}: {
-        # Useful other development tools
         home.packages = with pkgs; [
           dive
-          podman-compose # start group of containers for dev
+          podman-compose
           podman-tui
         ];
       };
