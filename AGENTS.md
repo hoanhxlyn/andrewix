@@ -31,6 +31,14 @@ nix run .#write-flake    # regenerate flake.nix
 nix flake update         # no commit
 ```
 
+## Communication
+
+- Answer the question asked. No preamble, no restating it, no plan nobody asked for.
+- Point first, then the fix. Name `file:line`. Skip praise, hedging, and what you are about to do.
+- One line if one line enough. No headers, tables or bullet lists for a yes/no answer.
+- Explain a concept only when asked; never repeat it next reply.
+- No summary of your own work at the end, no "what I did not check" essay unless the risk is real and unknown.
+
 ## Validation Pipeline (run before commit)
 
 ```bash
