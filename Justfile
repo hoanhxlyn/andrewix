@@ -16,6 +16,7 @@ lint:
   statix check
   deadnix --no-underscore --fail
   just comments
+  just attr --check
 
 # Reject invented comment markers: use TODO:/NOTE:/README: (AGENTS.md)
 [group('validate')]
