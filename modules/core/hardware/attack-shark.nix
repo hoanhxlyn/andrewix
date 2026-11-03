@@ -23,8 +23,6 @@
         dpi.activeStage = 1;
         lighting.mode = "static_dpi";
         lighting.brightness = 3;
-        power.sleep = 15;
-        power.deepSleep = 60;
       };
     };
   };
