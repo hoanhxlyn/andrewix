@@ -1,7 +1,7 @@
 # DO-NOT-EDIT. This file was auto-generated using github:denful/flake-file.
 # Use `nix run .#write-flake` to regenerate it.
 {
-  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
     aic8800 = {
@@ -70,10 +70,6 @@
     omp-yazi = {
       url = "github:saumyajyoti/omp.yazi";
       flake = false;
-    };
-    opencode = {
-      url = "github:anomalyco/opencode/v2";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     shark-nix = {
       url = "github:hoanhxlyn/shark-nix";

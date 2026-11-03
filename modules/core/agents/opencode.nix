@@ -1,13 +1,4 @@
-{
-  inputs,
-  self,
-  ...
-}: {
-  flake-file.inputs.opencode = {
-    url = "github:anomalyco/opencode/v2";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
-
+{self, ...}: {
   core.agents.opencode.homeManager = {
     pkgs,
     lib,
@@ -15,7 +6,6 @@
     ...
   }: let
     isWsl = osConfig.wsl.enable or false;
-    opencodePkgs = inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system};
   in {
     home.file.".config/opencode/commands/gh.md".source = "${self}/config/opencode/gh.md";
 
@@ -27,14 +17,10 @@
     '';
 
     programs.opencode = {
-      enable = true;
+      enable = !isWsl;
       # TODO: stylix still targets OpenCode 1's tui.json (ignored by v2 + warns);
       # drop this mkForce when stylix migrates to programs.opencode.cli
       tui = lib.mkForce {};
-      package =
-        if isWsl
-        then null
-        else opencodePkgs.opencode;
       enableMcpIntegration = true;
       web.enable = !isWsl;
       settings = {
@@ -54,16 +40,6 @@
           };
         };
         default_agent = "plan";
-        # agents = {
-        #   plan = {
-        #     color = colors.base0E;
-        #     model = "opencode-go/glm-5.3-flash";
-        #   };
-        #   build = {
-        #     color = colors.base0B;
-        #     model = "opencode-go/deepseek-v4.1-flash";
-        #   };
-        # };
         permissions = [
           {
             action = "shell";
