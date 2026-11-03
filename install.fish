@@ -1,9 +1,9 @@
 #!/usr/bin/env fish
 # @fish-lsp-disable 7001
 
-if not command -s gum
+if not command -s gum; or not command -s age
     exec nix --extra-experimental-features "nix-command flakes" \
-        shell nixpkgs#gum nixpkgs#fish -c fish (status filename) $argv
+        shell nixpkgs#gum nixpkgs#fish nixpkgs#age -c fish (status filename) $argv
 end
 
 #===============
@@ -23,27 +23,14 @@ if test (id -u) -eq 0
     exit 1
 end
 
-# ========== Clone/Fetch upstream ============
-set REPO_URL "https://github.com/hoanhxlyn/andrewix.git"
-set CLONE_DIR "$HOME/andrewix"
-if test -f /iso/andrewix/flake.nix
-    set CLONE_DIR /iso/andrewix
-else if test -d "$CLONE_DIR/.git"
-    gum style --italic "Repo exists, updating..."
-    # --ff-only fails on a diverged history; abort (errexit had no fish
-    # equivalent) rather than install a stale tree.
-    git -C "$CLONE_DIR" pull --ff-only; or begin
-        gum style --foreground $danger --bold "pull failed (diverged?). Remove $CLONE_DIR and re-run." >&2
-        exit 1
-    end
-else
-    git clone "$REPO_URL" "$CLONE_DIR"
-end
+# ========== Repo root ============
+# The tree this script lives in: /iso/andrewix on the ISO, or a checkout.
+set REPO_DIR (realpath (status dirname))
 
 # Installable hosts come from the flake (`flake.installableHosts` in modules/hosts.nix:
 # every non-WSL host), so adding a device needs no edit here.
 set HOSTS (nix eval --raw --extra-experimental-features "nix-command flakes" \
-    "$CLONE_DIR#installableHosts" \
+    "$REPO_DIR#installableHosts" \
     --apply 'hs: builtins.concatStringsSep "\n" hs')
 if test (count $HOSTS) -eq 0
     gum style --foreground $danger --bold "nix eval returned no installable hosts." >&2
@@ -61,7 +48,7 @@ gum confirm --default=$confirm_default "Install $HOST?"; or exit 0
 # laptop=1 disk and pc=3 disks need no special-casing here. diskOrder sets the
 # prompt order; an empty list falls back to alphabetical attrNames.
 set DISKS (nix eval --raw --extra-experimental-features "nix-command flakes" \
-    "$CLONE_DIR#nixosConfigurations.$HOST" \
+    "$REPO_DIR#nixosConfigurations.$HOST" \
     --apply 'c: let
       order = c.config.core.hardware.disko.diskOrder;
     in builtins.concatStringsSep "\n" (
@@ -95,7 +82,7 @@ for name in $DISKS
     end
     if contains (string replace -r '^/dev/' '' -- "$dev") $root_chain
         gum style --foreground $danger --bold "ERROR: $dev is the disk you are running from."
-        gum style --italic "Boot the installer ISO and run ./install from there."
+        gum style --italic "Boot the installer ISO and run andrewix-install from there."
         exit 1
     end
     set -ga args "$name=$dev"
@@ -117,7 +104,7 @@ end
 
 begin
     printf '{lib, ...}:\nlet\n'
-    printf '  f = builtins.getFlake "%s";\n' "$CLONE_DIR"
+    printf '  f = builtins.getFlake "%s";\n' "$REPO_DIR"
     printf '  d = f.nixosConfigurations.%s.config.disko.devices.disk;\n' "$HOST"
     printf '  dev = {'
     for pair in $args
@@ -139,7 +126,7 @@ end >"$DISKO_CONFIG"
 # No default password ships in the repo, so this account is the only way into the
 # machine once the install finishes. Resolve it before anything destructive.
 set -l login_user (nix eval --raw --extra-experimental-features "nix-command flakes" \
-    "$CLONE_DIR#nixosConfigurations.$HOST" \
+    "$REPO_DIR#nixosConfigurations.$HOST" \
     --apply 'c: let
       us = builtins.filter (n: c.config.users.users.${n}.isNormalUser) (builtins.attrNames c.config.users.users);
     in if builtins.length us == 1
@@ -160,7 +147,7 @@ gum spin --spinner dot --title "Partitioning the selected disks..." --show-error
 # ========= Installing part ============
 gum spin --spinner dot --title "Installing NixOS" --show-output -- \
     sudo NIX_CONFIG="experimental-features = nix-command flakes" \
-    nixos-install --flake "$CLONE_DIR#$HOST" --no-root-passwd --option fallback true; or exit $status
+    nixos-install --flake "$REPO_DIR#$HOST" --no-root-passwd --option fallback true; or exit $status
 
 # ========= First login password ============
 # Interactive on purpose — passwd prompts and validates, so no plaintext reaches
@@ -182,10 +169,10 @@ end
 # step: the spinner gives the child no tty.
 gum style --foreground $accent --bold "Decrypt the shared age key for secrets:"
 set -l keyfile (mktemp)
-age -d "$CLONE_DIR/secrets/keys.age" >"$keyfile"; or begin
+age -d "$REPO_DIR/secrets/keys.age" >"$keyfile"; or begin
     rm -f "$keyfile"
     gum style --foreground $danger --bold "ERROR: no age key installed. Secrets will NOT decrypt."
-    gum style --italic "Recovery: age -d ~/andrewix/secrets/keys.age > ~/.config/sops-nix/keys.txt"
+    gum style --italic "Recovery: boot the installed system and follow the age-key steps in README.md."
     exit 1
 end
 sudo install -D -m 600 \

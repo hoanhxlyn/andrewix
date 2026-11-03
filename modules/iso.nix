@@ -16,6 +16,7 @@
           (import "${self}/modules/core/editor/_nwm/wrapper.nix" {inherit inputs self;})
         ];
         environment.systemPackages = with pkgs; [
+          age
           gum
           fish
           ripgrep
