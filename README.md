@@ -2,8 +2,8 @@
 
 Visual overview of this config: **[andrewix.pages.dev](https://andrewix.pages.dev)**
 
-Personal NixOS and Home Manager configuration for five hosts: three physical machines
-(`asus-vivo14`, `asus-rog-gl552vx`, `home-pc`) and two WSL installs
+Personal NixOS and Home Manager configuration for six hosts: four physical machines
+(`asus-vivo14`, `asus-rog-gl552vx`, `msi-gf63`, `home-pc`) and two WSL installs
 (`home-wsl`, `work-wsl`). It is built with flake-parts and the
 [den](https://github.com/denful/den) dendritic framework.
 
@@ -16,6 +16,7 @@ just build <host>         # Build only, catches eval errors
 just switch <host>        # Apply the config
 just test <host>          # Validate the running system (needs sudo)
 just update               # Update flake inputs, no commit
+just iso                  # Build the custom installer ISO
 just fmt && just lint     # Format and lint
 ```
 
@@ -23,25 +24,31 @@ Without `just`: `nix run .#<host> -- build|switch|test`.
 
 ### Fresh install
 
-Only the three physical hosts are installable. Disks are partitioned declaratively with
+Installable hosts come from the flake (every host with a disk layout, so not WSL); the installer
+lists them and asks which one. Disks are partitioned declaratively with
 [disko](https://github.com/nix-community/disko), so there is nothing to partition by hand.
 
-1. Boot the NixOS minimal ISO and connect to the network (`nmtui`).
-1. Clone the repo and run the guided installer. It asks which disk to use for each role:
+1. Download the custom installer ISO
+   ([Google Drive](https://drive.google.com/file/d/168gGL8QO5dx9J8F61At7qkWiaLxMorWf/view?usp=sharing))
+   or build it with `just iso`, then write it to a USB stick.
 
-   ```bash
-   git clone https://github.com/hoanhxlyn/andrewix ~/andrewix
-   ~/andrewix/install.fish
-   ```
+1. Boot it and connect to the network (`nmtui`).
 
-1. Reboot and log in as `andrew` with the password the installer asked for. Secrets are already
-   decrypted: the installer unpacks the shared age key (`secrets/keys.age`, passphrase-encrypted in
-   the repo) into `~/.config/sops-nix/keys.txt` before the reboot. Skipped that step?
+1. Run `andrewix-install`. It asks which host to install, which disk to use for each role, the
+   login password and the passphrase for the shared age key.
 
-   ```bash
-   age -d ~/andrewix/secrets/keys.age > ~/.config/sops-nix/keys.txt \
-     && chmod 600 ~/.config/sops-nix/keys.txt
-   ```
+1. Reboot and log in as `andrew` with the password you set. The installer already put the age key
+   in `~/.config/sops-nix/keys.txt`, so sops decrypts the secrets on first boot.
+
+**NOTE:** Only needed if the age key step was skipped or failed. Clone the repo on the installed
+system, place the key and reboot:
+
+```bash
+git clone https://github.com/hoanhxlyn/andrewix ~/andrewix
+mkdir -p ~/.config/sops-nix
+age -d ~/andrewix/secrets/keys.age > ~/.config/sops-nix/keys.txt
+chmod 600 ~/.config/sops-nix/keys.txt
+```
 
 ### Adding a device
 
