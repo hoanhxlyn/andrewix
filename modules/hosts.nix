@@ -48,10 +48,10 @@
       chassis = "laptop";
       defaults.terminal = "rio";
       appearance = {
-        scheme = "tokyodark"; # base16-schemes name
+        scheme = "tokyo-night-dark"; # base16-schemes name
         wallpaper = {
-          source = "tokyonight";
-          path = "crosses-pattern.png";
+          source = "catppuccin";
+          path = "kitty.jpg";
         };
       };
       # From `lspci -D -d ::03xx` on the GF63: Intel CometLake-H 0000:00:02.0,
