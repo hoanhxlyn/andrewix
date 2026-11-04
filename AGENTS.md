@@ -5,7 +5,7 @@
 Use Justfile shortcuts. Best way. Default host = `hostname -s` (auto-detect).
 
 ```bash
-just fmt          # alejandra .
+just fmt          # attr-style + alejandra
 just lint         # statix + deadnix + comment markers
 just build <h>    # nix run .#<h> -- build
 just boot <h>     # boot new build at next restart

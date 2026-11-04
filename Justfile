@@ -5,9 +5,10 @@ host := `hostname -s`
 l:
   just --list
 
-# Format with alejandra
+# Flatten option groups, then format with alejandra
 [group('validate')]
 fmt:
+  nix run .#attr-style
   alejandra .
 
 # Statix + deadnix + comment marker check
@@ -16,7 +17,6 @@ lint:
   statix check
   deadnix --no-underscore --fail
   just comments
-  just attr --check
 
 # Reject invented comment markers: use TODO:/NOTE:/README: (AGENTS.md)
 [group('validate')]
@@ -26,7 +26,7 @@ comments:
 # Flatten option groups with <4 children to dotted paths (AGENTS.md)
 [group('validate')]
 attr *args:
-  uv run --quiet --with tree-sitter --with tree-sitter-nix scripts/attr-style.py {{ args }}
+  nix run .#attr-style -- {{ args }}
 
 # Build system config
 [group('nixos')]

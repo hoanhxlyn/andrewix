@@ -36,6 +36,18 @@
     schema.user.classes = lib.mkDefault ["homeManager"];
   };
   perSystem = {pkgs, ...}: let
+    # NOTE: a subpath of inputs.self drags the whole dirty-tree store path into the
+    # derivation; pinning to content keeps unrelated edits from rebuilding the crate.
+    attr-style-src = builtins.path {
+      path = inputs.self + "/scripts/attr-style";
+      name = "attr-style-src";
+    };
+    attr-style = pkgs.rustPlatform.buildRustPackage {
+      pname = "attr-style";
+      version = "0.1.0";
+      src = attr-style-src;
+      cargoLock.lockFile = "${attr-style-src}/Cargo.lock";
+    };
     # Auto-loaded in-repo via .envrc (`use flake`); keeps these out of global closure.
     devPackages = with pkgs; [
       gh
@@ -45,7 +57,7 @@
       just
     ];
   in {
-    packages = den.lib.nh.denPackages {fromFlake = true;} pkgs;
+    packages = den.lib.nh.denPackages {fromFlake = true;} pkgs // {inherit attr-style;};
     devShells.default = pkgs.mkShell {
       packages = devPackages;
       shellHook = let

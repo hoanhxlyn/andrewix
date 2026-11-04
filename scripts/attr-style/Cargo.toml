@@ -1,0 +1,8 @@
+[package]
+name = "attr-style"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rnix = "0.15"
+rowan = "0.17"
