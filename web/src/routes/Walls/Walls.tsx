@@ -113,9 +113,11 @@ export default function Walls() {
   const loaded = useMemo(() => shown.slice(0, size), [shown, size]);
   const loadMore = () => setBatch({ filter, size: size + gallery.batchSize });
 
+  // The dialog takes the grid's history entry, so Back does not step through every wallpaper.
   const open = (id: string) => {
     const wall = shown.find((other) => wallId(other) === id);
-    if (wall !== undefined) navigate(wallHref(wall) + filter);
+    if (wall !== undefined)
+      navigate(wallHref(wall) + filter, { replace: true });
   };
   const View = layout === "table" ? WallTable : WallGrid;
 

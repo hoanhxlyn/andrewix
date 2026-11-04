@@ -401,6 +401,25 @@ test("the close button returns to the same filtered grid", async ({ page }) => {
   await expect(page.getByRole("searchbox")).toHaveValue("forest");
 });
 
+test("opening and closing a wallpaper adds no history entry", async ({
+  page,
+}) => {
+  await openWalls(page);
+  const before = await page.evaluate(() => history.length);
+
+  for (let i = 0; i < 2; i++) {
+    await card(page, 0).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await page.getByRole("button", { name: "Close" }).click();
+    await expect(page).toHaveURL(/\/walls$/);
+  }
+
+  expect(await page.evaluate(() => history.length)).toBe(before);
+  // The grid is the entry the dialog took over, not a second one beneath it.
+  await page.goBack();
+  await expect(page).not.toHaveURL(/\/walls/);
+});
+
 test("Escape and the backdrop close the dialog too", async ({ page }) => {
   await openWalls(page);
 
