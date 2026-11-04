@@ -6,13 +6,13 @@
 
   core.hardware.attack-shark = {
     nixos.imports = [inputs.shark-nix.nixosModules.default];
-    homeManager = {
+    homeManager = {host, ...}: {
       imports = [inputs.shark-nix.homeManagerModules.default];
       programs.sharkx11 = {
         enable = true;
         dpi.stages = [
           {
-            dpi = 1400;
+            dpi = host.input.mouse.defaultDpi;
             color = "#4cd964";
           }
           {

@@ -29,6 +29,7 @@
   input.touchpad.naturalScroll = true;
   input.touchpad.disableWhileTyping = true;
   input.mouse.accelProfile = "adaptive"; # flat | adaptive
+  input.mouse.defaultDpi = 1200;
   accessibility.cursorSize = 24;
   accessibility.hideCursorWhenTyping = true;
   accessibility.animations.enable = true;
