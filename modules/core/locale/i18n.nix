@@ -35,8 +35,6 @@
       host,
       ...
     }: {
-      # Keep stylix fonts (Font/MenuFont/TrayFont), drop its generated classicui theme
-      # (Theme/UseDarkTheme/UseAccentColor) so classicui themes stay user-controlled.
       stylix.targets.fcitx5.colors.enable = false;
       i18n.inputMethod = {
         enable = true;
@@ -55,7 +53,7 @@
             Mode = "Uinput (Smooth)";
             W2U = "Disabled";
             SpellCheck = false;
-            UseLotusIcons = true;
+            UseLotusIcons = false;
             ShortcutDefault = 1;
             ShortcutPreedit = 2;
             ShortcutSuperSmooth = 4;
