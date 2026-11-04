@@ -48,7 +48,7 @@
       chassis = "laptop";
       defaults.terminal = "rio";
       appearance = {
-        scheme = "tokyo-night-dark"; # base16-schemes name
+        scheme = "tokyo-city-dark"; # base16-schemes name
         wallpaper = {
           source = "catppuccin";
           path = "kitty.jpg";
