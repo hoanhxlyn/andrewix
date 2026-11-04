@@ -35,7 +35,7 @@
   accessibility.animations.slowdown = 1.5;
   # Look & feel (pure data; packages stay in modules/core/services/sync/stylix.nix).
   appearance = {
-    scheme = "tokyo-night-dark"; # base16-schemes name
+    scheme = "tokyodark"; # base16-schemes name
     polarity = "dark"; # light | dark
     font = {
       size = 12; # terminal/applications/desktop derive from it
@@ -52,8 +52,8 @@
     # | tokyonight (hoanhxlyn/tokyonight-wallpapers, <filename> in repo root)
     # | catppuccin (orangci/walls-catppuccin-mocha, <filename> in repo root)
     # | remote ({url, hash} instead of path)
-    wallpaper.source = "catppuccin";
-    wallpaper.path = "kitty.jpg";
+    wallpaper.source = "tokyonight";
+    wallpaper.path = "neon-city.png";
     wallpaper.scaling = "center"; # fill | center | stretch | fit
     toast = {
       width = 400;
