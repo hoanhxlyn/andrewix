@@ -52,7 +52,7 @@
     # | tokyonight (hoanhxlyn/tokyonight-wallpapers, <filename> in repo root)
     # | catppuccin (orangci/walls-catppuccin-mocha, <filename> in repo root)
     # | remote ({url, hash} instead of path)
-    wallpaper.source = "tokyonight";
+    wallpaper.source = "tokyo-night-dark";
     wallpaper.path = "neon-city.png";
     wallpaper.scaling = "center"; # fill | center | stretch | fit
     toast = {
