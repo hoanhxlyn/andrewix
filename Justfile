@@ -58,12 +58,10 @@ vm h=host *args:
 iso:
   nix build .#nixosConfigurations.iso.config.system.build.isoImage
 
-# Update flake inputs
+# Update flake inputs (fzf multi-select)
 [group('nixos')]
-update:
-  nix run .#write-flake
-  alejandra flake.nix
-  nix flake update
+update *args:
+  fish --no-config scripts/update.fish {{ args }}
 
 # System-wide GC, delete old gens
 [group('nixos')]
