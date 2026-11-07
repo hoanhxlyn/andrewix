@@ -68,6 +68,9 @@
       yamlfix
       # Linters
       stylelint
+      cspell
+      # cspell.lua needs v4 CLI (`yq eval`, `-P`); pkgs.yq is the python v3 wrapper
+      yq-go
       # Debug
       vscode-js-debug
     ];
