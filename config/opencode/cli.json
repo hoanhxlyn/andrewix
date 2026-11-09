@@ -3,6 +3,12 @@
   "theme": {
     "name": "stylix"
   },
+  "plugins": [
+    "@streetturtle/opencode-recap",
+    "opencode-plugin-usage",
+    "opencode-bubble-tabs",
+    "opencode-ghost"
+  ],
   "animations": true,
   "session": {
     "permissions": "prompt",
