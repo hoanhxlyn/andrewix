@@ -4,7 +4,7 @@
       <core.gui.caprine>
       <core.gui.dbeaver>
       <core.gui.vesktop>
-      <core.gui.rustdesk>
+      # <core.gui.rustdesk>
     ];
   };
 }
