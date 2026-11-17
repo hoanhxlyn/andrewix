@@ -2,8 +2,8 @@
 
 Visual overview of this config: **[andrewix.pages.dev](https://andrewix.pages.dev)**
 
-Personal NixOS and Home Manager configuration for six hosts: four physical machines
-(`asus-vivo14`, `asus-rog-gl552vx`, `msi-gf63`, `home-pc`) and two WSL installs
+Personal NixOS and Home Manager configuration for five hosts: three physical machines
+(`asus-rog-gl552vx`, `msi-gf63`, `home-pc`) and two WSL installs
 (`home-wsl`, `work-wsl`). It is built with flake-parts and the
 [den](https://github.com/denful/den) dendritic framework.
 

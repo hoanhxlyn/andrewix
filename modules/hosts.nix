@@ -5,35 +5,6 @@
 }: let
   mkHost = import ./_lib/mk-host.nix {inherit lib;};
   hosts = {
-    asus-vivo14 = mkHost {
-      chassis = "laptop";
-      gpu = {
-        vendor = "intel";
-        kind = "integrated";
-      };
-      monitors = {
-        # panel left, external right; niri focuses the external at startup
-        order = ["eDP-1" "HDMI-A-1"];
-        "eDP-1" = {
-          resolution = {
-            width = 2880;
-            height = 1800;
-          };
-          refresh-rate = 90.0;
-          is-primary = false;
-          scale = 1.85;
-        };
-        "HDMI-A-1" = {
-          resolution = {
-            width = 1920;
-            height = 1080;
-          };
-          refresh-rate = 100.0;
-          is-primary = true;
-          scale = 1;
-        };
-      };
-    };
     asus-rog-gl552vx = mkHost {
       chassis = "laptop";
       is-homelab = true;
