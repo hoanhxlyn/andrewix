@@ -116,7 +116,10 @@ in
         }
         else {}
       );
-    homelab = {homelab.enable = true;};
+    homelab = {
+      homelab.enable = true;
+      rclone.path = "gdrive";
+    };
     # a host overrides only the keys it names (e.g. profiles.andrew.git.email)
     effectiveProfiles = lib.recursiveUpdate settings.profiles (
       if profiles == null
