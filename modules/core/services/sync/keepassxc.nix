@@ -14,6 +14,9 @@
     };
     homeManager = {pkgs, ...}: {
       home.packages = with pkgs; [libsecret procps];
+      # The helper lives with the vault, not with git: hosts that skip this
+      # aspect (homelab, WSL) get no helper instead of one pointing at nothing.
+      programs.git-credential-keepassxc.enable = true;
       programs.keepassxc.enable = true;
       programs.keepassxc.settings = {
         General = {
