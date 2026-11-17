@@ -47,6 +47,12 @@
       # hook registers the standard charge_control sysfs on the battery (BAT1).
       msiEc = ct != null && ct.msiEc;
       msiEcCtl = "/run/current-system/sw/bin/msi-ec-ctl";
+      # Battery name is per driver: asus_wmi uses BAT0, msi-ec uses BAT1.
+      thresholdPath = "/sys/class/power_supply/BAT${
+        if msiEc
+        then "1"
+        else "0"
+      }/charge_control_end_threshold";
       fanModes = ["auto" "silent" "basic" "advanced"];
       shiftModes = ["eco" "comfort" "sport" "turbo"];
     in {
@@ -117,13 +123,10 @@
         description = "Set battery charge stop threshold";
         wantedBy = ["multi-user.target"];
         after = ["systemd-modules-load.service"];
+        unitConfig.ConditionPathExists = thresholdPath;
         serviceConfig.Type = "oneshot";
         serviceConfig.RemainAfterExit = true;
-        # Battery name is per driver: asus_wmi uses BAT0, msi-ec uses BAT1.
-        script =
-          if msiEc
-          then "echo ${toString ct.stop} > /sys/class/power_supply/BAT1/charge_control_end_threshold"
-          else "echo ${toString ct.stop} > /sys/class/power_supply/BAT0/charge_control_end_threshold";
+        script = "echo ${toString ct.stop} > ${thresholdPath}";
       };
 
       services = {
