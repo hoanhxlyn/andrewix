@@ -37,6 +37,7 @@
     asus-rog-gl552vx = mkHost {
       chassis = "laptop";
       is-homelab = true;
+      defaults.browser = "helium";
       # Intel iGPU only, enough for niri. The NVIDIA dGPU is deliberately undeclared (no driver).
       # Confirm with `lspci -D -d ::03xx` at install time.
       gpu = {
