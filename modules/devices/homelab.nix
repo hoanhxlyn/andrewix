@@ -7,6 +7,8 @@
       # config.lib.stylix.*), so a headless host still needs it.
       <core.services.sync.stylix>
       <core.services.sync.sops>
+      <core.services.sync.rclone>
+      <core.services.sync.keepassxc>
       <core.services.gradient>
       <core.services.tailscale>
       <core.locale>

@@ -19,7 +19,7 @@ just gc           # wipe old system gens + store gc
 just clean-up     # user+system GC, keep 7d (sudo)
 ```
 
-Hosts: `asus-vivo14`, `asus-rog-gl552vx`, `msi-gf63`, `home-pc`, `home-wsl`, `work-wsl`. Only non-WSL hosts installable — WSL hosts have no disk layout.
+Hosts: `asus-rog-gl552vx`, `msi-gf63`, `home-pc`, `home-wsl`, `work-wsl`. Only non-WSL hosts installable — WSL hosts have no disk layout.
 
 ### No Justfile?
 
@@ -165,7 +165,10 @@ nix run .#write-flake    # rewrites flake.nix
 
 - **Disko own the layout:** `disko.enableConfig = true` in `modules/core/hardware/disko.nix` — disko provide `fileSystems`/`swapDevices`/`boot.resumeDevice` (xfs root, dedicated swap partition, hibernate resume) for all physical hosts; layout and swap size come from `storage` fact. Per-host `hosts/<host>/_nixos/` configs gone; hardware boot bits (initrd `vmd`/`ahci`/`nvme`, kvm, microcode) live in `modules/core/hardware/bootable.nix`, shared by Intel workstations; loader come from `bootLoader` fact. Target disks picked at install time by `install.fish`, so `/dev/nvme0n1` in `disko.nix` only be default.
 - **Hybrid GPU (`msi-gf63`, GTX 1650 Mobile):** `gpu` entries' `busId`s filled in from `lspci -D -d ::03xx` (see `hosts.nix`); hybrid host without them get PRIME off + build warning. niri run on Intel iGPU; games use nvidia dGPU via PRIME offload (`nvidia-offload <cmd>`, e.g. as Steam launch option). PRIME sync X11-only, not used. Verify connector names with `niri msg outputs`; HDMI ports wired to nvidia GPU may behave different.
-- **Charge limit:** `core.hardware.power-manager` set TLP thresholds and asus_wmi workaround for any laptop (default 70/80; `asus-vivo14` and others override it) unless host set `chargeThreshold = null`. Hosts whose firmware missing from in-tree msi-ec allowlist (GF63 Thin 10SC, `msi-gf63`) set `msiEc = true`: aspect then pull out-of-tree `boot.kernelPackages.msi-ec` and write threshold to `BAT1/charge_control_end_threshold`.
+- **Charge limit:** `core.hardware.power-manager` set TLP thresholds and asus_wmi workaround for any laptop (default 70/80 unless host set `chargeThreshold = null`). Hosts whose firmware missing from in-tree msi-ec allowlist (GF63 Thin 10SC, `msi-gf63`) set `msiEc = true`: aspect then pull out-of-tree `boot.kernelPackages.msi-ec` and write threshold to `BAT1/charge_control_end_threshold`.
+- **Gradient NAR store on the HDD:** `services.gradient.baseDir` point at `/data/gradient`, mounted from the homelab's second disk `sdb` by label `gradient`. Disko only manage the SSD, so the HDD survive reinstall — but its filesystem must exist once, by hand on a fresh homelab:
+  `sudo wipefs -a /dev/sdb && sudo mkfs.xfs -L gradient /dev/sdb`
+  Then `sudo mount /data && sudo systemd-tmpfiles --create`. A stale GPT from an old disk make plain `mkfs` refuse, hence the `wipefs`; a bare labelled filesystem with no partition table is the mount target. Skip it and the box still boot (`nofail`) while `gradient-server` fail on the missing `baseDir`.
 - **First-boot password:** installer (`install.fish`) prompt for it and set with `nixos-enter` before reboot; no default password in repo. Known `admin123` survive only inside `virtualisation.vmVariant` (`modules/core/hardware/disko.nix`) for `just vm`. Machines installed before this still hold old bootstrap password — check with `sudo passwd -S andrew` and run `passwd` if it show `P`.
 - **WSL PATH:** `modules/devices/wsl.nix` disable WSL interop `$PATH` because Windows PATH live on slow 9P/DrvFs mount. Invoke `.exe`s by absolute path; `wsl-open` wrapper handle explorer.exe's spurious non-zero exit.
 - **Secrets:** sops aspect included on every workstation (via `<core.services>`), homelab and WSL host. Decrypt with shared age key at `~/.config/sops-nix/keys.txt`, which must be present on each host. Edit via `sops secrets/secrets.yaml`; declare new secrets in `modules/core/services/sync/sops.nix` under `sops.secrets`.
