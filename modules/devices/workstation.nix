@@ -7,6 +7,8 @@
     <core.hardware>
     <core.services>
     <core.services.gradient-client>
+    # Joins the tailnet so gradient-client's cache (tailnet IP) is reachable.
+    <core.services.tailscale>
     <core.locale>
     <core.git>
     <core.agents>

@@ -23,13 +23,19 @@
 
     # Server: SSH is the way in from elsewhere, but only over the tailnet. The default firewall rule
     # for port 22 is off, so LAN and WAN interfaces never see sshd.
-    nixos = {config, ...}: {
-      # Register with the tailnet as "andrewix": the clients' substituter URL
-      # (core.services.gradient-client) hardcodes http://andrewix:1998.
+    nixos = {
+      config,
+      user,
+      ...
+    }: {
+      # Register with the tailnet as "andrewix".
       services.tailscale.extraUpFlags = ["--hostname=andrewix"];
       services.openssh.enable = true;
       services.openssh.openFirewall = false;
       networking.firewall.interfaces.${config.services.tailscale.interfaceName}.allowedTCPPorts = [22];
+      users.users.${user.userName}.openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPnUeg3dyZHHyYTuW43Kf+iteolCgWMIdBQR7t+rJ9nD andrew@home-pc"
+      ];
     };
   };
 }
