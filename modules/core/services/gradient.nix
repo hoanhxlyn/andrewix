@@ -34,6 +34,13 @@
         domain = "andrewix";
         serveUrl = "http://andrewix:1998";
         useTls = false;
+        # Self-service is not wanted; everything is declarative state anyway.
+        registration.enable = false;
+        permissions.createProject = "superusers";
+        permissions.createCache = "superusers";
+        # ~8 GB per workstation closure x 30 evals would blow past 700 GB;
+        # max_storage_gb stalls instead of evicting.
+        eval.maxKeep = 10;
 
         # NAR store on the idle HDD; the SSD keeps only /nix/store and the DB.
         baseDir = "/data/gradient";
@@ -107,14 +114,23 @@
       services.postgresql.package = pkgs.postgresql_18;
 
       # The module's nginx vhost fronts the UI/API/cache; serve it all on 1998
-      # instead of 80, tailnet-only like sshd in the homelab aspect.
+      # instead of 80. No per-port rule needed: tailscale's openFirewall
+      # trusts the whole tailscale0 interface.
       services.nginx.virtualHosts."andrewix".listen = [
         {
           addr = "0.0.0.0";
           port = 1998;
         }
       ];
-      networking.firewall.interfaces.${config.services.tailscale.interfaceName}.allowedTCPPorts = [1998];
+
+      # The worker keeps every built toplevel in /nix/store; reclaim it
+      # automatically. GC only touches /nix/store, never the NARs on /data.
+      nix.gc.automatic = true;
+      nix.gc.dates = "weekly";
+      nix.gc.options = "--delete-older-than 14d";
+      # nofail would otherwise let tmpfiles create /data/gradient on the root
+      # SSD and Gradient keep writing there without any error.
+      systemd.services.gradient-server.unitConfig.RequiresMountsFor = "/data";
     };
   };
 }
