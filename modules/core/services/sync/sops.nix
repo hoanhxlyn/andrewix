@@ -45,6 +45,7 @@
         # from secrets/keys.age (see install.fish).
         age = {inherit keyFile;};
         secrets = {
+          OPENCODE_WEB_ENV.path = secrets "OPENCODE_WEB_ENV";
           CONTEXT7_API_KEY.path = secrets "CONTEXT7_API_KEY";
           BRAVE_API_KEY.path = secrets "BRAVE_API_KEY";
           EXA_API_KEY.path = secrets "EXA_API_KEY";

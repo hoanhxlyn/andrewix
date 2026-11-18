@@ -1,5 +1,6 @@
 {self, ...}: {
   core.agents.opencode.homeManager = {
+    config,
     pkgs,
     lib,
     osConfig,
@@ -23,6 +24,8 @@
       tui = lib.mkForce {};
       enableMcpIntegration = true;
       web.enable = !isWsl;
+      web.extraArgs = ["--hostname" "0.0.0.0" "--port" "1905"];
+      web.environmentFile = config.sops.secrets.OPENCODE_WEB_ENV.path;
       settings = {
         update = "disable";
         websearch.provider = "exa";
@@ -109,5 +112,9 @@
         ];
       };
     };
+  };
+
+  core.agents.opencode.nixos = {config, ...}: {
+    networking.firewall.interfaces.${config.services.tailscale.interfaceName}.allowedTCPPorts = [1905];
   };
 }
