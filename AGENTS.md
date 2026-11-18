@@ -172,7 +172,7 @@ nix run .#write-flake    # rewrites flake.nix
 - **First-boot password:** installer (`install.fish`) prompt for it and set with `nixos-enter` before reboot; no default password in repo. Known `admin123` survive only inside `virtualisation.vmVariant` (`modules/core/hardware/disko.nix`) for `just vm`. Machines installed before this still hold old bootstrap password — check with `sudo passwd -S andrew` and run `passwd` if it show `P`.
 - **WSL PATH:** `modules/devices/wsl.nix` disable WSL interop `$PATH` because Windows PATH live on slow 9P/DrvFs mount. Invoke `.exe`s by absolute path; `wsl-open` wrapper handle explorer.exe's spurious non-zero exit.
 - **Secrets:** sops aspect included on every workstation (via `<core.services>`), homelab and WSL host. Decrypt with shared age key at `~/.config/sops-nix/keys.txt`, which must be present on each host. Edit via `sops secrets/secrets.yaml`; declare new secrets in `modules/core/services/sync/sops.nix` under `sops.secrets`.
-- **GC manual:** no `nix.gc` timer; run `just gc` (wipe old system gens + store gc, need sudo).
+- **GC manual:** no `nix.gc` timer on workstations; run `just gc` (wipe old system gens + store gc, need sudo). The homelab GCs its worker store weekly on its own.
 
 ## Dev shell
 
