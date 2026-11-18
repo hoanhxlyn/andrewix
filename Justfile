@@ -90,3 +90,8 @@ search *args:
 schemes *args:
   fish --no-config scripts/schemes.fish {{ args }}
 
+# SSH into the homelab once the tailnet reaches it
+[group('info')]
+homelab *args:
+  fish --no-config scripts/homelab.fish {{ args }}
+

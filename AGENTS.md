@@ -14,6 +14,7 @@ just test <h>     # nix run .#<h> -- test (needs sudo)
 just vm <h>       # build + run test VM, host store, disk untouched
 just update       # nix run .#write-flake && nix flake update (no commit)
 just search <pkg> # nps -e <pkg> in fzf
+just homelab      # ssh into the homelab once tailscale reaches it
 just list-gen     # nixos-rebuild list-generations
 just gc           # wipe old system gens + store gc
 just clean-up     # user+system GC, keep 7d (sudo)
