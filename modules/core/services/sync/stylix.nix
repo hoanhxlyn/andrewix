@@ -5,9 +5,7 @@
   ...
 }: {
   flake-file.inputs.stylix = {
-    # TODO: fork = master + stylix#2501 (rofi settings.font rename), revert when merged
-    # README: https://github.com/nix-community/stylix/pull/2501
-    url = "github:adomixaszvers/stylix/merged-rofi-settings-font";
+    url = "github:nix-community/stylix";
     inputs.nixpkgs.follows = "nixpkgs";
   };
   flake-file.inputs.gruvbox-wallpapers = {
