@@ -1,0 +1,2 @@
+specify-cli
+serena-agent

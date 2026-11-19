@@ -17,7 +17,10 @@
   presets.tailwindcss-language-server.enable = true;
   presets.vscode-css-language-server.enable = true;
   presets.typescript-go.enable = true;
-  servers = {
+  servers = let
+    flake = ''(builtins.getFlake (builtins.toString ./.))'';
+    hmOptions = ''${flake}.nixosConfigurations.home-pc.options.home-manager.users'';
+  in {
     biome = {};
 
     typescript-go.filetypes = [
@@ -32,7 +35,11 @@
       "cx"
       "tv"
     ];
-    nil.settings.nil.nix.flake.autoArchive = true;
+    # NOTE: option trees are declarations, shared by all hosts — home-pc is arbitrary
+    nixd.settings.nixd.nixpkgs.expr = ''import ${flake}.inputs.nixpkgs { }'';
+    nixd.settings.nixd.formatting.command = ["alejandra"];
+    nixd.settings.nixd.options.nixos.expr = ''${flake}.nixosConfigurations.home-pc.options'';
+    nixd.settings.nixd.options.home-manager.expr = ''${hmOptions}.type.getSubOptions []'';
     vscode-css-language-server.settings.css.lint.unknownAtRules = "ignore";
     vscode-json-language-server.filetypes = ["json" "jsonc" "bak"];
     vscode-json-language-server.settings.json.format.enable = false;
