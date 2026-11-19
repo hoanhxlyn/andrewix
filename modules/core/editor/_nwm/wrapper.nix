@@ -48,7 +48,7 @@
     ];
     runtimePkgs = with pkgs; [
       # LSPs
-      nil
+      nixd
       lua-language-server
       vscode-langservers-extracted
       yaml-language-server
