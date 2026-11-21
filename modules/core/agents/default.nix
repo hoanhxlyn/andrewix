@@ -39,8 +39,10 @@
         uv = lib.getExe' pkgs.uv "uv";
       in
         lib.hm.dag.entryAfter ["writeBoundary"] ''
+          # NOTE: `uv tool install` ignores a package's requires-python and picks the newest
+          # managed interpreter, so PyO3-based deps (pyo3 caps at 3.14) fail to build on 3.15.
           for tool in $(cat "${self}/config/uv/plugins.txt"); do
-            ${uv} tool list | grep -q "^$tool " || ${uv} tool install "$tool"
+            ${uv} tool list | grep -q "^$tool " || ${uv} tool install --python '>=3.11,<3.15' "$tool"
           done
         '';
     };
