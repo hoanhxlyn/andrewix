@@ -22,9 +22,11 @@
         "https://public.gradient.ci/cache/main"
         "http://127.0.0.1:1998/cache/andrewix"
       ];
+      # NOTE: Gradient names the key `<serveUrl minus scheme, ':' → '-'>-<cache>`;
+      # renaming the domain or port changes it and breaks substitution silently.
       nix.settings.extra-trusted-public-keys = [
         "public.gradient.ci-main:qmxRE+saUvhNa3jqaCMWje+feVU77TjABchZrPGf7A8="
-        "andrewix-andrewix:rRaDERFJTlZDBSBQ1yElSatGbEu9TDhOBMCM1/o3PZA="
+        "andrewix-1998-andrewix:rRaDERFJTlZDBSBQ1yElSatGbEu9TDhOBMCM1/o3PZA="
       ];
 
       services.gradient = {
