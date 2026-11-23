@@ -8,6 +8,10 @@
       url = "github:hoanhxlyn/aic8800-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    caprine = {
+      url = "https://github.com/bankjaneo/caprine/releases/download/v2.63.5/Caprine-2.63.5-x86_64.AppImage";
+      flake = false;
+    };
     den.url = "github:denful/den";
     disko = {
       url = "github:nix-community/disko";

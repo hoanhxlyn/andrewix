@@ -88,6 +88,18 @@
         "type": "github"
       }
     },
+    "caprine": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-nC5oH2yoet5Lv4HD+QT9wEbEY5Giv5nxiEB4G8gdCf4=",
+        "type": "file",
+        "url": "https://github.com/bankjaneo/caprine/releases/download/v2.63.5/Caprine-2.63.5-x86_64.AppImage"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/bankjaneo/caprine/releases/download/v2.63.5/Caprine-2.63.5-x86_64.AppImage"
+      }
+    },
     "crane": {
       "locked": {
         "lastModified": 1794962885,
@@ -860,6 +872,7 @@
     "root": {
       "inputs": {
         "aic8800": "aic8800",
+        "caprine": "caprine",
         "den": "den",
         "disko": "disko",
         "dw-proton": "dw-proton",

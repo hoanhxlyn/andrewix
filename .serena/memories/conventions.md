@@ -11,3 +11,7 @@
 - config/<tool>/ holds raw app configs; one subfolder per tool, symlinked into ~/.config via home.file.
 - sops secrets: declare under modules/core/services/sync/sops.nix sops.secrets; env plumbing pattern: OPENCODE_WEB_ENV / CONTEXT7_API_KEY (sops.nix + fish.nix export).
 - web/ has its own conventions (TS, styling, tests) — `mem:web/core`.
+
+- Versioned upstream assets (GitHub release files etc.): declare a TOP-LEVEL flake-file input in the aspect module file (never inside the aspect attrset — den drops it there): flake-file.inputs.<name> = { url = <file URL>; flake = false; }; then src = inputs.<name> captured by the outer {inputs, ...} closure. NEVER hardcode a fetchurl sha256. Update = bump version in the module, nix run .#write-flake, nix flake update <name>; the hash lives in flake.lock automatically. (example: modules/core/gui/caprine.nix)
+- git add edited module files BEFORE write-flake or any flake eval — the flake only sees staged/tracked files; stale staging = silently stale eval.
+- Long nix commands (write-flake, just build, nix flake update/prefetch, just gc): run them in background from the start; never block the conversation waiting on them.
