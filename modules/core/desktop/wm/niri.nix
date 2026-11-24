@@ -285,6 +285,12 @@
               "XF86MonBrightnessUp".action.spawn = ["xbacklight" "-inc" "5"];
               "XF86MonBrightnessDown".allow-when-locked = true;
               "XF86MonBrightnessDown".action.spawn = ["xbacklight" "-dec" "5"];
+              "Mod+Shift+Page_Up".hotkey-overlay.title = "Brightness up";
+              "Mod+Shift+Page_Up".allow-when-locked = true;
+              "Mod+Shift+Page_Up".action.spawn = ["brightnessctl" "set" "+5%"];
+              "Mod+Shift+Page_Down".hotkey-overlay.title = "Brightness down";
+              "Mod+Shift+Page_Down".allow-when-locked = true;
+              "Mod+Shift+Page_Down".action.spawn = ["brightnessctl" "set" "5%-"];
             }
             arrowFocus
             arrowMonitor
