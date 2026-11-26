@@ -27,6 +27,8 @@
           "start-mcp-server"
           "--context"
           "ide"
+          "--agent-interface"
+          "tools"
           "--project-from-cwd"
           "--open-web-dashboard"
           "false"
