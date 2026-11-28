@@ -99,8 +99,6 @@
     };
     homeManager = {
       home.pointerCursor.enable = true;
-      # nixpkgs dropped wayprompt (unmaintained); re-enable when stylix drops the target
-      stylix.targets.wayprompt.enable = false;
     };
   };
 }
